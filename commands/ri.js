@@ -1,75 +1,101 @@
-// wip
-
 const Discord = require('discord.js');
 
 module.exports = {
 	name: 'ri',
-    description: 'Affiche des informations sur le rôle mentionné ou exactement nommé.',
+    description: "Affiche des informations sur le rôle mentionné ou exactement nommé.",
     guildOnly: true,
     args: true,
     usage: '[rôle]',
     category: "others",
-	execute(bot, msg, argsArray) {
-        let member = msg.mentions.members.first();
 
-        if(!member) {
-            let user = "";
+    async help (bot, msg, helpEmbed) {
+        helpEmbed
+            .setDescription("Cette commande permet d'afficher des informations sur un rôle.")
+            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + bot.config.prefix + this.name + " " + this.usage + "`");
+        msg.channel.send(helpEmbed);
+    },
+    
+    async execute(bot, msg, argsArray) {
+        let role = msg.mentions.members.first();
+
+        if(!role) {
+            let r = "";
             argsArray.forEach(element => {
-                user += element + " ";
+                r += element + " ";
             });
-            user = user.substring(0, user.length - 1);
-            member = msg.guild.members.array().find((currentUser) => {
-                return currentUser.user.username.toLowerCase().replace(/_/g, " ") === user.toLowerCase();
+            r = r.substring(0, r.length - 1);
+            role = msg.guild.roles.array().find((currentRole) => {
+                return currentRole.name.toLowerCase() === r.toLowerCase();
             });
-            if (member === undefined) {
-                return msg.channel.send("Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur. <:warning:568037672770338816>");
+            if (role === undefined) {
+                return msg.channel.send("Veuillez mentionner ou écrire un rôle correct du serveur. <:warning:568037672770338816>");
             }
         }
 
-        const creationDate = member.user.createdAt;
-        const joinedAt = member.joinedAt;
-        const permsArray = member.permissions.toArray();
-        let permsStr = "";
-        permsArray.forEach(perm => {
-            permsStr += "`" + perm.toLowerCase().replace(/_/g, " ") + "`, ";
-        });
-        permsStr = permsStr.substring(0, permsStr.length - 2);
-        const arrayRoles = member.roles;
-        let roles = "";
-        arrayRoles.forEach((role) => {
-            roles += role + " ";
-        });
-        let nickname = member.nickname;
-        if (nickname === null) {
-            nickname = "Aucun"
+        // ------------------------------------------ //
+        
+        const creationDate = role.createdAt;
+
+        // mois de création du rôle
+        const creationMonth = creationDate.getMonth() + 1;
+        let creationMonthZ = "";
+        if (creationMonth < 10) {
+            creationMonthZ += "0";
         }
-        let presence;
-        try {
-            presence = member.presence.game.name;
+        creationMonthZ += creationMonth;
+
+        // jour de création du rôle
+        const creationDay = creationDate.getDate();
+        let creationDayZ = "";
+        if (creationDay < 10) {
+            creationDayZ += "0";
         }
-        catch(err) {
-            presence = "Aucun";
+        creationDayZ += creationDay;
+
+        // heure de création du rôle
+        const creationHour = creationDate.getHours();
+        let creationHourZ = "";
+        if (creationHour < 10) {
+            creationHourZ += "0";
         }
+        creationHourZ += creationHour;
+
+        // minute de création du rôle
+        const creationMin = creationDate.getMinutes();
+        let creationMinZ = "";
+        if (creationMin < 10) {
+            creationMinZ += "0";
+        }
+        creationMinZ += creationMin;
+
+        // seconde de création du rôle
+        const creationSec = creationDate.getSeconds();
+        let creationSecZ = "";
+        if (creationSec < 10) {
+            creationSecZ += "0";
+        }
+        creationSecZ += creationSec;
+
+        // Le Z à la fin des noms de variables correspond à la version chaine de caractère qui a un zéro devant si le nombre est < 10
+        // ------------------------------------------------------------------------------------------------------------------------ //
+
+        const porteurs = role.members.array().length;
+        const membresServeur = msg.guild.members.array().length;
+        const percentage = (porteurs / membresServeur * 100).toPrecision(3);
+
 
         let informations = new Discord.RichEmbed()
-        .setAuthor(member.user.tag, member.user.avatarURL)
+        .setAuthor("Rôle : " + role.name)
         .setColor('#000000')
-        .addField("ID", member.user.id, true)
-        .addField("Jeu", presence, true)
-        .addField("Nickname", nickname, true)
-        .addField("Date d'arrivée sur le serveur", "**" + joinedAt.getDate() + "/" + (joinedAt.getMonth() + 1) + "/" + joinedAt.getFullYear() + "** à **" + joinedAt.getHours() + ":" + joinedAt.getMinutes() + ":" + joinedAt.getSeconds() + "**", true)
-        .addField("Date de création du compte", "**" + creationDate.getDate() + "/" + (creationDate.getMonth() + 1) + "/" + creationDate.getFullYear() + "** à **" + creationDate.getHours() + ":" + creationDate.getMinutes() + ":" + creationDate.getSeconds() + "**", true)
-        .addField("Rôles", roles, true)
-        .addField("Permissions", permsStr, true)
-        .setThumbnail(member.user.avatarURL)
+        .addField("ID", role.id, true)
+        .addField("Couleur", role.hexColor.toUpperCase(), true)
+        .addField("Mentionnable", role.mentionable ? "oui" : "non", true)
+        .addField("Catégorie séparée", role.hoist ? "oui" : "non", true)
+        .addField("Géré par l'extérieur", role.managed ? "oui" : "non", true)
+        .addField("Position", role.calculatedPosition, true)
+        .addField("Utilisateurs avec ce rôle", porteurs + " (" + percentage + "%)")
+        .addField("Date de création du rôle", "**" + creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + "** à **" + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + "** UTC", true)
         .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
         msg.channel.send(informations);
-    },
-
-    help(bot, msg, helpEmbed) {
-        helpEmbed
-            .setDescription("Cette commande permet d'afficher des informations sur un rôle.")
-            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + config.prefix + this.name + " " + this.usage + "`.");
-        msg.channel.send(helpEmbed);
-    },
+    }
 };
