@@ -17,7 +17,7 @@ module.exports = {
     },
     
     async execute(bot, msg, argsArray) {
-        let role = msg.mentions.members.first();
+        let role = msg.mentions.roles.first();
 
         if(!role) {
             let r = "";
