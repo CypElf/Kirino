@@ -1,11 +1,12 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'ri',
+	name: 'roleinfo',
     description: "Affiche des informations sur le rôle mentionné ou exactement nommé.",
     guildOnly: true,
     args: true,
     usage: '[rôle]',
+    aliases: ["ri"],
     category: "others",
 
     async help (bot, msg, helpEmbed) {
@@ -82,19 +83,27 @@ module.exports = {
         const porteurs = role.members.array().length;
         const membresServeur = msg.guild.members.array().length;
         const percentage = (porteurs / membresServeur * 100).toPrecision(3);
+        let perms = "";
 
+        for (let flag in Discord.Permissions.FLAGS) {
+            if (role.hasPermission(flag)) {
+                perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, ";
+            }
+        }
+        perms = perms.substring(0, perms.length - 2);
 
         let informations = new Discord.RichEmbed()
         .setAuthor("Rôle : " + role.name)
-        .setColor('#000000')
+        .setColor(role.hexColor)
         .addField("ID", role.id, true)
         .addField("Couleur", role.hexColor.toUpperCase(), true)
         .addField("Mentionnable", role.mentionable ? "oui" : "non", true)
         .addField("Catégorie séparée", role.hoist ? "oui" : "non", true)
-        .addField("Géré par l'extérieur", role.managed ? "oui" : "non", true)
         .addField("Position", role.calculatedPosition, true)
+        .addField("Géré par l'extérieur", role.managed ? "oui" : "non", true)
         .addField("Utilisateurs avec ce rôle", porteurs + " (" + percentage + "%)")
         .addField("Date de création du rôle", "**" + creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + "** à **" + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + "** UTC", true)
+        .addField("Permissions", perms !== "" ? perms : "`Ce rôle n'a aucune permission`")
         .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
         msg.channel.send(informations);
     }

@@ -1,8 +1,9 @@
 module.exports = {
-	name: 'hbl',
+	name: 'homebrew',
     description: "Envoie la version 2.1.0 de l'homebrew launcher.",
     guildOnly: false,
     args: false,
+    aliases: ["hbl"],
     category: "hack",
     
     async execute(bot, msg) {

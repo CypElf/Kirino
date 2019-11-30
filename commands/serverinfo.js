@@ -1,8 +1,9 @@
 module.exports = {
-	name: 'si',
+	name: 'serverinfo',
     description: 'Affiche des informations sur le serveur.',
     guildOnly: true,
     args: false,
+    aliases: ["si"],
     category: "others",
     
     async execute(bot, msg) {

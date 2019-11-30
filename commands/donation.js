@@ -5,6 +5,7 @@ module.exports = {
     description: 'Envoie le lien PayPal de mon créateur',
     guildOnly: false,
 	args: false,
+	aliases: ["don"],
 	category: "others",
 	
 	async execute(bot, msg) {

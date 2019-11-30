@@ -70,16 +70,21 @@ module.exports = {
 				console.error(err);
 			});
 		}
-	
-		const name = args[0].toLowerCase();
-		const command = commands.get(name);
-	
-		if (!command) {
-			return msg.channel.send("Cette commande n'existe pas.");
-		}
+
+		const command = commands.get(args[0].toLowerCase()) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
+    	if (!command) return msg.channel.send("Cette commande n'existe pas.");
 	
 		if (command.description) data.push(`**Description** : ${command.description}`);
 		command.guildOnly ? data.push(`**Disponible en messages privés** : non`) : data.push(`**Disponible en messages privés** : oui`);
+		if (command.aliases) {
+			let aliasesStr = "";
+			command.aliases.forEach(aliase => {
+				aliasesStr += "`" + aliase + "`, ";
+			});
+			aliasesStr = aliasesStr.substring(0, aliasesStr.length - 2);
+
+			data.push("**Aliases** : " + aliasesStr);
+		}
 		if (command.usage) data.push(`**Utilisation** : \`${prefix}${command.name} ${command.usage}\``);
 		
 		const texte = data.join('\n');

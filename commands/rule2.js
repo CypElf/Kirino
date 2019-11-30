@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r8',
-    description: "Affiche la règle 8 du règlement de Avdray.",
+	name: 'rule2',
+    description: "Affiche la règle 2 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r2"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 8", "Ne pas usurper l'identité de quelqu'un en mettant la même photo de profil et / ou le même pseudo.")
+			.addField("Règle 2", "Le troll est autorisé, néanmoins sachez mesurer vos actes et ne pas aller trop loin.")
             .setColor('#000000');
             
             if (avdray != null) {

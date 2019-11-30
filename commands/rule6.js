@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r9',
-    description: "Affiche la règle 9 du règlement de Avdray.",
+	name: 'rule6',
+    description: "Affiche la règle 6 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r6"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 9", "Interdiction de diffuser des infos personnelles sur des gens sans leur accord.")
+			.addField("Règle 6", "Pas d'insultes, d'irrespect, de mots vulgaires, de menaces ou ce genre de choses.")
             .setColor('#000000');
             
             if (avdray != null) {

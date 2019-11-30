@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r12',
-    description: "Affiche la règle 12 du règlement de Avdray.",
+	name: 'rule17',
+    description: "Affiche la règle 17 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r17"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 12", "La demande de tokens / leveldb est interdite.")
+			.addField("Règle 17", "Les dramas sont interdits.")
             .setColor('#000000');
             
             if (avdray != null) {

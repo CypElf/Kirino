@@ -2,7 +2,8 @@ module.exports = {
 	name: 'maj',
     description: 'Explique comment supprimer une mise à jour de jeu 3ds, notamment de Steel Diver: Sub Wars.',
     guildOnly: false,
-    args: false,
+	args: false,
+	aliases: ["update"],
     category: "hack",
 	async execute(bot, msg) {
         const Discord = require('discord.js');

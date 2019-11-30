@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r11',
-    description: "Affiche la règle 11 du règlement de Avdray.",
+	name: 'rule16',
+    description: "Affiche la règle 16 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r16"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 11", "Pas de doubles comptes.")
+			.addField("Règle 16", "Interdiction de faire des raids sur d'autres serveurs, si quelqu'un le fait, il sera sanctionné et toute responsabilité devra être assumée par lui et uniquement lui.")
             .setColor('#000000');
             
             if (avdray != null) {

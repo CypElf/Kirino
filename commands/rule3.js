@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r7',
-    description: "Affiche la règle 7 du règlement de Avdray.",
+	name: 'rule3',
+    description: "Affiche la règle 3 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r3"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 7", "Pas de contenu pornographique hors de <#445281835476451348>, de spoil, de contenu haineux, incitant à la haine, etc.")
+			.addField("Règle 3", "La pub est strictement interdite (MP compris), sauf cas exceptionnel autorisé après demande.")
             .setColor('#000000');
             
             if (avdray != null) {

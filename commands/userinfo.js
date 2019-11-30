@@ -1,11 +1,12 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'ui',
+	name: 'userinfo',
     description: 'Affiche des informations sur l\'utilisateur mentionné ou exactement nommé, ou sur l\'utilisateur utilisant la commande, par défaut.',
     guildOnly: true,
     args: false,
     usage: '{utilisateur}',
+    aliases: ["ui"],
     category: "others",
     
     async execute(bot, msg, argsArray) {
@@ -124,12 +125,15 @@ module.exports = {
         // Le Z à la fin des noms de variables correspond à la version chaine de caractère qui a un zéro devant si le nombre est < 10
         // ------------------------------------------------------------------------------------------------------------------------ //
 
-        const permsArray = member.permissions.toArray();
-        let permsStr = "";
-        permsArray.forEach(perm => {
-            permsStr += "`" + perm.toLowerCase().replace(/_/g, " ") + "`, ";
-        });
-        permsStr = permsStr.substring(0, permsStr.length - 2);
+        let perms = "";
+
+        for (let flag in Discord.Permissions.FLAGS) {
+            if (member.hasPermission(flag)) {
+                perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, ";
+            }
+        }
+        perms = perms.substring(0, perms.length - 2);
+        
         const arrayRoles = member.roles;
         let roles = "";
         arrayRoles.forEach((role) => {
@@ -156,7 +160,7 @@ module.exports = {
         .addField("Date d'arrivée sur le serveur", "**" + joinedDayZ + "/" + joinedMonthZ + "/" + joinedAt.getFullYear() + "** à **" + joinedHourZ + ":" + joinedMinZ + ":" + joinedSecZ + "** UTC", true)
         .addField("Date de création du compte", "**" + creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + "** à **" + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + "** UTC", true)
         .addField("Rôles", roles, true)
-        .addField("Permissions", permsStr)
+        .addField("Permissions", perms)
         .setThumbnail(member.user.avatarURL)
         .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
         msg.channel.send(informations);

@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r2',
-    description: "Affiche la règle 2 du règlement de Avdray.",
+	name: 'rule5',
+    description: "Affiche la règle 5 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r5"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 2", "Le troll est autorisé, néanmoins sachez mesurer vos actes et ne pas aller trop loin.")
+			.addField("Règle 5", "Le spam et le flood sont interdits.")
             .setColor('#000000');
             
             if (avdray != null) {

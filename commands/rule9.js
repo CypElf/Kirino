@@ -1,15 +1,16 @@
 module.exports = {
-	name: 'r13',
-    description: "Affiche la règle 13 du règlement de Avdray.",
+	name: 'rule9',
+    description: "Affiche la règle 9 du règlement de Avdray.",
     guildOnly: false,
     args: false,
+    aliases: ["r9"],
     category: "admin",
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 13", "Une bonne orthographe est demandée, les gens n'écrivant que très mal sont donc priés d'utiliser un correcteur pour que les messages soient au moins compréhensibles. Pas de caps lock.")
+			.addField("Règle 9", "Interdiction de diffuser des infos personnelles sur des gens sans leur accord.")
             .setColor('#000000');
             
             if (avdray != null) {

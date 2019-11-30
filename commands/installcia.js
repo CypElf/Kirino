@@ -1,10 +1,11 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'install_cia',
+	name: 'installcia',
     description: 'Explique comment installer un fichier `.cia` sur une 3ds hackée à l\'aide de FBI.',
     guildOnly: false,
     args: false,
+    aliases: ["ic"],
     category: "hack",
 
 	async execute(bot, msg) {

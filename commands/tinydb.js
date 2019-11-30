@@ -3,6 +3,7 @@ module.exports = {
     description: 'Envoie le lien de tinyDB, le remplaçant de title DB.',
     guildOnly: false,
     args: false,
+    aliases: ["tdb"],
     category: "hack",
     
     async execute(bot, msg) {

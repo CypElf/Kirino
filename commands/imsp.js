@@ -6,6 +6,7 @@ module.exports = {
     guildOnly: false,
     args: true,
     category: "hack",
+    aliases: ["ismyswitchpatched"],
     usage: '[type] [numéro de série]',
 
     async help(bot, msg, helpEmbed) {

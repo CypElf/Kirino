@@ -97,9 +97,8 @@ bot.on('message', msg => {
 
     // ------------------------------------------------------------- vérification de la validité de la commande et exécution
 
-    if (!bot.commands.has(commandName)) return;
-
-    const command = bot.commands.get(commandName);
+    const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    if (!command) return;
 
     if (command.guildOnly && msg.channel.type !== 'text') {
         return msg.reply('Cette commande n\'est pas faite pour être utilisée en messages privés. <:warning:568037672770338816>');
