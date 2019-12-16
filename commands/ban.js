@@ -19,18 +19,14 @@ module.exports = {
             return msg.channel.send("Vous n'avez pas les permissions suffisantes pour bannir un membre. <:warning:568037672770338816>")
         }
     
-        if (msg.mentions.members.size !== 1) {
-            return msg.channel.send("Veuillez mentionner un unique membre à bannir. <:warning:568037672770338816>")
-        }
-    
         if (!msg.guild.me.hasPermission('BAN_MEMBERS')) {
             return msg.channel.send("On dirait que je n'ai pas les permissions nécessaire pour bannir des membres. <:warning:568037672770338816>");
         }
     
-        const banMember = msg.mentions.members.first();
+        let banMember = msg.mentions.members.first();
         if (!banMember) {
             banMember = msg.guild.members.array().find((currentUser) => {
-                return currentUser.userToBan.username.toLowerCase() === userToBan.toLowerCase();
+                return currentUser.user.username.toLowerCase() === userToBan.toLowerCase();
             });
             if (banMember === undefined) {
                 return msg.channel.send("Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur. <:warning:568037672770338816>");
@@ -49,7 +45,7 @@ module.exports = {
             return msg.channel.send("Vous ne pouvez pas bannir ce membre. <:warning:568037672770338816>");
         }
     
-        banMember.ban(reason.join(" ")).then(member => {
+        banMember.ban(reason.join(" ") + " (banni par " + msg.author.tag + ")").then(member => {
             msg.channel.send(`${member.user.username} a été banni du serveur ! <:hammer:568068459485855752>`);
             msg.delete();
         });
