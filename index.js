@@ -36,8 +36,9 @@ bot.on('message', msg => {
 
     // ------------------------------------------------------------- vérification de l'AFK
 
-    if (msg.content.includes(msg.mentions.users.first())) {
-        let mentioned = bot.afk.get(msg.mentions.users.first().id);
+    const mention = msg.mentions.users.first();
+    if (mention) {
+        let mentioned = bot.afk.get(mention.id);
         if (mentioned) {
             if (mentioned.reason) {
                 msg.channel.send(`**${mentioned.usertag}** est actuellement AFK pour la raison suivante : ${mentioned.reason}`);
@@ -49,7 +50,9 @@ bot.on('message', msg => {
         }
     }
     let afkcheck = bot.afk.get(msg.author.id);
-    if (afkcheck) return [bot.afk.delete(msg.author.id), msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete(5000))];
+    if (afkcheck) {
+        return [bot.afk.delete(msg.author.id), msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete(5000))];
+    }
 
     commandName = commandName.slice(bot.config.prefix.length);
     if (!msg.content.startsWith(bot.config.prefix)) return;

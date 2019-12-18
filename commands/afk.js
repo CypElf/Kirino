@@ -19,14 +19,14 @@ module.exports = {
             if (reason) {
                 construct = {
                     id: msg.author.id,
-                    usertag: msg.author.tag,
+                    usertag: msg.author.username,
                     reason: reason
                 };
             }
             else {
                 construct = {
                     id: msg.author.id,
-                    usertag: msg.author.tag,
+                    usertag: msg.author.username,
                 };
             }
     
