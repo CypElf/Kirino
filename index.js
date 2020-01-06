@@ -26,7 +26,7 @@ bot.afk = new Map();
 
 // ------------------------------------------------------------- évènement messages
 
-bot.on('message', msg => {
+bot.on('message', async msg => {
 
     if (msg.author.bot) return;
 
@@ -130,7 +130,7 @@ bot.on("guildDelete", () => updateActivity());
 
 // ------------------------------------------------------------- fonction pour mettre à jour le rich presence en fonction du nombre de serveurs sur lequel le bot est
 
-function updateActivity() {
+const updateActivity = () => {
     guildsCount = bot.guilds.size;
     bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "WATCHING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }

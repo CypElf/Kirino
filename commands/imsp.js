@@ -102,9 +102,14 @@ module.exports = {
             status = "Nous n'avons pas d'informations sur ce type, nous savons juste qu'il s'agit d'une console coréenne ! Nous ne pouvons donc pas déterminer si elle est patchée ou pas !";
         }
 
-        else if (type.toUpperCase().startsWith("XJE") || type.toUpperCase().startsWith("XKJ")) {
+        else if (type.toUpperCase().startsWith("XJE")) {
             color = Red;
             status = "Les Switch Lite sont toutes patchées à Fusée Gelée !";
+        }
+
+        else if (type.toUpperCase().startsWith("XKJ")) {
+            color = Red;
+            status = patched;
         }
 
         // --------------------------------------------------------------------------------------
