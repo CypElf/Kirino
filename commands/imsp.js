@@ -16,7 +16,7 @@ module.exports = {
             .addField("Exemple", "`" + prefix + "imsp XAW1 0001953380`")
             .setImage("https://cdn.discordapp.com/attachments/572037440672497674/572777164789776407/IMG_20190423_173227.jpg")
 
-            msg.channel.send(helpEmbed);
+        msg.channel.send(helpEmbed);
     },
 
 	async execute(bot, msg, args) {
@@ -24,96 +24,100 @@ module.exports = {
 
         let color;
         let status;
-        let Green = 0x33cc00;
-        let Orange = 0xff6600;
-        let Red = 0xff0000;
-        let Y = "Bonne nouvelle : votre Switch n'est pas patchée !";
-        let I = "Nous ne pouvons pas déterminer si votre Switch est patchée ou pas, et nous en sommes désolés !";
-        let N = "Pas de chance, votre Switch est très probablement patchée !";
+        const Green = 0x33cc00;
+        const Orange = 0xff6600;
+        const Red = 0xff0000;
+        const notPatched = "Bonne nouvelle : votre Switch n'est pas patchée !";
+        const cannotKnow = "Nous ne pouvons pas déterminer si votre Switch est patchée ou pas, et nous en sommes désolés !";
+        const patched = "Pas de chance, votre Switch est patchée !";
 
-        if(!args[1]) {
-            return msg.channel.send("Veuillez saisir le numéro de série !");
+        const type = args[0];
+        const nSerie = args[1];
+
+        if(!nSerie) return msg.channel.send("Veuillez saisir le numéro de série !");
+
+        if (isNaN(nSerie)) return msg.channel.send("Le numéro de série ne doit comporter que des chiffres !");
+
+        if (type.length != 4) return msg.channel.send("Le type doit contenir 4 caractères !")
+
+        if (nSerie.length != 10) return msg.channel.send("Le numéro de série doit contenir 10 chiffres !");
+
+        // ---------------------------------------------------------------------- comparaisons successives du type
+
+        if (type.toUpperCase() === "XAW1") {
+            if (nSerie > "0000000000" && nSerie < "0074000000")
+                (color = Green), (status = notPatched);
+            else if (nSerie > "0075000000" && nSerie < "0120000000")
+                (color = Orange), (status = cannotKnow);
+            else if ("0120000000" < nSerie) (color = Red), (status = patched);
         }
 
-        if (isNaN(args[1]))
-            return msg.channel.send("Le numéro de série ne doit comporter que des chiffres !");
-        if (args[1].length > 10)
-            return msg.channel.send("Le numéro de série ne peut pas contenir plus de 10 caractères !");
-        switch (args[0].toUpperCase()) {
-            case "XAW1":
-                if (args[1] > "0000000000" && args[1] < "0074000000")
-                    (color = Green), (status = Y);
-                if (args[1] > "0075000000" && args[1] < "0120000000")
-                    (color = Orange), (status = I);
-                if ("0120000000" < args[1]) (color = Red), (status = N);
-                break;
-
-            case "XAW4":
-                if (args[1] > "0000000000" && args[1] < "0011000000")
-                    (color = Green), (status = Y);
-                if (args[1] > "0011000000" && args[1] < "0012000000")
-                    (color = Orange), (status = I);
-                if ("0012000000" < args[1]) (color = Red), (status = N);
-                break;
-
-            case "XAW7":
-                if (args[1] > "0000000000" && args[1] < "0017800000")
-                    (color = Green), (status = Y);
-                if (args[1] > "0017800000" && args[1] < "0030000000")
-                    (color = Orange), (status = I);
-                if ("0030000000" < args[1]) (color = Red), (status = N);
-                break;
-
-            case "XAJ1":
-                if (args[1] > "0000000000" && args[1] < "0020000000")
-                    (color = Green), (status = Y);
-                if (args[1] > "0020000000" && args[1] < "0030000000")
-                    (color = Orange), (status = I);
-                if ("0030000000" < args[1]) (color = Red), (status = N);
-                break;
-
-            case "XAJ4":
-                if (args[1] > "0000000000" && args[1] < "0046000000")
-                    (color = Green), (status = Y);
-                if (args[1] > "0046000000" && args[1] < "0060000000")
-                    (color = Orange), (status = I);
-                if ("0060000000" < args[1]) (color = Red), (status = N);
-                break;
-
-            case "XAJ7":
-                if (args[1] > "0000000000" && args[1] < "0040000000")
-                    (color = Green), (status = Y);
-                if (args[1] > "0040000000" && args[1] < "0050000000")
-                    (color = Orange), (status = I);
-                if (args[1] > "0050000000") (color = Red), (status = N);
-                break;
-
-            case "XAW9":
-                color = Red;
-                status = "Les Nintendo Switch avec ce type sont directement modifiées depuis Nintendo et nous n'avons pas d'informations sur ce sujet... mais il est malheureusement très probable qu'elles soient toutes patchées !";
-                break;
-
-            case "XAK":
-                color = Orange;
-                status = "Nous n'avons pas d'informations sur ce type, nous savons juste qu'il s'agit d'une console coréenne ! Nous ne pouvons donc pas déterminer si elle est patchée ou pas !";
-                break;
-
-            case "XJE1":
-                color = Red;
-                status = "Les Switch Lite sont toutes patchées à Fusée Gelée !";
-                break;
+        else if (type.toUpperCase() === "XAW4") {
+            if (nSerie > "0000000000" && nSerie < "0011000000")
+                (color = Green), (status = notPatched);
+            else if (nSerie > "0011000000" && nSerie < "0012000000")
+                (color = Orange), (status = cannotKnow);
+            else if ("0012000000" < nSerie) (color = Red), (status = patched);
         }
-        if (!color) {
-            return msg.channel.send("Le type et/ou le numéro de série est incorrect ! Veuillez entrer un numéro de série valide !");
+
+        else if (type.toUpperCase() == "XAW7") {
+            if (nSerie > "0000000000" && nSerie < "0017800000")
+                (color = Green), (status = notPatched);
+            else if (nSerie > "0017800000" && nSerie < "0030000000")
+                (color = Orange), (status = cannotKnow);
+                else if ("0030000000" < nSerie) (color = Red), (status = patched);
         }
+
+        else if (type.toUpperCase() === "XAJ1") {
+            if (nSerie > "0000000000" && nSerie < "0020000000")
+                (color = Green), (status = notPatched);
+            else if (nSerie > "0020000000" && nSerie < "0030000000")
+                (color = Orange), (status = cannotKnow);
+            else if ("0030000000" < nSerie) (color = Red), (status = patched);
+        }
+
+        else if (type.toUpperCase() === "XAJ4") {
+            if (nSerie > "0000000000" && nSerie < "0046000000")
+                (color = Green), (status = notPatched);
+            else if (nSerie > "0046000000" && nSerie < "0060000000")
+                (color = Orange), (status = cannotKnow);
+            else if ("0060000000" < nSerie) (color = Red), (status = patched);
+        }
+
+        else if (type.toUpperCase() === "XAJ7") {
+            if (nSerie > "0000000000" && nSerie < "0040000000")
+                (color = Green), (status = notPatched);
+            else if (nSerie > "0040000000" && nSerie < "0050000000")
+                (color = Orange), (status = cannotKnow);
+            else if (nSerie > "0050000000") (color = Red), (status = patched);
+        }
+
+        else if (type.toUpperCase() === "XAW9") {
+            color = Red;
+            status = "Les Nintendo Switch avec ce type sont directement modifiées depuis Nintendo et nous n'avons pas d'informations sur ce sujet... mais il est malheureusement très probable qu'elles soient toutes patchées !";
+        }
+
+        else if (type.toUpperCase().startsWith("XAK")) {
+            color = Orange;
+            status = "Nous n'avons pas d'informations sur ce type, nous savons juste qu'il s'agit d'une console coréenne ! Nous ne pouvons donc pas déterminer si elle est patchée ou pas !";
+        }
+
+        else if (type.toUpperCase().startsWith("XJE") || type.toUpperCase().startsWith("XKJ")) {
+            color = Red;
+            status = "Les Switch Lite sont toutes patchées à Fusée Gelée !";
+        }
+
+        // --------------------------------------------------------------------------------------
+
+        if (!color) return msg.channel.send("Le type et/ou le numéro de série est incorrect ! Veuillez entrer un numéro de série valide !");
 
         let embed = new Discord.RichEmbed()
-                .setTitle("**Résultat**")
-                .setColor(color)
-                .addField("Type de Série", args[0].toUpperCase())
-                .addField("Numéro de Série", args[1])
-                .addField("Status", status)
-                .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
-            msg.channel.send(embed);
+            .setTitle("**Résultat**")
+            .setColor(color)
+            .addField("Type de Série", type.toUpperCase())
+            .addField("Numéro de Série", nSerie)
+            .addField("Status", status)
+            .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+        msg.channel.send(embed);
     }
 };
