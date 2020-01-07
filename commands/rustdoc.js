@@ -27,7 +27,7 @@ module.exports = {
         let contentReturned = "";
 
         for (let result of results.others) {
-            if (counter >= 10 || personalCounter >= 5) break;
+            if (counter >= 5) break;
             contentNames += "- [";
             if (result.path !== "") {
                 contentNames += result.path + "::";
@@ -41,9 +41,9 @@ module.exports = {
             counter++;
         }
 
-        personalCounter = 0;
+        counter = 0;
         for (let result of results.in_args) {
-            if (counter >= 10 || personalCounter >= 5) break;
+            if (counter >= 5) break;
             contentIsArgs += "- [";
             if (result.path !== "") {
                 contentIsArgs += result.path + "::";
@@ -57,9 +57,9 @@ module.exports = {
             counter++;
         }
 
-        personalCounter = 0;
+        counter = 0;
         for (let result of results.returned) {
-            if (counter >= 10 || personalCounter >= 5) break;
+            if (counter >= 5) break;
             contentReturned += "- [";
             if (result.path !== "") {
                 contentReturned += result.path + "::";
