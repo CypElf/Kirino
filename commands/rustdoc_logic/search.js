@@ -767,7 +767,7 @@ function initSearch(str, params, search_input) {
         !(
           name.indexOf(keys[i]) > -1 ||
           path.indexOf(keys[i]) > -1 ||
-          (parent !== undefined &&
+          (parent !== undefined && parent.name !== undefined &&
             parent.name.toLowerCase().indexOf(keys[i]) > -1) ||
           levenshtein(name, keys[i]) <= MAX_LEV_DISTANCE
         )
