@@ -21,7 +21,6 @@ module.exports = {
         const results = rustDocResearcher(keyword);
         
         let counter = 0;
-        let personalCounter = 0;
         let contentNames = "";
         let contentIsArgs = "";
         let contentReturned = "";
@@ -37,7 +36,6 @@ module.exports = {
                 contentNames += " : " + result.desc;
             }
             contentNames += "\n";
-            personalCounter++;
             counter++;
         }
 
@@ -53,7 +51,6 @@ module.exports = {
                 contentIsArgs += " : " + result.desc;
             }
             contentIsArgs += "\n";
-            personalCounter++;
             counter++;
         }
 
@@ -69,7 +66,6 @@ module.exports = {
                 contentReturned += " : " + result.desc;
             }
             contentReturned += "\n";
-            personalCounter++;
             counter++;
         }
 
