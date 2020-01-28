@@ -43,19 +43,21 @@ module.exports = {
 
         else if (mode === "list") {
             let liste = "Voici la liste des mots actuellement bannis :\n";
-            db.get("SELECT * FROM banwords WHERE id=(?)", [guild], (err, row) => {
-                if (err) return msg.channel.send("Impossible d'accéder aux mots bannis dans la base de données.");
-                if (row === undefined || row.words === undefined) liste = "Ce serveur n'a aucun mot bloqué pour l'instant.";
-
-                else {
-                    const contenu = row.words.split(",");
-                    contenu.forEach(word => {
-                        liste += "`" + word + "`, ";
-                    });
-                    liste = liste.substring(0, liste.length - 2); // -2 pour supprimer l'espace et la virgule tout à la fin
-                }
-                msg.channel.send(liste);
-            });
+            db.serialize(() => {
+                db.get("SELECT * FROM banwords WHERE id=(?)", [guild], (err, row) => {
+                    if (err) return msg.channel.send("Impossible d'accéder aux mots bannis dans la base de données.");
+                    if (row === undefined || row.words === undefined) liste = "Ce serveur n'a aucun mot bloqué pour l'instant.";
+    
+                    else {
+                        const contenu = row.words.split(",");
+                        contenu.forEach(word => {
+                            liste += "`" + word + "`, ";
+                        });
+                        liste = liste.substring(0, liste.length - 2); // -2 pour supprimer l'espace et la virgule tout à la fin
+                    }   
+                    msg.channel.send(liste);
+                });
+            }); 
         }
 
         else if (mode === "remove") {
