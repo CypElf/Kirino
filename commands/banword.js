@@ -25,6 +25,7 @@ module.exports = {
 
         if (mode === "add") {
             if (mots.length < 1) return msg.channel.send("Veuillez renseigner un ou plusieurs mots en arguments pour les bloquer.");
+            if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("Vous n'avez pas les permissions suffisantes pour utiliser ce mode. <:warning:568037672770338816>");
             mots.forEach(mot => {
                 db.serialize(() => {
                     db.run("INSERT INTO banwords(id,words) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET words=words || ',' || excluded.words", [guild, mot], err => {
@@ -59,6 +60,7 @@ module.exports = {
 
         else if (mode === "remove") {
             if (mots.length < 1) return msg.channel.send("Veuillez renseigner un ou plusieurs mots en arguments pour les débloquer.");
+            if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("Vous n'avez pas les permissions suffisantes pour utiliser ce mode. <:warning:568037672770338816>");
             let bannedWords;
             let removed = [];
             let notRemoved = [];
