@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
 // const express = require("./express.js");
 
 const bot = new Discord.Client();
@@ -54,13 +55,35 @@ bot.on('message', async msg => {
         return [bot.afk.delete(msg.author.id), msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete(5000))];
     }
 
+    // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
+
+    if (!msg.content.startsWith(bot.config.prefix + "banword remove")) {
+        let db = new sqlite3.Database("./database.db", err => {
+            if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
+        });
+    
+        let bannedWords = [];
+    
+        db.serialize(() => {
+            db.get("SELECT * FROM banwords WHERE id=(?)", [msg.guild.id], (err, row) => {
+                if (err) return msg.channel.send("Impossible d'accéder aux mots bannis dans la base de données.");
+                if (!(row === undefined || row.words === undefined)) {
+                    bannedWords = row.words.split(",");
+                    bannedWords.forEach(word => {
+                        if (messageArray.includes(word)) return msg.delete();
+                    });
+                }
+            });
+        });
+    }
+    
     commandName = commandName.slice(bot.config.prefix.length);
     if (!msg.content.startsWith(bot.config.prefix)) return;
 
     // maintenance
     // return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !");
 
-    // ------------------------------------------------------------- vérification de la commande spéciale invisible d'affichage des invitations de tous les serveurs sur lesquels est le bot
+    // ------------------------------------------------------------- vérification de la commande spéciale guilds
 
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
         let invites = ["I am required else it won't work"], ct = 0;
