@@ -29,6 +29,10 @@ bot.afk = new Map();
 
 bot.on('message', async msg => {
 
+    // maintenance
+    // if (msg.content.startsWith(bot.config.prefix)) return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !");
+    // else return;
+
     if (msg.author.bot) return;
 
     const messageArray = msg.content.split(" ");
@@ -66,7 +70,7 @@ bot.on('message', async msg => {
     
         db.serialize(() => {
             db.get("SELECT * FROM banwords WHERE id=(?)", [msg.guild.id], (err, row) => {
-                if (err) return msg.channel.send("Impossible d'accéder aux mots bannis dans la base de données.");
+                if (err) return console.log("Impossible d'accéder aux mots bannis dans la base de données : " + err.message);
                 if (!(row === undefined || row.words === undefined)) {
                     bannedWords = row.words.split(",");
                     bannedWords.forEach(word => {
@@ -79,9 +83,6 @@ bot.on('message', async msg => {
     
     commandName = commandName.slice(bot.config.prefix.length);
     if (!msg.content.startsWith(bot.config.prefix)) return;
-
-    // maintenance
-    // return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !");
 
     // ------------------------------------------------------------- vérification de la commande spéciale guilds
 

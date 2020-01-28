@@ -40,7 +40,7 @@ module.exports = {
             msg.channel.send(content);
         }
 
-        if (mode === "list") {
+        else if (mode === "list") {
             let liste = "Voici la liste des mots actuellement bannis :\n";
             db.get("SELECT * FROM banwords WHERE id=(?)", [guild], (err, row) => {
                 if (err) return msg.channel.send("Impossible d'accéder aux mots bannis dans la base de données.");
@@ -57,7 +57,7 @@ module.exports = {
             });
         }
 
-        if (mode === "remove") {
+        else if (mode === "remove") {
             if (mots.length < 1) return msg.channel.send("Veuillez renseigner un ou plusieurs mots en arguments pour les débloquer.");
             let bannedWords;
             let removed = [];
@@ -109,7 +109,7 @@ module.exports = {
         }
 
         else {
-            // ...
+            return msg.channel.send("Veuillez renseigner un mode valide.");
         }
     }
 };
