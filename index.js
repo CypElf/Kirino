@@ -72,14 +72,24 @@ bot.on('message', async msg => {
             db.get("SELECT * FROM banwords WHERE id=(?)", [msg.guild.id], (err, row) => {
                 if (err) return console.log("Impossible d'accéder aux mots bannis dans la base de données : " + err.message);
                 if (!(row === undefined || row.words === undefined)) {
+                    let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
                     bannedWords = row.words.split(",");
                     bannedWords.forEach(word => {
                         if (messageArray.includes(word)) return msg.delete();
+                        if (emojiNames) {
+                            emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
+                            if (word.startsWith(":") && word.endsWith(":")) {
+                                word = word.substring(1, word.length - 1);
+                                if (emojiNames.includes(word)) return msg.delete();
+                            }
+                        }
                     });
                 }
             });
         });
     }
+
+    // -------------------------------------------------------------
     
     commandName = commandName.slice(bot.config.prefix.length);
     if (!msg.content.startsWith(bot.config.prefix)) return;
@@ -160,3 +170,4 @@ const updateActivity = () => {
 }
 
 bot.login(bot.config.token);
+// bot.login(process.env.TOKEN);
