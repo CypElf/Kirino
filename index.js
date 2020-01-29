@@ -73,11 +73,12 @@ bot.on('message', async msg => {
                 if (err) return console.log("Impossible d'accéder aux mots bannis dans la base de données : " + err.message);
                 if (!(row === undefined || row.words === undefined)) {
                     let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
+                    if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
                     bannedWords = row.words.split(",");
                     bannedWords.forEach(word => {
                         if (messageArray.includes(word)) return msg.delete();
                         if (emojiNames) {
-                            emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
+                            console.log("emojiNames = " + emojiNames);
                             if (word.startsWith(":") && word.endsWith(":")) {
                                 word = word.substring(1, word.length - 1);
                                 if (emojiNames.includes(word)) return msg.delete();
