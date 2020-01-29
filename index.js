@@ -78,7 +78,6 @@ bot.on('message', async msg => {
                     bannedWords.forEach(word => {
                         if (messageArray.includes(word)) return msg.delete();
                         if (emojiNames) {
-                            console.log("emojiNames = " + emojiNames);
                             if (word.startsWith(":") && word.endsWith(":")) {
                                 word = word.substring(1, word.length - 1);
                                 if (emojiNames.includes(word)) return msg.delete();
