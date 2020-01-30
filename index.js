@@ -75,8 +75,9 @@ bot.on('message', async msg => {
                     let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
                     if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
                     bannedWords = row.words.split(",");
+                    const loweredMessageArray = messageArray.map(word => word.toLowerCase());
                     bannedWords.forEach(word => {
-                        if (messageArray.includes(word)) return msg.delete();
+                        if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete();
                         if (emojiNames) {
                             if (word.startsWith(":") && word.endsWith(":")) {
                                 word = word.substring(1, word.length - 1);
