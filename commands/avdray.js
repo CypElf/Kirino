@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'pub',
+	name: 'avdray',
     description: 'Envoie le lien du serveur de mon créateur.',
     guildOnly: false,
 	args: false,
