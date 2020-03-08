@@ -61,33 +61,35 @@ bot.on('message', async msg => {
 
     // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
 
-    if (!msg.content.startsWith(bot.config.prefix + "banword remove")) {
-        let db = new sqlite3.Database("./database.db", err => {
-            if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
-        });
-    
-        let bannedWords = [];
-    
-        db.serialize(() => {
-            db.get("SELECT * FROM banwords WHERE id=(?)", [msg.guild.id], (err, row) => {
-                if (err) return console.log("Impossible d'accéder aux mots bannis dans la base de données : " + err.message);
-                if (!(row === undefined || row.words === undefined)) {
-                    let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
-                    if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
-                    bannedWords = row.words.split(",");
-                    const loweredMessageArray = messageArray.map(word => word.toLowerCase());
-                    bannedWords.forEach(word => {
-                        if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete();
-                        if (emojiNames) {
-                            if (word.startsWith(":") && word.endsWith(":")) {
-                                word = word.substring(1, word.length - 1);
-                                if (emojiNames.includes(word)) return msg.delete();
-                            }
-                        }
-                    });
-                }
+    if (msg.channel.type == "text") {
+        if (!msg.content.startsWith(bot.config.prefix + "banword remove")) {
+            let db = new sqlite3.Database("./database.db", err => {
+                if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
             });
-        });
+        
+            let bannedWords = [];
+        
+            db.serialize(() => {
+                db.get("SELECT * FROM banwords WHERE id=(?)", [msg.guild.id], (err, row) => {
+                    if (err) return console.log("Impossible d'accéder aux mots bannis dans la base de données : " + err.message);
+                    if (!(row === undefined || row.words === undefined)) {
+                        let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
+                        if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
+                        bannedWords = row.words.split(",");
+                        const loweredMessageArray = messageArray.map(word => word.toLowerCase());
+                        bannedWords.forEach(word => {
+                            if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete();
+                            if (emojiNames) {
+                                if (word.startsWith(":") && word.endsWith(":")) {
+                                    word = word.substring(1, word.length - 1);
+                                    if (emojiNames.includes(word)) return msg.delete();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
     }
 
     // -------------------------------------------------------------
