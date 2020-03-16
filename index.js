@@ -187,5 +187,5 @@ const updateActivity = () => {
     bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "WATCHING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
-bot.login("NDkzNDcwMDU0NDE1ODU5NzEz.XXvv1Q.xR2YOEvnq7MK1yC7kvt0jJZuJ7k");
+bot.login(bot.config.token);
 // bot.login(process.env.TOKEN);
