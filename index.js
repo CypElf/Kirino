@@ -100,7 +100,8 @@ bot.on('message', async msg => {
     // ------------------------------------------------------------- vérification de la commande spéciale guilds
 
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
-        let invites = ["I am required else it won't work"], ct = 0;
+        let invites = ["ignore me"];
+        let ct = 0;
         bot.guilds.forEach(guild => {
             guild.fetchInvites().then(guildInvites => {
                 if (Array.isArray(guildInvites.array()) && guildInvites.array().length) {
@@ -120,13 +121,27 @@ bot.on('message', async msg => {
                     invites.forEach((invite, i) => invites[i] = "- " + invite);
                     invites = invites.join("\n");
 
+                    invites = "**Invitations :**\n" + invites;
+                    let invitesArray = invites.split("\n");
                     let embed = new Discord.RichEmbed()
-                    .setTitle("Invitations :")
-                    .setDescription(invites)
-                    .setColor('#DFC900')
-                    .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
-
-                    msg.channel.send(embed);
+                        .setTitle("**Invitations :**");
+                    let first = true;
+                    invitesArray.forEach(function(line, i) {
+                        if (line != "" && line !== undefined) {
+                            if  (!first) {
+                                embed = new Discord.RichEmbed();
+                                embed.setDescription(line);
+                                if (i === invitesArray.length - 1) {
+                                    embed.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+                                }
+                            }
+                            else {
+                                first = false;
+                            }  
+                            embed.setColor('#DFC900');
+                            msg.channel.send(embed);
+                        } 
+                    });
                 }
 
             }).catch (err => {
@@ -172,5 +187,5 @@ const updateActivity = () => {
     bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "WATCHING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
-bot.login(bot.config.token);
+bot.login("NDkzNDcwMDU0NDE1ODU5NzEz.XXvv1Q.xR2YOEvnq7MK1yC7kvt0jJZuJ7k");
 // bot.login(process.env.TOKEN);
