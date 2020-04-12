@@ -7,36 +7,31 @@ module.exports = {
     usage: "{raison de l'absence}",
 
     async execute (bot, msg, args) {
-        let reason;
-        if (args) {
-            reason = args.join(' ');
-        }
-    
-        let afklist = bot.afk.get(msg.author.id);
-        let construct;
-    
-        if (!afklist) {
-            if (reason) {
-                construct = {
-                    id: msg.author.id,
-                    usertag: msg.author.username,
-                    reason: reason
-                };
+        const sqlite3 = require('sqlite3').verbose();
+        let db = new sqlite3.Database("./database.db", err => {
+            if (err) return msg.channel.send("Impossible d'accéder à la base de données : " + err.message);
+        });
+
+        db.serialize(() => {
+            let reason;
+            if (args) {
+                reason = args.join(' ');
             }
-            else {
-                construct = {
-                    id: msg.author.id,
-                    usertag: msg.author.username,
-                };
-            }
-    
-            bot.afk.set(msg.author.id, construct);
+
+            db.run("INSERT INTO afk(id,reason) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET reason=excluded.reason", [msg.author.id, reason], err => {
+                if (err) return console.log("Une erreur est survenue pendant l'ajout du profil à la base de données AFK : " + err.message);
+            });
+
+            db.close(err => {
+                if (err) return console.log("Une erreur est survenue durant la fermture de la connexion avec la base de donnée : " + err.message);
+            });
+
             if (reason) {
                 return msg.reply(`tu as bien été mis AFK pour la raison suivante : ${reason}`);
             }
             else {
                 return msg.reply(`tu as bien été mis AFK.`);
             }
-        }
+        });
     }
 };

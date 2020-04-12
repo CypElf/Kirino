@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
-// const express = require("./express.js");
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
@@ -23,8 +22,6 @@ bot.once('ready', () => {
     console.log("Bot en ligne !");
 });
 
-bot.afk = new Map();
-
 // ------------------------------------------------------------- évènement messages
 
 bot.on('message', async msg => {
@@ -38,34 +35,50 @@ bot.on('message', async msg => {
     const messageArray = msg.content.split(" ");
     let commandName = messageArray[0].toLowerCase();
     const args = messageArray.slice(bot.config.prefix.length);
+    let db = new sqlite3.Database("./database.db", err => {
+        if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
+    });
 
     // ------------------------------------------------------------- vérification de l'AFK
 
-    const mention = msg.mentions.users.first();
-    if (mention) {
-        let mentioned = bot.afk.get(mention.id);
-        if (mentioned) {
-            if (mentioned.reason) {
-                msg.channel.send(`**${mentioned.usertag}** est actuellement AFK pour la raison suivante : ${mentioned.reason}`);
-            }
+    const mentions = msg.mentions.users;
 
-            else {
-                msg.channel.send(`**${mentioned.usertag}** est actuellement AFK, et n'a pas laissé de raison pour cela.`);
-            }            
-        }
-    }
-    let afkcheck = bot.afk.get(msg.author.id);
-    if (afkcheck) {
-        return [bot.afk.delete(msg.author.id), msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete(5000))];
-    }
+    mentions.forEach(mention => {
+        db.serialize(() => {
+            db.get("SELECT * FROM afk WHERE id=(?)", [mention.id], (err, row) => {
+                if (err) return console.log("Impossible d'accéder aux profils AFK dans la base de données : " + err.message);
+                if (!(row === undefined)) {
+                    if (row.id != msg.author.id) {
+                        console.log(row.id + " "+ msg.author.id);
+                        if (row.reason) {
+                            msg.channel.send(`**${mention.username}** est actuellement AFK pour la raison suivante : ${row.reason}`);
+                        }
+                        else {
+                            msg.channel.send(`**${mention.username}** est actuellement AFK, et n'a pas laissé de raison pour cela.`);
+                        }
+                    }
+                }
+            });
+        }); 
+    });
+
+    db.serialize(() => {
+        db.get("SELECT * FROM afk WHERE id=(?)", [msg.author.id], (err, row) => {
+            if (err) return console.log("Impossible d'accéder aux profils AFK dans la base de données : " + err.message);
+            if (!(row === undefined)) {
+                db.run("DELETE FROM afk WHERE id=(?)", [msg.author.id], err => {
+                    if (err) return console.log("Une erreur est survenue durant la suppression de votre profil AFK : " + err.message);
+                });
+
+                return msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete(5000));
+            }
+        });
+    });
 
     // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
 
     if (msg.channel.type == "text") {
         if (!msg.content.startsWith(bot.config.prefix + "banword remove")) {
-            let db = new sqlite3.Database("./database.db", err => {
-                if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
-            });
         
             let bannedWords = [];
         
@@ -188,4 +201,3 @@ const updateActivity = () => {
 }
 
 bot.login(bot.config.token);
-// bot.login(process.env.TOKEN);
