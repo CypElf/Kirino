@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 4", "Pas de mentions inutiles.")
+			.addField("Règle 4", "Ne spammez et ne floodez pas.")
             .setColor('#000000');
             
             if (avdray != null) {

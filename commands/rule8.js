@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 8", "Ne pas usurper l'identité de quelqu'un en mettant la même photo de profil et / ou le même pseudo.")
+			.addField("Règle 8", "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.")
             .setColor('#000000');
             
             if (avdray != null) {

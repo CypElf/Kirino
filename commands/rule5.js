@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 5", "Le spam et le flood sont interdits.")
+			.addField("Règle 5", "Pas d'insultes, d'irrespect, de mots vulgaires, de provocation, de menaces, de contenu nsfw, etc.")
             .setColor('#000000');
             
             if (avdray != null) {

@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 11", "Pas de doubles comptes.")
+			.addField("Règle 11", "Interdictions de créer, relancer ou parler de dramas.")
             .setColor('#000000');
             
             if (avdray != null) {

@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 7", "Pas de contenu pornographique hors de <#445281835476451348>, de spoil, de contenu haineux, incitant à la haine, etc.")
+			.addField("Règle 7", "Interdiction de diffuser la moindre information personnelle sur quelqu'un sans son accord.")
             .setColor('#000000');
             
             if (avdray != null) {

@@ -10,6 +10,7 @@ module.exports = {
 		const Discord = require('discord.js');
 		
 		let data = [];
+		let dataJoined;
 		const { commands } = msg.client;
 	
 		if (!args.length) {
@@ -30,25 +31,12 @@ module.exports = {
 					}
 				}
 			});
-	
-			help_embed.addField("Administration", data.join(""));
-	
-			data = [];
-			first = true;
-			commands.forEach(command => {
-				if (command.category == "hack") {
-					if (first) {
-						data.push("`" + command.name + "`");
-						first = false;
-					}
-					else {
-						data.push(", `" + command.name + "`");
-					}
-				}
-			});
-	
-			help_embed.addField("Hack de consoles", data.join(""));
-	
+
+			dataJoined = data.join("");
+			if (dataJoined) {
+				help_embed.addField("Administration", dataJoined);
+			}
+			
 			data = [];
 			first = true;
 			commands.forEach(command => {
@@ -62,8 +50,11 @@ module.exports = {
 					}
 				}
 			});
-	
-			help_embed.addField("Autres", data.join("") + `\n\nVous pouvez faire \`${prefix}help [commande]\` pour avoir des informations sur une commande en particulier.`);
+
+			dataJoined = data.join("");
+			if (dataJoined) {
+				help_embed.addField("Autres", dataJoined + `\n\nVous pouvez faire \`${prefix}help [commande]\` pour avoir des informations sur une commande en particulier.`);
+			}
 	
 			return msg.channel.send(help_embed)
 			.catch(err => {

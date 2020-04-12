@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 1", "Vous devez parler du bon sujet dans le bon salon (exemple : pour parler du hack 3ds allez dans <#444836115292094464>).")
+			.addField("Règle 1", "Parlez du bon sujet dans le bon salon.")
             .setColor('#000000');
             
             if (avdray != null) {

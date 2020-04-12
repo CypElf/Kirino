@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 3", "La pub est strictement interdite (MP compris), sauf cas exceptionnel autorisé après demande.")
+			.addField("Règle 3", "Ne mentionnez pas des gens inutilement.")
             .setColor('#000000');
             
             if (avdray != null) {

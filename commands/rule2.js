@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 2", "Le troll est autorisé, néanmoins sachez mesurer vos actes et ne pas aller trop loin.")
+			.addField("Règle 2", "Toute forme de pub est strictement interdite, **MP compris**, sauf exception autorisée après demande.")
             .setColor('#000000');
             
             if (avdray != null) {

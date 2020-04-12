@@ -33,11 +33,13 @@ bot.on('message', async msg => {
     if (msg.author.bot) return;
     if (msg.guild.available) {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return;
+        if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("Il me manque la permission gérer les messages pour être utilisée correctement.");
     }
 
     const messageArray = msg.content.split(" ");
-    let commandName = messageArray[0].toLowerCase();
-    const args = messageArray.slice(bot.config.prefix.length);
+    const commandName = messageArray[0].toLowerCase().slice(bot.config.prefix.length);
+    const args = messageArray.slice(bot.config.prefix.length);    
+
     let db = new sqlite3.Database("./database.db", err => {
         if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
     });
@@ -108,9 +110,8 @@ bot.on('message', async msg => {
         }
     }
 
-    // -------------------------------------------------------------
-    
-    commandName = commandName.slice(bot.config.prefix.length);
+    // -------------------------------------------------------------------------------
+
     if (!msg.content.startsWith(bot.config.prefix)) return;
 
     // ------------------------------------------------------------- vérification de la commande spéciale guilds

@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 10", "Le staff se réserve le droit de sanctionner lourdement les personnes ayant une attitude jugée incorrecte et/ou nuisant au serveur.")
+			.addField("Règle 10", "Interdiction de faire des raids sur d'autres serveurs.")
             .setColor('#000000');
             
             if (avdray != null) {

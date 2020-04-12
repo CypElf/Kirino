@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.RichEmbed()
-			.addField("Règle 9", "Interdiction de diffuser des infos personnelles sur des gens sans leur accord.")
+			.addField("Règle 9", "Faites des efforts pour écrire un minimum correctement, aidez vous du correcteur orthographique si besoin.")
             .setColor('#000000');
             
             if (avdray != null) {
