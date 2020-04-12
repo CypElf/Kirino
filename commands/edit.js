@@ -19,17 +19,21 @@ module.exports = {
 		if (msg.author.id != config.ownerID && msg.author.id !== msg.guild.ownerID) {
 			return;
 		}
-		
+
 		msg.channel.fetchMessage(ID)
 			.then(msg2 => {
 				if (!msg2.editable) {
-					msg.channel.send("Je ne peux pas modifier ce message ! <:warning:568037672770338816>");
+					return msg.channel.send("Je ne peux pas modifier ce message ! <:warning:568037672770338816>");
 				}
-				msg2.edit(editMsg.join(" "))
+				const replacementText = editMsg.join(" ");
+				if (!replacementText) return msg.channel.send("Veuillez préciser quelque chose à mettre dans le message ! <:warning:568037672770338816>")
+				msg2.edit(replacementText)
 					.catch();
+
+				msg.delete();
 			})
-			.catch();
-		
-		msg.delete();
+			.catch(err => {
+				return msg.channel.send("L'ID du message fourni est incorrect ! <:warning:568037672770338816>");
+			});
 	}
 };

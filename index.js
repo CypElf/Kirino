@@ -31,6 +31,9 @@ bot.on('message', async msg => {
     // else return;
 
     if (msg.author.bot) return;
+    if (msg.guild.available) {
+        if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return;
+    }
 
     const messageArray = msg.content.split(" ");
     let commandName = messageArray[0].toLowerCase();
