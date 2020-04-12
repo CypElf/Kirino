@@ -80,7 +80,7 @@ module.exports = {
             embed.addField("Dans les types de retour", contentReturned);
         }
 
-        if (contentNames === "" && contentIsArg === "" && contentReturned === "") {
+        if (contentNames === "" && contentIsArgs === "" && contentReturned === "") {
             embed.addField("Aucuns résultats", "Rien ne correspondant à votre recherche n'a été trouvé.")
         }
         
