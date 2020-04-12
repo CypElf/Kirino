@@ -15,8 +15,6 @@ for (const file of commandFiles) {
 	bot.commands.set(command.name, command);
 }
 
-let guildsCount;
-
 bot.once('ready', () => {
     updateActivity();
     console.log("Bot en ligne !");
@@ -31,7 +29,7 @@ bot.on('message', async msg => {
     // else return;
 
     if (msg.author.bot) return;
-    if (msg.guild.available) {
+    if (msg.channel.type === "text") {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return;
         if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("Il me manque la permission gérer les messages pour être utilisée correctement.");
     }
@@ -177,11 +175,7 @@ bot.on('message', async msg => {
     }
 
     if (command.args && !args.length) {
-        let helpEmbed = new Discord.RichEmbed()
-            .setColor('#DFC900')
-            .setTitle("**Utilisation**")
-            .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
-            return command.help(bot, msg, helpEmbed);
+        return bot.commands.get("help").execute(bot, msg, [].concat(commandName));
     }
 
     try {
@@ -201,7 +195,7 @@ bot.on("guildDelete", () => updateActivity());
 
 const updateActivity = () => {
     guildsCount = bot.guilds.size;
-    bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "WATCHING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
+    bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
 bot.login(bot.config.token);

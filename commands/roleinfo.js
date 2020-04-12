@@ -8,13 +8,6 @@ module.exports = {
     usage: '[rôle]',
     aliases: ["ri"],
     category: "others",
-
-    async help (bot, msg, helpEmbed) {
-        helpEmbed
-            .setDescription("Cette commande permet d'afficher des informations sur un rôle.")
-            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + bot.config.prefix + this.name + " " + this.usage + "`");
-        msg.channel.send(helpEmbed);
-    },
     
     async execute(bot, msg, argsArray) {
         let role = msg.mentions.roles.first();

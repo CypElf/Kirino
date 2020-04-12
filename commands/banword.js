@@ -7,13 +7,6 @@ module.exports = {
     modes: ["add", "remove", "list"],
     category: "admin",
 
-    async help (bot, msg, helpEmbed) {
-        helpEmbed
-            .setDescription("Cette commande permet de bloquer certains mots du serveur.")
-            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + bot.config.prefix + this.name + " " + this.usage + "`\nLes modes disponibles sont :\n- `" + this.modes.join("`,\n- `") + "`.");
-        msg.channel.send(helpEmbed);
-    },
-
     async execute (bot, msg, [mode, ...mots]) {
         if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("Vous n'avez pas les permissions suffisantes pour utiliser ce mode. <:warning:568037672770338816>");
 

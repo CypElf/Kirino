@@ -6,13 +6,6 @@ module.exports = {
     args: true,
     category: "admin",
     usage: '[utilisateur] {raison}',
-    
-    async help (bot, msg, helpEmbed) {
-        helpEmbed
-            .setDescription("Cette commande permet de kick un membre.")
-            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + prefix + this.name + " " + this.usage + "`");
-            msg.channel.send(helpEmbed);
-    },
 
     async execute (bot, msg, [userToBan, ...reason]) {
         const canKick = msg.member.hasPermission('KICK_MEMBERS');

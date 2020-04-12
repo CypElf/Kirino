@@ -11,7 +11,6 @@ module.exports = {
 		
 		let data = [];
 		let dataJoined;
-		const { commands } = msg.client;
 	
 		if (!args.length) {
 			
@@ -20,7 +19,7 @@ module.exports = {
 				.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
 	
 			let first = true;
-			commands.forEach(command => {
+			bot.commands.forEach(command => {
 				if (command.category == "admin") {
 					if (first) {
 						data.push("`" + command.name + "`");
@@ -39,7 +38,7 @@ module.exports = {
 			
 			data = [];
 			first = true;
-			commands.forEach(command => {
+			bot.commands.forEach(command => {
 				if (command.category == "others") {
 					if (first) {
 						data.push("`" + command.name + "`");
@@ -62,7 +61,7 @@ module.exports = {
 			});
 		}
 
-		const command = commands.get(args[0].toLowerCase()) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
+		const command = bot.commands.get(args[0].toLowerCase()) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
     	if (!command) return msg.channel.send("Cette commande n'existe pas.");
 	
 		if (command.description) data.push(`**Description** : ${command.description}`);

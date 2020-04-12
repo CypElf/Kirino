@@ -7,13 +7,6 @@ module.exports = {
 	args: true,
 	category: "admin",
 	usage: "[nombre de messages à supprimer]",
-
-	async help(bot, msg, helpEmbed) {
-		helpEmbed
-			.setDescription("Cette commande sert à supprimer le nombre de messages voulus.")
-			.addField("Procédure", "Cette commande s'utilise comme ceci : `" + config.prefix + this.name + " " + this.usage + "`");
-			msg.channel.send(helpEmbed);
-	},
 	
 	async execute(bot, msg, args) {
 		if (!msg.member.hasPermission('MANAGE_MESSAGES') && msg.author.id != config.ownerID) {

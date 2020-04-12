@@ -7,13 +7,6 @@ module.exports = {
     args: true,
     category: "others",
     usage: '[message]',
-
-    async help(bot, msg, helpEmbed) {
-        helpEmbed
-            .setDescription("Cette commande permet de me faire dire quelque chose.")
-            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + config.prefix + this.name + " " + this.usage + "`\nSeul le possesseur d'un serveur peut utiliser cette commande.");
-        msg.channel.send(helpEmbed);
-    },
     
     async execute(bot, msg, args) {
 		if(msg.author.id !== config.ownerID && msg.author.id !== msg.guild.ownerID) {

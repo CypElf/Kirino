@@ -7,13 +7,6 @@ module.exports = {
     category: "admin",
     usage: '[utilisateur] {raison}',
 
-    async help (bot, msg, helpEmbed) {
-        helpEmbed
-            .setDescription("Cette commande permet de bannir un membre.")
-            .addField("Procédure", "Cette commande s'utilise comme ceci : `" + prefix + this.name + " " + this.usage + "`");
-        msg.channel.send(helpEmbed);
-    },
-
     async execute (bot, msg, [userToBan, ...reason]) {
         if (!msg.member.hasPermission('BAN_MEMBERS')) {
             return msg.channel.send("Vous n'avez pas les permissions suffisantes pour bannir un membre. <:warning:568037672770338816>")

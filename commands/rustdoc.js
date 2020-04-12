@@ -1,17 +1,10 @@
 module.exports = {
 	name: 'rustdoc',
-    description: "Permet de récupérer les résultats d'une recherche dans la documentation de Rust.",
+    description: "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.42.0",
     guildOnly: false,
     args: true,
     usage: "[mot à rechercher]",
     category: "others",
-
-    async help(bot, msg, helpEmbed) {
-		helpEmbed
-			.setDescription("Cette commande permet de faire une recherche dans la documentation de Rust.")
-			.addField("Procédure", "Cette commande s'utilise comme ceci : `" + bot.config.prefix + this.name + " " + this.usage + "`");
-		msg.channel.send(helpEmbed);
-	},
 
     async execute (bot, msg, args) {
         const Discord = require('discord.js');
