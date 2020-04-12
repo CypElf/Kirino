@@ -9,7 +9,7 @@ module.exports = {
     async execute (bot, msg, args) {
         const sqlite3 = require('sqlite3').verbose();
         let db = new sqlite3.Database("./database.db", err => {
-            if (err) return msg.channel.send("Impossible d'accéder à la base de données : " + err.message);
+            if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
         });
 
         db.serialize(() => {
@@ -27,10 +27,10 @@ module.exports = {
             });
 
             if (reason) {
-                return msg.reply(`tu as bien été mis AFK pour la raison suivante : ${reason}`);
+                return msg.reply(`tu as bien été mis AFK pour la raison suivante <:kirinoglad:698923046819594351> : ${reason}`);
             }
             else {
-                return msg.reply(`tu as bien été mis AFK.`);
+                return msg.reply(`tu as bien été mis AFK. <:kirinoglad:698923046819594351>`);
             }
         });
     }

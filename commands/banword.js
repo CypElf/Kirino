@@ -4,7 +4,6 @@ module.exports = {
     guildOnly: true,
     args: true,
     usage: "[mode] {mot1} {mot2}... {motN}",
-    modes: ["add", "remove", "list"],
     category: "admin",
 
     async execute (bot, msg, [mode, ...mots]) {

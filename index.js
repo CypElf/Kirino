@@ -20,7 +20,7 @@ bot.once('ready', () => {
     console.log("Bot en ligne !");
 });
 
-// ------------------------------------------------------------- évènement messages
+// -------------------------------------------------------------
 
 bot.on('message', async msg => {
 
@@ -81,7 +81,7 @@ bot.on('message', async msg => {
     // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
 
     if (msg.channel.type == "text") {
-        if (!msg.content.startsWith(bot.config.prefix + "banword remove")) {
+        if (!msg.content.startsWith(bot.config.prefix + "banword remove") && !msg.content.startsWith(bot.config.prefix + "banword add")) {
         
             let bannedWords = [];
         
@@ -115,52 +115,43 @@ bot.on('message', async msg => {
     // ------------------------------------------------------------- vérification de la commande spéciale guilds
 
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
-        let invites = ["ignore me"];
-        let ct = 0;
-        bot.guilds.forEach(guild => {
+        let embedHeader = new Discord.RichEmbed()
+            .setDescription("**Invitations :**")
+            .setColor("#DFC900");
+        msg.channel.send(embedHeader);
+        bot.guilds.array().forEach((guild, i) => {
             guild.fetchInvites().then(guildInvites => {
-                if (Array.isArray(guildInvites.array()) && guildInvites.array().length) {
-                    invites[invites.length + 1] = (guild + " : `" + guildInvites.array().join(" / ") + "`");
-                }
+                let embedInvitations = new Discord.RichEmbed();
 
+                let invitesArray = guildInvites.array().map(guildInvite => {
+                    return "https://discord.gg/"  + guildInvite.code;
+                 });
+
+                let invites;
+
+                if(invitesArray.length === 0) invites = "aucune invitation disponible sur ce serveur";
                 else {
-                    invites[invites.length + 1] = (guild + " : `aucune invitation disponible sur ce serveur`");
-                }                
-                ct++;
-                if(ct >= bot.guilds.size) {
-                    invites.forEach((invite, i) => {
-                        if (invite == undefined) invites.splice(i, 1);
-                    }); 
-
-                    invites.shift();
-                    invites.forEach((invite, i) => invites[i] = "- " + invite);
-                    invites = invites.join("\n");
-
-                    invites = "**Invitations :**\n" + invites;
-                    let invitesArray = invites.split("\n");
-                    let embed = new Discord.RichEmbed()
-                        .setTitle("**Invitations :**");
-                    let first = true;
-                    invitesArray.forEach(function(line, i) {
-                        if (line != "" && line !== undefined) {
-                            if  (!first) {
-                                embed = new Discord.RichEmbed();
-                                embed.setDescription(line);
-                                if (i === invitesArray.length - 1) {
-                                    embed.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
-                                }
-                            }
-                            else {
-                                first = false;
-                            }  
-                            embed.setColor('#DFC900');
-                            msg.channel.send(embed);
-                        } 
-                    });
+                    invites = "`" + invitesArray.join(" / ") + "`";
                 }
 
+                embedInvitations.setDescription(`- ${guild.name} : ${invites}`)
+                    .setColor("#DFC900");
+
+                if (i === bot.guilds.array().length - 1) {
+                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+                }
+
+                msg.channel.send(embedInvitations);
             }).catch (err => {
-                ct++;
+                let embedError = new Discord.RichEmbed();
+                embedError.setDescription(`- ${guild.name} : permissions manquantes pour accéder aux invitations de ce serveur`)
+                    .setColor("#DFC900");
+
+
+                if (i === bot.guilds.length - 1) {
+                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+                }
+                msg.channel.send(embedError);
             });
         });
     }
@@ -171,7 +162,7 @@ bot.on('message', async msg => {
     if (!command) return;
 
     if (command.guildOnly && msg.channel.type !== 'text') {
-        return msg.reply('Cette commande n\'est pas faite pour être utilisée en messages privés. <:warning:568037672770338816>');
+        return msg.reply("Cette commande n'est pas faite pour être utilisée en messages privés. <:kirinopout:698923065773522944>");
     }
 
     if (command.args && !args.length) {
@@ -198,4 +189,4 @@ const updateActivity = () => {
     bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
-bot.login(bot.config.token);
+bot.login(bot.config.token).catch(err => console.log(err.message));

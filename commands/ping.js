@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'ping',
-    description: 'Affiche "pong !". Utile pour tester si je marche correctement.',
+    description: "Affiche mon ping en ms.",
     guildOnly: false,
 	args: false,
 	category: "others",
