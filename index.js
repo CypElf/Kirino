@@ -17,7 +17,7 @@ for (const file of commandFiles) {
 
 bot.once('ready', () => {
     updateActivity();
-    console.log("Bot en ligne !");
+    console.log("Connexion à discord établie.");
 });
 
 // -------------------------------------------------------------
