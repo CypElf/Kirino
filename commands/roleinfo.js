@@ -18,7 +18,7 @@ module.exports = {
                 r += element + " ";
             });
             r = r.substring(0, r.length - 1);
-            role = msg.guild.roles.array().find((currentRole) => {
+            role = msg.guild.roles.cache.array().find((currentRole) => {
                 return currentRole.name.toLowerCase() === r.toLowerCase();
             });
             if (role === undefined) {
@@ -38,15 +38,14 @@ module.exports = {
         creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`;
         
         const porteurs = role.members.array().length;
-        const membresServeur = msg.guild.members.array().length;
+        const membresServeur = msg.guild.members.cache.array().length;
         const percentage = (porteurs / membresServeur * 100).toPrecision(3);
+        let permsArray = role.permissions.toArray();
         let perms = "";
+        permsArray.forEach(perm => {
+            perms += "`" + perm.toLowerCase().replace(/_/g, " ") + "`, ";
+        })
 
-        for (let flag in Discord.Permissions.FLAGS) {
-            if (role.hasPermission(flag)) {
-                perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, ";
-            }
-        }
         perms = perms.substring(0, perms.length - 2);
 
         let informations = new Discord.MessageEmbed()
@@ -56,12 +55,12 @@ module.exports = {
         .addField("Couleur", role.hexColor.toUpperCase(), true)
         .addField("Mentionnable", role.mentionable ? "oui" : "non", true)
         .addField("Catégorie séparée", role.hoist ? "oui" : "non", true)
-        .addField("Position", role.calculatedPosition, true)
+        .addField("Position", role.position, true)
         .addField("Géré par l'extérieur", role.managed ? "oui" : "non", true)
-        .addField("Utilisateurs avec ce rôle", porteurs + " (" + percentage + "%)")
+        .addField("Utilisateurs avec ce rôle", porteurs + " (" + percentage + "%)", true)
         .addField("Date de création du rôle", creationDate, true)
         .addField("Permissions", perms !== "" ? perms : "`Ce rôle n'a aucune permission`")
-        .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+        .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
         msg.channel.send(informations);
     }
 };

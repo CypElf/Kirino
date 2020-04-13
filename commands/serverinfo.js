@@ -32,7 +32,7 @@ module.exports = {
         });
         let roles = arrayRoles.join(", ");
 
-        if (nbRoles === 1) {
+        if (nbRoles === 0 || nbRoles === 1) {
             roles += " (" + nbRoles + " rôle)";
         }
         else {
@@ -63,7 +63,7 @@ module.exports = {
         .addField("Bots", bots, true)
         .addField("Niveau de boost", `Niveau ${msg.guild.premiumTier}`, true)
         .addField("Region", msg.guild.region, true)
-        .addField("Emojis", emojis)
+        .addField("Emojis", emojis, true)
         .addField("Rôles", roles)
         .addField("Salons", nbSalonsTxt + " textuels, " + nbSalonsVocaux + " vocaux", true)
         .addField("Date de création du serveur", creationDate, true)

@@ -64,11 +64,23 @@ module.exports = {
         }
         perms = perms.substring(0, perms.length - 2);
         
-        const arrayRoles = member.roles;
-        let roles = "";
-        arrayRoles.forEach((role) => {
-            roles += role + " ";
+        const arrayTotalRoles = member.roles.cache;
+        let arrayRoles = [];
+        let nbRoles = 0;
+        arrayTotalRoles.forEach((role) => {
+            if (role.name !== "@everyone") {
+                arrayRoles.push(role.name);
+                nbRoles++;
+            }
         });
+        let roles = arrayRoles.join(", ");
+        if (nbRoles === 0 || nbRoles === 1) {
+            roles += " (" + nbRoles + " rôle)";
+        }
+        else {
+            roles += " (" + nbRoles + " rôles)";
+        }
+
         let nickname = member.nickname;
         if (nickname === null) {
             nickname = "Aucun"
@@ -95,7 +107,7 @@ module.exports = {
         }
 
         let informations = new Discord.MessageEmbed()
-        .setAuthor(member.user.tag, member.user.avatarURL)
+        .setAuthor(member.user.tag, member.user.displayAvatarURL())
         .setColor('#000000')
         .addField("ID", member.user.id, true)
         .addField("Jeu", presence, true)
@@ -105,8 +117,8 @@ module.exports = {
         .addField("Booster", premiumSince)
         .addField("Rôles", roles, true)
         .addField("Permissions", perms)
-        .setThumbnail(member.user.avatarURL)
-        .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+        .setThumbnail(member.user.displayAvatarURL())
+        .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
         msg.channel.send(informations);
     }
 };
