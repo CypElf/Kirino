@@ -35,11 +35,11 @@ module.exports = {
             return msg.channel.send("Tu ne peux pas te kick toi même ! <:kirinopff:698922942268047391>")
         }
     
-        if (!(msg.member.highestRole.comparePositionTo(kickMember.highestRole) > 0)) {
+        if (msg.member.roles.highest.comparePositionTo(kickMember.roles.highest) < 0) {
             return msg.channel.send("Vous ne pouvez pas kick ce membre. <:kirinopff:698922942268047391>");
         }
 
-        msg.guild.members.kick(banMember, { reason: reason.join(" ") + " (kick par " + msg.author.tag + ")" })
+        kickMember.kick({ reason: reason.join(" ") + " (kick par " + msg.author.tag + ")" })
             .then(member => {
                 msg.channel.send(`${member.user.username} a été kick du serveur ! <:boot:568041855523094549>`);
                 msg.delete();

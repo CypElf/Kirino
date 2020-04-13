@@ -34,11 +34,11 @@ module.exports = {
             return msg.channel.send("Tu ne peux pas te bannir toi même ! <:kirinopff:698922942268047391>")
         }
     
-        if (!(msg.member.highestRole.comparePositionTo(banMember.highestRole) > 0)) {
+        if (msg.member.roles.highest.comparePositionTo(banMember.roles.highest) < 0) {
             return msg.channel.send("Vous ne pouvez pas bannir ce membre. <:kirinopff:698922942268047391>");
         }
     
-        msg.guild.members.ban(banMember, { reason: reason.join(" ") + " (banni par " + msg.author.tag + ")" })
+        banMember.ban({ reason: reason.join(" ") + " (banni par " + msg.author.tag + ")" })
             .then(member => {
                 msg.channel.send(`${member.user.username} a été banni du serveur ! <:hammer:568068459485855752>`);
                 msg.delete();
