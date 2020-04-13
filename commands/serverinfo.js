@@ -63,9 +63,27 @@ module.exports = {
             roles += role + " ";
             nbRoles++;
         });
+
+        if (nbRoles === 1) {
+            roles += " (" + nbRoles + " rôle)";
+        }
+        else {
+            roles += " (" + nbRoles + " rôles)";
+        }
+
         const salons = msg.guild.channels;
         const nbSalonsTxt = salons.filter(salon => salon.type == "text").size;
         const nbSalonsVocaux = salons.filter(salon => salon.type == "voice").size;
+        let emojis = msg.guild.emojis.array();
+        const emojisCount = emojis.length;
+        emojis = emojis.join(", ");
+        if (emojis.length === 0) emojis = "Aucun";
+        if (emojisCount === 0 || emojisCount === 1) {
+            emojis += " (" + emojisCount + " émoji)";
+        }
+        else {
+            emojis += " (" + emojisCount + " émojis)";
+        }
 
         let informations = new Discord.RichEmbed()
         .setAuthor(msg.guild.name, msg.guild.owner.user.avatarURL)
@@ -75,10 +93,10 @@ module.exports = {
         .addField("Membres", msg.guild.memberCount, true)
         .addField("Humains", humains, true)
         .addField("Bots", bots, true)
-        .addField("Liste des rôles", roles)
-        .addField("Rôles", nbRoles, true)
+        .addField("Emojis", emojis)
+        .addField("Rôles", roles)
         .addField("Salons", nbSalonsTxt + " textuels, " + nbSalonsVocaux + " vocaux", true)
-        .addField("Date de création du serveur", "**" + creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + "** à **" + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + "** UTC", true)
+        .addField("Date de création du serveur", creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + " à " + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + " UTC", true)
         .setThumbnail(msg.guild.iconURL)
         .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
         msg.channel.send(informations);
