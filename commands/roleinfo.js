@@ -27,52 +27,16 @@ module.exports = {
         }
 
         // ------------------------------------------ //
+
+        let creationDate = role.createdAt;
+        const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0");
+        const creationDay = String(creationDate.getDate()).padStart(2, "0");
+        const creationYear = creationDate.getFullYear();
+        const creationHour = String(creationDate.getHours()).padStart(2, "0");
+        const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0");
+        const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0");
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`;
         
-        const creationDate = role.createdAt;
-
-        // mois de création du rôle
-        const creationMonth = creationDate.getMonth() + 1;
-        let creationMonthZ = "";
-        if (creationMonth < 10) {
-            creationMonthZ += "0";
-        }
-        creationMonthZ += creationMonth;
-
-        // jour de création du rôle
-        const creationDay = creationDate.getDate();
-        let creationDayZ = "";
-        if (creationDay < 10) {
-            creationDayZ += "0";
-        }
-        creationDayZ += creationDay;
-
-        // heure de création du rôle
-        const creationHour = creationDate.getHours();
-        let creationHourZ = "";
-        if (creationHour < 10) {
-            creationHourZ += "0";
-        }
-        creationHourZ += creationHour;
-
-        // minute de création du rôle
-        const creationMin = creationDate.getMinutes();
-        let creationMinZ = "";
-        if (creationMin < 10) {
-            creationMinZ += "0";
-        }
-        creationMinZ += creationMin;
-
-        // seconde de création du rôle
-        const creationSec = creationDate.getSeconds();
-        let creationSecZ = "";
-        if (creationSec < 10) {
-            creationSecZ += "0";
-        }
-        creationSecZ += creationSec;
-
-        // Le Z à la fin des noms de variables correspond à la version chaine de caractère qui a un zéro devant si le nombre est < 10
-        // ------------------------------------------------------------------------------------------------------------------------ //
-
         const porteurs = role.members.array().length;
         const membresServeur = msg.guild.members.array().length;
         const percentage = (porteurs / membresServeur * 100).toPrecision(3);
@@ -95,7 +59,7 @@ module.exports = {
         .addField("Position", role.calculatedPosition, true)
         .addField("Géré par l'extérieur", role.managed ? "oui" : "non", true)
         .addField("Utilisateurs avec ce rôle", porteurs + " (" + percentage + "%)")
-        .addField("Date de création du rôle", "**" + creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + "** à **" + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + "** UTC", true)
+        .addField("Date de création du rôle", creationDate, true)
         .addField("Permissions", perms !== "" ? perms : "`Ce rôle n'a aucune permission`")
         .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
         msg.channel.send(informations);
