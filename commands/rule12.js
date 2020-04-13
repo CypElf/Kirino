@@ -10,7 +10,7 @@ module.exports = {
         const Discord = require('discord.js');
         const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.MessageEmbed()
-			.addField("Règle 12", "Tout contenu illégal étant concrètement nuisible est interdit.")
+			.addField("Règle 12", "Tout contenu illégal est interdit.")
             .setColor('#000000');
             
             if (avdray != null) {

@@ -18,7 +18,7 @@ module.exports = {
         msg.channel.send(text)
             .then(() => {
                 if (msg.channel.type == 'text') {
-                    msg.delete({ timeout: 4 })
+                    msg.delete()
                         .catch()
                 }
             })
