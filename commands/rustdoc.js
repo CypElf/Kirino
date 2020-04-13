@@ -10,8 +10,8 @@ module.exports = {
         const Discord = require('discord.js');
         const rustDocResearcher = require('./rustdoc_logic/rustdoc_researcher');
 
-        const keyword = args[0];
-        const results = rustDocResearcher(keyword);
+        const keywords = args.join(" ");
+        const results = rustDocResearcher(keywords);
         
         let counter = 0;
         let contentNames = "";
@@ -65,7 +65,7 @@ module.exports = {
         let embed = new Discord.RichEmbed()
             .setTitle("Résultats")
 			.setColor('#353535')
-			.setThumbnail("https://doc.rust-lang.org/rust-logo1.40.0.png")
+			.setThumbnail("https://doc.rust-lang.org/rust-logo1.42.0.png")
             .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
 
         if (contentNames !== "") {
