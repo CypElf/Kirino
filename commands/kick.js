@@ -19,7 +19,7 @@ module.exports = {
     
         let kickMember = msg.mentions.members.first();
         if (!kickMember) {
-            kickMember = msg.guild.members.array().find((currentUser) => {
+            kickMember = msg.guild.members.cache.array().find((currentUser) => {
                 return currentUser.user.username.toLowerCase() === userToBan.toLowerCase();
             });
             if (kickMember === undefined) {

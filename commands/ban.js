@@ -18,7 +18,7 @@ module.exports = {
     
         let banMember = msg.mentions.members.first();
         if (!banMember) {
-            banMember = msg.guild.members.array().find((currentUser) => {
+            banMember = msg.guild.members.cache.array().find((currentUser) => {
                 return currentUser.user.username.toLowerCase() === userToBan.toLowerCase();
             });
             if (banMember === undefined) {

@@ -8,13 +8,13 @@ module.exports = {
 	
     async execute(bot, msg) {
         const Discord = require('discord.js');
-        const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
+        const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
         const emb = new Discord.MessageEmbed()
 			.addField("Règle 8", "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.")
             .setColor('#000000');
             
             if (avdray != null) {
-                emb.setFooter("Règlement de " + avdray.name, avdray.iconURL);
+                emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
             }
 			
 		msg.channel.send(emb);

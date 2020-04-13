@@ -161,7 +161,7 @@ bot.on('message', async msg => {
     const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
 
-    if (command.guildOnly && msg.channel.type !== 'text') {
+    if (command.guildOnly && msg.channel.type !== "text") {
         return msg.reply("Cette commande n'est pas faite pour être utilisée en messages privés. <:kirinopout:698923065773522944>");
     }
 
