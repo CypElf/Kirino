@@ -26,7 +26,7 @@ module.exports = {
         const ID = args[0];
         const emoji = args[1];
 
-        msg.channel.fetchMessage(ID)
+        msg.channel.messages.fetch(ID)
 			.then(msg2 => {
                 msg2.react(emoji)
                     .then(() => {

@@ -13,7 +13,7 @@ module.exports = {
 			return;
 		}
 
-		msg.channel.fetchMessage(ID)
+		msg.channel.messages.fetch(ID)
 			.then(msg2 => {
 				if (!msg2.editable) {
 					return msg.channel.send("Je ne peux pas modifier ce message ! <:kirinopff:698922942268047391>");

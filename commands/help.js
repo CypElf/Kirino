@@ -16,7 +16,7 @@ module.exports = {
 			
 			let help_embed = new Discord.MessageEmbed()
 				.setColor('#DFC900')
-				.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+				.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
 	
 			let first = true;
 			bot.commands.forEach(command => {
@@ -82,7 +82,7 @@ module.exports = {
 		const help_embed = new Discord.MessageEmbed()
 			.setColor('#DFC900')
 			.addField("**Commande : " + command.name + "**", texte)
-			.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+			.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
 		msg.channel.send(help_embed);
 	}
 };

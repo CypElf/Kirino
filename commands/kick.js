@@ -38,10 +38,11 @@ module.exports = {
         if (!(msg.member.highestRole.comparePositionTo(kickMember.highestRole) > 0)) {
             return msg.channel.send("Vous ne pouvez pas kick ce membre. <:kirinopff:698922942268047391>");
         }
-    
-        kickMember.kick(reason.join(" ") + " (kick par " + msg.author.tag + ")").then(member => {
-            msg.channel.send(`${member.user.username} a été kick du serveur ! <:boot:568041855523094549>`);
-            msg.delete();
-        });
+
+        msg.guild.members.kick(banMember, { reason: reason.join(" ") + " (kick par " + msg.author.tag + ")" })
+            .then(member => {
+                msg.channel.send(`${member.user.username} a été kick du serveur ! <:boot:568041855523094549>`);
+                msg.delete();
+            });
     }
 };

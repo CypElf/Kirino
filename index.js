@@ -73,7 +73,7 @@ bot.on('message', async msg => {
                     if (err) return console.log("Une erreur est survenue durant la suppression de votre profil AFK : " + err.message);
                 });
 
-                return msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete(5000));
+                return msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete({ timeout: 5000 }));
             }
         });
     });
@@ -119,7 +119,7 @@ bot.on('message', async msg => {
             .setDescription("**Invitations :**")
             .setColor("#DFC900");
         msg.channel.send(embedHeader);
-        bot.guilds.array().forEach((guild, i) => {
+        bot.guilds.cache.array().forEach((guild, i) => {
             guild.fetchInvites().then(guildInvites => {
                 let embedInvitations = new Discord.MessageEmbed();
 
@@ -137,8 +137,8 @@ bot.on('message', async msg => {
                 embedInvitations.setDescription(`- ${guild.name} : ${invites}`)
                     .setColor("#DFC900");
 
-                if (i === bot.guilds.array().length - 1) {
-                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+                if (i === bot.guilds.cache.array().length - 1) {
+                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
                 }
 
                 msg.channel.send(embedInvitations);
@@ -149,7 +149,7 @@ bot.on('message', async msg => {
 
 
                 if (i === bot.guilds.length - 1) {
-                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
                 }
                 msg.channel.send(embedError);
             });
@@ -185,7 +185,7 @@ bot.on("guildDelete", () => updateActivity());
 // ------------------------------------------------------------- fonction pour mettre à jour le rich presence en fonction du nombre de serveurs sur lequel le bot est
 
 const updateActivity = () => {
-    guildsCount = bot.guilds.size;
+    guildsCount = bot.guilds.cache.size;
     bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
