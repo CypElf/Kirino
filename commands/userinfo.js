@@ -36,94 +36,24 @@ module.exports = {
             }
         }
         
-        const creationDate = member.user.createdAt;
+        let creationDate = member.user.createdAt;
+        const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0");
+        const creationDay = String(creationDate.getDate()).padStart(2, "0");
+        const creationYear = creationDate.getFullYear();
+        const creationHour = String(creationDate.getHours()).padStart(2, "0");
+        const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0");
+        const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0");
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`;
 
-        // mois de création du compte
-        const creationMonth = creationDate.getMonth() + 1;
-        let creationMonthZ = "";
-        if (creationMonth < 10) {
-            creationMonthZ += "0";
-        }
-        creationMonthZ += creationMonth;
 
-        // jour de création du compte
-        const creationDay = creationDate.getDate();
-        let creationDayZ = "";
-        if (creationDay < 10) {
-            creationDayZ += "0";
-        }
-        creationDayZ += creationDay;
-
-        // heure de création du compte
-        const creationHour = creationDate.getHours();
-        let creationHourZ = "";
-        if (creationHour < 10) {
-            creationHourZ += "0";
-        }
-        creationHourZ += creationHour;
-
-        // minute de création du compte
-        const creationMin = creationDate.getMinutes();
-        let creationMinZ = "";
-        if (creationMin < 10) {
-            creationMinZ += "0";
-        }
-        creationMinZ += creationMin;
-
-        // seconde de création du compte
-        const creationSec = creationDate.getSeconds();
-        let creationSecZ = "";
-        if (creationSec < 10) {
-            creationSecZ += "0";
-        }
-        creationSecZ += creationSec;
-
-        // -------------------------------------- //
-
-        const joinedAt = member.joinedAt;
-
-        // mois d'arrivée
-        const joinedMonth = joinedAt.getMonth() + 1;
-        let joinedMonthZ = "";
-        if (joinedMonth < 10) {
-            joinedMonthZ += "0";
-        }
-        joinedMonthZ += joinedMonth;
-
-        // jour d'arrivée
-        const joinedDay = joinedAt.getDate();
-        let joinedDayZ = "";
-        if (joinedDay < 10) {
-            joinedDayZ += "0";
-        }
-        joinedDayZ += joinedDay;
-
-        // heure d'arrivée
-        const joinedHour = joinedAt.getHours();
-        let joinedHourZ = "";
-        if (joinedHour < 10) {
-            joinedHourZ += "0";
-        }
-        joinedHourZ += joinedHour;
-
-        // minute d'arrivée
-        const joinedMin = joinedAt.getMinutes();
-        let joinedMinZ = "";
-        if (joinedMin < 10) {
-            joinedMinZ += "0";
-        }
-        joinedMinZ += joinedMin;
-
-        // seconde d'arrivée
-        const joinedSec = joinedAt.getSeconds();
-        let joinedSecZ = "";
-        if (joinedSec < 10) {
-            joinedSecZ += "0";
-        }
-        joinedSecZ += joinedSec;
-
-        // Le Z à la fin des noms de variables correspond à la version chaine de caractère qui a un zéro devant si le nombre est < 10
-        // ------------------------------------------------------------------------------------------------------------------------ //
+        let joinedAt = member.joinedAt;
+        const joinedAtMonth = String(joinedAt.getMonth() + 1).padStart(2, "0");
+        const joinedAtDay = String(joinedAt.getDate()).padStart(2, "0");
+        const joinedAtYear = joinedAt.getFullYear();
+        const joinedAtHour = String(joinedAt.getHours()).padStart(2, "0");
+        const joinedAtMinutes = String(joinedAt.getMinutes()).padStart(2, "0");
+        const joinedAtSeconds = String(joinedAt.getSeconds()).padStart(2, "0");
+        joinedAt = `${joinedAtDay}/${joinedAtMonth}/${joinedAtYear} à ${joinedAtHour}:${joinedAtMinutes}:${joinedAtSeconds}`;
 
         let perms = "";
 
@@ -150,6 +80,19 @@ module.exports = {
         catch(err) {
             presence = "Aucun";
         }
+        let premiumSince = member.premiumSince;
+        if (premiumSince) {
+            const premiumSinceMonth = String(premiumSince.getMonth() + 1).padStart(2, "0");
+            const premiumSinceDay = String(premiumSince.getDate()).padStart(2, "0");
+            const premiumSinceYear = premiumSince.getFullYear();
+            const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0");
+            const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0");
+            const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0");
+            premiumSince = `Oui, depuis le ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`;
+        }
+        else {
+            premiumSince = "Non";
+        }
 
         let informations = new Discord.RichEmbed()
         .setAuthor(member.user.tag, member.user.avatarURL)
@@ -157,8 +100,9 @@ module.exports = {
         .addField("ID", member.user.id, true)
         .addField("Jeu", presence, true)
         .addField("Nickname", nickname, true)
-        .addField("Date d'arrivée sur le serveur", "**" + joinedDayZ + "/" + joinedMonthZ + "/" + joinedAt.getFullYear() + "** à **" + joinedHourZ + ":" + joinedMinZ + ":" + joinedSecZ + "** UTC", true)
-        .addField("Date de création du compte", "**" + creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + "** à **" + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + "** UTC", true)
+        .addField("Date d'arrivée sur le serveur", joinedAt, true)
+        .addField("Date de création du compte", creationDate, true)
+        .addField("Booster", premiumSince)
         .addField("Rôles", roles, true)
         .addField("Permissions", perms)
         .setThumbnail(member.user.avatarURL)

@@ -8,50 +8,15 @@ module.exports = {
     
     async execute(bot, msg) {
         const Discord = require('discord.js');
-        const creationDate = msg.guild.createdAt;
 
-        // mois
-        const creationMonth = creationDate.getMonth() + 1;
-        let creationMonthZ = "";
-        if (creationMonth < 10) {
-            creationMonthZ += "0";
-        }
-        creationMonthZ += creationMonth;
-
-        // jour
-        const creationDay = creationDate.getDate();
-        let creationDayZ = "";
-        if (creationDay < 10) {
-            creationDayZ += "0";
-        }
-        creationDayZ += creationDay;
-
-        // heure
-        const creationHour = creationDate.getHours();
-        let creationHourZ = "";
-        if (creationHour < 10) {
-            creationHourZ += "0";
-        }
-        creationHourZ += creationHour;
-
-        // minutes
-        const creationMin = creationDate.getMinutes();
-        let creationMinZ = "";
-        if (creationMin < 10) {
-            creationMinZ += "0";
-        }
-        creationMinZ += creationMin;
-
-        // secondes
-        const creationSec = creationDate.getSeconds();
-        let creationSecZ = "";
-        if (creationSec < 10) {
-            creationSecZ += "0";
-        }
-        creationSecZ += creationSec;
-        
-        // Le Z à la fin des noms de variables correspond à la version chaine de caractère qui a un zéro devant si le nombre est < 10
-        // ------------------------------------------------------------------------------------------------------------------------ //
+        let creationDate = msg.guild.createdAt;
+        const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0");
+        const creationDay = String(creationDate.getDate()).padStart(2, "0");
+        const creationYear = creationDate.getFullYear();
+        const creationHour = String(creationDate.getHours()).padStart(2, "0");
+        const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0");
+        const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0");
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`;
 
         const membres = msg.guild.members;
         const bots = membres.filter(membre => membre.user.bot).size;
@@ -93,10 +58,12 @@ module.exports = {
         .addField("Membres", msg.guild.memberCount, true)
         .addField("Humains", humains, true)
         .addField("Bots", bots, true)
+        .addField("Niveau de boost", `Niveau ${msg.guild.premiumTier}`, true)
+        .addField("Region", msg.guild.region, true)
         .addField("Emojis", emojis)
         .addField("Rôles", roles)
         .addField("Salons", nbSalonsTxt + " textuels, " + nbSalonsVocaux + " vocaux", true)
-        .addField("Date de création du serveur", creationDayZ + "/" + creationMonthZ + "/" + creationDate.getFullYear() + " à " + creationHourZ + ":" + creationMinZ + ":" + creationSecZ + " UTC", true)
+        .addField("Date de création du serveur", creationDate, true)
         .setThumbnail(msg.guild.iconURL)
         .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
         msg.channel.send(informations);
