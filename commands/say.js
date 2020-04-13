@@ -9,17 +9,19 @@ module.exports = {
     usage: '[message]',
     
     async execute(bot, msg, args) {
-		if(msg.author.id !== config.ownerID && msg.author.id !== msg.guild.ownerID) {
-            return;
+		if (msg.author.id !== config.ownerID && msg.author.id !== msg.guild.ownerID) {
+            return msg.channel.send("Vous n'êtes pas autorisés à utiliser cette commande ! <:kirinopff:698922942268047391>")
+                .then(msg => msg.delete(5000))
+                .catch();
         }
-        	let text = args.join(" ");
-        	msg.channel.send(text)
-        		.then(() => {
-                    if (msg.channel.type == 'text') {
-        			    msg.delete(4)
-                            .catch()
-                    }
-        		})
-        		.catch()
+        let text = args.join(" ");
+        msg.channel.send(text)
+            .then(() => {
+                if (msg.channel.type == 'text') {
+                    msg.delete(4)
+                        .catch()
+                }
+            })
+            .catch()
     }
 };

@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: false,
     args: true,
     usage: "[mot à rechercher]",
+    aliases: ["rd"],
     category: "others",
 
     async execute (bot, msg, args) {

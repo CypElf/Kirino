@@ -31,7 +31,7 @@ bot.on('message', async msg => {
     if (msg.author.bot) return;
     if (msg.channel.type === "text") {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return;
-        if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("Il me manque la permission gérer les messages pour être utilisée correctement.");
+        if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("J'ai besoin de la permission gérer les messages pour pouvoir être utilisée.");
     }
 
     const messageArray = msg.content.split(" ");
