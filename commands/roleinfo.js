@@ -49,7 +49,7 @@ module.exports = {
         }
         perms = perms.substring(0, perms.length - 2);
 
-        let informations = new Discord.RichEmbed()
+        let informations = new Discord.MessageEmbed()
         .setAuthor("Rôle : " + role.name)
         .setColor(role.hexColor)
         .addField("ID", role.id, true)

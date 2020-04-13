@@ -9,7 +9,7 @@ module.exports = {
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.RichEmbed()
+        const emb = new Discord.MessageEmbed()
 			.addField("Règle 2", "Toute forme de pub est strictement interdite, **MP compris**, sauf exception autorisée après demande.")
             .setColor('#000000');
             

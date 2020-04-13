@@ -50,7 +50,7 @@ module.exports = {
             emojis += " (" + emojisCount + " émojis)";
         }
 
-        let informations = new Discord.RichEmbed()
+        let informations = new Discord.MessageEmbed()
         .setAuthor(msg.guild.name, msg.guild.owner.user.avatarURL)
         .setColor('#000000')
         .addField("Propriétaire du serveur", msg.guild.owner.user.tag, true)

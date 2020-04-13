@@ -9,7 +9,7 @@ module.exports = {
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.RichEmbed()
+        const emb = new Discord.MessageEmbed()
 			.addField("Règle 8", "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.")
             .setColor('#000000');
             

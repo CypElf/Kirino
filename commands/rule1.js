@@ -9,7 +9,7 @@ module.exports = {
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.RichEmbed()
+        const emb = new Discord.MessageEmbed()
 			.addField("Règle 1", "Parlez du bon sujet dans le bon salon.")
             .setColor('#000000');
             

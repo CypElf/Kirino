@@ -9,7 +9,7 @@ module.exports = {
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.RichEmbed()
+        const emb = new Discord.MessageEmbed()
 			.addField("Règle 13", "Évitez de parler d'affaires extérieures, liées à d'autres serveurs notamment, sur ce serveur. Elles ne nous regardent pas.")
             .setColor('#000000');
             

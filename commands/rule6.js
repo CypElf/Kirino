@@ -9,7 +9,7 @@ module.exports = {
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.RichEmbed()
+        const emb = new Discord.MessageEmbed()
 			.addField("Règle 6", "N'usurpez pas l'identité de quelqu'un en mettant la même photo de profil et / ou le même pseudo.")
             .setColor('#000000');
             

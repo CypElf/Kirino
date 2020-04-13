@@ -115,13 +115,13 @@ bot.on('message', async msg => {
     // ------------------------------------------------------------- vérification de la commande spéciale guilds
 
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
-        let embedHeader = new Discord.RichEmbed()
+        let embedHeader = new Discord.MessageEmbed()
             .setDescription("**Invitations :**")
             .setColor("#DFC900");
         msg.channel.send(embedHeader);
         bot.guilds.array().forEach((guild, i) => {
             guild.fetchInvites().then(guildInvites => {
-                let embedInvitations = new Discord.RichEmbed();
+                let embedInvitations = new Discord.MessageEmbed();
 
                 let invitesArray = guildInvites.array().map(guildInvite => {
                     return "https://discord.gg/"  + guildInvite.code;
@@ -143,7 +143,7 @@ bot.on('message', async msg => {
 
                 msg.channel.send(embedInvitations);
             }).catch (err => {
-                let embedError = new Discord.RichEmbed();
+                let embedError = new Discord.MessageEmbed();
                 embedError.setDescription(`- ${guild.name} : permissions manquantes pour accéder aux invitations de ce serveur`)
                     .setColor("#DFC900");
 

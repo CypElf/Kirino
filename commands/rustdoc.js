@@ -63,7 +63,7 @@ module.exports = {
             counter++;
         }
 
-        let embed = new Discord.RichEmbed()
+        let embed = new Discord.MessageEmbed()
             .setTitle("Résultats")
 			.setColor('#353535')
 			.setThumbnail("https://doc.rust-lang.org/rust-logo1.42.0.png")

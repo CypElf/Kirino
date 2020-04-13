@@ -9,7 +9,7 @@ module.exports = {
     async execute(bot, msg) {
         const Discord = require('discord.js');
         const avdray = bot.guilds.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.RichEmbed()
+        const emb = new Discord.MessageEmbed()
 			.addField("Règle 5", "Pas d'insultes, d'irrespect, de mots vulgaires, de provocation, de menaces, de contenu nsfw, etc.")
             .setColor('#000000');
             

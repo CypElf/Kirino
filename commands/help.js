@@ -14,7 +14,7 @@ module.exports = {
 	
 		if (!args.length) {
 			
-			let help_embed = new Discord.RichEmbed()
+			let help_embed = new Discord.MessageEmbed()
 				.setColor('#DFC900')
 				.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
 	
@@ -79,7 +79,7 @@ module.exports = {
 		
 		const texte = data.join('\n');
 	
-		const help_embed = new Discord.RichEmbed()
+		const help_embed = new Discord.MessageEmbed()
 			.setColor('#DFC900')
 			.addField("**Commande : " + command.name + "**", texte)
 			.setFooter("Requête de " + msg.author.username, msg.author.avatarURL);

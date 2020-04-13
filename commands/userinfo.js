@@ -94,7 +94,7 @@ module.exports = {
             premiumSince = "Non";
         }
 
-        let informations = new Discord.RichEmbed()
+        let informations = new Discord.MessageEmbed()
         .setAuthor(member.user.tag, member.user.avatarURL)
         .setColor('#000000')
         .addField("ID", member.user.id, true)

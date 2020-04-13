@@ -7,7 +7,7 @@ module.exports = {
 	
 	async execute(bot, msg) {
 		const discord = require("discord.js");
-		let embedPresentation = new discord.RichEmbed();
+		let embedPresentation = new discord.MessageEmbed();
 
 		embedPresentation.setAuthor(bot.user.username);
 
