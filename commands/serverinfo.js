@@ -19,15 +19,18 @@ module.exports = {
         creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`;
 
         const membres = msg.guild.members;
-        const bots = membres.filter(membre => membre.user.bot).size;
+        const bots = membres.cache.filter(membre => membre.user.bot).size;
         const humains = msg.guild.memberCount - bots;
-        const arrayRoles = msg.guild.roles;
-        let roles = "";
+        const arrayTotalRoles = msg.guild.roles.cache;
+        let arrayRoles = [];
         let nbRoles = 0;
-        arrayRoles.forEach((role) => {
-            roles += role + " ";
-            nbRoles++;
+        arrayTotalRoles.forEach((role) => {
+            if (role.name !== "@everyone") {
+                arrayRoles.push(role.name);
+                nbRoles++;
+            }
         });
+        let roles = arrayRoles.join(", ");
 
         if (nbRoles === 1) {
             roles += " (" + nbRoles + " rôle)";
@@ -36,10 +39,10 @@ module.exports = {
             roles += " (" + nbRoles + " rôles)";
         }
 
-        const salons = msg.guild.channels;
+        const salons = msg.guild.channels.cache;
         const nbSalonsTxt = salons.filter(salon => salon.type == "text").size;
         const nbSalonsVocaux = salons.filter(salon => salon.type == "voice").size;
-        let emojis = msg.guild.emojis.array();
+        let emojis = msg.guild.emojis.cache.array();
         const emojisCount = emojis.length;
         emojis = emojis.join(", ");
         if (emojis.length === 0) emojis = "Aucun";
@@ -51,7 +54,7 @@ module.exports = {
         }
 
         let informations = new Discord.MessageEmbed()
-        .setAuthor(msg.guild.name, msg.guild.owner.user.avatarURL)
+        .setAuthor(msg.guild.name, msg.guild.owner.user.displayAvatarURL())
         .setColor('#000000')
         .addField("Propriétaire du serveur", msg.guild.owner.user.tag, true)
         .addField("ID du serveur", msg.guild.id, true)
@@ -64,8 +67,8 @@ module.exports = {
         .addField("Rôles", roles)
         .addField("Salons", nbSalonsTxt + " textuels, " + nbSalonsVocaux + " vocaux", true)
         .addField("Date de création du serveur", creationDate, true)
-        .setThumbnail(msg.guild.iconURL)
-        .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+        .setThumbnail(msg.guild.iconURL())
+        .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
         msg.channel.send(informations);
     }
 };
