@@ -67,7 +67,7 @@ module.exports = {
             .setTitle("Résultats")
 			.setColor('#353535')
 			.setThumbnail("https://doc.rust-lang.org/rust-logo1.42.0.png")
-            .setFooter("Requête de " + msg.author.username, msg.author.avatarURL);
+            .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
 
         if (contentNames !== "") {
             embed.addField("Dans le nom", contentNames);
