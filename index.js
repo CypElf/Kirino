@@ -17,7 +17,15 @@ for (const file of commandFiles) {
 
 bot.once('ready', () => {
     updateActivity();
-    console.log("Connexion à discord établie.");
+    let startDate = new Date();
+    const startMonth = String(startDate.getMonth() + 1).padStart(2, "0");
+    const startDay = String(startDate.getDate()).padStart(2, "0");
+    const startYear = startDate.getFullYear();
+    const startHour = String(startDate.getHours()).padStart(2, "0");
+    const startMinutes = String(startDate.getMinutes()).padStart(2, "0");
+    const startSeconds = String(startDate.getSeconds()).padStart(2, "0");
+    startDate = `${startHour}:${startMinutes}:${startSeconds} ${startDay}/${startMonth}/${startYear}`;
+    console.log(`Connexion à discord établie. (${startDate})`);
 });
 
 // -------------------------------------------------------------
@@ -52,7 +60,6 @@ bot.on('message', async msg => {
                 if (err) return console.log("Impossible d'accéder aux profils AFK dans la base de données : " + err.message);
                 if (!(row === undefined)) {
                     if (row.id != msg.author.id) {
-                        console.log(row.id + " "+ msg.author.id);
                         if (row.reason) {
                             msg.channel.send(`**${mention.username}** est actuellement AFK pour la raison suivante : ${row.reason}`);
                         }

@@ -22,7 +22,7 @@ module.exports = {
                 return currentRole.name.toLowerCase() === r.toLowerCase();
             });
             if (role === undefined) {
-                return msg.channel.send("Veuillez mentionner ou écrire un rôle correct du serveur. <:warning:568037672770338816>");
+                return msg.channel.send("Veuillez mentionner ou écrire un rôle correct du serveur. <:kirinopout:698923065773522944>");
             }
         }
 

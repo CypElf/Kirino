@@ -27,7 +27,7 @@ module.exports = {
                     user += element + " ";
                 });
                 user = user.substring(0, user.length - 1);
-                member = msg.guild.members.array().find((currentUser) => {
+                member = msg.guild.members.cache.array().find((currentUser) => {
                     return currentUser.user.username.toLowerCase() === user.toLowerCase();
                 });
                 if (member === undefined) { // ... et enfin si on a toujours rien, on répond qu'il n'y a pas d'utilisateur correspondant
