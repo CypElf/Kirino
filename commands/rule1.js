@@ -7,7 +7,7 @@ module.exports = {
     
     async execute(bot, msg) {
         if (msg.channel.type === "text") {
-            if (msg.guild.ID === bot.config.avdrayID) {
+            if (msg.guild.id === bot.config.avdrayID) {
                 const Discord = require('discord.js');
                 const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
                 const emb = new Discord.MessageEmbed()

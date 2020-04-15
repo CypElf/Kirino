@@ -196,4 +196,4 @@ const updateActivity = () => {
     bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
-bot.login(bot.config.token).catch(err => console.log(err.message));
+bot.login(bot.config.kirinoToken).catch(err => console.log(err.message));
