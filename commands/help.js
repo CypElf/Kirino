@@ -21,7 +21,18 @@ module.exports = {
 			let first = true;
 			bot.commands.forEach(command => {
 				if (command.category == "admin") {
-					if (!command.name.startsWith("rule")) {
+					if (!(msg.channel.type === "text" && msg.guild.id === bot.config.avdrayID)) {
+						if (!command.name.startsWith("rule")) {
+							if (first) {
+								data.push("`" + command.name + "`");
+								first = false;
+							}
+							else {
+								data.push(", `" + command.name + "`");
+							}
+						}
+					}
+					else {
 						if (first) {
 							data.push("`" + command.name + "`");
 							first = false;
@@ -42,14 +53,12 @@ module.exports = {
 			first = true;
 			bot.commands.forEach(command => {
 				if (command.category == "others") {
-					if (!command.name.startsWith("rule")) {
-						if (first) {
-							data.push("`" + command.name + "`");
-							first = false;
-						}
-						else {
-							data.push(", `" + command.name + "`");
-						}
+					if (first) {
+						data.push("`" + command.name + "`");
+						first = false;
+					}
+					else {
+						data.push(", `" + command.name + "`");
 					}
 				}
 			});

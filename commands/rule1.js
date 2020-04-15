@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'rule1',
     description: "Affiche la règle 1 du règlement de Avdray.",
-    guildOnly: false,
+    guildOnly: true,
     args: false,
     category: "admin",
     
