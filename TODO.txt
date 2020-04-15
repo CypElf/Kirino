@@ -1,0 +1,2 @@
+- don't display avdray rules command in others guilds
+- translation

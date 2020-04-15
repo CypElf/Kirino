@@ -7,16 +7,20 @@ module.exports = {
     category: "admin",
 	
     async execute(bot, msg) {
-        const Discord = require('discord.js');
-        const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.MessageEmbed()
-			.addField("Règle 8", "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.")
-            .setColor('#000000');
-            
-            if (avdray != null) {
-                emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
+        if (msg.channel.type === "text") {
+            if (msg.guild.ID === bot.config.avdrayID) {
+                const Discord = require('discord.js');
+                const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
+                const emb = new Discord.MessageEmbed()
+                    .addField("Règle 8", "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.")
+                    .setColor('#000000');
+                    
+                    if (avdray != null) {
+                        emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
+                    }
+                    
+                msg.channel.send(emb);
             }
-			
-		msg.channel.send(emb);
+        }
     }
 };

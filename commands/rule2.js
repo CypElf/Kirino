@@ -7,16 +7,20 @@ module.exports = {
     category: "admin",
 	
     async execute(bot, msg) {
-        const Discord = require('discord.js');
-        const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
-        const emb = new Discord.MessageEmbed()
-			.addField("Règle 2", "Toute forme de pub est strictement interdite, **MP compris**, sauf exception autorisée après demande.")
-            .setColor('#000000');
-            
-            if (avdray != null) {
-                emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
+        if (msg.channel.type === "text") {
+            if (msg.guild.ID === bot.config.avdrayID) {
+                const Discord = require('discord.js');
+                const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
+                const emb = new Discord.MessageEmbed()
+                    .addField("Règle 2", "Toute forme de pub est strictement interdite, **MP compris**, sauf exception autorisée après demande.")
+                    .setColor('#000000');
+                    
+                    if (avdray != null) {
+                        emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
+                    }
+                    
+                msg.channel.send(emb);
             }
-			
-		msg.channel.send(emb);
+        }
     }
 };
