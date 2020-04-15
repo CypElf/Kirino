@@ -21,12 +21,14 @@ module.exports = {
 			let first = true;
 			bot.commands.forEach(command => {
 				if (command.category == "admin") {
-					if (first) {
-						data.push("`" + command.name + "`");
-						first = false;
-					}
-					else {
-						data.push(", `" + command.name + "`");
+					if (!command.name.startsWith("rule")) {
+						if (first) {
+							data.push("`" + command.name + "`");
+							first = false;
+						}
+						else {
+							data.push(", `" + command.name + "`");
+						}
 					}
 				}
 			});
@@ -40,12 +42,14 @@ module.exports = {
 			first = true;
 			bot.commands.forEach(command => {
 				if (command.category == "others") {
-					if (first) {
-						data.push("`" + command.name + "`");
-						first = false;
-					}
-					else {
-						data.push(", `" + command.name + "`");
+					if (!command.name.startsWith("rule")) {
+						if (first) {
+							data.push("`" + command.name + "`");
+							first = false;
+						}
+						else {
+							data.push(", `" + command.name + "`");
+						}
 					}
 				}
 			});
@@ -61,7 +65,12 @@ module.exports = {
 			});
 		}
 
-		const command = bot.commands.get(args[0].toLowerCase()) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
+		let command = bot.commands.get(args[0].toLowerCase()) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
+		if (msg.channel.type === "text") {
+			if (!(msg.guild.id === bot.config.avdrayID)) {
+				command = command && !cmd.name.startsWith("rule");
+			}
+		}
     	if (!command) return msg.channel.send("Cette commande n'existe pas.");
 	
 		if (command.description) data.push(`**Description** : ${command.description}`);

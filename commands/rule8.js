@@ -3,7 +3,6 @@ module.exports = {
     description: "Affiche la règle 8 du règlement de Avdray.",
     guildOnly: false,
     args: false,
-    aliases: ["r8"],
     category: "admin",
 	
     async execute(bot, msg) {
