@@ -66,9 +66,9 @@ module.exports = {
 		}
 
 		let command = bot.commands.get(args[0].toLowerCase()) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
-		if (msg.channel.type === "text") {
-			if (!(msg.guild.id === bot.config.avdrayID)) {
-				command = command && !cmd.name.startsWith("rule");
+		if (command) {
+			if (!(msg.channel.type ==="text" && msg.guild.id === bot.config.avdrayID)) {
+				command = command && !command.name.startsWith("rule");
 			}
 		}
     	if (!command) return msg.channel.send("Cette commande n'existe pas.");
