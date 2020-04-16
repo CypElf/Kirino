@@ -44,13 +44,32 @@ module.exports = {
         const nbSalonsVocaux = salons.filter(salon => salon.type == "voice").size;
         let emojis = msg.guild.emojis.cache.array();
         const emojisCount = emojis.length;
-        emojis = emojis.join(", ");
-        if (emojis.length === 0) emojis = "Aucun";
+        let emojisArray = [""];
+        let displayedEmojisCount = "";
+        if (emojisCount === 0) displayedEmojisCount = "Aucun";
         if (emojisCount === 0 || emojisCount === 1) {
-            emojis += " (" + emojisCount + " émoji)";
+            displayedEmojisCount += " (" + emojisCount + " émoji)";
         }
         else {
-            emojis += " (" + emojisCount + " émojis)";
+            displayedEmojisCount += " (" + emojisCount + " émojis)";
+        }
+
+        let i = 0;
+        emojis.forEach(emoji => {
+            if (emojisArray[i].length + emoji.toString().length > 1024) {
+                i++;
+                emojisArray.push(emoji.toString())
+            }
+            else {
+                emojisArray[i] += emoji.toString();
+            }
+        });
+
+        if (emojisArray[i].length + displayedEmojisCount.length > 1024) {
+            emojisArray.push(displayedEmojisCount.toString())
+        }
+        else {
+            emojisArray[i] += displayedEmojisCount.toString();
         }
 
         let informations = new Discord.MessageEmbed()
@@ -63,8 +82,19 @@ module.exports = {
         .addField("Bots", bots, true)
         .addField("Niveau de boost", `Niveau ${msg.guild.premiumTier}`, true)
         .addField("Region", msg.guild.region, true)
-        .addField("Emojis", emojis, true)
-        .addField("Rôles", roles)
+
+        let first = true;
+        emojisArray.forEach(msg1024 => {
+            if (first) {
+                informations.addField("Emojis", msg1024);
+                first = false;
+            }
+            else {
+                informations.addField("Suite des émojis", msg1024);
+            }
+        });
+        
+        informations.addField("Rôles", roles)
         .addField("Salons", nbSalonsTxt + " textuels, " + nbSalonsVocaux + " vocaux", true)
         .addField("Date de création du serveur", creationDate, true)
         .setThumbnail(msg.guild.iconURL())
