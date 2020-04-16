@@ -1,0 +1,14 @@
+{
+	"need_handle_messages_perm": "J'ai besoin de la permission gérer les messages pour pouvoir être utilisée.",
+    "unable_to_get_afk": "Impossible d'accéder aux profils AFK dans la base de données : ",
+    "unable_to_delete_afk": "Une erreur est survenue durant la suppression de votre profil AFK : ",
+    "afk_with_reason": " est actuellement AFK pour la raison suivante : ",
+    "afk_without_reason": " est actuellement AFK, et n'a pas laissé de raison pour cela.",
+    "deleted_from_afk": "tu as été retiré de la liste des personnes AFK.",
+    "unable_to_get_banwords": "Impossible d'accéder aux mots bannis dans la base de données : ",
+    "invitations": "Invitations :",
+    "no_invit_available": "aucune invitation disponible sur ce serveur",
+    "request_from": "Requête de ",
+    "missing_permissions_to_get_invits": "permissions manquantes pour accéder aux invitations de ce serveur",
+    "command_not_available_in_dm": "Cette commande n'est pas faite pour être utilisée en messages privés. <:kirinopout:698923065773522944>"
+}

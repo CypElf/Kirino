@@ -1,21 +1,28 @@
-const Discord = require('discord.js');
-const config = require('./config.json');
-const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
+const Discord = require("discord.js");
+const config = require("./config.json");
+const fs = require("fs");
+const bsqlite3 = require('better-sqlite3');
+let i18n = require("i18n");
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 
 bot.config = config;
+i18n.configure({
+    locales: ['en', 'fr'],
+    directory: __dirname + "/languages",
+    autoReload: true,
+    register: global,
+});
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
 	bot.commands.set(command.name, command);
 }
 
-bot.once('ready', () => {
+bot.once("ready", () => {
     updateActivity();
     let startDate = new Date();
     const startMonth = String(startDate.getMonth() + 1).padStart(2, "0");
@@ -25,12 +32,12 @@ bot.once('ready', () => {
     const startMinutes = String(startDate.getMinutes()).padStart(2, "0");
     const startSeconds = String(startDate.getSeconds()).padStart(2, "0");
     startDate = `${startHour}:${startMinutes}:${startSeconds} ${startDay}/${startMonth}/${startYear}`;
-    console.log(`Connexion à discord établie. (${startDate})`);
+    console.log(`Connection to Discord established (${startDate})`);
 });
 
 // -------------------------------------------------------------
 
-bot.on('message', async msg => {
+bot.on("message", async msg => {
 
     // maintenance
     // if (msg.content.startsWith(bot.config.prefix)) return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !");
@@ -39,52 +46,60 @@ bot.on('message', async msg => {
     if (msg.author.bot) return;
     if (msg.channel.type === "text") {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return;
-        if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("J'ai besoin de la permission gérer les messages pour pouvoir être utilisée.");
+        if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"));
     }
 
     const messageArray = msg.content.split(" ");
     const commandName = messageArray[0].toLowerCase().slice(bot.config.prefix.length);
     const args = messageArray.slice(bot.config.prefix.length);    
 
-    let db = new sqlite3.Database("./database.db", err => {
-        if (err) return console.log("Impossible d'accéder à la base de données : " + err.message);
-    });
+    const db = new bsqlite3("database.db");
+
+    // ------------------------------------------------------------- paramétrage de la bonne langue
+
+    let callerID;
+    if (msg.channel.type === "text") callerID = msg.guild.id;
+    else callerID = msg.author.id;
+
+    const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?");
+    const languageRow = languagesRequest.get(callerID);
+    if (!(languageRow === undefined)) {
+        setLocale(languageRow.language);
+    }
+    else {
+        setLocale("en");
+    }
+
 
     // ------------------------------------------------------------- vérification de l'AFK
 
     const mentions = msg.mentions.users;
 
+    const afkRequest = db.prepare("SELECT * FROM afk WHERE id = ?");
+
     mentions.forEach(mention => {
-        db.serialize(() => {
-            db.get("SELECT * FROM afk WHERE id=(?)", [mention.id], (err, row) => {
-                if (err) return console.log("Impossible d'accéder aux profils AFK dans la base de données : " + err.message);
-                if (!(row === undefined)) {
-                    if (row.id != msg.author.id) {
-                        if (row.reason) {
-                            msg.channel.send(`**${mention.username}** est actuellement AFK pour la raison suivante : ${row.reason}`);
-                        }
-                        else {
-                            msg.channel.send(`**${mention.username}** est actuellement AFK, et n'a pas laissé de raison pour cela.`);
-                        }
-                    }
+        const mentionnedAfkRow = afkRequest.get(mention.id);
+
+        if (!(mentionnedAfkRow === undefined)) {
+            if (mentionnedAfkRow.id != msg.author.id) {
+                if (mentionnedAfkRow.reason) {
+                    msg.channel.send(`**${mention.username}**` + __("afk_with_reason") + mentionnedAfkRow.reason);
                 }
-            });
-        }); 
-    });
-
-    db.serialize(() => {
-        db.get("SELECT * FROM afk WHERE id=(?)", [msg.author.id], (err, row) => {
-            if (err) return console.log("Impossible d'accéder aux profils AFK dans la base de données : " + err.message);
-            if (!(row === undefined)) {
-                db.run("DELETE FROM afk WHERE id=(?)", [msg.author.id], err => {
-                    if (err) return console.log("Une erreur est survenue durant la suppression de votre profil AFK : " + err.message);
-                });
-
-                return msg.reply(`tu as été retiré de la liste des personnes AFK.`).then(msg => msg.delete({ timeout: 5000 }));
+                else {
+                    msg.channel.send(`**${mention.username}**` + __("afk_without_reason"));
+                }
             }
-        });
+        }
     });
 
+    const selfAfkRow = afkRequest.get(msg.author.id);
+
+    if (!(selfAfkRow === undefined)) {
+        const deletionRequest = db.prepare("DELETE FROM afk WHERE id = ?");
+        deletionRequest.run(msg.author.id);
+        msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 }));
+    }
+    
     // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
 
     if (msg.channel.type == "text") {
@@ -92,26 +107,24 @@ bot.on('message', async msg => {
         
             let bannedWords = [];
         
-            db.serialize(() => {
-                db.get("SELECT * FROM banwords WHERE id=(?)", [msg.guild.id], (err, row) => {
-                    if (err) return console.log("Impossible d'accéder aux mots bannis dans la base de données : " + err.message);
-                    if (!(row === undefined || row.words === undefined)) {
-                        let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
-                        if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
-                        bannedWords = row.words.split(",");
-                        const loweredMessageArray = messageArray.map(word => word.toLowerCase());
-                        bannedWords.forEach(word => {
-                            if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete();
-                            if (emojiNames) {
-                                if (word.startsWith(":") && word.endsWith(":")) {
-                                    word = word.substring(1, word.length - 1);
-                                    if (emojiNames.includes(word)) return msg.delete();
-                                }
-                            }
-                        });
+            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE id = ?");
+            const banwordsRow = banwordsRequest.get(msg.guild.id);
+            
+            if (!(banwordsRow === undefined || banwordsRow.words === undefined)) {
+                let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm);
+                if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0]);
+                bannedWords = banwordsRow.words.split(",");
+                const loweredMessageArray = messageArray.map(word => word.toLowerCase());
+                bannedWords.forEach(word => {
+                    if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete();
+                    if (emojiNames) {
+                        if (word.startsWith(":") && word.endsWith(":")) {
+                            word = word.substring(1, word.length - 1);
+                            if (emojiNames.includes(word)) return msg.delete();
+                        }
                     }
                 });
-            });
+            }
         }
     }
 
@@ -123,7 +136,7 @@ bot.on('message', async msg => {
 
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
         let embedHeader = new Discord.MessageEmbed()
-            .setDescription("**Invitations :**")
+            .setDescription("**" + __("invitations") + "**")
             .setColor("#DFC900");
         msg.channel.send(embedHeader);
         bot.guilds.cache.array().forEach((guild, i) => {
@@ -132,11 +145,11 @@ bot.on('message', async msg => {
 
                 let invitesArray = guildInvites.array().map(guildInvite => {
                     return "https://discord.gg/"  + guildInvite.code;
-                 });
+                });
 
                 let invites;
 
-                if(invitesArray.length === 0) invites = "aucune invitation disponible sur ce serveur";
+                if(invitesArray.length === 0) invites = __("no_invit_available");
                 else {
                     invites = "`" + invitesArray.join(" / ") + "`";
                 }
@@ -145,18 +158,18 @@ bot.on('message', async msg => {
                     .setColor("#DFC900");
 
                 if (i === bot.guilds.cache.array().length - 1) {
-                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+                    embedInvitations.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
                 }
 
                 msg.channel.send(embedInvitations);
             }).catch (err => {
                 let embedError = new Discord.MessageEmbed();
-                embedError.setDescription(`- ${guild.name} : permissions manquantes pour accéder aux invitations de ce serveur`)
+                embedError.setDescription(`- ${guild.name} : ` + __("missing_permissions_to_get_invits"))
                     .setColor("#DFC900");
 
 
                 if (i === bot.guilds.length - 1) {
-                    embedInvitations.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+                    embedInvitations.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
                 }
                 msg.channel.send(embedError);
             });
@@ -169,7 +182,7 @@ bot.on('message', async msg => {
     if (!command) return;
 
     if (command.guildOnly && msg.channel.type !== "text") {
-        return msg.reply("Cette commande n'est pas faite pour être utilisée en messages privés. <:kirinopout:698923065773522944>");
+        return msg.reply(__("command_not_available_in_dm"));
     }
 
     if (command.args && !args.length) {
@@ -193,7 +206,7 @@ bot.on("guildDelete", () => updateActivity());
 
 const updateActivity = () => {
     guildsCount = bot.guilds.cache.size;
-    bot.user.setActivity(`ses ${guildsCount} serveurs | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
+    bot.user.setActivity(`${guildsCount} servers | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ });
 }
 
-bot.login(bot.config.kirinoToken).catch(err => console.log(err.message));
+bot.login(bot.config.token).catch(err => console.log(err.message));

@@ -23,7 +23,7 @@ module.exports = {
             });
 
             db.close(err => {
-                if (err) return console.log("Une erreur est survenue durant la fermture de la connexion avec la base de donnée : " + err.message);
+                if (err) return console.log("Une erreur est survenue durant la fermeture de la connexion avec la base de données : " + err.message);
             });
 
             if (reason) {
