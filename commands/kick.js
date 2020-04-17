@@ -1,6 +1,6 @@
 module.exports = {
 	name: "kick",
-    description: __("description_kick"),
+    description: "description_kick",
     guildOnly: true,
     args: true,
     category: "admin",

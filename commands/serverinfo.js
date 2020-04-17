@@ -1,6 +1,6 @@
 module.exports = {
 	name: "serverinfo",
-    description: __("description_serverinfo"),
+    description: "description_serverinfo",
     guildOnly: true,
     args: false,
     aliases: ["si"],

@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'afk',
-    description: __("description_afk"),
+    description: "description_afk",
     guildOnly: true,
     args: false,
     category: "others",
-    usage: __("usage_afk"),
+    usage: "usage_afk",
 
     async execute (bot, msg, args) {
         const bsqlite3 = require("better-sqlite3");

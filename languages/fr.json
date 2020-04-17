@@ -4,24 +4,18 @@
 	"afk_without_reason": " est actuellement AFK, et n'a pas laissé de raison pour cela.",
 	"added_to_afk_with_reason": "tu as bien été mis AFK pour la raison suivante",
 	"added_to_afk_without_reason": "tu as bien été mis AFK.",
-    "deleted_from_afk": "tu as été retiré de la liste des personnes AFK.",
-    
+	"deleted_from_afk": "tu as été retiré de la liste des personnes AFK.",
 	"invitations": "Invitations :",
 	"no_invit_available": "aucune invitation disponible sur ce serveur",
 	"request_from": "Requête de ",
-    "missing_permissions_to_get_invits": "permissions manquantes pour accéder aux invitations de ce serveur",
-    
-    "command_not_available_in_dm": "Cette commande n'est pas faite pour être utilisée en messages privés.",
-    
+	"missing_permissions_to_get_invits": "permissions manquantes pour accéder aux invitations de ce serveur",
+	"command_not_available_in_dm": "Cette commande n'est pas faite pour être utilisée en messages privés.",
 	"i_am": "Je suis ",
-    "remaining_about": ", un bot développé en node.js à l'aide de l'API discord.js.\nOriginairement hébergée sur Glitch, j'ai maintenant un VPS pour moi toute seule.\nJe suis originaire de l'animé *Ore no imōto ga konna ni kawaii wake ga nai*, ou *Oreimo* pour les intimes, duquel je suis le second personnage principal.\nMon créateur se nomme CypElf, et son serveur qui est aussi mon serveur d'origine se nomme Avdray. Il a pour thème l'informatique en général, bien qu'axé sur le langage de programmation Rust.\nVous êtes les bienvenues dessus !\nMerci de m'avoir ajoutée à votre serveur et de m'utiliser ! <:kirinoglad:698923046819594351>\nhttps://discord.gg/btJhreB",
-    "description_about": "Affiche des informations sur moi.",
-    
+	"remaining_about": ", un bot développé en node.js à l'aide de l'API discord.js.\nOriginairement hébergée sur Glitch, j'ai maintenant un VPS pour moi toute seule.\nJe suis originaire de l'animé *Ore no imōto ga konna ni kawaii wake ga nai*, ou *Oreimo* pour les intimes, duquel je suis le second personnage principal.\nMon créateur se nomme CypElf, et son serveur qui est aussi mon serveur d'origine se nomme Avdray. Il a pour thème l'informatique en général, bien qu'axé sur le langage de programmation Rust.\nVous êtes les bienvenues dessus !\nMerci de m'avoir ajoutée à votre serveur et de m'utiliser ! <:kirinoglad:698923046819594351>\nhttps://discord.gg/btJhreB",
+	"description_about": "Affiche des informations sur moi.",
 	"description_afk": "Permet de laisser un message à ceux qui voudraient vous mentionner pendant que vous êtes AFK. La raison est optionnelle.",
-    "usage_afk": "{raison de l'absence}",
-    
-    "description_avdray": "Envoie le lien du serveur de mon créateur.",
-    
+	"usage_afk": "{raison de l'absence}",
+	"description_avdray": "Envoie le lien du serveur de mon créateur.",
 	"description_ban": "Ban le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du ban). La permission de ban est requise.",
 	"usage_ban": "[utilisateur] {raison}",
 	"you_are_missing_permissions_to_ban_members": "Vous n'avez pas les permissions suffisantes pour bannir un membre.",
@@ -31,13 +25,11 @@
 	"cannot_ban_yourself": "Tu ne peux pas te bannir toi même !",
 	"you_cannot_ban_this_member": "Vous ne pouvez pas bannir ce membre.",
 	"has_been_banned": " a été banni du serveur !",
-    "banned_by": "banni par ",
-    
+	"banned_by": "banni par ",
 	"banword_description": "Permet de bannir des mots dans le serveur.",
 	"banword_usage": "[mode] {mot1} {mot2}... {motN}",
 	"please_insert_banwords_to_add": "Veuillez renseigner un ou plusieurs mots en arguments pour les bloquer.",
-    "missing_permissions_to_execute_this_command": "Vous n'avez pas les permissions suffisantes pour utiliser cette commande !",
-    
+	"missing_permissions_to_execute_this_command": "Vous n'avez pas les permissions suffisantes pour utiliser cette commande !",
 	"the_word": {
 		"one": "Le mot",
 		"other": "Les mots"
@@ -56,14 +48,12 @@
 	"please_use_valid_mode": "Veuillez renseigner un mode valide.",
 	"usage_donation": "Envoie le lien PayPal de mon créateur",
 	"make_donation_title": "Faire un don",
-    "make_donation": "Si vous voulez soutenir mon créateur, vous pouvez lui [faire un don]",
-    
+	"make_donation": "Si vous voulez soutenir mon créateur, vous pouvez lui [faire un don]",
 	"edit_usage": "[ID du message] [nouveau message]",
 	"cannot_edit_this_message": "Je ne peux pas modifier ce message !",
 	"precise_something_to_replace": "Veuillez préciser quelque chose à mettre dans le message !",
 	"bad_message_id": "L'ID du message fourni est incorrect !",
-    "edit_description": "Modifie un de mes messages. Seul le possesseur d'un serveur peut utiliser cette commande.",
-    
+	"edit_description": "Modifie un de mes messages. Seul le possesseur d'un serveur peut utiliser cette commande.",
 	"description_help": "Liste les commandes disponibles ou les informations sur une commande en particulier.\nQuand les informations sur une commande sont affichées, si la commande est utilisable avec des arguments, ceux ci seront entre crochets `[]` quand ils sont obligatoires, ou entre accolades `{}` s'ils sont optionnels.",
 	"usage_help": "{commande}",
 	"administration": "Administration",
@@ -77,14 +67,12 @@
 	"yes": "oui",
 	"aliases": "Aliases",
 	"usage": "Utilisation",
-    "command": "Commande",
-    
+	"command": "Commande",
 	"description_invit": "Envoie le lien permettant de m'inviter dans un serveur.",
 	"invit_bot": "Inviter le bot",
 	"on_a_server": "sur un serveur",
 	"the_link_to_invit_me_is_available": "Le lien permettant de m'inviter sur un serveur est disponible",
-    "here": "[ici]",
-    
+	"here": "[ici]",
 	"description_kick": "Kick le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du kick). La permission de kick est requise.",
 	"usage_kick": "[utilisateur] {raison}",
 	"you_are_missing_permissions_to_kick_members": "Vous n'avez pas les permissions suffisantes pour kick un membre.",
@@ -93,28 +81,24 @@
 	"cannot_kick_yourself": "Tu ne peux pas te kick toi même !",
 	"you_cannot_kick_this_member": "Vous ne pouvez pas kick ce membre.",
 	"has_been_kicked": " a été kick du serveur !",
-    "kicked_by": "kick par ",
-    
+	"kicked_by": "kick par ",
 	"description_language": "Permet de changer la langue dans laquelle je suis.\nLes langues disponibles sont `en` pour l'anglais et `fr` pour le français.",
 	"usage_language": "[langue]",
 	"bad_language_code": "Le code de language saisi est incorrect.",
 	"server_language_changed": "La langue du serveur a correctement été définie à `",
-    "dm_language_changed": "La langue de vos messages privés a correctement été définie à `",
-    
-    "description_ping": "Affiche mon ping en ms.",
-    
+	"dm_language_changed": "La langue de vos messages privés a correctement été définie à `",
+	"not_enough_permission_to_change_language": "Vous n'avez pas les permissions nécessaires pour utiliser cette commande !",
+	"description_ping": "Affiche mon ping en ms.",
 	"description_purge": "Supprime le nombre de messages voulus.",
 	"usage_purge": "[nombre de messages à supprimer]",
 	"you_cannot_delete_messages": "Vous ne pouvez pas supprimer de messages !",
-    "please_insert_only_a_number": "Veuillez saisir un nombre entier uniquement.",
-    
+	"please_insert_only_a_number": "Veuillez saisir un nombre entier uniquement.",
 	"description_react": "Me fait réagir à un message par un émoji.",
 	"usage_react": "[ID du message] [émoji]",
 	"not_allowed_to_use_this_command": "Vous n'êtes pas autorisés à utiliser cette commande !",
 	"cannot_react_to_messages": "Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions.",
 	"insert_only_id_and_emoji": "Veuillez saisir uniquement l'ID du message sur lequel réagir ainsi que l'émoji à y mettre.",
-    "access_to_emoji_denied": "L'émoji saisi est incorrect ou je n'y ai pas accès !",
-    
+	"access_to_emoji_denied": "L'émoji saisi est incorrect ou je n'y ai pas accès !",
 	"description_report": "Permet de signaler un problème, un bug, ou proposer de nouvelles commandes et autres améliorations.\nN'utilisez pas abusivement cette commande pour envoyer des choses ne rentrant pas dans ce cadre.",
 	"usage_report": "[message]",
 	"report_confirmation": "Confirmez vous vouloir envoyer ce report ?",
@@ -127,8 +111,7 @@
 	"report_server_unavailable": "Le serveur sur lequel je suis censée envoyer votre report est introuvable...",
 	"contact_dev": "Veuillez contacter mon développeur au plus vite (CypElf#4541) afin vite corriger ce problème !",
 	"report_sent": "Le report a bien été envoyé. Merci de contribuer à m'améliorer",
-    "report_cancelled": "Le report a bien été annulé.",
-    
+	"report_cancelled": "Le report a bien été annulé.",
 	"description_roleinfo": "Affiche des informations sur le rôle mentionné ou exactement nommé.",
 	"usage_roleinfo": "[rôle]",
 	"bad_role": "Veuillez mentionner ou écrire un rôle correct du serveur.",
@@ -146,8 +129,7 @@
 	"users_with_this_role": "Utilisateurs avec ce rôle",
 	"role_creation_date": "Date de création du rôle",
 	"permissions": "Permissions",
-    "no_permissions": "Ce rôle n'a aucune permission",
-    
+	"no_permissions": "Ce rôle n'a aucune permission",
 	"rules_from": "Règlement de ",
 	"rule_title": "Règle ",
 	"description_rule1": "Affiche la règle 1 du règlement de Avdray.",
@@ -175,8 +157,7 @@
 	"description_rule12": "Affiche la règle 12 du règlement de Avdray.",
 	"rule12": "Tout contenu illégal est interdit.",
 	"description_rule13": "Affiche la règle 13 du règlement de Avdray.",
-    "rule13": "Évitez de parler d'affaires extérieures, liées à d'autres serveurs notamment, sur ce serveur. Elles ne nous regardent pas.",
-    
+	"rule13": "Évitez de parler d'affaires extérieures, liées à d'autres serveurs notamment, sur ce serveur. Elles ne nous regardent pas.",
 	"description_rustdoc": "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.42.0",
 	"usage_rustdoc": "[mot à rechercher]",
 	"results": "Résultats",
@@ -184,11 +165,9 @@
 	"in_settings": "Dans les paramètres",
 	"in_return_types": "Dans les types de retour",
 	"no_result_title": "Aucuns résultats",
-    "no_result": "Rien ne correspondant à votre recherche n'a été trouvé.",
-    
+	"no_result": "Rien ne correspondant à votre recherche n'a été trouvé.",
 	"description_say": "Me fait dire le message passé en argument. Seul le possesseur d'un serveur peut l'utiliser.",
-    "usage_say": "[message]",
-    
+	"usage_say": "[message]",
 	"description_serverinfo": "Affiche des informations sur le serveur.",
 	"nothing": "Aucun",
 	"emoji": {
@@ -227,8 +206,7 @@
 		"one": "vocal",
 		"other": "vocaux"
 	},
-    "server_creation_date": "Date de création du serveur",
-    
+	"server_creation_date": "Date de création du serveur",
 	"description_userinfo": "Affiche des informations sur l'utilisateur mentionné ou exactement nommé, ou sur l'utilisateur utilisant la commande, par défaut.",
 	"usage_userinfo": "{utilisateur}",
 	"yes_since": "Oui, depuis le",

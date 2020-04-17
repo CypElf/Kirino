@@ -1,10 +1,10 @@
 module.exports = {
 	name: "ban",
-    description: __("description_ban"),
+    description: "description_ban",
     guildOnly: true,
     args: true,
     category: "admin",
-    usage: __("usage_ban"),
+    usage: "usage_ban",
 
     async execute (bot, msg, [userToBan, ...reason]) {
         if (!msg.member.hasPermission('BAN_MEMBERS')) {

@@ -1,10 +1,10 @@
 module.exports = {
 	name: "say",
-    description: __("description_say"),
+    description: "description_say",
     guildOnly: true,
     args: true,
     category: "others",
-    usage: __("usage_say"),
+    usage: "usage_say",
     
     async execute(bot, msg, args) {
 		if (msg.author.id !== bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {

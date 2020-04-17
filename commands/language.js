@@ -7,6 +7,11 @@ module.exports = {
     category: "admin",
 
 	async execute (bot, msg, args) {
+
+        if (!msg.member.hasPermission("MANAGE_GUILD")) {
+            return msg.channel.send(__("not_enough_permission_to_change_language") + " <:kirinopout:698923065773522944>");
+        }
+
         const language = args[0];
         if (!getLocales().includes(language)) {
             return msg.channel.send(__("bad_language_code") + " <:kirinopout:698923065773522944>");

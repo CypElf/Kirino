@@ -1,10 +1,10 @@
 module.exports = {
 	name: "report",
-    description: __("description_report"),
+    description: "description_report",
     guildOnly: false,
 	args: true,
 	category: "others",
-	usage: __("usage_report"),
+	usage: "usage_report",
 	
 	async execute(bot, msg, args) {
         let origin;

@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 
 module.exports = {
 	name: "donation",
-    description: __("usage_donation"),
+    description: "usage_donation",
     guildOnly: false,
 	args: false,
 	aliases: ["don"],

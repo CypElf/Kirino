@@ -1,6 +1,6 @@
 module.exports = {
 	name: "rule10",
-    description: __("description_rule10"),
+    description: "description_rule10",
     guildOnly: true,
     args: false,
     category: "admin",

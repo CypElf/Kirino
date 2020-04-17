@@ -1,8 +1,8 @@
 module.exports = {
-	name: 'help',
-	description: __("description_help"),
+	name: "help",
+	description: "description_help",
 	guildOnly: false,
-	usage: __("usage_help"),
+	usage: "usage_help",
 	category: "others",
 
 	async execute (bot, msg, args) {
@@ -84,7 +84,7 @@ module.exports = {
 		}
     	if (!command) return msg.channel.send(__("this_command_does_not_exist"));
 	
-		if (command.description) data.push("**" + __("description") + "**" + " : " + __(`${command.description}`));
+		if (command.description) data.push("**" + __("description") + "**" + " : " + __(command.description));
 		command.guildOnly ? data.push("**" + __("available_in_dm") + "** : " + __("no")) : data.push("**" + __("available_in_dm") + "** : " + __("yes"));
 		if (command.aliases) {
 			let aliasesStr = "";
@@ -95,7 +95,7 @@ module.exports = {
 
 			data.push("**" + __("aliases") + "** : " + aliasesStr);
 		}
-		if (command.usage) data.push("**" + __("usage") + "** : `" + prefix + command.name + " " + __(`${command.usage}`) + "`");
+		if (command.usage) data.push("**" + __("usage") + "** : `" + prefix + command.name + " " + __(command.usage) + "`");
 		
 		const texte = data.join('\n');
 	

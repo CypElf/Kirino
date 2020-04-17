@@ -1,6 +1,6 @@
 module.exports = {
 	name: "ping",
-    description: __("description_ping"),
+    description: "description_ping",
     guildOnly: false,
 	args: false,
 	category: "others",

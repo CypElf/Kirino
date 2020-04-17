@@ -1,9 +1,9 @@
 module.exports = {
 	name: "banword",
-    description: __("banword_description"),
+    description: "banword_description",
     guildOnly: true,
     args: true,
-    usage: __("banword_usage"),
+    usage: "banword_usage",
     aliases: ["bw"],
     category: "admin",
 

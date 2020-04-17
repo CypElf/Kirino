@@ -1,6 +1,6 @@
 module.exports = {
 	name: "invit",
-    description: __("description_invit"),
+    description: "description_invit",
     guildOnly: false,
 	args: false,
 	category: "others",

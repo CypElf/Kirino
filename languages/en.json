@@ -82,11 +82,14 @@
 	"you_cannot_kick_this_member": "You can't kick that member.",
 	"has_been_kicked": " has been kicked from the server!",
 	"kicked_by": "kicked by ",
+
 	"description_language": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.",
 	"usage_language": "[language]",
 	"bad_language_code": "The language code entered is incorrect.",
 	"server_language_changed": "The server language has been correctly set to `",
 	"dm_language_changed": "The language of your direct messages has been correctly set to `",
+	"not_enough_permission_to_change_language": "You don't have the necessary permissions to use this command!",
+
 	"description_ping": "Shows my ping in ms.",
 	"description_purge": "Deletes the desired number of messages.",
 	"usage_purge": "[number of messages to be deleted]",
@@ -213,9 +216,5 @@
 	"nickname": "Nickname",
 	"join_date": "Arrival date on the server",
 	"user_creation_date": "Account creation date",
-	"booster": "Booster",
-	"Allows you to retrieve the results of a search in the Rust documentation. Current version: 1.42.0": "Allows you to retrieve the results of a search in the Rust documentation. Current version: 1.42.0",
-	"[word to search for]": "[word to search for]",
-	"Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.",
-	"[language]": "[language]"
+	"booster": "Booster"
 }

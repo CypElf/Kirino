@@ -1,9 +1,9 @@
 module.exports = {
 	name: "rustdoc",
-    description: __("description_rustdoc"),
+    description: "description_rustdoc",
     guildOnly: false,
     args: true,
-    usage: __("usage_rustdoc"),
+    usage: "usage_rustdoc",
     aliases: ["rd"],
     category: "others",
 

@@ -1,10 +1,10 @@
 module.exports = {
 	name: "edit",
-    description: __("edit_description"),
+    description: "edit_description",
     guildOnly: true,
 	args: true,
 	category: "others",
-	usage: __("edit_usage"),
+	usage: "edit_usage",
 	
 	async execute(bot, msg, [ID, ...editMsg]) {
 		if (msg.author.id != bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
