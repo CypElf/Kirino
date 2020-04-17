@@ -8,8 +8,10 @@ module.exports = {
 
 	async execute (bot, msg, args) {
 
-        if (!msg.member.hasPermission("MANAGE_GUILD")) {
-            return msg.channel.send(__("not_enough_permission_to_change_language") + " <:kirinopout:698923065773522944>");
+        if (msg.channel.type === "text") {
+            if (!msg.member.hasPermission("MANAGE_GUILD")) {
+                return msg.channel.send(__("not_enough_permission_to_change_language") + " <:kirinopout:698923065773522944>");
+            }
         }
 
         const language = args[0];
