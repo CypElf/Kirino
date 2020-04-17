@@ -73,7 +73,7 @@ module.exports = {
                 nbRoles++;
             }
         });
-        let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles) + ")";
+        let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")";
 
         let nickname = member.nickname;
         if (nickname === null) {

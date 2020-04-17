@@ -1,253 +1,240 @@
 {
-    "need_handle_messages_perm": "J'ai besoin de la permission gérer les messages pour pouvoir être utilisée.",
-
-    "afk_with_reason": " est actuellement AFK pour la raison suivante : ",
-    "afk_without_reason": " est actuellement AFK, et n'a pas laissé de raison pour cela.",
-    "added_to_afk_with_reason": "tu as bien été mis AFK pour la raison suivante",
-    "added_to_afk_without_reason": "tu as bien été mis AFK.",
+	"need_handle_messages_perm": "J'ai besoin de la permission gérer les messages pour pouvoir être utilisée.",
+	"afk_with_reason": " est actuellement AFK pour la raison suivante : ",
+	"afk_without_reason": " est actuellement AFK, et n'a pas laissé de raison pour cela.",
+	"added_to_afk_with_reason": "tu as bien été mis AFK pour la raison suivante",
+	"added_to_afk_without_reason": "tu as bien été mis AFK.",
     "deleted_from_afk": "tu as été retiré de la liste des personnes AFK.",
-
-    "invitations": "Invitations :",
-    "no_invit_available": "aucune invitation disponible sur ce serveur",
-    "request_from": "Requête de ",
+    
+	"invitations": "Invitations :",
+	"no_invit_available": "aucune invitation disponible sur ce serveur",
+	"request_from": "Requête de ",
     "missing_permissions_to_get_invits": "permissions manquantes pour accéder aux invitations de ce serveur",
-
+    
     "command_not_available_in_dm": "Cette commande n'est pas faite pour être utilisée en messages privés.",
-
-    "i_am": "Je suis ",
+    
+	"i_am": "Je suis ",
     "remaining_about": ", un bot développé en node.js à l'aide de l'API discord.js.\nOriginairement hébergée sur Glitch, j'ai maintenant un VPS pour moi toute seule.\nJe suis originaire de l'animé *Ore no imōto ga konna ni kawaii wake ga nai*, ou *Oreimo* pour les intimes, duquel je suis le second personnage principal.\nMon créateur se nomme CypElf, et son serveur qui est aussi mon serveur d'origine se nomme Avdray. Il a pour thème l'informatique en général, bien qu'axé sur le langage de programmation Rust.\nVous êtes les bienvenues dessus !\nMerci de m'avoir ajoutée à votre serveur et de m'utiliser ! <:kirinoglad:698923046819594351>\nhttps://discord.gg/btJhreB",
     "description_about": "Affiche des informations sur moi.",
-
-    "description_afk": "Permet de laisser un message à ceux qui voudraient vous mentionner pendant que vous êtes AFK. La raison est optionnelle.",
+    
+	"description_afk": "Permet de laisser un message à ceux qui voudraient vous mentionner pendant que vous êtes AFK. La raison est optionnelle.",
     "usage_afk": "{raison de l'absence}",
-
+    
     "description_avdray": "Envoie le lien du serveur de mon créateur.",
-
-    "description_ban": "Ban le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du ban). La permission de ban est requise.",
-    "usage_ban": "[utilisateur] {raison}",
-    "you_are_missing_permissions_to_ban_members": "Vous n'avez pas les permissions suffisantes pour bannir un membre.",
-    "i_am_missing_permissions_to_ban_members": "Je n'ai pas les permissions nécessaires pour bannir des membres.",
-    "please_correctly_write_or_mention_a_member": "Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur.",
-    "unable_to_ban_higher_than_me": "Je ne peux pas bannir cet utilisateur, il a un rang égal ou supérieur au mien.",
-    "cannot_ban_yourself": "Tu ne peux pas te bannir toi même !",
-    "you_cannot_ban_this_member": "Vous ne pouvez pas bannir ce membre.",
-    "has_been_banned": " a été banni du serveur !",
+    
+	"description_ban": "Ban le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du ban). La permission de ban est requise.",
+	"usage_ban": "[utilisateur] {raison}",
+	"you_are_missing_permissions_to_ban_members": "Vous n'avez pas les permissions suffisantes pour bannir un membre.",
+	"i_am_missing_permissions_to_ban_members": "Je n'ai pas les permissions nécessaires pour bannir des membres.",
+	"please_correctly_write_or_mention_a_member": "Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur.",
+	"unable_to_ban_higher_than_me": "Je ne peux pas bannir cet utilisateur, il a un rang égal ou supérieur au mien.",
+	"cannot_ban_yourself": "Tu ne peux pas te bannir toi même !",
+	"you_cannot_ban_this_member": "Vous ne pouvez pas bannir ce membre.",
+	"has_been_banned": " a été banni du serveur !",
     "banned_by": "banni par ",
-
-    "banword_description": "Permet de bannir des mots dans le serveur.",
-    "banword_usage": "[mode] {mot1} {mot2}... {motN}",
-    "please_insert_banwords_to_add": "Veuillez renseigner un ou plusieurs mots en arguments pour les bloquer.",
+    
+	"banword_description": "Permet de bannir des mots dans le serveur.",
+	"banword_usage": "[mode] {mot1} {mot2}... {motN}",
+	"please_insert_banwords_to_add": "Veuillez renseigner un ou plusieurs mots en arguments pour les bloquer.",
     "missing_permissions_to_execute_this_command": "Vous n'avez pas les permissions suffisantes pour utiliser cette commande !",
-    "the_word": {
-        "one": "Le mot",
-        "other": "Les mots"
-    },
-    "has_been_added_to_banwords": {
-        "one": "a bien été ajouté aux mots bannis.",
-        "other": "ont bien tous été ajoutés aux mots bannis."
-    },
-    "here_is_banword_list": "Voici la liste des mots actuellement bannis",
-    "no_banwords_for_now": "Ce serveur n'a aucun mot bloqué pour l'instant.",
-    "precise_banwords_to_remove": "Veuillez renseigner un ou plusieurs mots en arguments pour les débloquer.",
-    "no_banwords_on_this_server": "Ce serveur n'a actuellement aucun mot bloqué.",
-    "no_word_has_been_deleted": "Aucun mot n'a été supprimé de la liste des mots bloqués.",
-    "following_words_has_been_removed": "Les mots suivants ont bien été supprimés des mots bloqués",
-    "words_not_founds": "Les mots suivants n'ont pas été trouvés dans les mots bloqués et n'ont donc pas été supprimés",
-    "please_use_valid_mode": "Veuillez renseigner un mode valide.",
-
-    "usage_donation": "Envoie le lien PayPal de mon créateur",
-    "make_donation_title": "Faire un don",
+    
+	"the_word": {
+		"one": "Le mot",
+		"other": "Les mots"
+	},
+	"has_been_added_to_banwords": {
+		"one": "a bien été ajouté aux mots bannis.",
+		"other": "ont bien tous été ajoutés aux mots bannis."
+	},
+	"here_is_banword_list": "Voici la liste des mots actuellement bannis",
+	"no_banwords_for_now": "Ce serveur n'a aucun mot bloqué pour l'instant.",
+	"precise_banwords_to_remove": "Veuillez renseigner un ou plusieurs mots en arguments pour les débloquer.",
+	"no_banwords_on_this_server": "Ce serveur n'a actuellement aucun mot bloqué.",
+	"no_word_has_been_deleted": "Aucun mot n'a été supprimé de la liste des mots bloqués.",
+	"following_words_has_been_removed": "Les mots suivants ont bien été supprimés des mots bloqués",
+	"words_not_founds": "Les mots suivants n'ont pas été trouvés dans les mots bloqués et n'ont donc pas été supprimés",
+	"please_use_valid_mode": "Veuillez renseigner un mode valide.",
+	"usage_donation": "Envoie le lien PayPal de mon créateur",
+	"make_donation_title": "Faire un don",
     "make_donation": "Si vous voulez soutenir mon créateur, vous pouvez lui [faire un don]",
-
-    "edit_usage": "[ID du message] [nouveau message]",
-    "cannot_edit_this_message": "Je ne peux pas modifier ce message !",
-    "precise_something_to_replace": "Veuillez préciser quelque chose à mettre dans le message !",
-    "bad_message_id": "L'ID du message fourni est incorrect !",
+    
+	"edit_usage": "[ID du message] [nouveau message]",
+	"cannot_edit_this_message": "Je ne peux pas modifier ce message !",
+	"precise_something_to_replace": "Veuillez préciser quelque chose à mettre dans le message !",
+	"bad_message_id": "L'ID du message fourni est incorrect !",
     "edit_description": "Modifie un de mes messages. Seul le possesseur d'un serveur peut utiliser cette commande.",
-
-    "description_help": "Liste les commandes disponibles ou les informations sur une commande en particulier.\nQuand les informations sur une commande sont affichées, si la commande est utilisable avec des arguments, ceux ci seront entre crochets `[]` quand ils sont obligatoires, ou entre accolades `{}` s'ils sont optionnels.",
-    "usage_help": "{commande}",
-    "administration": "Administration",
-    "others": "Autres",
-    "you_can_do": "Vous pouvez faire",
-    "to_get_infos_on_a_command": "pour avoir des informations sur une commande en particulier.",
-    "this_command_does_not_exist": "Cette commande n'existe pas.",
-    "description": "Description",
-    "available_in_dm": "Disponible en messages privés",
-    "no": "non",
-    "yes": "oui",
-    "aliases": "Aliases",
-    "usage": "Utilisation",
+    
+	"description_help": "Liste les commandes disponibles ou les informations sur une commande en particulier.\nQuand les informations sur une commande sont affichées, si la commande est utilisable avec des arguments, ceux ci seront entre crochets `[]` quand ils sont obligatoires, ou entre accolades `{}` s'ils sont optionnels.",
+	"usage_help": "{commande}",
+	"administration": "Administration",
+	"others": "Autres",
+	"you_can_do": "Vous pouvez faire",
+	"to_get_infos_on_a_command": "pour avoir des informations sur une commande en particulier.",
+	"this_command_does_not_exist": "Cette commande n'existe pas.",
+	"description": "Description",
+	"available_in_dm": "Disponible en messages privés",
+	"no": "non",
+	"yes": "oui",
+	"aliases": "Aliases",
+	"usage": "Utilisation",
     "command": "Commande",
-
-    "description_invit": "Envoie le lien permettant de m'inviter dans un serveur.",
-    "invit_bot": "Inviter le bot",
-    "on_a_server": "sur un serveur",
-    "the_link_to_invit_me_is_available": "Le lien permettant de m'inviter sur un serveur est disponible",
+    
+	"description_invit": "Envoie le lien permettant de m'inviter dans un serveur.",
+	"invit_bot": "Inviter le bot",
+	"on_a_server": "sur un serveur",
+	"the_link_to_invit_me_is_available": "Le lien permettant de m'inviter sur un serveur est disponible",
     "here": "[ici]",
-
-    "description_kick": "Kick le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du kick). La permission de kick est requise.",
-    "usage_kick": "[utilisateur] {raison}",
-    "you_are_missing_permissions_to_kick_members": "Vous n'avez pas les permissions suffisantes pour kick un membre.",
-    "i_am_missing_permissions_to_kick_members": "Je n'ai pas les permissions nécessaires pour kick des membres.",
-    "unable_to_kick_higher_than_me": "Je ne peux pas kick cet utilisateur, il a un rang égal ou supérieur au mien.",
-    "cannot_kick_yourself": "Tu ne peux pas te kick toi même !",
-    "you_cannot_kick_this_member": "Vous ne pouvez pas kick ce membre.",
-    "has_been_kicked": " a été kick du serveur !",
+    
+	"description_kick": "Kick le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du kick). La permission de kick est requise.",
+	"usage_kick": "[utilisateur] {raison}",
+	"you_are_missing_permissions_to_kick_members": "Vous n'avez pas les permissions suffisantes pour kick un membre.",
+	"i_am_missing_permissions_to_kick_members": "Je n'ai pas les permissions nécessaires pour kick des membres.",
+	"unable_to_kick_higher_than_me": "Je ne peux pas kick cet utilisateur, il a un rang égal ou supérieur au mien.",
+	"cannot_kick_yourself": "Tu ne peux pas te kick toi même !",
+	"you_cannot_kick_this_member": "Vous ne pouvez pas kick ce membre.",
+	"has_been_kicked": " a été kick du serveur !",
     "kicked_by": "kick par ",
-
-    "description_language": "Permet de changer la langue dans laquelle je suis.\nLes langues disponibles sont `en` pour l'anglais et `fr` pour le français.",
-    "usage_language": "[langue]",
-    "bad_language_code": "Le code de language saisi est incorrect.",
-    "server_language_changed": "La langue du serveur a correctement été définie à `",
+    
+	"description_language": "Permet de changer la langue dans laquelle je suis.\nLes langues disponibles sont `en` pour l'anglais et `fr` pour le français.",
+	"usage_language": "[langue]",
+	"bad_language_code": "Le code de language saisi est incorrect.",
+	"server_language_changed": "La langue du serveur a correctement été définie à `",
     "dm_language_changed": "La langue de vos messages privés a correctement été définie à `",
-
+    
     "description_ping": "Affiche mon ping en ms.",
-
-    "description_purge": "Supprime le nombre de messages voulus.",
-    "usage_purge": "[nombre de messages à supprimer]",
-    "you_cannot_delete_messages": "Vous ne pouvez pas supprimer de messages !",
+    
+	"description_purge": "Supprime le nombre de messages voulus.",
+	"usage_purge": "[nombre de messages à supprimer]",
+	"you_cannot_delete_messages": "Vous ne pouvez pas supprimer de messages !",
     "please_insert_only_a_number": "Veuillez saisir un nombre entier uniquement.",
-
-    "description_react": "Me fait réagir à un message par un émoji.",
-    "usage_react": "[ID du message] [émoji]",
-    "not_allowed_to_use_this_command": "Vous n'êtes pas autorisés à utiliser cette commande !",
-    "cannot_react_to_messages": "Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions.",
-    "insert_only_id_and_emoji": "Veuillez saisir uniquement l'ID du message sur lequel réagir ainsi que l'émoji à y mettre.",
+    
+	"description_react": "Me fait réagir à un message par un émoji.",
+	"usage_react": "[ID du message] [émoji]",
+	"not_allowed_to_use_this_command": "Vous n'êtes pas autorisés à utiliser cette commande !",
+	"cannot_react_to_messages": "Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions.",
+	"insert_only_id_and_emoji": "Veuillez saisir uniquement l'ID du message sur lequel réagir ainsi que l'émoji à y mettre.",
     "access_to_emoji_denied": "L'émoji saisi est incorrect ou je n'y ai pas accès !",
-
-    "description_report": "Permet de signaler un problème, un bug, ou proposer de nouvelles commandes et autres améliorations.\nN'utilisez pas abusivement cette commande pour envoyer des choses ne rentrant pas dans ce cadre.",
-    "usage_report": "[message]",
-    "report_confirmation": "Confirmez vous vouloir envoyer ce report ?",
-    "thirty_seconds_before_auto_cancelling": "Vous avez 30 secondes pour confirmer, ou ce report sera automatiquement annulé.",
-    "new_report": "Nouveau report !",
-    "report_origin": "Origine du report :",
-    "message": "Message",
-    "report_from": "Report de ",
-    "report_channel_unavailable": "Le salon du serveur sur lequel je suis censée envoyer votre report est introuvable...",
-    "report_server_unavailable": "Le serveur sur lequel je suis censée envoyer votre report est introuvable...",
-    "contact_dev": "Veuillez contacter mon développeur au plus vite (CypElf#4541) afin vite corriger ce problème !",
-    "report_sent": "Le report a bien été envoyé. Merci de contribuer à m'améliorer",
+    
+	"description_report": "Permet de signaler un problème, un bug, ou proposer de nouvelles commandes et autres améliorations.\nN'utilisez pas abusivement cette commande pour envoyer des choses ne rentrant pas dans ce cadre.",
+	"usage_report": "[message]",
+	"report_confirmation": "Confirmez vous vouloir envoyer ce report ?",
+	"thirty_seconds_before_auto_cancelling": "Vous avez 30 secondes pour confirmer, ou ce report sera automatiquement annulé.",
+	"new_report": "Nouveau report !",
+	"report_origin": "Origine du report :",
+	"message": "Message",
+	"report_from": "Report de ",
+	"report_channel_unavailable": "Le salon du serveur sur lequel je suis censée envoyer votre report est introuvable...",
+	"report_server_unavailable": "Le serveur sur lequel je suis censée envoyer votre report est introuvable...",
+	"contact_dev": "Veuillez contacter mon développeur au plus vite (CypElf#4541) afin vite corriger ce problème !",
+	"report_sent": "Le report a bien été envoyé. Merci de contribuer à m'améliorer",
     "report_cancelled": "Le report a bien été annulé.",
-
-    "description_roleinfo": "Affiche des informations sur le rôle mentionné ou exactement nommé.",
-    "usage_roleinfo": "[rôle]",
-    "bad_role": "Veuillez mentionner ou écrire un rôle correct du serveur.",
-    "roles": {
-        "zero": "Rôle",
-        "one": "Rôle",
-        "other": "Rôles"
-    },
-    "id": "ID",
-    "color": "Couleur",
-    "mentionnable": "Mentionnable",
-    "separated_category": "Catégorie séparée",
-    "position": "Position",
-    "external_handler": "Géré par l'extérieur",
-    "users_with_this_role": "Utilisateurs avec ce rôle",
-    "role_creation_date": "Date de création du rôle",
-    "permissions": "Permissions",
+    
+	"description_roleinfo": "Affiche des informations sur le rôle mentionné ou exactement nommé.",
+	"usage_roleinfo": "[rôle]",
+	"bad_role": "Veuillez mentionner ou écrire un rôle correct du serveur.",
+	"roles": {
+		"zero": "Rôle",
+		"one": "Rôle",
+		"other": "Rôles"
+	},
+	"id": "ID",
+	"color": "Couleur",
+	"mentionnable": "Mentionnable",
+	"separated_category": "Catégorie séparée",
+	"position": "Position",
+	"external_handler": "Géré par l'extérieur",
+	"users_with_this_role": "Utilisateurs avec ce rôle",
+	"role_creation_date": "Date de création du rôle",
+	"permissions": "Permissions",
     "no_permissions": "Ce rôle n'a aucune permission",
-
-    "rules_from": "Règlement de ",
-    "rule_title": "Règle ",
-    "description_rule1": "Affiche la règle 1 du règlement de Avdray.",
-    "rule1": "Parlez du bon sujet dans le bon salon.",
-
-    "description_rule2": "Affiche la règle 2 du règlement de Avdray.",
-    "rule2": "Toute forme de pub est strictement interdite, **MP compris**, sauf exception autorisée après demande.",
-
-    "description_rule3": "Affiche la règle 3 du règlement de Avdray.",
-    "rule3": "Ne mentionnez pas des gens inutilement.",
-
-    "description_rule4": "Affiche la règle 4 du règlement de Avdray.",
-    "rule4": "Ne spammez et ne floodez pas.",
-
-    "description_rule5": "Affiche la règle 5 du règlement de Avdray.",
-    "rule5": "Pas d'insultes, d'irrespect, de mots vulgaires, de provocation, de menaces, de contenu nsfw, etc.",
-
-    "description_rule6": "Affiche la règle 6 du règlement de Avdray.",
-    "rule6": "N'usurpez pas l'identité de quelqu'un en mettant la même photo de profil et / ou le même pseudo.",
-
-    "description_rule7": "Affiche la règle 7 du règlement de Avdray.",
-    "rule7": "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.",
-
-    "description_rule8": "Affiche la règle 8 du règlement de Avdray.",
-    "rule8": "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.",
-
-    "description_rule9": "Affiche la règle 9 du règlement de Avdray.",
-    "rule9": "Faites des efforts pour écrire un minimum correctement, aidez vous du correcteur orthographique si besoin.",
-
-    "description_rule10": "Affiche la règle 10 du règlement de Avdray.",
-    "rule10": "Interdiction de faire des raids sur d'autres serveurs.",
-
-    "description_rule11": "Affiche la règle 11 du règlement de Avdray.",
-    "rule11": "Interdictions de créer, relancer ou parler de dramas.",
-
-    "description_rule12": "Affiche la règle 12 du règlement de Avdray.",
-    "rule12": "Tout contenu illégal est interdit.",
-
-    "description_rule13": "Affiche la règle 13 du règlement de Avdray.",
+    
+	"rules_from": "Règlement de ",
+	"rule_title": "Règle ",
+	"description_rule1": "Affiche la règle 1 du règlement de Avdray.",
+	"rule1": "Parlez du bon sujet dans le bon salon.",
+	"description_rule2": "Affiche la règle 2 du règlement de Avdray.",
+	"rule2": "Toute forme de pub est strictement interdite, **MP compris**, sauf exception autorisée après demande.",
+	"description_rule3": "Affiche la règle 3 du règlement de Avdray.",
+	"rule3": "Ne mentionnez pas des gens inutilement.",
+	"description_rule4": "Affiche la règle 4 du règlement de Avdray.",
+	"rule4": "Ne spammez et ne floodez pas.",
+	"description_rule5": "Affiche la règle 5 du règlement de Avdray.",
+	"rule5": "Pas d'insultes, d'irrespect, de mots vulgaires, de provocation, de menaces, de contenu nsfw, etc.",
+	"description_rule6": "Affiche la règle 6 du règlement de Avdray.",
+	"rule6": "N'usurpez pas l'identité de quelqu'un en mettant la même photo de profil et / ou le même pseudo.",
+	"description_rule7": "Affiche la règle 7 du règlement de Avdray.",
+	"rule7": "Interdiction de diffuser la moindre information personnelle sur quelqu'un sans son accord.",
+	"description_rule8": "Affiche la règle 8 du règlement de Avdray.",
+	"rule8": "Ne ramenez pas de double compte. Un seul compte par utilisateur sur le serveur suffit.",
+	"description_rule9": "Affiche la règle 9 du règlement de Avdray.",
+	"rule9": "Faites des efforts pour écrire un minimum correctement, aidez vous du correcteur orthographique si besoin.",
+	"description_rule10": "Affiche la règle 10 du règlement de Avdray.",
+	"rule10": "Interdiction de faire des raids sur d'autres serveurs.",
+	"description_rule11": "Affiche la règle 11 du règlement de Avdray.",
+	"rule11": "Interdictions de créer, relancer ou parler de dramas.",
+	"description_rule12": "Affiche la règle 12 du règlement de Avdray.",
+	"rule12": "Tout contenu illégal est interdit.",
+	"description_rule13": "Affiche la règle 13 du règlement de Avdray.",
     "rule13": "Évitez de parler d'affaires extérieures, liées à d'autres serveurs notamment, sur ce serveur. Elles ne nous regardent pas.",
-
-    "description_rustdoc": "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.42.0",
-    "usage_rustdoc": "[mot à rechercher]",
-    "results": "Résultats",
-    "in_name": "Dans le nom",
-    "in_settings": "Dans les paramètres",
-    "in_return_types": "Dans les types de retour",
-    "no_result_title": "Aucuns résultats",
+    
+	"description_rustdoc": "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.42.0",
+	"usage_rustdoc": "[mot à rechercher]",
+	"results": "Résultats",
+	"in_name": "Dans le nom",
+	"in_settings": "Dans les paramètres",
+	"in_return_types": "Dans les types de retour",
+	"no_result_title": "Aucuns résultats",
     "no_result": "Rien ne correspondant à votre recherche n'a été trouvé.",
     
-    "description_say": "Me fait dire le message passé en argument. Seul le possesseur d'un serveur peut l'utiliser.",
+	"description_say": "Me fait dire le message passé en argument. Seul le possesseur d'un serveur peut l'utiliser.",
     "usage_say": "[message]",
-
-    "description_serverinfo": "Affiche des informations sur le serveur.",
-    "nothing": "Aucun",
-    "emoji": {
-        "zero": "émoji",
-        "one": "émoji",
-        "other": "émojis"
-    },
-    "server_owner": "Propriétaire du serveur",
-    "server_id": "ID du serveur",
-    "members": {
-        "one": "Membre",
-        "other": "Membres"
-    },
-    "humans": {
-        "one": "Humain",
-        "other": "Humains"
-    },
-    "bots": {
-        "zero": "Bot",
-        "one": "Bots",
-        "other": "Bots"
-    },
-    "boost_level": "Niveau de boost",
-    "level": "Niveau",
-    "region": "Région",
-    "emojis": "Emojis",
-    "emojis_continuation": "Suite des émojis",
-    "channels": "Salons",
-    "text_channel": {
-        "zero": "textuel",
-        "one": "textuel",
-        "other": "textuels"
-    },
-    "vocal_channel": {
-        "zero": "vocal",
-        "one": "vocal",
-        "other": "vocaux"
-    },
+    
+	"description_serverinfo": "Affiche des informations sur le serveur.",
+	"nothing": "Aucun",
+	"emoji": {
+		"zero": "émoji",
+		"one": "émoji",
+		"other": "émojis"
+	},
+	"server_owner": "Propriétaire du serveur",
+	"server_id": "ID du serveur",
+	"members": {
+		"one": "Membre",
+		"other": "Membres"
+	},
+	"humans": {
+		"one": "Humain",
+		"other": "Humains"
+	},
+	"bots": {
+		"zero": "Bot",
+		"one": "Bots",
+		"other": "Bots"
+	},
+	"boost_level": "Niveau de boost",
+	"level": "Niveau",
+	"region": "Région",
+	"emojis": "Emojis",
+	"emojis_continuation": "Suite des émojis",
+	"channels": "Salons",
+	"text_channel": {
+		"zero": "textuel",
+		"one": "textuel",
+		"other": "textuels"
+	},
+	"vocal_channel": {
+		"zero": "vocal",
+		"one": "vocal",
+		"other": "vocaux"
+	},
     "server_creation_date": "Date de création du serveur",
-
-    "description_userinfo": "Affiche des informations sur l'utilisateur mentionné ou exactement nommé, ou sur l'utilisateur utilisant la commande, par défaut.",
-    "usage_userinfo": "{utilisateur}",
-    "yes_since": "Oui, depuis le",
-    "game": "Jeu",
-    "nickname": "Nickname",
-    "join_date": "Date d'arrivée sur le serveur",
-    "user_creation_date": "Date de création du compte",
-    "booster": "Booster"
+    
+	"description_userinfo": "Affiche des informations sur l'utilisateur mentionné ou exactement nommé, ou sur l'utilisateur utilisant la commande, par défaut.",
+	"usage_userinfo": "{utilisateur}",
+	"yes_since": "Oui, depuis le",
+	"game": "Jeu",
+	"nickname": "Nickname",
+	"join_date": "Date d'arrivée sur le serveur",
+	"user_creation_date": "Date de création du compte",
+	"booster": "Booster"
 }
