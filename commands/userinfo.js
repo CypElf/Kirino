@@ -1,11 +1,11 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'userinfo',
-    description: 'Affiche des informations sur l\'utilisateur mentionné ou exactement nommé, ou sur l\'utilisateur utilisant la commande, par défaut.',
+	name: "userinfo",
+    description: __("description_userinfo"),
     guildOnly: true,
     args: false,
-    usage: '{utilisateur}',
+    usage: __("usage_userinfo"),
     aliases: ["ui"],
     category: "others",
     
@@ -31,7 +31,7 @@ module.exports = {
                     return currentUser.user.username.toLowerCase() === user.toLowerCase();
                 });
                 if (member === undefined) { // ... et enfin si on a toujours rien, on répond qu'il n'y a pas d'utilisateur correspondant
-                    return msg.channel.send("Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur. <:warning:568037672770338816>");
+                    return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>");
                 }
             }
         }
@@ -73,24 +73,18 @@ module.exports = {
                 nbRoles++;
             }
         });
-        let roles = arrayRoles.join(", ");
-        if (nbRoles === 0 || nbRoles === 1) {
-            roles += " (" + nbRoles + " rôle)";
-        }
-        else {
-            roles += " (" + nbRoles + " rôles)";
-        }
+        let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles) + ")";
 
         let nickname = member.nickname;
         if (nickname === null) {
-            nickname = "Aucun"
+            nickname = __("nothing");
         }
         let presence;
         try {
             presence = member.presence.game.name;
         }
         catch(err) {
-            presence = "Aucun";
+            presence = __("nothing");
         }
         let premiumSince = member.premiumSince;
         if (premiumSince) {
@@ -100,25 +94,25 @@ module.exports = {
             const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0");
             const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0");
             const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0");
-            premiumSince = `Oui, depuis le ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`;
+            premiumSince = __("yes_since") + `${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`;
         }
         else {
-            premiumSince = "Non";
+            premiumSince = __("no");
         }
 
         let informations = new Discord.MessageEmbed()
         .setAuthor(member.user.tag, member.user.displayAvatarURL())
-        .setColor('#000000')
-        .addField("ID", member.user.id, true)
-        .addField("Jeu", presence, true)
-        .addField("Nickname", nickname, true)
-        .addField("Date d'arrivée sur le serveur", joinedAt, true)
-        .addField("Date de création du compte", creationDate, true)
-        .addField("Booster", premiumSince)
-        .addField("Rôles", roles, true)
-        .addField("Permissions", perms)
+        .setColor("#000000")
+        .addField(__("id"), member.user.id, true)
+        .addField(__("game"), presence, true)
+        .addField(__("nickname"), nickname, true)
+        .addField(__("join_date"), joinedAt, true)
+        .addField(__("user_creation_date"), creationDate, true)
+        .addField(__("booster"), premiumSince)
+        .addField(__n("roles", nbRoles), roles, true)
+        .addField(__("permissions"), perms)
         .setThumbnail(member.user.displayAvatarURL())
-        .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
         msg.channel.send(informations);
     }
 };

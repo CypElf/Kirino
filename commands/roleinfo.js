@@ -1,11 +1,11 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'roleinfo',
-    description: "Affiche des informations sur le rôle mentionné ou exactement nommé.",
+	name: "roleinfo",
+    description: __("description_roleinfo"),
     guildOnly: true,
     args: true,
-    usage: '[rôle]',
+    usage: __("usage_roleinfo"),
     aliases: ["ri"],
     category: "others",
     
@@ -22,7 +22,7 @@ module.exports = {
                 return currentRole.name.toLowerCase() === r.toLowerCase();
             });
             if (role === undefined) {
-                return msg.channel.send("Veuillez mentionner ou écrire un rôle correct du serveur. <:kirinopout:698923065773522944>");
+                return msg.channel.send(__("bad_role") + " <:kirinopout:698923065773522944>");
             }
         }
 
@@ -49,18 +49,18 @@ module.exports = {
         perms = perms.substring(0, perms.length - 2);
 
         let informations = new Discord.MessageEmbed()
-        .setAuthor("Rôle : " + role.name)
+        .setAuthor(__n("roles", 1) + " : " + role.name)
         .setColor(role.hexColor)
-        .addField("ID", role.id, true)
-        .addField("Couleur", role.hexColor.toUpperCase(), true)
-        .addField("Mentionnable", role.mentionable ? "oui" : "non", true)
-        .addField("Catégorie séparée", role.hoist ? "oui" : "non", true)
-        .addField("Position", role.position, true)
-        .addField("Géré par l'extérieur", role.managed ? "oui" : "non", true)
-        .addField("Utilisateurs avec ce rôle", porteurs + " (" + percentage + "%)", true)
-        .addField("Date de création du rôle", creationDate, true)
-        .addField("Permissions", perms !== "" ? perms : "`Ce rôle n'a aucune permission`")
-        .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+        .addField(__("id"), role.id, true)
+        .addField(__("color"), role.hexColor.toUpperCase(), true)
+        .addField(__("mentionnable"), role.mentionable ? __("yes") : __("no"), true)
+        .addField(__("separated_category"), role.hoist ? __("yes") : __("no"), true)
+        .addField(__("position"), role.position, true)
+        .addField(__("external_handler"), role.managed ? __("yes") : __("no"), true)
+        .addField(__("users_with_this_role"), porteurs + " (" + percentage + "%)", true)
+        .addField(__("role_creation_date"), creationDate, true)
+        .addField(__("permissions"), perms !== "" ? perms : "`" + __("no_permissions") + "`")
+        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
         msg.channel.send(informations);
     }
 };

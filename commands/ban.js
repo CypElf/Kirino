@@ -1,19 +1,18 @@
-const { prefix } = require('../config.json');
 module.exports = {
-	name: 'ban',
-    description: 'Ban le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du ban). La permission de ban est requise.',
+	name: "ban",
+    description: __("description_ban"),
     guildOnly: true,
     args: true,
     category: "admin",
-    usage: '[utilisateur] {raison}',
+    usage: __("usage_ban"),
 
     async execute (bot, msg, [userToBan, ...reason]) {
         if (!msg.member.hasPermission('BAN_MEMBERS')) {
-            return msg.channel.send("Vous n'avez pas les permissions suffisantes pour bannir un membre. <:kirinopff:698922942268047391>")
+            return msg.channel.send(__("you_are_missing_permissions_to_ban_members") + " <:kirinopff:698922942268047391>");
         }
     
         if (!msg.guild.me.hasPermission('BAN_MEMBERS')) {
-            return msg.channel.send("Je n'ai pas les permissions nécessaires pour bannir des membres. <:kirinopout:698923065773522944>");
+            return msg.channel.send(__("i_am_missing_permissions_to_ban_members") + " <:kirinopout:698923065773522944>");
         }
     
         let banMember = msg.mentions.members.first();
@@ -22,25 +21,25 @@ module.exports = {
                 return currentUser.user.username.toLowerCase() === userToBan.toLowerCase();
             });
             if (banMember === undefined) {
-                return msg.channel.send("Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur. <:kirinopout:698923065773522944>");
+                return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>");
             }
         }
     
         if (!banMember.bannable) {
-            return msg.channel.send("Je ne peux pas bannir cet utilisateur, il a un rang égal ou supérieur au mien. <:kirinopout:698923065773522944>");
+            return msg.channel.send(__("unable_to_ban_higher_than_me") + " <:kirinopout:698923065773522944>");
         }
     
         if (banMember.id === msg.member.id) {
-            return msg.channel.send("Tu ne peux pas te bannir toi même ! <:kirinopff:698922942268047391>")
+            return msg.channel.send(__("cannot_ban_yourself") + " <:kirinopff:698922942268047391>");
         }
     
         if (msg.member.roles.highest.comparePositionTo(banMember.roles.highest) < 0) {
-            return msg.channel.send("Vous ne pouvez pas bannir ce membre. <:kirinopff:698922942268047391>");
+            return msg.channel.send(__("you_cannot_ban_this_member") + " <:kirinopff:698922942268047391>");
         }
     
-        banMember.ban({ reason: reason.join(" ") + " (banni par " + msg.author.tag + ")" })
+        banMember.ban({ reason: reason.join(" ") + " (" + __("banned_by") + msg.author.tag + ")" })
             .then(member => {
-                msg.channel.send(`${member.user.username} a été banni du serveur ! <:hammer:568068459485855752>`);
+                msg.channel.send(member.user.username + __("has_been_banned") + " <:hammer:568068459485855752>");
                 msg.delete();
             });
     }

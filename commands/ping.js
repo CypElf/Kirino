@@ -1,6 +1,6 @@
 module.exports = {
-	name: 'ping',
-    description: "Affiche mon ping en ms.",
+	name: "ping",
+    description: __("description_ping"),
     guildOnly: false,
 	args: false,
 	category: "others",

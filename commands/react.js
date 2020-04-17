@@ -1,26 +1,24 @@
-const config = require('../config.json');
-
 module.exports = {
-	name: 'react',
-    description: 'Me fait réagir à un message par un émoji.',
+	name: "react",
+    description: __("description_react"),
     guildOnly: false,
     args: true,
     category: "others",
-    usage: '[ID du message] [émoji]',
+    usage: __("usage_react"),
     
     async execute(bot, msg, args) {
-		if (msg.author.id !== config.ownerID && msg.author.id !== msg.guild.ownerID) {
-            return msg.channel.send("Vous n'êtes pas autorisés à utiliser cette commande ! <:kirinopff:698922942268047391>")
+		if (msg.author.id !== bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
+            return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
                 .then(msg => msg.delete(5000))
                 .catch();
         }
 
         if (msg.channel.type === "text") {
-            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send("Je n'ai pas la permission de réagir aux messages ! <:kirinopout:698923065773522944>")
+            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
         }
 
         if (args.length < 2) {
-            return msg.channel.send("Veuillez saisir uniquement l'ID du message sur lequel réagir ainsi que l'émoji à y mettre. <:kirinopout:698923065773522944>");
+            return msg.channel.send(__("insert_only_id_and_emoji") + " <:kirinopout:698923065773522944>");
         }
 
         const ID = args[0];
@@ -41,12 +39,12 @@ module.exports = {
                                 msg.delete();
                             })
                             .catch(() => {
-                                return msg.channel.send("L'émoji saisi est incorrect ou je n'y ai pas accès ! <:kirinopout:698923065773522944>")
+                                return msg.channel.send(__("access_to_emoji_denied") + " <:kirinopout:698923065773522944>")
                             });
                     })
 			})
 			.catch(err => {
-				return msg.channel.send("L'ID du message fourni est incorrect ! <:kirinopout:698923065773522944>");
+				return msg.channel.send(__("bad_message_id") + " <:kirinopout:698923065773522944>");
 			});
     }
 };

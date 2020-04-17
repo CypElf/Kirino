@@ -1,32 +1,30 @@
-const config = require("../config.json");
-
 module.exports = {
-	name: 'edit',
-    description: 'Modifie un de mes messages. Seul le possesseur d\'un serveur peut utiliser cette commande.',
+	name: "edit",
+    description: __("edit_description"),
     guildOnly: true,
 	args: true,
 	category: "others",
-	usage: "[ID du message] [nouveau message]",
+	usage: __("edit_usage"),
 	
 	async execute(bot, msg, [ID, ...editMsg]) {
-		if (msg.author.id != config.ownerID && msg.author.id !== msg.guild.ownerID) {
+		if (msg.author.id != bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
 			return;
 		}
 
 		msg.channel.messages.fetch(ID)
 			.then(msg2 => {
 				if (!msg2.editable) {
-					return msg.channel.send("Je ne peux pas modifier ce message ! <:kirinopff:698922942268047391>");
+					return msg.channel.send(__("cannot_edit_this_message") + " <:kirinopff:698922942268047391>");
 				}
 				const replacementText = editMsg.join(" ");
-				if (!replacementText) return msg.channel.send("Veuillez préciser quelque chose à mettre dans le message ! <:kirinopout:698923065773522944>")
+				if (!replacementText) return msg.channel.send(__("precise_something_to_replace") + " <:kirinopout:698923065773522944>")
 				msg2.edit(replacementText)
 					.catch();
 
 				msg.delete();
 			})
 			.catch(err => {
-				return msg.channel.send("L'ID du message fourni est incorrect ! <:kirinopout:698923065773522944>");
+				return msg.channel.send(__("bad_message_id") + " <:kirinopout:698923065773522944>");
 			});
 	}
 };

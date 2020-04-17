@@ -1,23 +1,22 @@
 module.exports = {
-	name: 'rule11',
-    description: "Affiche la règle 11 du règlement de Avdray.",
+	name: "rule11",
+    description: __("description_rule11"),
     guildOnly: true,
     args: false,
     category: "admin",
-	
+    
     async execute(bot, msg) {
         if (msg.channel.type === "text") {
             if (msg.guild.id === bot.config.avdrayID) {
-                const Discord = require('discord.js');
+                const Discord = require("discord.js");
                 const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
                 const emb = new Discord.MessageEmbed()
-                    .addField("Règle 11", "Interdictions de créer, relancer ou parler de dramas.")
+                    .addField(__("rule_title") + "11", __("rule11"))
                     .setColor('#000000');
                     
-                    if (avdray != null) {
-                        emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
-                    }
-                    
+                if (avdray != null) {
+                    emb.setFooter(__("rules_from") + avdray.name, avdray.iconURL());
+                }
                 msg.channel.send(emb);
             }
         }

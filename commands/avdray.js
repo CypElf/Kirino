@@ -1,6 +1,6 @@
 module.exports = {
-	name: 'avdray',
-    description: 'Envoie le lien du serveur de mon créateur.',
+	name: "avdray",
+    description: __("description_avdray"),
     guildOnly: false,
 	args: false,
 	category: "others",

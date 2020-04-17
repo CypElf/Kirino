@@ -1,13 +1,13 @@
 module.exports = {
 	name: 'help',
-	description: "Liste les commandes disponibles ou les informations sur une commande en particulier.\nQuand les informations sur une commande sont affichées, si la commande est utilisable avec des arguments, ceux ci seront entre crochets `[]` quand ils sont obligatoires, ou entre accolades `{}` s'ils sont optionnels.",
+	description: __("description_help"),
 	guildOnly: false,
-	usage: '{commande}',
+	usage: __("usage_help"),
 	category: "others",
 
 	async execute (bot, msg, args) {
-		const { prefix } = require('../config.json');
-		const Discord = require('discord.js');
+		const prefix = bot.config.prefix;
+		const Discord = require("discord.js");
 		
 		let data = [];
 		let dataJoined;
@@ -16,7 +16,7 @@ module.exports = {
 			
 			let help_embed = new Discord.MessageEmbed()
 				.setColor('#DFC900')
-				.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
 	
 			let first = true;
 			bot.commands.forEach(command => {
@@ -46,7 +46,7 @@ module.exports = {
 
 			dataJoined = data.join("");
 			if (dataJoined) {
-				help_embed.addField("Administration", dataJoined);
+				help_embed.addField(__("administration"), dataJoined);
 			}
 			
 			data = [];
@@ -65,7 +65,7 @@ module.exports = {
 
 			dataJoined = data.join("");
 			if (dataJoined) {
-				help_embed.addField("Autres", dataJoined + `\n\nVous pouvez faire \`${prefix}help [commande]\` pour avoir des informations sur une commande en particulier.`);
+				help_embed.addField(__("others"), dataJoined + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"));
 			}
 	
 			return msg.channel.send(help_embed)
@@ -82,10 +82,10 @@ module.exports = {
 				}
 			}
 		}
-    	if (!command) return msg.channel.send("Cette commande n'existe pas.");
+    	if (!command) return msg.channel.send(__("this_command_does_not_exist"));
 	
-		if (command.description) data.push(`**Description** : ${command.description}`);
-		command.guildOnly ? data.push(`**Disponible en messages privés** : non`) : data.push(`**Disponible en messages privés** : oui`);
+		if (command.description) data.push("**" + __("description") + "**" + " : " + __(`${command.description}`));
+		command.guildOnly ? data.push("**" + __("available_in_dm") + "** : " + __("no")) : data.push("**" + __("available_in_dm") + "** : " + __("yes"));
 		if (command.aliases) {
 			let aliasesStr = "";
 			command.aliases.forEach(aliase => {
@@ -93,16 +93,16 @@ module.exports = {
 			});
 			aliasesStr = aliasesStr.substring(0, aliasesStr.length - 2);
 
-			data.push("**Aliases** : " + aliasesStr);
+			data.push("**" + __("aliases") + "** : " + aliasesStr);
 		}
-		if (command.usage) data.push(`**Utilisation** : \`${prefix}${command.name} ${command.usage}\``);
+		if (command.usage) data.push("**" + __("usage") + "** : `" + prefix + command.name + " " + __(`${command.usage}`) + "`");
 		
 		const texte = data.join('\n');
 	
 		const help_embed = new Discord.MessageEmbed()
 			.setColor('#DFC900')
-			.addField("**Commande : " + command.name + "**", texte)
-			.setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+			.addField("**" + __("command") + " : " + command.name + "**", texte)
+			.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
 		msg.channel.send(help_embed);
 	}
 };

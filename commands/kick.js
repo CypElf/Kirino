@@ -1,20 +1,19 @@
-const { prefix } = require('../config.json');
 module.exports = {
-	name: 'kick',
-    description: 'Kick le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du ban). La permission de kick est requise.',
+	name: "kick",
+    description: __("description_kick"),
     guildOnly: true,
     args: true,
     category: "admin",
-    usage: '[utilisateur] {raison}',
+    usage: __("usage_kick"),
 
     async execute (bot, msg, [userToBan, ...reason]) {
-        const canKick = msg.member.hasPermission('KICK_MEMBERS');
+        const canKick = msg.member.hasPermission("KICK_MEMBERS");
         if (!canKick) {
-            return msg.channel.send("Vous n'avez pas les permissions suffisantes pour kick un membre. <:kirinopff:698922942268047391>")
+            return msg.channel.send(__("you_are_missing_permissions_to_kick_members") + " <:kirinopff:698922942268047391>")
         }
     
-        if (!msg.guild.me.hasPermission('KICK_MEMBERS')) {
-            return msg.channel.send("On dirait que je n'ai pas les permissions nécessaire pour kick des membres. <:kirinopout:698923065773522944>");
+        if (!msg.guild.me.hasPermission("KICK_MEMBERS")) {
+            return msg.channel.send(__("i_am_missing_permissions_to_kick_members") + " <:kirinopout:698923065773522944>");
         }
     
         let kickMember = msg.mentions.members.first();
@@ -23,25 +22,25 @@ module.exports = {
                 return currentUser.user.username.toLowerCase() === userToBan.toLowerCase();
             });
             if (kickMember === undefined) {
-                return msg.channel.send("Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur. <:kirinopout:698923065773522944>");
+                return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>");
             }
         }
     
         if (!kickMember.kickable) {
-            return msg.channel.send("Je ne peux pas kick cet utilisateur, il a un rang égal ou supérieur au mien. <:kirinopout:698923065773522944>");
+            return msg.channel.send(__("unable_to_kick_higher_than_me") + " <:kirinopout:698923065773522944>");
         }
     
         if (kickMember.id === msg.member.id) {
-            return msg.channel.send("Tu ne peux pas te kick toi même ! <:kirinopff:698922942268047391>")
+            return msg.channel.send(__("cannot_kick_yourself") + " <:kirinopff:698922942268047391>")
         }
     
         if (msg.member.roles.highest.comparePositionTo(kickMember.roles.highest) < 0) {
-            return msg.channel.send("Vous ne pouvez pas kick ce membre. <:kirinopff:698922942268047391>");
+            return msg.channel.send(__("you_cannot_kick_this_member") + " <:kirinopff:698922942268047391>");
         }
 
-        kickMember.kick({ reason: reason.join(" ") + " (kick par " + msg.author.tag + ")" })
+        kickMember.kick({ reason: reason.join(" ") + " (" + __("kicked_by") + msg.author.tag + ")" })
             .then(member => {
-                msg.channel.send(`${member.user.username} a été kick du serveur ! <:boot:568041855523094549>`);
+                msg.channel.send(member.user.username + __("has_been_kicked") + " <:boot:568041855523094549>");
                 msg.delete();
             });
     }

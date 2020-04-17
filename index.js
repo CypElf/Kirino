@@ -53,7 +53,7 @@ bot.on("message", async msg => {
     const commandName = messageArray[0].toLowerCase().slice(bot.config.prefix.length);
     const args = messageArray.slice(bot.config.prefix.length);    
 
-    const db = new bsqlite3("database.db");
+    const db = new bsqlite3("database.db", { fileMustExist: true });
 
     // ------------------------------------------------------------- paramétrage de la bonne langue
 
@@ -182,7 +182,7 @@ bot.on("message", async msg => {
     if (!command) return;
 
     if (command.guildOnly && msg.channel.type !== "text") {
-        return msg.reply(__("command_not_available_in_dm"));
+        return msg.reply(__("command_not_available_in_dm") + " <:kirinopout:698923065773522944>");
     }
 
     if (command.args && !args.length) {

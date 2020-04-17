@@ -1,15 +1,15 @@
 module.exports = {
-	name: 'rustdoc',
-    description: "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.42.0",
+	name: "rustdoc",
+    description: __("description_rustdoc"),
     guildOnly: false,
     args: true,
-    usage: "[mot à rechercher]",
+    usage: __("usage_rustdoc"),
     aliases: ["rd"],
     category: "others",
 
     async execute (bot, msg, args) {
-        const Discord = require('discord.js');
-        const rustDocResearcher = require('./rustdoc_logic/rustdoc_researcher');
+        const Discord = require("discord.js");
+        const rustDocResearcher = require("./rustdoc_logic/rustdoc_researcher");
 
         const keywords = args.join(" ");
         const results = rustDocResearcher(keywords);
@@ -64,25 +64,25 @@ module.exports = {
         }
 
         let embed = new Discord.MessageEmbed()
-            .setTitle("Résultats")
+            .setTitle(__("results"))
 			.setColor('#353535')
 			.setThumbnail("https://doc.rust-lang.org/rust-logo1.42.0.png")
-            .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
 
         if (contentNames !== "") {
-            embed.addField("Dans le nom", contentNames);
+            embed.addField(__("in_name"), contentNames);
         }
 
         if (contentIsArgs !== "") {
-            embed.addField("Dans les paramètres", contentIsArgs);
+            embed.addField(__("in_settings"), contentIsArgs);
         }
 
         if (contentReturned !== "") {
-            embed.addField("Dans les types de retour", contentReturned);
+            embed.addField(__("in_return_types"), contentReturned);
         }
 
         if (contentNames === "" && contentIsArgs === "" && contentReturned === "") {
-            embed.addField("Aucuns résultats", "Rien ne correspondant à votre recherche n'a été trouvé.")
+            embed.addField(__("no_result_title"), __("no_result"))
         }
         
         msg.channel.send(embed);

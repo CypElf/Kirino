@@ -1,23 +1,22 @@
 module.exports = {
-	name: 'rule6',
-    description: "Affiche la règle 6 du règlement de Avdray.",
+	name: "rule6",
+    description: __("description_rule6"),
     guildOnly: true,
     args: false,
     category: "admin",
-	
+    
     async execute(bot, msg) {
         if (msg.channel.type === "text") {
             if (msg.guild.id === bot.config.avdrayID) {
-                const Discord = require('discord.js');
+                const Discord = require("discord.js");
                 const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
                 const emb = new Discord.MessageEmbed()
-                    .addField("Règle 6", "N'usurpez pas l'identité de quelqu'un en mettant la même photo de profil et / ou le même pseudo.")
+                    .addField(__("rule_title") + "6", __("rule6"))
                     .setColor('#000000');
                     
-                    if (avdray != null) {
-                        emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
-                    }
-                    
+                if (avdray != null) {
+                    emb.setFooter(__("rules_from") + avdray.name, avdray.iconURL());
+                }
                 msg.channel.send(emb);
             }
         }

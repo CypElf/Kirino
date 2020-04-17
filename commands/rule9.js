@@ -1,23 +1,22 @@
 module.exports = {
-	name: 'rule9',
-    description: "Affiche la règle 9 du règlement de Avdray.",
+	name: "rule9",
+    description: __("description_rule9"),
     guildOnly: true,
     args: false,
     category: "admin",
-	
+    
     async execute(bot, msg) {
         if (msg.channel.type === "text") {
             if (msg.guild.id === bot.config.avdrayID) {
-                const Discord = require('discord.js');
+                const Discord = require("discord.js");
                 const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
                 const emb = new Discord.MessageEmbed()
-                    .addField("Règle 9", "Faites des efforts pour écrire un minimum correctement, aidez vous du correcteur orthographique si besoin.")
+                    .addField(__("rule_title") + "9", __("rule9"))
                     .setColor('#000000');
                     
-                    if (avdray != null) {
-                        emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
-                    }
-                    
+                if (avdray != null) {
+                    emb.setFooter(__("rules_from") + avdray.name, avdray.iconURL());
+                }
                 msg.channel.send(emb);
             }
         }

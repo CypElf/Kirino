@@ -1,2 +1,1 @@
-- don't display avdray rules command in others guilds
-- translation
+- i18n

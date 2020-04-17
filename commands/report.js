@@ -1,17 +1,17 @@
 module.exports = {
 	name: "report",
-    description: "Permet de signaler un problème, un bug, ou proposer de nouvelles commandes et autres améliorations.\nN'utilisez pas abusivement cette commande pour envoyer des choses ne rentrant pas dans ce cadre.",
+    description: __("description_report"),
     guildOnly: false,
 	args: true,
 	category: "others",
-	usage: "[message]",
+	usage: __("usage_report"),
 	
 	async execute(bot, msg, args) {
         let origin;
         let originAvatar;
         if (msg.channel.type === "text") {
             if (!msg.guild.me.hasPermission("ADD_REACTIONS")) {
-                return msg.channel.send("Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions. <:kirinopout:698923065773522944>");
+                return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>");
             }
             origin = msg.guild.name;
             originAvatar = msg.guild.iconURL();
@@ -21,7 +21,7 @@ module.exports = {
             originAvatar = msg.author.displayAvatarURL();
         }
         const report = args.join(" ");
-        let confirmationMsg = await msg.channel.send("Confirmez vous vouloir envoyer ce report ?\n```" + report + "``` Vous avez 30 secondes pour confirmer, ou ce report sera automatiquement annulé.");
+        let confirmationMsg = await msg.channel.send(__("report_confirmation") + "\n```" + report + "``` " + __("thirty_seconds_before_auto_cancelling"));
 
         confirmationMsg.react('✅');
         confirmationMsg.react('❌');
@@ -44,24 +44,24 @@ module.exports = {
                         const Discord = require("discord.js");
     
                         let reportEmbed = new Discord.MessageEmbed()
-                            .setTitle("**Nouveau report !**")
+                            .setTitle("**" + __("new_report") + "**")
                             .setThumbnail(originAvatar)
-                            .setDescription("**Origine du report :** " + origin + "\n**Message :** " + report)
+                            .setDescription("**" + __("report_origin") + "** " + origin + "\n**" + __("message") + " :** " + report)
                             .setColor("#CC0101")
-                            .setFooter("Report de " + msg.author.tag, msg.author.displayAvatarURL());
+                            .setFooter(__("report_from") + msg.author.tag, msg.author.displayAvatarURL());
                         reportChannel.send(reportEmbed);
                     }
                     else {
-                        return msg.channel.send("Le salon du serveur sur lequel je suis censée envoyer votre report est introuvable... <:kirinowhat:698923096752783401> Veuillez contacter mon développeur au plus vite (CypElf#4541) afin vite corriger ce problème !");
+                        return msg.channel.send(__("report_channel_unavailable") + " <:kirinowhat:698923096752783401> " + __("contact_dev"));
                     }
                 }
                 else {
-                    return msg.channel.send("Le serveur sur lequel je suis censée envoyer votre report est introuvable... <:kirinowhat:698923096752783401> Veuillez contacter mon développeur au plus vite (CypElf#4541) afin vite corriger ce problème !");
+                    return msg.channel.send(__("report_server_unavailable") + " <:kirinowhat:698923096752783401> " + __("contact_dev"));
                 }
-                msg.channel.send("Le report a bien été envoyé. Merci de contribuer à m'améliorer <:kirinoglad:698923046819594351> !");
+                msg.channel.send(__("report_sent") + " <:kirinoglad:698923046819594351> !");
             }
             else {
-                msg.channel.send("Le report a bien été annulé.");
+                msg.channel.send(__("report_cancelled"));
             }
         });
 	}

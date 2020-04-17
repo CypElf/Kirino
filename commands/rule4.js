@@ -1,23 +1,22 @@
 module.exports = {
-	name: 'rule4',
-    description: "Affiche la règle 4 du règlement de Avdray.",
+	name: "rule4",
+    description: __("description_rule4"),
     guildOnly: true,
     args: false,
     category: "admin",
-	
+    
     async execute(bot, msg) {
         if (msg.channel.type === "text") {
             if (msg.guild.id === bot.config.avdrayID) {
-                const Discord = require('discord.js');
+                const Discord = require("discord.js");
                 const avdray = bot.guilds.cache.find(g => g.id === bot.config.avdrayID);
                 const emb = new Discord.MessageEmbed()
-                    .addField("Règle 4", "Ne spammez et ne floodez pas.")
+                    .addField(__("rule_title") + "4", __("rule4"))
                     .setColor('#000000');
                     
-                    if (avdray != null) {
-                        emb.setFooter("Règlement de " + avdray.name, avdray.iconURL());
-                    }
-                    
+                if (avdray != null) {
+                    emb.setFooter(__("rules_from") + avdray.name, avdray.iconURL());
+                }
                 msg.channel.send(emb);
             }
         }

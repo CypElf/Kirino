@@ -1,13 +1,13 @@
 module.exports = {
-	name: 'serverinfo',
-    description: 'Affiche des informations sur le serveur.',
+	name: "serverinfo",
+    description: __("description_serverinfo"),
     guildOnly: true,
     args: false,
     aliases: ["si"],
     category: "others",
     
     async execute(bot, msg) {
-        const Discord = require('discord.js');
+        const Discord = require("discord.js");
 
         let creationDate = msg.guild.createdAt;
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0");
@@ -32,12 +32,7 @@ module.exports = {
         });
         let roles = arrayRoles.join(", ");
 
-        if (nbRoles === 0 || nbRoles === 1) {
-            roles += " (" + nbRoles + " rôle)";
-        }
-        else {
-            roles += " (" + nbRoles + " rôles)";
-        }
+        roles += " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")";
 
         const salons = msg.guild.channels.cache;
         const nbSalonsTxt = salons.filter(salon => salon.type == "text").size;
@@ -46,13 +41,9 @@ module.exports = {
         const emojisCount = emojis.length;
         let emojisArray = [""];
         let displayedEmojisCount = "";
-        if (emojisCount === 0) displayedEmojisCount = "Aucun";
-        if (emojisCount === 0 || emojisCount === 1) {
-            displayedEmojisCount += " (" + emojisCount + " émoji)";
-        }
-        else {
-            displayedEmojisCount += " (" + emojisCount + " émojis)";
-        }
+        if (emojisCount === 0) displayedEmojisCount = __("nothing");
+
+        displayedEmojisCount += " (" + emojisCount + " " + __n("emoji", emojisCount) + ")";
 
         let i = 0;
         emojis.forEach(emoji => {
@@ -74,31 +65,31 @@ module.exports = {
 
         let informations = new Discord.MessageEmbed()
         .setAuthor(msg.guild.name, msg.guild.owner.user.displayAvatarURL())
-        .setColor('#000000')
-        .addField("Propriétaire du serveur", msg.guild.owner.user.tag, true)
-        .addField("ID du serveur", msg.guild.id, true)
-        .addField("Membres", msg.guild.memberCount, true)
-        .addField("Humains", humains, true)
-        .addField("Bots", bots, true)
-        .addField("Niveau de boost", `Niveau ${msg.guild.premiumTier}`, true)
-        .addField("Region", msg.guild.region, true)
+        .setColor("#000000")
+        .addField(__("server_owner"), msg.guild.owner.user.tag, true)
+        .addField(__("server_id"), msg.guild.id, true)
+        .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
+        .addField(__n("humans", humains), humains, true)
+        .addField(__n("bots", bots), bots, true)
+        .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
+        .addField(__("region"), msg.guild.region, true)
 
         let first = true;
         emojisArray.forEach(msg1024 => {
             if (first) {
-                informations.addField("Emojis", msg1024);
+                informations.addField(__("emojis"), msg1024);
                 first = false;
             }
             else {
-                informations.addField("Suite des émojis", msg1024);
+                informations.addField(__("emojis_continuation"), msg1024);
             }
         });
         
-        informations.addField("Rôles", roles)
-        .addField("Salons", nbSalonsTxt + " textuels, " + nbSalonsVocaux + " vocaux", true)
-        .addField("Date de création du serveur", creationDate, true)
+        informations.addField(__n("roles", nbRoles), roles)
+        .addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
+        .addField(__("server_creation_date"), creationDate, true)
         .setThumbnail(msg.guild.iconURL())
-        .setFooter("Requête de " + msg.author.username, msg.author.displayAvatarURL());
+        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
         msg.channel.send(informations);
     }
 };
