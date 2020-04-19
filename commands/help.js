@@ -51,7 +51,7 @@ module.exports = {
 			first = true;
 			bot.commands.forEach(command => {
 				if (command.category == "others") {
-					if (!(command.name === "avdray")) {
+					if (!(command.name === "avdray" && (msg.channel.type !== "text" || msg.guild.id !== bot.config.avdrayID ))) {
 						if (first) {
 							data.push("`" + command.name + "`");
 							first = false;
