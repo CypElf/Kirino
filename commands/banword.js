@@ -8,7 +8,7 @@ module.exports = {
     category: "admin",
 
     async execute (bot, msg, [mode, ...mots]) {
-        if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("missing_permissions_to_execute_this_command") + "<:kirinopout:698923065773522944>");
+        if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("missing_permissions_to_execute_this_command") + " <:kirinopout:698923065773522944>");
 
         const bsqlite3 = require("better-sqlite3");
         const db = new bsqlite3("database.db", { fileMustExist: true });
