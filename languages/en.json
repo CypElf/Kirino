@@ -212,7 +212,7 @@
 	"join_date": "Arrival date on the server",
 	"user_creation_date": "Account creation date",
 	"booster": "Booster",
-	"description_rule": "Allows you to store server rules.",
+	"description_rule": "Allows to store server rules.\nThe available modes are:\n- `add` which allows to add a rule. The rule to be added must be given as an argument.\n- `remove` allows you to delete a rule. You have to provide as argument the number of the rule to be deleted.\n- `count` allows to know how many rules are defined.\n- And finally `n` with n a positive integer, corresponding to the position of the rule, displays the rule.",
 	"usage_rule": "[mode or number] {number or rule}",
 	"please_enter_a_rule_to_add": "Please specify the rule to be added!",
 	"cannot_store_|": "I'm sorry, but because of the way I store the rules, you can't put `|` in them.",

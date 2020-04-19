@@ -212,7 +212,7 @@
 	"join_date": "Date d'arrivée sur le serveur",
 	"user_creation_date": "Date de création du compte",
 	"booster": "Booster",
-	"description_rule": "Permet de stocker les règles du serveur.",
+	"description_rule": "Permet de stocker les règles du serveur.\nLes modes disponibles sont :\n - `add` qui permet d'ajouter une règle. Il faut fournir en argument la règle à ajouter.\n- `remove` qui permet de supprimer unr règle. Il faut fournir en argument le numéro de la règle à supprimer.\n- `count` pour savoir combien de règles sont définies.\n- Et enfin `n` avec n un nombre entier positif, correspondant à la position d'une règle, affiche cette dernière.",
 	"usage_rule": "[mode ou numéro] {numéro ou règle}",
 	"please_enter_a_rule_to_add": "Veuillez préciser la règle à ajouter !",
 	"cannot_store_|": "Je suis désolée, mais à cause de la façon dont je stocke les règles, vous ne pouvez pas mettre de `|` dedans.",
