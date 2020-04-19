@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: false,
     args: true,
     usage: __("usage_language"),
+    aliases: ["lang"],
     category: "admin",
 
 	async execute (bot, msg, args) {

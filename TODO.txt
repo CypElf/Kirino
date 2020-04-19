@@ -1,3 +1,2 @@
-- custom rules (limit to 30)
 - limit afk reason to make sure total message on afk is under 2000
-- banwords `,` to `|`
+- limit max ban word length to make sure total of 100 of them stay under 2000
