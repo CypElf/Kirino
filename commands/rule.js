@@ -13,6 +13,7 @@ module.exports = {
         
         const request = args[0];
         if (request === "add") {
+            if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("not_enough_permissions_to_add_rule") + " <:kirinopff:698922942268047391>");
             const newRule = args.slice(1).join(" ");
             if (!newRule) {
                 return msg.channel.send(__("please_enter_a_rule_to_add") + " <:kirinopout:698923065773522944>");
@@ -30,6 +31,7 @@ module.exports = {
         }
 
         else if (request === "remove") {
+            if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("not_enough_permissions_to_add_rule") + " <:kirinopff:698922942268047391>");
             if (!args[1]) return msg.channel.send(__("please_enter_a_rule_do_delete") + " <:kirinopout:698923065773522944>");
 
             const index = parseInt(args.slice(1)[0]) - 1;

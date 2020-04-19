@@ -229,5 +229,6 @@
 		"one": "règle définie sur ce serveur.",
 		"other": "règles définies sur ce serveur."
 	},
-	"no_rules_defined_on_this_server": "Aucune règle n'est définie pour ce serveur."
+	"no_rules_defined_on_this_server": "Aucune règle n'est définie pour ce serveur.",
+	"not_enough_permissions_to_add_rule": "Tu n'as pas les permissions nécessaires pour utiliser cette commande !"
 }

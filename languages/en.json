@@ -232,5 +232,6 @@
 		"one": "rule defined on this server.",
 		"other": "rules defined on this server."
 	},
-	"no_rules_defined_on_this_server": "No rules are defined for this server."
+	"no_rules_defined_on_this_server": "No rules are defined for this server.",
+	"not_enough_permissions_to_add_rule": "You don't have the necessary permissions to use this command!"
 }
