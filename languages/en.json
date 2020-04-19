@@ -28,6 +28,7 @@
 	"banned_by": "banned by ",
 	"banword_description": "Allows you to block words in the server.",
 	"banword_usage": "[mode] {word1} {word2}... {wordN}",
+	"banwords_count_limited": "The number of blocked words is limited to 100 per server. Please delete some of them in order to free up space.",
 	"please_insert_banwords_to_add": "Please enter one or more words as arguments to block them.",
 	"missing_permissions_to_execute_this_command": "You do not have sufficient permissions to use this command!",
 	"the_word": {
@@ -82,14 +83,12 @@
 	"you_cannot_kick_this_member": "You can't kick that member.",
 	"has_been_kicked": " has been kicked from the server!",
 	"kicked_by": "kicked by ",
-
 	"description_language": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.",
 	"usage_language": "[language]",
 	"bad_language_code": "The language code entered is incorrect.",
 	"server_language_changed": "The server language has been correctly set to `",
 	"dm_language_changed": "The language of your direct messages has been correctly set to `",
 	"not_enough_permission_to_change_language": "You don't have the necessary permissions to use this command!",
-
 	"description_ping": "Shows my ping in ms.",
 	"description_purge": "Deletes the desired number of messages.",
 	"usage_purge": "[number of messages to be deleted]",
@@ -118,7 +117,6 @@
 	"usage_roleinfo": "[role]",
 	"bad_role": "Please mention or write a correct server role.",
 	"roles": {
-		"zero": "Role",
 		"one": "Role",
 		"other": "Roles"
 	},
@@ -173,7 +171,6 @@
 	"description_serverinfo": "Displays information about the server.",
 	"nothing": "None",
 	"emoji": {
-		"zero": "emoji",
 		"one": "emoji",
 		"other": "emojis"
 	},
@@ -189,7 +186,6 @@
 		"other": "Humans"
 	},
 	"bots": {
-		"zero": "Bot",
 		"one": "Bots",
 		"other": "Bots"
 	},
@@ -200,12 +196,10 @@
 	"emojis_continuation": "Emojis continuation",
 	"channels": "Channels",
 	"text_channel": {
-		"zero": "textual",
 		"one": "textual",
 		"other": "textuals"
 	},
 	"vocal_channel": {
-		"zero": "vocal",
 		"one": "vocal",
 		"other": "vocals"
 	},
@@ -217,5 +211,26 @@
 	"nickname": "Nickname",
 	"join_date": "Arrival date on the server",
 	"user_creation_date": "Account creation date",
-	"booster": "Booster"
+	"booster": "Booster",
+	"description_rule": "Allows you to store server rules.",
+	"usage_rule": "[mode or number] {number or rule}",
+	"please_enter_a_rule_to_add": "Please specify the rule to be added!",
+	"cannot_store_|": "I'm sorry, but because of the way I store the rules, you can't put `|` in them.",
+	"max_rules_number_reached": "The maximum number of rules (30) is reached for this server. Please delete other rules to free up space!",
+	"the_following_rule": "The following rule:",
+	"has_been_added_to_rules": "has been correctly added to the rules of this server.",
+	"please_enter_a_rule_do_delete": "Please specify the rule to be deleted!",
+	"please_enter_a_valid_rule_number": "Please enter a valid rule number!",
+	"no_rules_defined_at_this_index": "There is no rule defined for this number.",
+	"the_rule_number_n": "Rule number",
+	"has_been_deleted_from_rules": "has been properly deleted.",
+	"there_is_currently": {
+		"one": "There is currently",
+		"other": "There are currently"
+	},
+	"rules_on_this_server": {
+		"one": "rule defined on this server.",
+		"other": "rules defined on this server."
+	},
+	"no_rules_defined_on_this_server": "No rules are defined for this server."
 }

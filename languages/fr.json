@@ -28,6 +28,7 @@
 	"banned_by": "banni par ",
 	"banword_description": "Permet de bannir des mots dans le serveur.",
 	"banword_usage": "[mode] {mot1} {mot2}... {motN}",
+	"banwords_count_limited": "Le nombre de mots bloqués est limité à 100 par serveurs. Veuillez en effacer afin de libérer des places.",
 	"please_insert_banwords_to_add": "Veuillez renseigner un ou plusieurs mots en arguments pour les bloquer.",
 	"missing_permissions_to_execute_this_command": "Vous n'avez pas les permissions suffisantes pour utiliser cette commande !",
 	"the_word": {
@@ -116,7 +117,6 @@
 	"usage_roleinfo": "[rôle]",
 	"bad_role": "Veuillez mentionner ou écrire un rôle correct du serveur.",
 	"roles": {
-		"zero": "Rôle",
 		"one": "Rôle",
 		"other": "Rôles"
 	},
@@ -171,7 +171,6 @@
 	"description_serverinfo": "Affiche des informations sur le serveur.",
 	"nothing": "Aucun",
 	"emoji": {
-		"zero": "émoji",
 		"one": "émoji",
 		"other": "émojis"
 	},
@@ -187,7 +186,6 @@
 		"other": "Humains"
 	},
 	"bots": {
-		"zero": "Bot",
 		"one": "Bots",
 		"other": "Bots"
 	},
@@ -198,12 +196,10 @@
 	"emojis_continuation": "Suite des émojis",
 	"channels": "Salons",
 	"text_channel": {
-		"zero": "textuel",
 		"one": "textuel",
 		"other": "textuels"
 	},
 	"vocal_channel": {
-		"zero": "vocal",
 		"one": "vocal",
 		"other": "vocaux"
 	},
@@ -215,5 +211,23 @@
 	"nickname": "Nickname",
 	"join_date": "Date d'arrivée sur le serveur",
 	"user_creation_date": "Date de création du compte",
-	"booster": "Booster"
+	"booster": "Booster",
+	"description_rule": "Permet de stocker les règles du serveur.",
+	"usage_rule": "[mode ou numéro] {numéro ou règle}",
+	"please_enter_a_rule_to_add": "Veuillez préciser la règle à ajouter !",
+	"cannot_store_|": "Je suis désolée, mais à cause de la façon dont je stocke les règles, vous ne pouvez pas mettre de `|` dedans.",
+	"max_rules_number_reached": "Le nombre maximal de règles (30) est atteint pour ce serveur. Veuillez effacer d'autres règles afin de libérer des emplacements !",
+	"the_following_rule": "La règle suivante :",
+	"has_been_added_to_rules": "a correctement été ajoutée aux règles de ce serveur.",
+	"please_enter_a_rule_do_delete": "Veuillez préciser la règle à supprimer !",
+	"please_enter_a_valid_rule_number": "Veuillez saisir un numéro de règle valide !",
+	"no_rules_defined_at_this_index": "Il n'y a pas de règle définie pour ce numéro.",
+	"the_rule_number_n": "La règle numéro",
+	"has_been_deleted_from_rules": "a correctement été supprimée.",
+	"there_is_currently": "Il y a actuellement",
+	"rules_on_this_server": {
+		"one": "règle définie sur ce serveur.",
+		"other": "règles définies sur ce serveur."
+	},
+	"no_rules_defined_on_this_server": "Aucune règle n'est définie pour ce serveur."
 }

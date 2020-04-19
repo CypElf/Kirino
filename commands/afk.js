@@ -15,7 +15,7 @@ module.exports = {
             reason = args.join(' ');
         }
 
-        const afkRequest = db.prepare("INSERT INTO afk(id,reason) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET reason=excluded.reason")
+        const afkRequest = db.prepare("INSERT INTO afk(id,reason) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET reason=excluded.reason");
         afkRequest.run(msg.author.id, reason);
 
         if (reason) {

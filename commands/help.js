@@ -22,14 +22,12 @@ module.exports = {
 			bot.commands.forEach(command => {
 				if (command.category == "admin") {
 					if (!(msg.channel.type === "text" && msg.guild.id === bot.config.avdrayID)) {
-						if (!command.name.startsWith("rule")) {
-							if (first) {
-								data.push("`" + command.name + "`");
-								first = false;
-							}
-							else {
-								data.push(", `" + command.name + "`");
-							}
+						if (first) {
+							data.push("`" + command.name + "`");
+							first = false;
+						}
+						else {
+							data.push(", `" + command.name + "`");
 						}
 					}
 					else {
@@ -75,13 +73,6 @@ module.exports = {
 		}
 
 		let command = bot.commands.get(args[0].toLowerCase()) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()));
-		if (command) {
-			if (!(msg.channel.type ==="text" && msg.guild.id === bot.config.avdrayID)) {
-				if (command.name.startsWith("rule")) {
-					command = undefined;
-				}
-			}
-		}
     	if (!command) return msg.channel.send(__("this_command_does_not_exist"));
 	
 		if (command.description) data.push("**" + __("description") + "**" + " : " + __(command.description));

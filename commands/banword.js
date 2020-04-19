@@ -17,8 +17,24 @@ module.exports = {
 
         if (mode === "add") {
             if (mots.length < 1) return msg.channel.send(__("please_insert_banwords_to_add"));
+            if (mots.filter(mot => mot.includes("|")).length !== 0) return msg.channel.send(__("cannot_store_|") + " <:kirinopout:698923065773522944>");
+                
+            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE id = ?");
+            const banwordsRow = banwordsRequest.get(guild);
+            let bannedWords = [];
+            let currentBannedWordsCount = 0;
+            
+            if (!(banwordsRow === undefined || banwordsRow.words === undefined)) {
+                bannedWords = banwordsRow.words.split(",");
+                currentBannedWordsCount = bannedWords.length;
+            }
+
+            if (currentBannedWordsCount + mots.length > 100) {
+                return msg.channel.send(__("banwords_count_limited") + " <:kirinopout:698923065773522944>");
+            }
+
             mots.forEach(mot => {
-                const addBanwordCommand = db.prepare("INSERT INTO banwords(id,words) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET words=words || ',' || excluded.words")
+                const addBanwordCommand = db.prepare("INSERT INTO banwords(id,words) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET words=words || '|' || excluded.words")
                 addBanwordCommand.run(guild, mot);
             });
             let content = __n("the_word", mots.length) + " `";
@@ -39,11 +55,8 @@ module.exports = {
             const listRow = listBanwordsRequest.get(guild);
             if (listRow === undefined || listRow.words === undefined) liste = __("no_banwords_for_now");
             else {
-                const contenu = listRow.words.split(",");
-                contenu.forEach(word => {
-                    liste += "`" + word + "`, ";
-                });
-                liste = liste.substring(0, liste.length - 2); // -2 pour supprimer l'espace et la virgule tout à la fin
+                const contenu = listRow.words.split("|");
+                liste += "`" + contenu.join("`, `") + "`";
             }
             msg.channel.send(liste); 
         }
@@ -57,7 +70,7 @@ module.exports = {
             const removeRow = removeBanwordsRequest.get(guild);
 
             if (removeRow === undefined || removeRow.words === undefined) return msg.channel.send(__("no_banwords_on_this_server"));
-            bannedWords = removeRow.words.split(",");
+            bannedWords = removeRow.words.split("|");
 
             mots.forEach(mot => {
                 if (bannedWords.includes(mot)) {
