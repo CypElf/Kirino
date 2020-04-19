@@ -30,9 +30,27 @@ module.exports = {
                 nbRoles++;
             }
         });
-        let roles = arrayRoles.join(", ");
+        let roles = [""];
+        let displayedRolesCount = " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")";
+        let j = 0;
+        arrayRoles.forEach(role => {
+            if (roles[j].length + role.length + 2 > 1024) {
+                j++;
+                roles.push(role) + ", ";
+            }
+            else {
+                roles[j] += role + ", ";
+            }
+        });
 
-        roles += " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")";
+        roles[j] = roles[j].substring(0, roles[j].length - 2);
+
+        if (roles[j].length + displayedRolesCount.length + 2 > 1024) {
+            roles.push(displayedRolesCount.toString())
+        }
+        else {
+            roles[j] += displayedRolesCount.toString();
+        }
 
         const salons = msg.guild.channels.cache;
         const nbSalonsTxt = salons.filter(salon => salon.type == "text").size;
@@ -47,7 +65,7 @@ module.exports = {
 
         let i = 0;
         emojis.forEach(emoji => {
-            if (emojisArray[i].length + emoji.toString().length > 1024) {
+            if (emojisArray[i].length + emoji.toString().length + 3 > 1024) {
                 i++;
                 emojisArray.push(emoji.toString())
             }
@@ -84,9 +102,19 @@ module.exports = {
                 informations.addField(__("emojis_continuation"), msg1024);
             }
         });
+
+        first = true;
+        roles.forEach(roles1024 => {
+            if (first) {
+                informations.addField(__n("roles", nbRoles), roles1024);
+                first = false;
+            }
+            else {
+                informations.addField(__("roles_continuation"), roles1024);
+            }
+        });
         
-        informations.addField(__n("roles", nbRoles), roles)
-        .addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
+        informations.addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
         .addField(__("server_creation_date"), creationDate, true)
         .setThumbnail(msg.guild.iconURL())
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());

@@ -106,7 +106,7 @@
 	"report_confirmation": "Do you confirm you want to send this report?",
 	"thirty_seconds_before_auto_cancelling": "You have 30 seconds to confirm, or this report will be automatically cancelled.",
 	"new_report": "New report!",
-	"report_origin": "Report origin:",
+	"report_origin": "Report origin :",
 	"message": "Message",
 	"report_from": "Report from ",
 	"report_channel_unavailable": "The server channel where I'm supposed to send your report is nowhere...",
@@ -179,6 +179,7 @@
 	},
 	"server_owner": "Server owner",
 	"server_id": "Server ID",
+	"roles_continuation": "Roles continuation",
 	"members": {
 		"one": "Member",
 		"other": "Members"

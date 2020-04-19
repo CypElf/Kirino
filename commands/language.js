@@ -31,13 +31,13 @@ module.exports = {
 
         db.close();
 
+        setLocale(language);
+
         if (msg.channel.type === "text") {
             msg.channel.send(__("server_language_changed") + language + "` <:kirinoglad:698923046819594351> !");
         }
         else {
             msg.channel.send(__("dm_language_changed") + language + "` <:kirinoglad:698923046819594351> !");
         }
-
-        setLocale(language);
 	}
 };

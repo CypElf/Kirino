@@ -1,0 +1,2 @@
+- custom rules (limit to 40)
+- limit banwords to 100

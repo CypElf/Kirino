@@ -177,6 +177,7 @@
 	},
 	"server_owner": "Propriétaire du serveur",
 	"server_id": "ID du serveur",
+	"roles_continuation": "Suite des rôles",
 	"members": {
 		"one": "Membre",
 		"other": "Membres"
