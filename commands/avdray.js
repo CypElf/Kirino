@@ -1,11 +1,13 @@
 module.exports = {
 	name: "avdray",
     description: "description_avdray",
-    guildOnly: false,
+    guildOnly: true,
 	args: false,
 	category: "others",
 	
 	async execute(bot, msg) {
-		msg.channel.send("https://discord.gg/btJhreB");
+		if (msg.guild.id === bot.config.avdrayID) {
+			msg.channel.send("https://discord.gg/btJhreB");
+		}
 	}
 };
