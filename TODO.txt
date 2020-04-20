@@ -1,2 +1,0 @@
-- limit afk reason to make sure total message on afk is under 2000
-- limit max ban word length to make sure total of 100 of them stay under 2000

@@ -15,6 +15,10 @@ module.exports = {
             reason = args.join(' ');
         }
 
+        if (reason && reason.length > 1800) {
+            return msg.channel.send(__("afk_reason_too_long") + " <:kirinopout:698923065773522944>");
+        }
+
         const afkRequest = db.prepare("INSERT INTO afk(id,reason) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET reason=excluded.reason");
         afkRequest.run(msg.author.id, reason);
 

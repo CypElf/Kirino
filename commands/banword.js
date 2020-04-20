@@ -29,9 +29,10 @@ module.exports = {
                 currentBannedWordsCount = bannedWords.length;
             }
 
-            if (currentBannedWordsCount + mots.length > 100) {
+            if (currentBannedWordsCount + mots.length > 40) {
                 return msg.channel.send(__("banwords_count_limited") + " <:kirinopout:698923065773522944>");
             }
+            if (mots.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " <:kirinopout:698923065773522944>");
 
             mots.forEach(mot => {
                 const addBanwordCommand = db.prepare("INSERT INTO banwords(id,words) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET words=words || '|' || excluded.words")
