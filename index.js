@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const config = require("./config.json");
 const fs = require("fs");
 const bsqlite3 = require('better-sqlite3');
-let i18n = require("i18n");
+const i18n = require("i18n");
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
@@ -199,8 +199,14 @@ bot.on("message", async msg => {
 
 // ------------------------------------------------------------- évènements ajout / retrait de serveurs
 
-bot.on("guildCreate", () => updateActivity());
-bot.on("guildDelete", () => updateActivity());
+bot.on("guildCreate", guild  => {
+    console.log(`Server joined: ${guild.name}`);
+    updateActivity()
+});
+bot.on("guildDelete", guild => {
+    console.log(`Server left: ${guild.name}`);
+    updateActivity()
+});
 
 // ------------------------------------------------------------- fonction pour mettre à jour le rich presence en fonction du nombre de serveurs sur lequel le bot est
 
