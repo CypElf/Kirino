@@ -39,6 +39,10 @@ bot.once("ready", () => {
 
 bot.on("message", async msg => {
 
+    if (msg.content === "TASINTERETAPASSERUNBONANNIVERSAIRESINONJTEMANGEOK?" && msg.channel.type === "dm" && (msg.author.id === "343445422909423628" || msg.author.id === "327113301198766082")) {
+        return msg.channel.send("https://youtu.be/2zacRwpqsd8");
+    }
+
     // maintenance
     // if (msg.content.startsWith(bot.config.prefix)) return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !")
     // else return
