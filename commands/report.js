@@ -43,8 +43,9 @@ module.exports = {
                     if (reportChannel) {
                         const Discord = require("discord.js")
 
-                        const senderLanguage = getLocale();
+                        const senderLanguage = getLocale()
 
+                        const db = new bsqlite3("database.db", { fileMustExist: true })
                         const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?")
                         const languageRow = languagesRequest.get(bot.config.kirinoDebugID)
                         if (!(languageRow === undefined)) {
