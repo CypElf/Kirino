@@ -22,3 +22,4 @@ deploy/deploy_key.pub
 docs/docs.json
 webpack/
 TODO.txt
+database.db

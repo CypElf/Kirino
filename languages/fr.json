@@ -207,5 +207,7 @@
 	},
 	"no_rules_defined_on_this_server": "Aucune règle n'est définie pour ce serveur.",
 	"not_enough_permissions_to_add_rule": "Tu n'as pas les permissions nécessaires pour utiliser cette commande !",
-	"rule_too_long": "Votre règle est trop longue ! Les règles sont limitées à 1000 caractères chacune. Veuillez réduire sa longueur."
+	"rule_too_long": "Votre règle est trop longue ! Les règles sont limitées à 1000 caractères chacune. Veuillez réduire sa longueur.",
+	"Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.",
+	"[language]": "[language]"
 }

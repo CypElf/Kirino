@@ -210,5 +210,7 @@
 	},
 	"no_rules_defined_on_this_server": "No rules are defined for this server.",
 	"not_enough_permissions_to_add_rule": "You don't have the necessary permissions to use this command!",
-	"rule_too_long": "Your rule is too long! Rules are limited to 1000 characters each. Please reduce its length."
+	"rule_too_long": "Your rule is too long! Rules are limited to 1000 characters each. Please reduce its length.",
+	"Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.",
+	"[language]": "[language]"
 }

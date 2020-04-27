@@ -1,9 +1,9 @@
 module.exports = {
 	name: "language",
-    description: __("description_language"),
+    description: "description_language",
     guildOnly: false,
     args: true,
-    usage: __("usage_language"),
+    usage: "usage_language",
     aliases: ["lang"],
     category: "admin",
 
