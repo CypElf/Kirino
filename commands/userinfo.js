@@ -97,7 +97,7 @@ module.exports = {
             premiumSince = __("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
         }
         else {
-            premiumSince = __("no")
+            premiumSince = __("no_capitalized")
         }
 
         let informations = new Discord.MessageEmbed()

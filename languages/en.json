@@ -183,6 +183,7 @@
 	"description_userinfo": "Displays information about the user mentioned or exactly named, or about the user using the command, by default.",
 	"usage_userinfo": "{user}",
 	"yes_since": "Yes, since",
+	"no_capitalized": "No",
 	"game": "Game",
 	"nickname": "Nickname",
 	"join_date": "Arrival date on the server",
