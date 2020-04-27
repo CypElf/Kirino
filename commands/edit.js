@@ -8,23 +8,23 @@ module.exports = {
 	
 	async execute(bot, msg, [ID, ...editMsg]) {
 		if (msg.author.id != bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
-			return;
+			return
 		}
 
 		msg.channel.messages.fetch(ID)
 			.then(msg2 => {
 				if (!msg2.editable) {
-					return msg.channel.send(__("cannot_edit_this_message") + " <:kirinopff:698922942268047391>");
+					return msg.channel.send(__("cannot_edit_this_message") + " <:kirinopff:698922942268047391>")
 				}
-				const replacementText = editMsg.join(" ");
+				const replacementText = editMsg.join(" ")
 				if (!replacementText) return msg.channel.send(__("precise_something_to_replace") + " <:kirinopout:698923065773522944>")
 				msg2.edit(replacementText)
-					.catch();
+					.catch()
 
-				msg.delete();
+				msg.delete()
 			})
 			.catch(err => {
-				return msg.channel.send(__("bad_message_id") + " <:kirinopout:698923065773522944>");
-			});
+				return msg.channel.send(__("bad_message_id") + " <:kirinopout:698923065773522944>")
+			})
 	}
-};
+}

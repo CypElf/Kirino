@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js')
 
 module.exports = {
 	name: "userinfo",
@@ -10,94 +10,94 @@ module.exports = {
     category: "others",
     
     async execute(bot, msg, argsArray) {
-        let member;
+        let member
 
         // si aucun argument n'est fourni, l'utilisateur dont les informations seront affichées sera celui ayant exécuté la commande
         if (!argsArray.length) {
-            member = msg.member;
+            member = msg.member
         }
 
         // sinon, on regardera les arguments, et...
         else {
             // ... si un utilisateur est mentionné, ce sera lui dont les informations seront affichées...
-            member = msg.mentions.members.first();
+            member = msg.mentions.members.first()
             if(!member) { // ... sinon, on cherchera un utilisateur dont le pseudo correspond à l'argument saisi pour afficher ses informations...
-                let user = "";
+                let user = ""
                 argsArray.forEach(element => {
-                    user += element + " ";
-                });
-                user = user.substring(0, user.length - 1);
+                    user += element + " "
+                })
+                user = user.substring(0, user.length - 1)
                 member = msg.guild.members.cache.array().find((currentUser) => {
-                    return currentUser.user.username.toLowerCase() === user.toLowerCase();
-                });
+                    return currentUser.user.username.toLowerCase() === user.toLowerCase()
+                })
                 if (member === undefined) { // ... et enfin si on a toujours rien, on répond qu'il n'y a pas d'utilisateur correspondant
-                    return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>");
+                    return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
                 }
             }
         }
         
-        let creationDate = member.user.createdAt;
-        const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0");
-        const creationDay = String(creationDate.getDate()).padStart(2, "0");
-        const creationYear = creationDate.getFullYear();
-        const creationHour = String(creationDate.getHours()).padStart(2, "0");
-        const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0");
-        const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0");
-        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`;
+        let creationDate = member.user.createdAt
+        const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")
+        const creationDay = String(creationDate.getDate()).padStart(2, "0")
+        const creationYear = creationDate.getFullYear()
+        const creationHour = String(creationDate.getHours()).padStart(2, "0")
+        const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0")
+        const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`
 
 
-        let joinedAt = member.joinedAt;
-        const joinedAtMonth = String(joinedAt.getMonth() + 1).padStart(2, "0");
-        const joinedAtDay = String(joinedAt.getDate()).padStart(2, "0");
-        const joinedAtYear = joinedAt.getFullYear();
-        const joinedAtHour = String(joinedAt.getHours()).padStart(2, "0");
-        const joinedAtMinutes = String(joinedAt.getMinutes()).padStart(2, "0");
-        const joinedAtSeconds = String(joinedAt.getSeconds()).padStart(2, "0");
-        joinedAt = `${joinedAtDay}/${joinedAtMonth}/${joinedAtYear} à ${joinedAtHour}:${joinedAtMinutes}:${joinedAtSeconds}`;
+        let joinedAt = member.joinedAt
+        const joinedAtMonth = String(joinedAt.getMonth() + 1).padStart(2, "0")
+        const joinedAtDay = String(joinedAt.getDate()).padStart(2, "0")
+        const joinedAtYear = joinedAt.getFullYear()
+        const joinedAtHour = String(joinedAt.getHours()).padStart(2, "0")
+        const joinedAtMinutes = String(joinedAt.getMinutes()).padStart(2, "0")
+        const joinedAtSeconds = String(joinedAt.getSeconds()).padStart(2, "0")
+        joinedAt = `${joinedAtDay}/${joinedAtMonth}/${joinedAtYear} à ${joinedAtHour}:${joinedAtMinutes}:${joinedAtSeconds}`
 
-        let perms = "";
+        let perms = ""
 
         for (let flag in Discord.Permissions.FLAGS) {
             if (member.hasPermission(flag)) {
-                perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, ";
+                perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, "
             }
         }
-        perms = perms.substring(0, perms.length - 2);
+        perms = perms.substring(0, perms.length - 2)
         
-        const arrayTotalRoles = member.roles.cache;
-        let arrayRoles = [];
-        let nbRoles = 0;
+        const arrayTotalRoles = member.roles.cache
+        let arrayRoles = []
+        let nbRoles = 0
         arrayTotalRoles.forEach((role) => {
             if (role.name !== "@everyone") {
-                arrayRoles.push(role.name);
-                nbRoles++;
+                arrayRoles.push(role.name)
+                nbRoles++
             }
-        });
-        let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")";
+        })
+        let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")"
 
-        let nickname = member.nickname;
+        let nickname = member.nickname
         if (nickname === null) {
-            nickname = __("nothing");
+            nickname = __("nothing")
         }
-        let presence;
+        let presence
         try {
-            presence = member.presence.game.name;
+            presence = member.presence.game.name
         }
         catch(err) {
-            presence = __("nothing");
+            presence = __("nothing")
         }
-        let premiumSince = member.premiumSince;
+        let premiumSince = member.premiumSince
         if (premiumSince) {
-            const premiumSinceMonth = String(premiumSince.getMonth() + 1).padStart(2, "0");
-            const premiumSinceDay = String(premiumSince.getDate()).padStart(2, "0");
-            const premiumSinceYear = premiumSince.getFullYear();
-            const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0");
-            const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0");
-            const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0");
-            premiumSince = __("yes_since") + `${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`;
+            const premiumSinceMonth = String(premiumSince.getMonth() + 1).padStart(2, "0")
+            const premiumSinceDay = String(premiumSince.getDate()).padStart(2, "0")
+            const premiumSinceYear = premiumSince.getFullYear()
+            const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0")
+            const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0")
+            const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0")
+            premiumSince = __("yes_since") + `${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
         }
         else {
-            premiumSince = __("no");
+            premiumSince = __("no")
         }
 
         let informations = new Discord.MessageEmbed()
@@ -112,7 +112,7 @@ module.exports = {
         .addField(__n("roles", nbRoles), roles, true)
         .addField(__("permissions"), perms)
         .setThumbnail(member.user.displayAvatarURL())
-        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
-        msg.channel.send(informations);
+        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
+        msg.channel.send(informations)
     }
-};
+}

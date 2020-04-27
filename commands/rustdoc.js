@@ -8,83 +8,83 @@ module.exports = {
     category: "others",
 
     async execute (bot, msg, args) {
-        const Discord = require("discord.js");
-        const rustDocResearcher = require("./rustdoc_logic/rustdoc_researcher");
+        const Discord = require("discord.js")
+        const rustDocResearcher = require("./rustdoc_logic/rustdoc_researcher")
 
-        const keywords = args.join(" ");
-        const results = rustDocResearcher(keywords);
+        const keywords = args.join(" ")
+        const results = rustDocResearcher(keywords)
         
-        let counter = 0;
-        let contentNames = "";
-        let contentIsArgs = "";
-        let contentReturned = "";
+        let counter = 0
+        let contentNames = ""
+        let contentIsArgs = ""
+        let contentReturned = ""
 
         for (let result of results.others) {
-            if (counter >= 5) break;
-            contentNames += "- [";
+            if (counter >= 5) break
+            contentNames += "- ["
             if (result.path !== "") {
-                contentNames += result.path + "::";
+                contentNames += result.path + "::"
             }
-            contentNames += "**" + result.name + "**](" + result.href + ")";
+            contentNames += "**" + result.name + "**](" + result.href + ")"
             if (result.desc !== "") {
-                contentNames += " : " + result.desc;
+                contentNames += " : " + result.desc
             }
-            contentNames += "\n";
-            counter++;
+            contentNames += "\n"
+            counter++
         }
 
-        counter = 0;
+        counter = 0
         for (let result of results.in_args) {
-            if (counter >= 5) break;
-            contentIsArgs += "- [";
+            if (counter >= 5) break
+            contentIsArgs += "- ["
             if (result.path !== "") {
-                contentIsArgs += result.path + "::";
+                contentIsArgs += result.path + "::"
             }
-            contentIsArgs += "**" + result.name + "**](" + result.href + ")";
+            contentIsArgs += "**" + result.name + "**](" + result.href + ")"
             if (result.desc !== "") {
-                contentIsArgs += " : " + result.desc;
+                contentIsArgs += " : " + result.desc
             }
-            contentIsArgs += "\n";
-            counter++;
+            contentIsArgs += "\n"
+            counter++
         }
 
-        counter = 0;
+        counter = 0
         for (let result of results.returned) {
-            if (counter >= 5) break;
-            contentReturned += "- [";
+            if (counter >= 5) break
+            contentReturned += "- ["
             if (result.path !== "") {
-                contentReturned += result.path + "::";
+                contentReturned += result.path + "::"
             }
-            contentReturned += "**" + result.name + "**](" + result.href + ")";
+            contentReturned += "**" + result.name + "**](" + result.href + ")"
             if (result.desc !== "") {
-                contentReturned += " : " + result.desc;
+                contentReturned += " : " + result.desc
             }
-            contentReturned += "\n";
-            counter++;
+            contentReturned += "\n"
+            counter++
         }
 
         let embed = new Discord.MessageEmbed()
             .setTitle(__("results"))
 			.setColor('#353535')
 			.setThumbnail("https://doc.rust-lang.org/rust-logo1.42.0.png")
-            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL());
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
         if (contentNames !== "") {
-            embed.addField(__("in_name"), contentNames);
+            embed.addField(__("in_name"), contentNames)
         }
 
         if (contentIsArgs !== "") {
-            embed.addField(__("in_settings"), contentIsArgs);
+            embed.addField(__("in_settings"), contentIsArgs)
         }
 
         if (contentReturned !== "") {
-            embed.addField(__("in_return_types"), contentReturned);
+            embed.addField(__("in_return_types"), contentReturned)
         }
 
         if (contentNames === "" && contentIsArgs === "" && contentReturned === "") {
             embed.addField(__("no_result_title"), __("no_result"))
         }
         
-        msg.channel.send(embed);
+        msg.channel.send(embed)
     }
-};
+}

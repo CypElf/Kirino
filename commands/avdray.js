@@ -7,7 +7,7 @@ module.exports = {
 	
 	async execute(bot, msg) {
 		if (msg.guild.id === bot.config.avdrayID) {
-			msg.channel.send("https://discord.gg/btJhreB");
+			msg.channel.send("https://discord.gg/btJhreB")
 		}
 	}
-};
+}

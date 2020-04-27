@@ -85,7 +85,7 @@
 	"you_cannot_kick_this_member": "Vous ne pouvez pas kick ce membre.",
 	"has_been_kicked": " a été kick du serveur !",
 	"kicked_by": "kick par ",
-	"description_language": "Permet de changer la langue dans laquelle je suis.\nLes langues disponibles sont `en` pour l'anglais et `fr` pour le français.",
+	"description_language": "Permet de changer la langue dans laquelle je suis.\nLes langues disponibles sont `en` pour l'anglais et `fr` pour le français.\nCette commande nécessite la permission gérer le serveur.",
 	"usage_language": "[langue]",
 	"bad_language_code": "Le code de language saisi est incorrect.",
 	"server_language_changed": "La langue du serveur a correctement été définie à `",

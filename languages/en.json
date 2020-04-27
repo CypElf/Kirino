@@ -85,7 +85,7 @@
 	"you_cannot_kick_this_member": "You can't kick that member.",
 	"has_been_kicked": " has been kicked from the server!",
 	"kicked_by": "kicked by ",
-	"description_language": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.",
+	"description_language": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.",
 	"usage_language": "[language]",
 	"bad_language_code": "The language code entered is incorrect.",
 	"server_language_changed": "The server language has been correctly set to `",
