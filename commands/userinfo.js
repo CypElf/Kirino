@@ -94,7 +94,7 @@ module.exports = {
             const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0")
             const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0")
             const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0")
-            premiumSince = __("yes_since") + `${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
+            premiumSince = __("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
         }
         else {
             premiumSince = __("no")
