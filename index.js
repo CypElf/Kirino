@@ -1,7 +1,7 @@
 const Discord = require("discord.js")
 const config = require("./config.json")
 const fs = require("fs")
-const bsqlite3 = require('better-sqlite3')
+const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 
 const bot = new Discord.Client()

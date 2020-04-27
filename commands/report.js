@@ -42,6 +42,7 @@ module.exports = {
                     })
                     if (reportChannel) {
                         const Discord = require("discord.js")
+                        const bsqlite3 = require('better-sqlite3')
 
                         const senderLanguage = getLocale()
 
