@@ -138,25 +138,24 @@ bot.on("message", async msg => {
     
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
         let allInvites = ""
-        bot.guilds.cache.array().forEach(guild => {
+        for (const guild of bot.guilds.cache.array()) {
             allInvites += `- ${guild.name} :\n\n`
-            guild.fetchInvites().then(guildInvites => {
-
+            try {
+                let guildInvites = await guild.fetchInvites()
                 let invitesArray = guildInvites.array().map(guildInvite => {
-                    return "https://discord.gg/"  + guildInvite.code
+                    return "https://discord.gg/" + guildInvite.code
                 })
-
                 let invites
-                if (invitesArray.length === 0) invites = __("no_invit_available") + "\n"
-                else invites = invitesArray.join("\n")
-
+                if (invitesArray.length === 0)
+                    invites = __("no_invit_available") + "\n"
+                else
+                    invites = invitesArray.join("\n")
                 allInvites += invites + "\n"
-            }).catch (() => {
-                allInvites += __("missing_permissions_to_get_invits") + "\n"
-
-                allInvites += invites + "\n"
-            })
-        })
+            }
+            catch (err) {
+                allInvites += __("missing_permissions_to_get_invits") + "\n\n"
+            }
+        }
 
         const query = querystring.stringify({
             
