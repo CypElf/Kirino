@@ -3,6 +3,8 @@ const config = require("./config.json")
 const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
+const querystring = require("querystring")
+const https = require("https")
 
 const bot = new Discord.Client()
 bot.commands = new Discord.Collection()
@@ -133,47 +135,61 @@ bot.on("message", async msg => {
     if (!msg.content.startsWith(bot.config.prefix)) return
 
     // ------------------------------------------------------------- vérification de la commande spéciale guilds
-
+    
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
-        let embedHeader = new Discord.MessageEmbed()
-            .setDescription("**" + __("invitations") + "**")
-            .setColor("#DFC900")
-        msg.channel.send(embedHeader)
-        bot.guilds.cache.array().forEach((guild, i) => {
+        let allInvites = ""
+        bot.guilds.cache.array().forEach(guild => {
+            allInvites += `- ${guild.name} :\n\n`
             guild.fetchInvites().then(guildInvites => {
-                let embedInvitations = new Discord.MessageEmbed()
 
                 let invitesArray = guildInvites.array().map(guildInvite => {
                     return "https://discord.gg/"  + guildInvite.code
                 })
 
                 let invites
+                if (invitesArray.length === 0) invites = __("no_invit_available") + "\n"
+                else invites = invitesArray.join("\n")
 
-                if (invitesArray.length === 0) invites = __("no_invit_available")
-                else {
-                    invites = "`" + invitesArray.join(" / ") + "`"
-                }
+                allInvites += invites + "\n"
+            }).catch (() => {
+                allInvites += __("missing_permissions_to_get_invits") + "\n"
 
-                embedInvitations.setDescription(`- ${guild.name} : ${invites}`)
-                    .setColor("#DFC900")
-
-                if (i === bot.guilds.cache.array().length - 1) {
-                    embedInvitations.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-                }
-
-                msg.channel.send(embedInvitations)
-            }).catch (err => {
-                let embedError = new Discord.MessageEmbed()
-                embedError.setDescription(`- ${guild.name} : ` + __("missing_permissions_to_get_invits"))
-                    .setColor("#DFC900")
-
-
-                if (i === bot.guilds.length - 1) {
-                    embedInvitations.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-                }
-                msg.channel.send(embedError)
+                allInvites += invites + "\n"
             })
         })
+
+        const query = querystring.stringify({
+            
+            api_paste_code: allInvites,
+            api_paste_name: __("invitations").substring(0, __("invitations").length - 2),
+            api_paste_private: 1,
+            api_paste_expire_date: "1D",
+            api_dev_key: bot.config.pastebinDevKey,
+            api_option: "paste",
+        })
+
+        const req = https.request({
+            hostname: "pastebin.com",
+            port: 443,
+            path: "/api/api_post.php",
+            method: "POST",
+            headers: {
+                'Content-Type': "application/x-www-form-urlencoded",
+                'Content-Length': query.length
+            }
+        }, res => {
+            let data = ""
+            res.on("data", piece => {
+                data += piece
+            })
+
+            res.on("end", () => {
+                msg.channel.send(data)
+            })
+        })
+
+        req.write(query)
+        req.end()
     }
 
     // ------------------------------------------------------------- vérification de la validité de la commande et exécution
