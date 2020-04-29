@@ -76,7 +76,7 @@ module.exports = {
         let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")"
 
         let nickname = member.nickname
-        if (nickname === undefined) {
+        if (nickname === undefined || nickname === null) {
             nickname = __("nothing")
         }
         let presence
