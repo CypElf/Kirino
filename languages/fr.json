@@ -96,7 +96,7 @@
 	"usage_purge": "[nombre de messages à supprimer]",
 	"you_cannot_delete_messages": "Vous ne pouvez pas supprimer de messages !",
 	"please_insert_only_a_number": "Veuillez saisir un nombre entier uniquement.",
-	"description_react": "Me fait réagir à un message par un émoji.",
+	"description_react": "Me fait réagir à un message par un émoji. Seul le possesseur d'un serveur peut utiliser cette commande.",
 	"usage_react": "[ID du message] [émoji]",
 	"not_allowed_to_use_this_command": "Vous n'êtes pas autorisés à utiliser cette commande !",
 	"cannot_react_to_messages": "Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions.",

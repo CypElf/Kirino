@@ -1,5 +1,3 @@
-const Discord = require('discord.js')
-
 module.exports = {
 	name: "userinfo",
     description: "description_userinfo",
@@ -35,6 +33,8 @@ module.exports = {
                 }
             }
         }
+
+        const Discord = require('discord.js')
         
         let creationDate = member.user.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")

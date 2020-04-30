@@ -96,7 +96,7 @@
 	"usage_purge": "[number of messages to be deleted]",
 	"you_cannot_delete_messages": "You cannot delete messages!",
 	"please_insert_only_a_number": "Please enter an integer only.",
-	"description_react": "Makes me react to a message with an emoji.",
+	"description_react": "Makes me react to a message with an emoji. Only the owner of a server can use this command.",
 	"usage_react": "[message ID] [emoji]",
 	"not_allowed_to_use_this_command": "You are not allowed to use this command!",
 	"cannot_react_to_messages": "You can't use this command if I don't have permission to add reactions.",
@@ -213,5 +213,6 @@
 	"not_enough_permissions_to_add_rule": "You don't have the necessary permissions to use this command!",
 	"rule_too_long": "Your rule is too long! Rules are limited to 1000 characters each. Please reduce its length.",
 	"Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.",
-	"[language]": "[language]"
+	"[language]": "[language]",
+	"usage_github": "usage_github"
 }
