@@ -1,6 +1,6 @@
 module.exports = {
 	name: "github",
-    description: "usage_github",
+    description: "description_github",
     guildOnly: false,
 	args: true,
     usage: "usage_github",
