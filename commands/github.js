@@ -8,7 +8,7 @@ module.exports = {
 	
 	async execute(bot, msg, args) {
         if (args.length > 1) {
-            return msg.channel.send("Les utilisateurs de github ne peuvent pas avoir d'espaces dans leurs pseudos. Veuillez ne saisir qu'un argument. <:kirinopout:698923065773522944>")
+            return msg.channel.send(`${__("too_much_args_for_github")} <:kirinopout:698923065773522944>`)
         }
         const fetch = require("node-fetch")
 
@@ -28,7 +28,7 @@ module.exports = {
             const color = await ColorThief.getColor(data.avatar_url)
 
             const profileEmbed = new Discord.MessageEmbed()
-                .setAuthor("Profil GitHub", "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+                .setAuthor(__("github_profile"), "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
                 .setColor(color)
                 .setThumbnail(data.avatar_url)
                 .setURL(data.html_url)
@@ -36,17 +36,17 @@ module.exports = {
 
             if (data.name) profileEmbed.setTitle(`**${data.name}** (${data.login})`)
             else profileEmbed.setTitle(`**${data.login}**`)
-            if (data.blog) profileEmbed.addField("Blog", data.blog)
-            if (data.company) profileEmbed.addField("Compagnie", data.company, true)
-            if (data.location) profileEmbed.addField("Emplacement", data.location, true)
-            if (data.email) profileEmbed.addField("E-mail", data.email)
+            if (data.blog) profileEmbed.addField(__("blog"), data.blog)
+            if (data.company) profileEmbed.addField(__("company"), data.company, true)
+            if (data.location) profileEmbed.addField(__("location"), data.location, true)
+            if (data.email) profileEmbed.addField(__("email"), data.email)
 
-            profileEmbed.addField("ID", data.id, true)
-                .addField("Dépôts publics", `[${data.public_repos}](https://github.com/${data.login}?tab=repositories)`, true)
-                .addField("Gists publics", data.public_gists, true)
-                .addField("Suiveurs", `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
-                .addField("Suivis", `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
-                .addField("Date de création", `${creationDate} à ${creationTime}`, true)
+            profileEmbed.addField(__("id"), data.id, true)
+                .addField(__("public_repos"), `[${data.public_repos}](https://github.com/${data.login}?tab=repositories)`, true)
+                .addField(__("public_gists"), data.public_gists, true)
+                .addField(__("followers"), `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
+                .addField("following", `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
+                .addField(__("account_creation_date"), `${creationDate} à ${creationTime}`, true)
             
             if (data.bio) profileEmbed.setDescription(data.bio)
 
@@ -54,7 +54,7 @@ module.exports = {
         }
 
         else {
-            msg.channel.send("L'utilisateur spécifié est introuvable. <:kirinowhat:698923096752783401>")
+            msg.channel.send(`${__("user_not_found")} <:kirinowhat:698923096752783401>`)
         }
 	}
 }

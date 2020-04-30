@@ -209,6 +209,19 @@
 	"no_rules_defined_on_this_server": "Aucune règle n'est définie pour ce serveur.",
 	"not_enough_permissions_to_add_rule": "Tu n'as pas les permissions nécessaires pour utiliser cette commande !",
 	"rule_too_long": "Votre règle est trop longue ! Les règles sont limitées à 1000 caractères chacune. Veuillez réduire sa longueur.",
-	"Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.": "Allows you to change the language I am in.\nThe available languages are `en` for english and `fr` for french.\nThis commands needs the manage guild permission.",
-	"[language]": "[language]"
+	"[language]": "[language]",
+	"usage_github": "Permet d'afficher les informations sur un utilisateur de GitHub.",
+	"description_github": "[utilisateur]",
+	"too_much_args_for_github": "Les utilisateurs de github ne peuvent pas avoir d'espaces dans leurs pseudos. Veuillez ne saisir qu'un argument.",
+	"github_profile": "Profil GitHub",
+	"blog": "Blog",
+	"company": "Compagnie",
+	"location": "Emplacement",
+	"email": "E-mail",
+	"public_repos": "Dépôts publics",
+	"public_gists": "Gists publics",
+	"followers": "Suiveurs",
+	"following": "Suivis",
+	"account_creation_date": "Date de création du compte",
+	"user_not_found": "L'utilisateur spécifié est introuvable."
 }
