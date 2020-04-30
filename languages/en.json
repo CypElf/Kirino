@@ -226,5 +226,21 @@
 	"followers": "Followers",
 	"following": "Following",
 	"account_creation_date": "Account creation date",
-	"user_not_found": "The specified user cannot be found."
+	"user_not_found": "The specified user cannot be found.",
+	"description_ask": "You ask a question, I'll answer it.",
+	"usage_ask": "[question]",
+	"Yes.": "Yes.",
+	"No.": "No.",
+	"maybe": "Maybe.",
+	"surely": "Surely.",
+	"probably": "It's probable.",
+	"surely_not": "No way...",
+	"not_at_all": "Not at all.",
+	"i_do_not_think": "I don't think so.",
+	"you_should_take_a_break": "Maybe you should take a break.",
+	"do_not_want_to_answer": "I don't want to answer that.",
+	"who_are_you": "Lmao who are you ?",
+	"clearly_not": "Clearly not.",
+	"they_whisper_yes": "It's whispering in my ear that I do.",
+	"idk": "I don't know."
 }

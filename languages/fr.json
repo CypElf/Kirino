@@ -223,5 +223,21 @@
 	"followers": "Suiveurs",
 	"following": "Suivis",
 	"account_creation_date": "Date de création du compte",
-	"user_not_found": "L'utilisateur spécifié est introuvable."
+	"user_not_found": "L'utilisateur spécifié est introuvable.",
+	"description_ask": "Vous posez une question, je réponds à celle ci.",
+	"usage_ask": "[question]",
+	"Yes.": "Oui.",
+	"No.": "Non.",
+	"maybe": "Peut être.",
+	"surely": "Sûrement.",
+	"probably": "C'est probable.",
+	"surely_not": "Sûrement pas...",
+	"not_at_all": "Pas du tout.",
+	"i_do_not_think": "Je ne pense pas.",
+	"you_should_take_a_break": "Tu devrais peut être faire une pause.",
+	"do_not_want_to_answer": "Je n'ai pas envie de te répondre.",
+	"who_are_you": "Ptdr t ki ?",
+	"clearly_not": "Clairement pas.",
+	"they_whisper_yes": "On me chuchotte à l'oreillette que oui.",
+	"idk": "Je ne sais pas."
 }

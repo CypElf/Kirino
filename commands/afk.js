@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'afk',
+	name: "afk",
     description: "description_afk",
     guildOnly: true,
     args: false,
