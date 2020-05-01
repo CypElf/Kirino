@@ -6,7 +6,7 @@ module.exports = {
     category: "admin",
     usage: __("usage_kick"),
 
-    async execute (bot, msg, [userToBan, ...reason]) {
+    async execute (bot, msg, [userToKick, ...reason]) {
         const canKick = msg.member.hasPermission("KICK_MEMBERS")
         if (!canKick) {
             return msg.channel.send(__("you_are_missing_permissions_to_kick_members") + " <:kirinopff:698922942268047391>")
@@ -19,7 +19,7 @@ module.exports = {
         let kickMember = msg.mentions.members.first()
         if (!kickMember) {
             kickMember = msg.guild.members.cache.array().find((currentUser) => {
-                return currentUser.user.username.toLowerCase() === userToBan.toLowerCase()
+                return currentUser.user.username.toLowerCase() === userToKick.toLowerCase()
             })
             if (kickMember === undefined) {
                 return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")

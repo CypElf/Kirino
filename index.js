@@ -6,7 +6,7 @@ const i18n = require("i18n")
 const querystring = require("querystring")
 const https = require("https")
 
-const bot = new Discord.Client()
+const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
 bot.commands = new Discord.Collection()
 
 bot.config = config
