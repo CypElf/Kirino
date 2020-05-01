@@ -11,8 +11,6 @@ module.exports = {
 
         const choice = Math.floor(Math.random() * (possibleAnswers.length));
 
-        console.log(choice)
-
         msg.channel.send(possibleAnswers[choice])
     }
 }
