@@ -241,6 +241,7 @@
 	"do_not_want_to_answer": "I don't want to answer that.",
 	"who_are_you": "Lmao who are you ?",
 	"clearly_not": "Clearly not.",
-	"they_whisper_yes": "It's whispering in my ear that I do.",
+	"they_whisper_yes": "It's whispering in my ear that yes.",
+	"they_whisper_no": "It's whispering in my ear that no.",
 	"idk": "I don't know."
 }
