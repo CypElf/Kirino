@@ -7,9 +7,11 @@ module.exports = {
 	usage: "edit_usage",
 	
 	async execute(bot, msg, [ID, ...editMsg]) {
-		if (msg.author.id != bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
-			return
-		}
+		if (msg.author.id !== bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
+            return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
+                .then(msg => msg.delete({ timeout: 5000 }))
+                .catch()
+        }
 
 		msg.channel.messages.fetch(ID)
 			.then(msg2 => {
