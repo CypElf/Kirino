@@ -21,11 +21,9 @@ module.exports = {
             if (newRule.length > 1000) return msg.channel.send(__("rule_too_long")  + " <:kirinopout:698923065773522944>")
             if (newRule.includes("|")) return msg.channel.send(__("cannot_store_|") + " <:kirinopout:698923065773522944>")
 
-            let r = getRules(false)
-            if (!r) r = 0
-            else r = r.rules.split("|").length
+            let r = getRules(false).length
             if (r >= 30) return msg.channel.send(__("max_rules_number_reached") + " <:kirinopout:698923065773522944>")
-            const newRuleRequest = db.prepare("INSERT INTO rules(id,rules) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET rules=rules || '|' || excluded.rules")
+            const newRuleRequest = db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
             newRuleRequest.run(msg.guild.id, newRule)
 
             return msg.channel.send(__("the_following_rule") + "\n```" + newRule + "```\n" + __("has_been_added_to_rules"))
@@ -41,35 +39,27 @@ module.exports = {
                 return msg.channel.send(__("please_enter_a_valid_rule_number") + " <:kirinopff:698922942268047391>")
             }
 
-            const rules = getRules()
-            if (!rules) {
+            let rules = getRules()
+            if (rules.length === 0) {
                 return
             }
 
-            let newRulesArray = rules.rules.split("|")
+            rules = rules.map(row => row.rule)
 
-            if (index < 0 || index >= newRulesArray.length) {
+            if (index < 0 || index >= rules.length) {
                 return msg.channel.send(__("no_rules_defined_at_this_index") + " <:kirinopout:698923065773522944>")
             }
 
-            newRulesArray.splice(index, 1)
+            const ruleToDelete = rules[index]
 
-            const newRules = newRulesArray.join("|")
-            if (newRules.length < 1) {
-                const deleteCommand = db.prepare("DELETE FROM rules WHERE id = ?")
-                deleteCommand.run(msg.guild.id)
-            }
-            else {
-                const deleteCommand = db.prepare("INSERT INTO rules(id,rules) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET rules=excluded.rules")
-                deleteCommand.run(msg.guild.id, newRules)
-            }
+            const deleteRequest = db.prepare("DELETE FROM rules WHERE guild_id = ? AND rule = ?")
+            deleteRequest.run(msg.guild.id, ruleToDelete)
+
             return msg.channel.send(__("the_rule_number_n") + " " + (index + 1) + " " + __("has_been_deleted_from_rules"))
         }
 
         else if (request === "count") {
-            let rulesCount = getRules(false)
-            if (!rulesCount) rulesCount = 0
-            else rulesCount = rulesCount.rules.split("|").length
+            let rulesCount = getRules(false).length
             return msg.channel.send(__n("there_is_currently", rulesCount) + " " + rulesCount + " " + __n("rules_on_this_server", rulesCount))
         }
 
@@ -78,11 +68,11 @@ module.exports = {
         if (!index && index !== 0) {
             return msg.channel.send(__("please_enter_a_valid_rule_number") + " <:kirinopff:698922942268047391>")
         }
-                
-        const rulesRow = getRules()
-        if (!rulesRow) return
+        
+        let rules = getRules()
+        if (rules.length === 0) return
 
-        const rules = rulesRow.rules.split("|")
+        rules = rules.map(row => row.rule)
         const askedRule = rules[index]
 
         if (!askedRule) {
@@ -98,14 +88,11 @@ module.exports = {
         msg.channel.send(emb)
 
         function getRules(verbose = true) {
-            const rulesRequest = db.prepare("SELECT * FROM rules WHERE id = ?")
-            const rulesRow = rulesRequest.get(msg.guild.id)
+            const rulesRequest = db.prepare("SELECT * FROM rules WHERE guild_id = ?")
+            const rulesRow = rulesRequest.all(msg.guild.id)
     
-            if (!rulesRow) {
-                if (verbose) {
-                    msg.channel.send(__("no_rules_defined_on_this_server"))
-                }
-                return undefined
+            if (rulesRow.length === 0 && verbose) {
+                msg.channel.send(__("no_rules_defined_on_this_server"))
             }
     
             return rulesRow
