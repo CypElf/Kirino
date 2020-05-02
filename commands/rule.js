@@ -19,7 +19,6 @@ module.exports = {
                 return msg.channel.send(__("please_enter_a_rule_to_add") + " <:kirinopout:698923065773522944>")
             }
             if (newRule.length > 1000) return msg.channel.send(__("rule_too_long")  + " <:kirinopout:698923065773522944>")
-            if (newRule.includes("|")) return msg.channel.send(__("cannot_store_|") + " <:kirinopout:698923065773522944>")
 
             let r = getRules(false).length
             if (r >= 30) return msg.channel.send(__("max_rules_number_reached") + " <:kirinopout:698923065773522944>")

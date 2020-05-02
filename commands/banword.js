@@ -24,7 +24,6 @@ module.exports = {
 
         if (mode === "add") {
             if (words.length < 1) return msg.channel.send(__("please_insert_banwords_to_add"))
-            if (words.filter(mot => mot.includes("|")).length !== 0) return msg.channel.send(__("cannot_store_|") + " <:kirinopout:698923065773522944>")
                 
             const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwordsRows = banwordsRequest.all(guild)
