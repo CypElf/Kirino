@@ -223,7 +223,7 @@ bot.on("guildDelete", guild => {
 
 const updateActivity = () => {
     guildsCount = bot.guilds.cache.size
-    bot.user.setActivity(`${guildsCount} servers | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
+    bot.user.setActivity(`${guildsCount} servers | ${bot.config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
 }
 
-bot.login(process.env.KIRINO_BETA_TOKEN).catch(err => console.log(err.message))
+bot.login(process.env.KIRINO_BETA_TOKEN)
