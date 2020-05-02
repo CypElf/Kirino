@@ -22,5 +22,7 @@ deploy/deploy_key.pub
 docs/docs.json
 webpack/
 
+old_console_hack_commands/
 TODO.txt
 database.db
+.env

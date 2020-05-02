@@ -5,6 +5,7 @@ const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const querystring = require("querystring")
 const https = require("https")
+require("dotenv").config()
 
 const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
 bot.commands = new Discord.Collection()
@@ -156,12 +157,11 @@ bot.on("message", async msg => {
         }
 
         const query = querystring.stringify({
-            
             api_paste_code: allInvites,
             api_paste_name: __("invitations").substring(0, __("invitations").length - 2),
             api_paste_private: 1,
             api_paste_expire_date: "1D",
-            api_dev_key: bot.config.pastebinDevKey,
+            api_dev_key: process.env.PASTEBIN_DEV_KEY,
             api_option: "paste",
         })
 
@@ -228,4 +228,4 @@ const updateActivity = () => {
     bot.user.setActivity(`${guildsCount} servers | ${config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
 }
 
-bot.login(bot.config.token).catch(err => console.log(err.message))
+bot.login(process.env.KIRINO_BETA_TOKEN).catch(err => console.log(err.message))
