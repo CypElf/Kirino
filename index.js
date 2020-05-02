@@ -64,7 +64,7 @@ bot.on("message", async msg => {
     if (msg.channel.type === "text") callerID = msg.guild.id
     else callerID = msg.author.id
 
-    const languagesRequest = db.prepare("SELECT * FROM languages WHERE guild_id = ?")
+    const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?")
     const languageRow = languagesRequest.get(callerID)
     if (languageRow !== undefined) {
         setLocale(languageRow.language)

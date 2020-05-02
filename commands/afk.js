@@ -19,7 +19,7 @@ module.exports = {
             return msg.channel.send(__("afk_reason_too_long") + " <:kirinopout:698923065773522944>")
         }
 
-        const afkRequest = db.prepare("INSERT INTO afk(user_id,reason) VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET reason=excluded.reason")
+        const afkRequest = db.prepare("INSERT INTO afk(user_id,reason) VALUES(?,?)")
         afkRequest.run(msg.author.id, reason)
 
         if (reason) {
