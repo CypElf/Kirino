@@ -7,7 +7,7 @@ module.exports = {
     aliases: ["bw"],
     category: "admin",
 
-    async execute (bot, msg, [mode, ...mots]) {
+    async execute (bot, msg, [mode, ...words]) {
         if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("missing_permissions_to_execute_this_command") + " <:kirinopout:698923065773522944>")
 
         const bsqlite3 = require("better-sqlite3")
@@ -15,82 +15,91 @@ module.exports = {
 
         const guild = msg.guild.id
 
+        const parseEmoji = mot => {
+            if (mot.match(/<:(.*?):[0-9]*>/gm)) { // modification de la représentation des émojis
+                return ":" + mot.split(":")[1].split(":")[0] + ":"
+            }
+            else return mot
+        }
+
         if (mode === "add") {
-            if (mots.length < 1) return msg.channel.send(__("please_insert_banwords_to_add"))
-            if (mots.filter(mot => mot.includes("|")).length !== 0) return msg.channel.send(__("cannot_store_|") + " <:kirinopout:698923065773522944>")
+            if (words.length < 1) return msg.channel.send(__("please_insert_banwords_to_add"))
+            if (words.filter(mot => mot.includes("|")).length !== 0) return msg.channel.send(__("cannot_store_|") + " <:kirinopout:698923065773522944>")
                 
-            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE id = ?")
-            const banwordsRow = banwordsRequest.get(guild)
-            let bannedWords = []
-            let currentBannedWordsCount = 0
-            
-            if (!(banwordsRow === undefined || banwordsRow.words === undefined)) {
-                bannedWords = banwordsRow.words.split(",")
-                currentBannedWordsCount = bannedWords.length
+            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            let banwordsRows = banwordsRequest.all(guild)
+            let banwordsCount
+            if (banwordsRows.length !== 0) {
+                banwordsRows = banwordsRows.map(row => row.word)
+                banwordsCount = banwordsRows.length
+            }
+            else {
+                banwordsCount = 0
             }
 
-            if (currentBannedWordsCount + mots.length > 40) {
+            if (banwordsCount + words.length > 40) {
                 return msg.channel.send(__("banwords_count_limited") + " <:kirinopout:698923065773522944>")
             }
-            if (mots.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " <:kirinopout:698923065773522944>")
 
-            mots.forEach(mot => {
-                const addBanwordCommand = db.prepare("INSERT INTO banwords(id,words) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET words=words || '|' || excluded.words")
+            words = words.map(mot => parseEmoji(mot))
+
+            if (words.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " <:kirinopout:698923065773522944>")
+
+            words.forEach(mot => {
+                const addBanwordCommand = db.prepare("INSERT INTO banwords(guild_id,word) VALUES(?,?) ON CONFLICT(word) DO NOTHING")
                 addBanwordCommand.run(guild, mot)
             })
-            let content = __n("the_word", mots.length) + " `"
-            if (mots.length === 1) content += mots[0]
+            let content = __n("the_word", words.length) + " `"
+            if (words.length === 1) content += words[0]
 
             else {
-                content += mots.join("`, `")
+                content += words.join("`, `")
             }
 
-            content += "` " + __n("has_been_added_to_banwords", mots.length)
+            content += "` " + __n("has_been_added_to_banwords", words.length)
 
             msg.channel.send(content)
         }
 
         else if (mode === "list") {
-            let liste = __("here_is_banword_list") + " :\n"
-            const listBanwordsRequest = db.prepare("SELECT * FROM banwords WHERE id = ?")
-            const listRow = listBanwordsRequest.get(guild)
-            if (listRow === undefined || listRow.words === undefined) liste = __("no_banwords_for_now")
-            else {
-                const contenu = listRow.words.split("|")
-                liste += "`" + contenu.join("`, `") + "`"
+            let list = __("here_is_banword_list") + " :\n"
+            const listBanwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            let wordsList = listBanwordsRequest.all(guild)
+
+            if (wordsList.length !== 0) {
+                wordsList = wordsList.map(row => row.word)
+                list += "`" + wordsList.join("`, `") + "`"
             }
-            msg.channel.send(liste) 
+            else {
+                list = __("no_banwords_for_now")
+            }
+
+            msg.channel.send(list) 
         }
 
         else if (mode === "remove") {
-            if (mots.length < 1) return msg.channel.send(__("precise_banwords_to_remove"))
-            let bannedWords
+            if (words.length < 1) return msg.channel.send(__("precise_banwords_to_remove"))
             let removed = []
             let notRemoved = []
-            const removeBanwordsRequest = db.prepare("SELECT * FROM banwords WHERE id = ?")
-            const removeRow = removeBanwordsRequest.get(guild)
+            const removeBanwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            let banwords = removeBanwordsRequest.all(guild)
 
-            if (removeRow === undefined || removeRow.words === undefined) return msg.channel.send(__("no_banwords_on_this_server"))
-            bannedWords = removeRow.words.split("|")
-
-            mots.forEach(mot => {
-                if (bannedWords.includes(mot)) {
-                    bannedWords = bannedWords.filter(bannedWord => bannedWord !== mot)
-                    removed.push(mot)
-                }
-                else {
-                    notRemoved.push(mot)
-                }
-
-                if (bannedWords.length < 1) {
-                    const deleteCommand = db.prepare("DELETE FROM banwords WHERE id = ?")
-                    deleteCommand.run(guild)
-                }
-                else {
-                    const deleteCommand = db.prepare("INSERT INTO banwords(id,words) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET words=excluded.words")
-                    deleteCommand.run(guild, bannedWords.join(","))
-                }
-            })
+            if (banwords.length !== 0) {
+                banwords = banwords.map(row => row.word)
+                words.forEach(word => {
+                    word = parseEmoji(word)
+                    if (banwords.includes(word)) {
+                        banwords = banwords.filter(bannedWord => bannedWord !== word)
+                        removed.push(word)
+                    }
+                    else {
+                        notRemoved.push(word)
+                    }
+                    
+                    const deleteCommand = db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?")
+                    deleteCommand.run(guild, parseEmoji(word))
+                })
+            }
 
             let answer = ""
             if (removed.length === 0) {

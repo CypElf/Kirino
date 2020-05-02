@@ -64,9 +64,9 @@ bot.on("message", async msg => {
     if (msg.channel.type === "text") callerID = msg.guild.id
     else callerID = msg.author.id
 
-    const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?")
+    const languagesRequest = db.prepare("SELECT * FROM languages WHERE guild_id = ?")
     const languageRow = languagesRequest.get(callerID)
-    if (!(languageRow === undefined)) {
+    if (languageRow !== undefined) {
         setLocale(languageRow.language)
     }
     else {
@@ -78,7 +78,7 @@ bot.on("message", async msg => {
 
     const mentions = msg.mentions.users
 
-    const afkRequest = db.prepare("SELECT * FROM afk WHERE id = ?")
+    const afkRequest = db.prepare("SELECT * FROM afk WHERE user_id = ?")
 
     mentions.forEach(mention => {
         const mentionnedAfkRow = afkRequest.get(mention.id)
@@ -98,7 +98,7 @@ bot.on("message", async msg => {
     const selfAfkRow = afkRequest.get(msg.author.id)
 
     if (!(selfAfkRow === undefined)) {
-        const deletionRequest = db.prepare("DELETE FROM afk WHERE id = ?")
+        const deletionRequest = db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
         msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 }))
     }
@@ -107,18 +107,16 @@ bot.on("message", async msg => {
 
     if (msg.channel.type == "text") {
         if (!msg.content.startsWith(bot.config.prefix + "banword remove") && !msg.content.startsWith(bot.config.prefix + "banword add")) {
-        
-            let bannedWords = []
-        
-            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE id = ?")
-            const banwordsRow = banwordsRequest.get(msg.guild.id)
-            
-            if (!(banwordsRow === undefined || banwordsRow.words === undefined)) {
+
+            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            let banwords = banwordsRequest.all(msg.guild.id)
+
+            if (banwords) {
+                banwords = banwords.map(row => row.word.toLowerCase())
                 let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm)
                 if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0])
-                bannedWords = banwordsRow.words.split("|")
                 const loweredMessageArray = messageArray.map(word => word.toLowerCase())
-                bannedWords.forEach(word => {
+                for (let word of banwords) {
                     if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete()
                     if (emojiNames) {
                         if (word.startsWith(":") && word.endsWith(":")) {
@@ -126,7 +124,7 @@ bot.on("message", async msg => {
                             if (emojiNames.includes(word)) return msg.delete()
                         }
                     }
-                })
+                }
             }
         }
     }
