@@ -43,7 +43,7 @@ module.exports = {
         const creationHour = String(creationDate.getHours()).padStart(2, "0")
         const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0")
         const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
-        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} ${__("at")} ${creationHour}:${creationMinutes}:${cretionsSeconds}`
 
 
         let joinedAt = member.joinedAt
@@ -53,7 +53,7 @@ module.exports = {
         const joinedAtHour = String(joinedAt.getHours()).padStart(2, "0")
         const joinedAtMinutes = String(joinedAt.getMinutes()).padStart(2, "0")
         const joinedAtSeconds = String(joinedAt.getSeconds()).padStart(2, "0")
-        joinedAt = `${joinedAtDay}/${joinedAtMonth}/${joinedAtYear} à ${joinedAtHour}:${joinedAtMinutes}:${joinedAtSeconds}`
+        joinedAt = `${joinedAtDay}/${joinedAtMonth}/${joinedAtYear} ${__("at")} ${joinedAtHour}:${joinedAtMinutes}:${joinedAtSeconds}`
 
         let perms = ""
 
@@ -94,7 +94,7 @@ module.exports = {
             const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0")
             const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0")
             const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0")
-            premiumSince = __("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} à ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
+            premiumSince = __("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} ${__("at")} ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
         }
         else {
             premiumSince = __("no_capitalized")

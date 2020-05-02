@@ -16,7 +16,7 @@ module.exports = {
         const creationHour = String(creationDate.getHours()).padStart(2, "0")
         const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0")
         const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
-        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} ${__("at")} ${creationHour}:${creationMinutes}:${cretionsSeconds}`
 
         const membres = msg.guild.members
         const bots = membres.cache.filter(membre => membre.user.bot).size

@@ -35,7 +35,7 @@ module.exports = {
         const creationHour = String(creationDate.getHours()).padStart(2, "0")
         const creationMinutes = String(creationDate.getMinutes()).padStart(2, "0")
         const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
-        creationDate = `${creationDay}/${creationMonth}/${creationYear} à ${creationHour}:${creationMinutes}:${cretionsSeconds}`
+        creationDate = `${creationDay}/${creationMonth}/${creationYear} ${__("at")} ${creationHour}:${creationMinutes}:${cretionsSeconds}`
         
         const porteurs = role.members.array().length
         const membresServeur = msg.guild.members.cache.array().length
