@@ -45,7 +45,7 @@ module.exports = {
             if (words.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " <:kirinopout:698923065773522944>")
 
             words.forEach(mot => {
-                const addBanwordCommand = db.prepare("INSERT INTO banwords(guild_id,word) VALUES(?,?) ON CONFLICT(word) DO NOTHING")
+                const addBanwordCommand = db.prepare("INSERT INTO banwords(guild_id,word) VALUES(?,?)")
                 addBanwordCommand.run(guild, mot)
             })
             let content = __n("the_word", words.length) + " `"
