@@ -12,6 +12,9 @@ module.exports = {
         let db = new bsqlite3("database.db", { fileMustExist: true })
         
         const request = args[0]
+
+        // ------------------------------------------------------------------- add
+
         if (request === "add") {
             if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("not_enough_permissions_to_add_rule") + " <:kirinopff:698922942268047391>")
             const newRule = args.slice(1).join(" ")
@@ -27,6 +30,8 @@ module.exports = {
 
             return msg.channel.send(__("the_following_rule") + "\n```" + newRule + "```\n" + __("has_been_added_to_rules"))
         }
+
+        // ------------------------------------------------------------------- remove
 
         else if (request === "remove") {
             if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("not_enough_permissions_to_add_rule") + " <:kirinopff:698922942268047391>")
@@ -49,18 +54,29 @@ module.exports = {
                 return msg.channel.send(__("no_rules_defined_at_this_index") + " <:kirinopout:698923065773522944>")
             }
 
-            const ruleToDelete = rules[index]
+            rules.splice(index, 1)
 
-            const deleteRequest = db.prepare("DELETE FROM rules WHERE guild_id = ? AND rule = ?")
-            deleteRequest.run(msg.guild.id, ruleToDelete)
+            const deleteRequest = db.prepare("DELETE FROM rules WHERE guild_id = ?")
+            deleteRequest.run(msg.guild.id)
+
+            if (rules.length !== 0) {
+                const newRuleRequest = db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
+                rules.forEach(rule => {
+                    newRuleRequest.run(msg.guild.id, rule)
+                })
+            }
 
             return msg.channel.send(__("the_rule_number_n") + " " + (index + 1) + " " + __("has_been_deleted_from_rules"))
         }
+
+        // ------------------------------------------------------------------- count
 
         else if (request === "count") {
             let rulesCount = getRules(false).length
             return msg.channel.send(__n("there_is_currently", rulesCount) + " " + rulesCount + " " + __n("rules_on_this_server", rulesCount))
         }
+
+        // ------------------------------------------------------------------- display rule
 
         const index = parseInt(request) - 1
 
