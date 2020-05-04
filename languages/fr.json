@@ -243,6 +243,9 @@
 	"they_whisper_no": "On me chuchotte à l'oreillette que non.",
 	"idk": "Je ne sais pas.",
 	"at": "à",
-	"description_prefix": "description_prefix",
-	"usage_prefix": "usage_prefix"
+	"description_prefix": "Permet de changer le préfixe utilisable pour mes commandes.",
+	"usage_prefix": "[nouveau préfixe]",
+	"no_spaces_in_prefixs": "Les préfixes ne doivent pas avoir d'espace",
+	"three_chars_max": "Les préfixes sont limités à 3 caractères maximum.",
+	"new_prefix_is_now": "Le préfixe est maintenant"
 }

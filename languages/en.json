@@ -245,5 +245,10 @@
 	"they_whisper_yes": "It's whispering in my ear that yes.",
 	"they_whisper_no": "It's whispering in my ear that no.",
 	"idk": "I don't know.",
-	"at": "at"
+	"at": "at",
+	"description_prefix": "Allows you to change the prefix that can be used for my commands.",
+	"usage_prefix": "[new prefix]",
+	"no_spaces_in_prefixs": "Prefixs must have no spaces.",
+	"three_chars_max": "Prefixs are limited to a maximum of 3 characters.",
+	"new_prefix_is_now": "The prefix is now"
 }

@@ -7,9 +7,9 @@ module.exports = {
 	category: "others",
 	
 	async execute(bot, msg, args) {
-        if (args.length > 1) return msg.channel.send("Les préfixes ne doivent pas avoir d'espace")
+        if (args.length > 1) return msg.channel.send(__("no_spaces_in_prefixs"))
         const newPrefix = args[0]
-        if (newPrefix.length > 3) return msg.channel.send("Les préfixes sont limités à 3 caractères maximum.")
+        if (newPrefix.length > 3) return msg.channel.send(__("three_chars_max"))
 
         const bsqlite3 = require("better-sqlite3")
         let db = new bsqlite3("database.db", { fileMustExist: true })       
@@ -21,6 +21,6 @@ module.exports = {
 
         prefixRequest.run(id, newPrefix)
 
-        msg.channel.send("Le préfixe est maintenant" + " `" + newPrefix + "` <:kirinoglad:698923046819594351> !")
+        msg.channel.send(__("new_prefix_is_now") + " `" + newPrefix + "` <:kirinoglad:698923046819594351> !")
 	}
 }
