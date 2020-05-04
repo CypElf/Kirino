@@ -4,7 +4,7 @@ const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const querystring = require("querystring")
-const https = require("https")
+const fetch = require("node-fetch");
 require("dotenv").config()
 
 const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
@@ -163,28 +163,17 @@ bot.on("message", async msg => {
             api_option: "paste",
         })
 
-        const req = https.request({
-            hostname: "pastebin.com",
-            port: 443,
-            path: "/api/api_post.php",
+        let answer = await fetch("https://pastebin.com/api/api_post.php", {
             method: "POST",
             headers: {
                 'Content-Type': "application/x-www-form-urlencoded",
                 'Content-Length': query.length
-            }
-        }, res => {
-            let data = ""
-            res.on("data", piece => {
-                data += piece
-            })
-
-            res.on("end", () => {
-                msg.channel.send(data)
-            })
+            },
+            body: query
         })
+        answer = await answer.text()
 
-        req.write(query)
-        req.end()
+        if (answer) return msg.channel.send(answer)
     }
 
     // ------------------------------------------------------------- vérification de la validité de la commande et exécution
