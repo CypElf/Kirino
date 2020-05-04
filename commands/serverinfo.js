@@ -4,7 +4,7 @@ module.exports = {
     guildOnly: true,
     args: false,
     aliases: ["si"],
-    category: "others",
+    category: "utility",
     
     async execute(bot, msg) {
         const Discord = require("discord.js")

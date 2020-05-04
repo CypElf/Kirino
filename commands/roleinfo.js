@@ -7,7 +7,7 @@ module.exports = {
     args: true,
     usage: "usage_roleinfo",
     aliases: ["ri"],
-    category: "others",
+    category: "utility",
     
     async execute(bot, msg, argsArray) {
         let role = msg.mentions.roles.first()

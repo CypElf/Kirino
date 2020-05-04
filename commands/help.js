@@ -3,69 +3,37 @@ module.exports = {
 	description: "description_help",
 	guildOnly: false,
 	usage: "usage_help",
-	category: "others",
+	category: "utility",
 
 	async execute (bot, msg, args) {
 		const prefix = bot.config.prefix
 		const Discord = require("discord.js")
-		
-		let data = []
-		let dataJoined
+
+		// ------------------------------------------------------------------- general help
 	
 		if (!args.length) {
 			
 			let help_embed = new Discord.MessageEmbed()
 				.setColor('#DFC900')
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-	
-			let first = true
-			bot.commands.forEach(command => {
-				if (command.category == "admin") {
-					if (!(msg.channel.type === "text" && msg.guild.id === bot.config.avdrayID)) {
-						if (first) {
-							data.push("`" + command.name + "`")
-							first = false
-						}
-						else {
-							data.push(", `" + command.name + "`")
-						}
-					}
-					else {
-						if (first) {
-							data.push("`" + command.name + "`")
-							first = false
-						}
-						else {
-							data.push(", `" + command.name + "`")
-						}
-					}
-				}
-			})
 
-			dataJoined = data.join("")
-			if (dataJoined) {
-				help_embed.addField(__("administration"), dataJoined)
+			const dataJoined = bot.commands.array()
+			const adminCommands = "`" + dataJoined.filter(command => command.category === "admin").map(command => command.name).join("`, `") + "`"
+			const utilityCommands = "`" + dataJoined.filter(command => command.category === "utility").map(command => command.name).join("`, `") + "`"
+			const programmingCommands = "`" + dataJoined.filter(command => command.category === "programming").map(command => command.name).join("`, `") + "`"
+			const othersCommands = "`" + dataJoined.filter(command => command.category === "others" && !(command.name === "avdray" && (msg.channel.type !== "text" || msg.guild.id !== bot.config.avdrayID ))).map(command => command.name).join("`, `") + "`"
+
+			if (adminCommands) {
+				help_embed.addField(__("administration"), adminCommands)
 			}
-			
-			data = []
-			first = true
-			bot.commands.forEach(command => {
-				if (command.category == "others") {
-					if (!(command.name === "avdray" && (msg.channel.type !== "text" || msg.guild.id !== bot.config.avdrayID ))) {
-						if (first) {
-							data.push("`" + command.name + "`")
-							first = false
-						}
-						else {
-							data.push(", `" + command.name + "`")
-						}
-					}
-				}
-			})
-
-			dataJoined = data.join("")
-			if (dataJoined) {
-				help_embed.addField(__("others"), dataJoined + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"))
+			if (utilityCommands) {
+				help_embed.addField(__("utility"), utilityCommands)
+			}
+			if (programmingCommands) {
+				help_embed.addField(__("programming"), programmingCommands)
+			}
+			if (othersCommands) {
+				help_embed.addField(__("others"), othersCommands + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"))
 			}
 	
 			return msg.channel.send(help_embed)
@@ -74,7 +42,12 @@ module.exports = {
 			})
 		}
 
-		let command = bot.commands.get(args[0].toLowerCase()) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0].toLowerCase()))
+		// ------------------------------------------------------------------- help on specitif command
+
+		let data = []
+		const commandName = args[0].toLowerCase()
+
+		let command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 		if (command) {
 			if (!(msg.channel.type ==="text" && msg.guild.id === bot.config.avdrayID)) {
 				if (command.name === "avdray") {

@@ -3,11 +3,11 @@ module.exports = {
     description: "description_say",
     guildOnly: true,
     args: true,
-    category: "others",
+    category: "admin",
     usage: "usage_say",
     
     async execute(bot, msg, args) {
-		if (msg.author.id !== bot.config.ownerID && msg.author.id !== msg.guild.ownerID) {
+		if (msg.author.id !== bot.config.ownerID && !msg.member.hasPermission("ADMINISTRATOR")) {
             return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
                 .then(msg => msg.delete({ timeout: 5000 }))
                 .catch()

@@ -4,7 +4,7 @@ module.exports = {
     guildOnly: false,
 	args: true,
     usage: "usage_github",
-	category: "others",
+	category: "programming",
 	
 	async execute(bot, msg, args) {
         if (args.length > 1) {

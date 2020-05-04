@@ -5,13 +5,13 @@ module.exports = {
     args: false,
     usage: "usage_userinfo",
     aliases: ["ui"],
-    category: "others",
+    category: "utility",
     
-    async execute(bot, msg, argsArray) {
+    async execute(bot, msg, args) {
         let member
 
         // si aucun argument n'est fourni, l'utilisateur dont les informations seront affichées sera celui ayant exécuté la commande
-        if (!argsArray.length) {
+        if (!args.length) {
             member = msg.member
         }
 
@@ -21,7 +21,7 @@ module.exports = {
             member = msg.mentions.members.first()
             if(!member) { // ... sinon, on cherchera un utilisateur dont le pseudo correspond à l'argument saisi pour afficher ses informations...
                 let user = ""
-                argsArray.forEach(element => {
+                args.forEach(element => {
                     user += element + " "
                 })
                 user = user.substring(0, user.length - 1)

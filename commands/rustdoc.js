@@ -5,7 +5,7 @@ module.exports = {
     args: true,
     usage: "usage_rustdoc",
     aliases: ["rd"],
-    category: "others",
+    category: "programming",
 
     async execute (bot, msg, args) {
         const Discord = require("discord.js")

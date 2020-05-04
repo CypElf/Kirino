@@ -3,7 +3,7 @@ module.exports = {
     description: "description_afk",
     guildOnly: true,
     args: false,
-    category: "others",
+    category: "utility",
     usage: "usage_afk",
 
     async execute (bot, msg, args) {
