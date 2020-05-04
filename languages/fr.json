@@ -242,5 +242,7 @@
 	"they_whisper_yes": "On me chuchotte à l'oreillette que oui.",
 	"they_whisper_no": "On me chuchotte à l'oreillette que non.",
 	"idk": "Je ne sais pas.",
-	"at": "à"
+	"at": "à",
+	"description_prefix": "description_prefix",
+	"usage_prefix": "usage_prefix"
 }

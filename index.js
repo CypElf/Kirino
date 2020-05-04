@@ -41,22 +41,29 @@ bot.once("ready", () => {
 // -------------------------------------------------------------
 
 bot.on("message", async msg => {
+    const db = new bsqlite3("database.db", { fileMustExist: true })
+    const prefixRequest = db.prepare("SELECT * FROM prefixs WHERE id = ?")
+    let id
+    if (msg.channel.type === "text") id = msg.guild.id
+    else id = msg.author.id
+    let prefix = prefixRequest.get(id)
+    if (!prefix) prefix = ";"
+    else prefix = prefix.prefix
+    bot.prefix = prefix
 
     // maintenance
-    // if (msg.content.startsWith(bot.config.prefix)) return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !")
+    // if (msg.content.startsWith(bot.prefix)) return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !")
     // else return
 
     if (msg.author.bot) return
     if (msg.channel.type === "text") {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
-        if (msg.content.startsWith(bot.config.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
+        if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
     }
 
     const messageArray = msg.content.split(" ")
-    const commandName = messageArray[0].toLowerCase().slice(bot.config.prefix.length)
-    const args = messageArray.slice(bot.config.prefix.length)
-
-    const db = new bsqlite3("database.db", { fileMustExist: true })
+    const commandName = messageArray[0].toLowerCase().slice(bot.prefix.length)
+    const args = messageArray.slice(1)
 
     // ------------------------------------------------------------- paramétrage de la bonne langue
 
@@ -106,7 +113,7 @@ bot.on("message", async msg => {
     // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
 
     if (msg.channel.type == "text") {
-        if (!msg.content.startsWith(bot.config.prefix + "banword remove") && !msg.content.startsWith(bot.config.prefix + "banword add")) {
+        if (!msg.content.startsWith(bot.prefix + "banword remove") && !msg.content.startsWith(bot.prefix + "banword add")) {
 
             const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwords = banwordsRequest.all(msg.guild.id)
@@ -131,7 +138,7 @@ bot.on("message", async msg => {
 
     // -------------------------------------------------------------------------------
 
-    if (!msg.content.startsWith(bot.config.prefix)) return
+    if (!msg.content.startsWith(bot.prefix)) return
 
     // ------------------------------------------------------------- vérification de la commande spéciale guilds
     
@@ -208,11 +215,11 @@ bot.on("guildDelete", guild => {
     updateActivity()
 })
 
-// ------------------------------------------------------------- fonction pour mettre à jour le rich presence en fonction du nombre de serveurs sur lequel le bot est
+// ------------------------------------------------------------- update bot activity 
 
 const updateActivity = () => {
     guildsCount = bot.guilds.cache.size
-    bot.user.setActivity(`${guildsCount} servers | ${bot.config.prefix}help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
+    bot.user.setActivity(`${guildsCount} servers | ;help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
 }
 
 bot.login(process.env.KIRINO_BETA_TOKEN)

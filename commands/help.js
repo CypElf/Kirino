@@ -6,7 +6,7 @@ module.exports = {
 	category: "utility",
 
 	async execute (bot, msg, args) {
-		const prefix = bot.config.prefix
+		const prefix = bot.prefix
 		const Discord = require("discord.js")
 
 		// ------------------------------------------------------------------- general help
