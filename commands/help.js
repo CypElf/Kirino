@@ -69,8 +69,10 @@ module.exports = {
 			data.push("**" + __("aliases") + "** : " + aliasesStr)
 		}
 		if (command.usage) data.push("**" + __("usage") + "** : `" + prefix + command.name + " " + __(command.usage) + "`")
+		if (command.permissions) data.push("**" + __("required_permissions") + "** : `" + command.permissions.join("`, `") + "`")
+		else data.push("**" + __("required_permissions") + "** : `" + __("nothingF") + "`")
 		
-		const texte = data.join('\n')
+		const texte = data.join("\n")
 	
 		const help_embed = new Discord.MessageEmbed()
 			.setColor('#DFC900')

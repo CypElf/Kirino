@@ -5,6 +5,7 @@ module.exports = {
     args: true,
     category: "admin",
     usage: "usage_say",
+    permissions: ["administrator"],
     
     async execute(bot, msg, args) {
 		if (msg.author.id !== bot.config.ownerID && !msg.member.hasPermission("ADMINISTRATOR")) {

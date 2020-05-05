@@ -7,6 +7,7 @@ module.exports = {
 	args: true,
 	category: "admin",
 	usage: "usage_purge",
+	permissions: ["manage messages"],
 	
 	async execute(bot, msg, args) {
 		if (!msg.member.hasPermission("MANAGE_MESSAGES") && msg.author.id != config.ownerID) {

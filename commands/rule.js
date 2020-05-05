@@ -6,6 +6,7 @@ module.exports = {
     usage: "usage_rule",
     aliases: ["r"],
     category: "admin",
+    permissions: ["manage guild"],
     
     async execute(bot, msg, args) {
         const bsqlite3 = require("better-sqlite3")

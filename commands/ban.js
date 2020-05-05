@@ -5,6 +5,7 @@ module.exports = {
     args: true,
     category: "admin",
     usage: "usage_ban",
+    permissions: ["ban members"],
 
     async execute (bot, msg, [userToBan, ...reason]) {
         if (!msg.member.hasPermission('BAN_MEMBERS')) {

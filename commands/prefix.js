@@ -4,7 +4,8 @@ module.exports = {
     guildOnly: false,
     args: true,
     usage: "usage_prefix",
-	category: "others",
+    category: "others",
+    permissions: ["manage guild"],
 	
 	async execute(bot, msg, args) {
         if (msg.channel.type === "text" && !msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("missing_permissions_to_execute_this_command"))

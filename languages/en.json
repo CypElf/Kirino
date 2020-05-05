@@ -63,6 +63,7 @@
 	"programming": "Programming",
 	"utility": "Utility",
 	"others": "Autres",
+	"required_permissions": "Required permissions",
 	"you_can_do": "You can do",
 	"to_get_infos_on_a_command": "to get information on a particular command.",
 	"this_command_does_not_exist": "This command does not exist.",
@@ -148,6 +149,7 @@
 	"usage_say": "[message]",
 	"description_serverinfo": "Displays information about the server.",
 	"nothing": "None",
+	"nothingF": "None",
 	"emoji": {
 		"one": "emoji",
 		"other": "emojis"

@@ -5,6 +5,7 @@ module.exports = {
     args: true,
     category: "admin",
     usage: __("usage_kick"),
+    permissions: ["kick members"],
 
     async execute (bot, msg, [userToKick, ...reason]) {
         const canKick = msg.member.hasPermission("KICK_MEMBERS")

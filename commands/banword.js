@@ -6,6 +6,7 @@ module.exports = {
     usage: "banword_usage",
     aliases: ["bw"],
     category: "admin",
+    permissions: ["manage messages"],
 
     async execute (bot, msg, [mode, ...words]) {
         if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("missing_permissions_to_execute_this_command") + " <:kirinopout:698923065773522944>")
