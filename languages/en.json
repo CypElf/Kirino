@@ -97,6 +97,7 @@
 	"description_ping": "Shows my ping in ms.",
 	"description_purge": "Deletes the desired number of messages.",
 	"usage_purge": "[number of messages to be deleted]",
+	"purge_does_not_work_beyond_14_days": "You cannot purge messages older than two weeks.",
 	"you_cannot_delete_messages": "You cannot delete messages!",
 	"please_insert_only_a_number": "Please enter an integer only.",
 	"description_react": "Makes me react to a message with an emoji.",
@@ -252,5 +253,7 @@
 	"usage_prefix": "[new prefix]",
 	"no_spaces_in_prefixs": "Prefixs must have no spaces.",
 	"three_chars_max": "Prefixs are limited to a maximum of 3 characters.",
-	"new_prefix_is_now": "The prefix is now"
+	"new_prefix_is_now": "The prefix is now",
+	"description_profilepicture": "Displays the profile picture of the desired user.",
+	"usage_profilepicture": "{mention, user or ID}"
 }

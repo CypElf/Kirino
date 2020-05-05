@@ -1,10 +1,11 @@
 module.exports = {
-	name: "pp",
-    description: "description_pp",
+	name: "profilepicture",
+    description: "description_profilepicture",
     guildOnly: true,
     args: false,
+    aliases: ["pp"],
     category: "utility",
-    usage: "usage_pp",
+    usage: "usage_profilepicture",
 
     async execute (bot, msg, args) {
         let member

@@ -16,9 +16,7 @@ module.exports = {
 
         if (role === undefined) {
             let roleNameOrID = args.join(" ")
-            role = msg.guild.roles.cache.array().find(currentRole => {
-                return currentRole.name.toLowerCase() === roleNameOrID.toLowerCase()
-            })
+            role = msg.guild.roles.cache.array().find(currentRole => currentRole.name.toLowerCase() === roleNameOrID.toLowerCase())
             if (role === undefined) {
                 role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === roleNameOrID)
                 if (role === undefined) {
