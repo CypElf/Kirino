@@ -9,20 +9,21 @@ module.exports = {
     aliases: ["ri"],
     category: "utility",
     
-    async execute(bot, msg, argsArray) {
+    async execute(bot, msg, args) {
+        let member
+
         let role = msg.mentions.roles.first()
 
-        if(!role) {
-            let r = ""
-            argsArray.forEach(element => {
-                r += element + " "
-            })
-            r = r.substring(0, r.length - 1)
-            role = msg.guild.roles.cache.array().find((currentRole) => {
-                return currentRole.name.toLowerCase() === r.toLowerCase()
+        if (role === undefined) {
+            let roleNameOrID = args.join(" ")
+            role = msg.guild.roles.cache.array().find(currentRole => {
+                return currentRole.name.toLowerCase() === roleNameOrID.toLowerCase()
             })
             if (role === undefined) {
-                return msg.channel.send(__("bad_role") + " <:kirinopout:698923065773522944>")
+                role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === roleNameOrID)
+                if (role === undefined) {
+                    return msg.channel.send(__("bad_role") + " <:kirinopout:698923065773522944>")
+                }
             }
         }
 

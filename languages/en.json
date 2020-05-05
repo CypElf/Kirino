@@ -21,7 +21,7 @@
 	"usage_ban": "[user] {reason}",
 	"you_are_missing_permissions_to_ban_members": "You do not have sufficient permissions to ban a member.",
 	"i_am_missing_permissions_to_ban_members": "I don't have the necessary permission to ban members.",
-	"please_correctly_write_or_mention_a_member": "Please mention or write the exact name of a server user.",
+	"please_correctly_write_or_mention_a_member": "Please mention, write the name or ID of a server user.",
 	"unable_to_ban_higher_than_me": "I cannot ban this user, he has a rank equal to or higher than mine.",
 	"cannot_ban_yourself": "You can't ban yourself!",
 	"you_cannot_ban_this_member": "You can't ban this member.",
@@ -120,7 +120,7 @@
 	"report_cancelled": "The report has been cancelled.",
 	"description_roleinfo": "Displays information about the role mentioned or exactly named.",
 	"usage_roleinfo": "[role]",
-	"bad_role": "Please mention or write a correct server role.",
+	"bad_role": "Please mention, write the name or ID of a server role.",
 	"roles": {
 		"one": "Role",
 		"other": "Roles"

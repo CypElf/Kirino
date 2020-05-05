@@ -10,26 +10,18 @@ module.exports = {
     async execute(bot, msg, args) {
         let member
 
-        // si aucun argument n'est fourni, l'utilisateur dont les informations seront affichées sera celui ayant exécuté la commande
-        if (!args.length) {
-            member = msg.member
-        }
+        if (!args.length) member = msg.member
 
-        // sinon, on regardera les arguments, et...
         else {
-            // ... si un utilisateur est mentionné, ce sera lui dont les informations seront affichées...
             member = msg.mentions.members.first()
-            if(!member) { // ... sinon, on cherchera un utilisateur dont le pseudo correspond à l'argument saisi pour afficher ses informations...
-                let user = ""
-                args.forEach(element => {
-                    user += element + " "
-                })
-                user = user.substring(0, user.length - 1)
-                member = msg.guild.members.cache.array().find((currentUser) => {
-                    return currentUser.user.username.toLowerCase() === user.toLowerCase()
-                })
-                if (member === undefined) { // ... et enfin si on a toujours rien, on répond qu'il n'y a pas d'utilisateur correspondant
-                    return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
+            if (member === undefined) {
+                let usernameOrID = args.join(" ")
+                member = msg.guild.members.cache.array().find(currentMember => currentMember.user.username.toLowerCase() === usernameOrID.toLowerCase())
+                if (member === undefined) {
+                    member = msg.guild.members.cache.array().find(currentMember => currentMember.id === usernameOrID)
+                    if (member === undefined) {
+                        return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
+                    }
                 }
             }
         }

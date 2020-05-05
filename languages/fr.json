@@ -21,7 +21,7 @@
 	"usage_ban": "[utilisateur] {raison}",
 	"you_are_missing_permissions_to_ban_members": "Vous n'avez pas les permissions suffisantes pour bannir un membre.",
 	"i_am_missing_permissions_to_ban_members": "Je n'ai pas les permissions nécessaires pour bannir des membres.",
-	"please_correctly_write_or_mention_a_member": "Veuillez mentionner ou écrire le nom exact d'un utilisateur du serveur.",
+	"please_correctly_write_or_mention_a_member": "Veuillez mentionner, écrire le nom ou bien l'ID d'un utilisateur du serveur.",
 	"unable_to_ban_higher_than_me": "Je ne peux pas bannir cet utilisateur, il a un rang égal ou supérieur au mien.",
 	"cannot_ban_yourself": "Tu ne peux pas te bannir toi même !",
 	"you_cannot_ban_this_member": "Vous ne pouvez pas bannir ce membre.",
@@ -120,7 +120,7 @@
 	"report_cancelled": "Le report a bien été annulé.",
 	"description_roleinfo": "Affiche des informations sur le rôle mentionné ou exactement nommé.",
 	"usage_roleinfo": "[rôle]",
-	"bad_role": "Veuillez mentionner ou écrire un rôle correct du serveur.",
+	"bad_role": "Veuillez mentionner, écrire le nom ou bien l'ID d'un rôle du serveur.",
 	"roles": {
 		"one": "Rôle",
 		"other": "Rôles"
