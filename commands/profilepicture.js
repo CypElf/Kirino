@@ -26,11 +26,6 @@ module.exports = {
             }
         }
 
-        msg.channel.send({
-            files: [{
-                attachment: member.user.displayAvatarURL() + "?size=2048",
-                name: "avatar.png"
-            }]
-        })
+        msg.channel.send(member.user.displayAvatarURL() + "?size=2048")
     }
 }
