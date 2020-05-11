@@ -255,5 +255,6 @@
 	"three_chars_max": "Prefixs are limited to a maximum of 3 characters.",
 	"new_prefix_is_now": "The prefix is now",
 	"description_profilepicture": "Displays the profile picture of the desired user.",
-	"usage_profilepicture": "{mention, user or ID}"
+	"usage_profilepicture": "{mention, user or ID}",
+	"maintenance": "Maintenance in progress, please wait a few moments, sorry for the inconvenience!"
 }

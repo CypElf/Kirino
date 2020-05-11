@@ -52,7 +52,7 @@ bot.on("message", async msg => {
     bot.prefix = prefix
 
     // maintenance
-    // if (msg.content.startsWith(bot.prefix)) return msg.channel.send("Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !")
+    // if (msg.content.startsWith(bot.prefix)) return msg.channel.send(__("maintenance"))
     // else return
 
     if (msg.author.bot) return
@@ -65,7 +65,7 @@ bot.on("message", async msg => {
     const commandName = messageArray[0].toLowerCase().slice(bot.prefix.length)
     const args = messageArray.slice(1)
 
-    // ------------------------------------------------------------- paramétrage de la bonne langue
+    // ------------------------------------------------------------- language settings
 
     let callerID
     if (msg.channel.type === "text") callerID = msg.guild.id
@@ -81,7 +81,7 @@ bot.on("message", async msg => {
     }
 
 
-    // ------------------------------------------------------------- vérification de l'AFK
+    // ------------------------------------------------------------- AFK check
 
     const mentions = msg.mentions.users
 
@@ -110,15 +110,15 @@ bot.on("message", async msg => {
         msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 }))
     }
     
-    // ------------------------------------------------------------- vérification si un des mots est dans les mots bloqués du serveur
+    // ------------------------------------------------------------- banwords check
 
     checkWords(msg, messageArray, db)
 
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------------------- ignore non command messages
 
     if (!msg.content.startsWith(bot.prefix)) return
 
-    // ------------------------------------------------------------- vérification de la commande spéciale guilds
+    // ------------------------------------------------------------- guilds special command check
     
     if (commandName == "guilds" && config.ownerID == msg.author.id) {
         let allInvites = ""
@@ -161,7 +161,7 @@ bot.on("message", async msg => {
         if (answer) return msg.channel.send(answer)
     }
 
-    // ------------------------------------------------------------- vérification de la validité de la commande et exécution
+    // ------------------------------------------------------------- command check and execution
 
     const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
     if (!command) return
@@ -182,7 +182,7 @@ bot.on("message", async msg => {
     }
 })
 
-// ------------------------------------------------------------- évènements ajout / retrait de serveurs
+// ------------------------------------------------------------- join / leave
 
 bot.on("guildCreate", guild  => {
     console.log(`Server joined: ${guild.name}`)
@@ -192,6 +192,9 @@ bot.on("guildDelete", guild => {
     console.log(`Server left: ${guild.name}`)
     updateActivity()
 })
+
+// ------------------------------------------------------------- banwords check
+
 bot.on("messageUpdate", async (oldMsg, newMsg) => {
     const db = new bsqlite3("database.db", { fileMustExist: true })
     const messageArray = newMsg.content.split(" ")

@@ -252,5 +252,6 @@
 	"three_chars_max": "Les préfixes sont limités à 3 caractères maximum.",
 	"new_prefix_is_now": "Le préfixe est maintenant",
 	"description_profilepicture": "Permet d'afficher la photo de profil de l'utilisateur souhaité.",
-	"usage_profilepicture": "{mention, utilisateur ou ID}"
+	"usage_profilepicture": "{mention, utilisateur ou ID}",
+	"maintenance": "Maintenance en cours, veuillez patienter quelques instants, désolée pour la gêne occasionée !"
 }
