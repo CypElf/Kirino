@@ -33,9 +33,7 @@ module.exports = {
 
         collector.on("collect", (reaction) => {
             if (reaction.emoji.name === '✅') {
-                const kirinoDebug = bot.guilds.cache.find(guild => {
-                    return guild.id === bot.config.kirinoDebugID
-                })
+                const kirinoDebug = bot.guilds.cache.find(guild => guild.id === bot.config.kirinoDebugID)
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => {
                         return channel.id === bot.config.reportChannelID
