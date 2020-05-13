@@ -108,7 +108,7 @@ bot.on("message", async msg => {
         msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 }))
     }
     
-    // ------------------------------------------------------------- banwords check
+    // ------------------------------------------------------------- banwords check on message
 
     checkWords(msg, messageArray, db)
 
@@ -148,7 +148,7 @@ bot.on("guildDelete", guild => {
     updateActivity()
 })
 
-// ------------------------------------------------------------- banwords check
+// ------------------------------------------------------------- banwords check on edit
 
 bot.on("messageUpdate", async (oldMsg, newMsg) => {
     const db = new bsqlite3("database.db", { fileMustExist: true })
