@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: true,
 	args: false,
 	category: "others",
+	avdrayExclusive: true,
 	
 	async execute(bot, msg) {
 		if (msg.guild.id === bot.config.avdrayID) {

@@ -18,10 +18,12 @@ module.exports = {
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
 			const dataJoined = bot.commands.array()
-			const adminCommands = "`" + dataJoined.filter(command => command.category === "admin").map(command => command.name).join("`, `") + "`"
-			const utilityCommands = "`" + dataJoined.filter(command => command.category === "utility").map(command => command.name).join("`, `") + "`"
-			const programmingCommands = "`" + dataJoined.filter(command => command.category === "programming").map(command => command.name).join("`, `") + "`"
-			const othersCommands = "`" + dataJoined.filter(command => command.category === "others" && !(command.name === "avdray" && (msg.channel.type !== "text" || msg.guild.id !== bot.config.avdrayID ))).map(command => command.name).join("`, `") + "`"
+			const notOnAvdray = !msg.guild || msg.guild.id !== bot.config.avdrayID
+
+			const adminCommands = "`" + dataJoined.filter(command => command.category === "admin" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
+			const utilityCommands = "`" + dataJoined.filter(command => command.category === "utility" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
+			const programmingCommands = "`" + dataJoined.filter(command => command.category === "programming" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
+			const othersCommands = "`" + dataJoined.filter(command => command.category === "others" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
 
 			if (adminCommands) {
 				help_embed.addField(__("administration"), adminCommands)
@@ -48,13 +50,10 @@ module.exports = {
 		const commandName = args[0].toLowerCase()
 
 		let command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
-		if (command) {
-			if (!(msg.channel.type ==="text" && msg.guild.id === bot.config.avdrayID)) {
-				if (command.name === "avdray") {
-					command = undefined
-				}
-			}
+		if (command && command.category === "ignore" || !(msg.guild && msg.guild.id === bot.config.avdrayID) && command.avdrayExclusive) {
+			command = undefined
 		}
+
     	if (!command) return msg.channel.send(__("this_command_does_not_exist"))
 	
 		if (command.description) data.push("**" + __("description") + "**" + " : " + __(command.description))
