@@ -66,7 +66,7 @@ module.exports = {
         let embed = new Discord.MessageEmbed()
             .setTitle(__("results"))
 			.setColor('#353535')
-			.setThumbnail("https://doc.rust-lang.org/rust-logo1.42.0.png")
+			.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png")
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
         if (contentNames !== "") {
