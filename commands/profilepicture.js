@@ -26,6 +26,9 @@ module.exports = {
             }
         }
 
-        msg.channel.send(member.user.displayAvatarURL() + "?size=2048")
+        msg.channel.send(member.user.displayAvatarURL({
+            dynamic: true,
+            size: 4096
+        }))
     }
 }
