@@ -16,7 +16,7 @@ module.exports = {
         let text = args.join(" ")
         msg.channel.send(text)
             .then(() => {
-                if (msg.channel.type == 'text') {
+                if (msg.guild) {
                     msg.delete({ timeout: 4 })
                         .catch()
                 }

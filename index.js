@@ -42,7 +42,7 @@ bot.on("message", async msg => {
     const db = new bsqlite3("database.db", { fileMustExist: true })
     const prefixRequest = db.prepare("SELECT * FROM prefixs WHERE id = ?")
     let id
-    if (msg.channel.type === "text") id = msg.guild.id
+    if (msg.guild) id = msg.guild.id
     else id = msg.author.id
     let prefix = prefixRequest.get(id)
     if (!prefix) prefix = ";"
@@ -54,7 +54,7 @@ bot.on("message", async msg => {
     // else return
 
     if (msg.author.bot) return
-    if (msg.channel.type === "text") {
+    if (msg.guild) {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
         if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
     }
@@ -66,7 +66,7 @@ bot.on("message", async msg => {
     // ------------------------------------------------------------- language settings
 
     let callerID
-    if (msg.channel.type === "text") callerID = msg.guild.id
+    if (msg.guild) callerID = msg.guild.id
     else callerID = msg.author.id
 
     const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?")
@@ -121,7 +121,7 @@ bot.on("message", async msg => {
     const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
     if (!command) return
 
-    if (command.guildOnly && msg.channel.type !== "text") {
+    if (command.guildOnly && !msg.guild) {
         return msg.reply(__("command_not_available_in_dm") + " <:kirinopout:698923065773522944>")
     }
 
@@ -159,7 +159,7 @@ bot.on("messageUpdate", async (oldMsg, newMsg) => {
 // ------------------------------------------------------------- banword check function for message and edit events
 
 const checkWords = (msg, messageArray, db) => {
-    if (msg.channel.type == "text") {
+    if (msg.guild) {
         if (!msg.content.startsWith(bot.prefix + "banword remove") && !msg.content.startsWith(bot.prefix + "banword add")) {
     
             const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")

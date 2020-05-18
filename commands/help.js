@@ -71,11 +71,11 @@ module.exports = {
 		if (command.permissions) data.push("**" + __("required_permissions") + "** : `" + command.permissions.join("`, `") + "`")
 		else data.push("**" + __("required_permissions") + "** : `" + __("nothingF") + "`")
 		
-		const texte = data.join("\n")
+		const text = data.join("\n")
 	
 		const help_embed = new Discord.MessageEmbed()
 			.setColor('#DFC900')
-			.addField("**" + __("command") + " : " + command.name + "**", texte)
+			.addField("**" + __("command") + " : " + command.name + "**", text)
 			.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(help_embed)
 	}

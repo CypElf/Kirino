@@ -8,7 +8,7 @@ module.exports = {
     permissions: ["manage guild"],
 	
 	async execute(bot, msg, args) {
-        if (msg.channel.type === "text" && !msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("missing_permissions_to_execute_this_command"))
+        if (msg.guild && !msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("missing_permissions_to_execute_this_command"))
 
         if (args.length > 1) return msg.channel.send(__("no_spaces_in_prefixs"))
         const newPrefix = args[0]
@@ -19,7 +19,7 @@ module.exports = {
         const prefixRequest = db.prepare("INSERT INTO prefixs(id,prefix) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET prefix=excluded.prefix")
 
         let id
-        if (msg.channel.type === "text") id = msg.guild.id
+        if (msg.guild) id = msg.guild.id
         else id = msg.author.id
 
         prefixRequest.run(id, newPrefix)

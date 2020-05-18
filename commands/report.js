@@ -9,7 +9,7 @@ module.exports = {
 	async execute(bot, msg, args) {
         let origin
         let originAvatar
-        if (msg.channel.type === "text") {
+        if (msg.guild) {
             if (!msg.guild.me.hasPermission("ADD_REACTIONS")) {
                 return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
             }

@@ -10,7 +10,7 @@ module.exports = {
 
 	async execute (bot, msg, args) {
 
-        if (msg.channel.type === "text") {
+        if (msg.guild) {
             if (!msg.member.hasPermission("MANAGE_GUILD")) {
                 return msg.channel.send(__("not_enough_permission_to_change_language") + " <:kirinopout:698923065773522944>")
             }
@@ -25,7 +25,7 @@ module.exports = {
         let db = new bsqlite3("database.db")
 
         let id
-        if (msg.channel.type === "text") id = msg.guild.id
+        if (msg.guild) id = msg.guild.id
         else id = msg.author.id
 
         const insertLanguageRequest = db.prepare("INSERT INTO languages(id,language) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET language=excluded.language")
@@ -35,7 +35,7 @@ module.exports = {
 
         setLocale(language)
 
-        if (msg.channel.type === "text") {
+        if (msg.guild) {
             msg.channel.send(__("server_language_changed") + language + "` <:kirinoglad:698923046819594351> !")
         }
         else {
