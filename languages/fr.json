@@ -288,5 +288,14 @@
 	"x86_nasm_by_example": "x86 NASM par l'exemple",
 	"what_is_a_linux_executable": "Qu'est ce qu'un exécutable Linux ?",
 	"nasm_x86_course": "Cours sur le NASM x86",
-	"contains_many_articles": "contient de nombreux articles"
+	"contains_many_articles": "contient de nombreux articles",
+	"learn_c": "Apprendre le C",
+	"learn_cpp": "Apprendre le C++",
+	"learn_discordjs": "Apprendre à utiliser discord.js",
+	"learn_java": "Apprendre le Java",
+	"learn_javascript": "Apprendre le JavaScript",
+	"learn_php": "Apprendre le PHP",
+	"learn_python": "Apprendre le Python",
+	"learn_reverse": "Apprendre le reverse engineering",
+	"learn_rust": "Apprendre le Rust"
 }

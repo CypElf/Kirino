@@ -268,7 +268,7 @@
 	"not_finished": "unfinished",
 	"description_discordjs": "Sends useful links to learn how to use the discord.js library.",
 	"complete_course": "Complete course",
-	"description_learnjava":  "Sends useful links to learn the Java programming language.",
+	"description_learnjava": "Sends useful links to learn the Java programming language.",
 	"also_available": "also available",
 	"on_youtube": "on YouTube",
 	"as_video_formation": "as a video formation",
@@ -291,5 +291,15 @@
 	"x86_nasm_by_example": "x86 NASM by example",
 	"what_is_a_linux_executable": "What is a Linux executable?",
 	"nasm_x86_course": "NASM x86 course",
-	"contains_many_articles": "contains many articles"
+	"contains_many_articles": "contains many articles",
+	"learn_c": "Learn C",
+	"learn_cpp": "Learn C++",
+	"learn_discordjs": "Learn to use discord.js",
+	"learn_java": "Learn Java",
+	"learn_javascript": "Learn JavaScript",
+	"learn_php": "Learn PHP",
+	"learn_python": "Learn Python",
+	"learn_reverse": "Learn reverse engineering",
+	"learn_rust": "Learn Rust",
+	"learn_js": "learn_js"
 }

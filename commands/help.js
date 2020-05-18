@@ -50,7 +50,7 @@ module.exports = {
 		const commandName = args[0].toLowerCase()
 
 		let command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
-		if (command && command.category === "ignore" || !(msg.guild && msg.guild.id === bot.config.avdrayID) && command.avdrayExclusive) {
+		if (command && command.category === "ignore" || !(msg.guild && msg.guild.id === bot.config.avdrayID) && command && command.avdrayExclusive) {
 			command = undefined
 		}
 
