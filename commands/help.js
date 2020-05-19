@@ -68,6 +68,11 @@ module.exports = {
 			data.push("**" + __("aliases") + "** : " + aliasesStr)
 		}
 		if (command.usage) data.push("**" + __("usage") + "** : `" + prefix + command.name + " " + __(command.usage) + "`")
+
+		let cooldown = 2
+		if (command.cooldown) cooldown = command.cooldown
+		data.push("**" + __("cooldown") + "** : `" + cooldown + "`")
+
 		if (command.permissions) data.push("**" + __("required_permissions") + "** : `" + command.permissions.join("`, `") + "`")
 		else data.push("**" + __("required_permissions") + "** : `" + __("nothingF") + "`")
 		
