@@ -27,7 +27,7 @@
 	"you_cannot_ban_this_member": "You can't ban this member.",
 	"has_been_banned": " has been banned from the server!",
 	"banned_by": "banned by ",
-	"banword_description": "Allows you to block words in the server. The available modes are:\n- `add', followed by one or more words / emojis, which allows you to add words to the list of blocked words,\n- `remove', followed by one or more words / emojis, which allows you to remove them from the list of blocked words,\n- `list', which allows you to see which words are currently in the list of blocked words.",
+	"banword_description": "Allows you to block words in the server. The available modes are:\n- `add`, followed by one or more words / emojis, which allows you to add words to the list of blocked words,\n- `remove`, followed by one or more words / emojis, which allows you to remove them from the list of blocked words,\n- `list`, which allows you to see which words are currently in the list of blocked words.",
 	"banword_usage": "[mode] {word1} {word2}... {wordN}",
 	"word_beyond_25_chars": "The maximum length of each word is 25 characters. Please enter only smaller words or words of this length.",
 	"banwords_count_limited": "The number of blocked words is limited to 100 per server. Please delete some of them in order to free up space.",
