@@ -3,6 +3,7 @@ module.exports = {
     description: "description_kick",
     guildOnly: true,
     args: true,
+    cooldown: 3,
     category: "admin",
     usage: "usage_kick",
     permissions: ["kick members"],

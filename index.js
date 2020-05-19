@@ -3,12 +3,14 @@ const config = require("./config.json")
 const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
+
 require("dotenv").config()
 
 const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
 bot.commands = new Discord.Collection()
-
+const cooldowns = new Discord.Collection()
 bot.config = config
+
 i18n.configure({
     locales: ['en', 'fr'],
     directory: __dirname + "/languages",
@@ -128,6 +130,26 @@ bot.on("message", async msg => {
     if (command.args && !args.length) {
         return bot.commands.get("help").execute(bot, msg, [].concat(commandName))
     }
+
+    if (!cooldowns.has(command.name)) {
+        cooldowns.set(command.name, new Discord.Collection())
+    }
+    
+    const now = Date.now()
+    const timestamps = cooldowns.get(command.name)
+    const cooldown = (command.cooldown || 2) * 1000 // default cooldown is 2 seconds, for commands without a cooldown
+    
+    if (timestamps.has(msg.author.id)) {
+        const expiration = timestamps.get(msg.author.id) + cooldown
+    
+        if (now < expiration) {
+            const timeLeft = (expiration - now) / 1000
+            return msg.channel.send(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
+        }
+    }
+
+    timestamps.set(msg.author.id, now)
+    setTimeout(() => timestamps.delete(msg.author.id), cooldown)
 
     try {
         command.execute(bot, msg, args)

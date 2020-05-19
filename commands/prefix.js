@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: false,
     args: true,
     usage: "usage_prefix",
+    cooldown: 5,
     category: "others",
     permissions: ["manage guild"],
 	

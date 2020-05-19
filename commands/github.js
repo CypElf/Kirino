@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: false,
 	args: true,
     usage: "usage_github",
+    cooldown: 3,
 	category: "programming",
 	
 	async execute(bot, msg, args) {

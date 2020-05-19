@@ -3,6 +3,7 @@ module.exports = {
     description: "description_ping",
     guildOnly: false,
 	args: false,
+	cooldown: 1,
 	category: "others",
 
 	async execute (bot, msg) {

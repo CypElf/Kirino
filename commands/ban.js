@@ -3,6 +3,7 @@ module.exports = {
     description: "description_ban",
     guildOnly: true,
     args: true,
+    cooldown: 3,
     category: "admin",
     usage: "usage_ban",
     permissions: ["ban members"],

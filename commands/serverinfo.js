@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: true,
     args: false,
     aliases: ["si"],
+    cooldown: 3,
     category: "utility",
     
     async execute(bot, msg) {

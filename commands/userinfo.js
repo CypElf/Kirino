@@ -5,6 +5,7 @@ module.exports = {
     args: false,
     usage: "usage_userinfo",
     aliases: ["ui"],
+    cooldown: 3,
     category: "utility",
     
     async execute(bot, msg, args) {

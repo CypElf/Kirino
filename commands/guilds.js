@@ -5,7 +5,7 @@ module.exports = {
     category: "ignore",
 
     async execute (bot, msg, args) {
-        if (bot.config.ownerID == msg.author.id) {
+        if (bot.config.ownerID === msg.author.id) {
             let allInvites = ""
             for (const guild of bot.guilds.cache.array()) {
                 allInvites += `- ${guild.name} :\n\n`

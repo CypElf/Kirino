@@ -5,6 +5,7 @@ module.exports = {
     args: true,
     usage: "usage_language",
     aliases: ["lang"],
+    cooldown: 5,
     category: "admin",
     permissions: ["manage guild"],
 

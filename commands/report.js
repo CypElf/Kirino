@@ -2,7 +2,8 @@ module.exports = {
 	name: "report",
     description: "description_report",
     guildOnly: false,
-	args: true,
+    args: true,
+    cooldown: 5,
 	category: "others",
 	usage: "usage_report",
 	

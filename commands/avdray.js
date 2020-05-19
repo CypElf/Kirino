@@ -4,6 +4,7 @@ module.exports = {
     guildOnly: true,
 	args: false,
 	category: "others",
+	cooldown: 1,
 	avdrayExclusive: true,
 	
 	async execute(bot, msg) {

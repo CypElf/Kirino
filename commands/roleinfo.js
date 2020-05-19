@@ -7,6 +7,7 @@ module.exports = {
     args: true,
     usage: "usage_roleinfo",
     aliases: ["ri"],
+    cooldown: 3,
     category: "utility",
     
     async execute(bot, msg, args) {

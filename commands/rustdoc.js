@@ -5,6 +5,7 @@ module.exports = {
     args: true,
     usage: "usage_rustdoc",
     aliases: ["rd"],
+    cooldown: 3,
     category: "programming",
 
     async execute (bot, msg, args) {
