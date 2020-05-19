@@ -118,7 +118,7 @@ bot.on("message", async msg => {
 
     if (!msg.content.startsWith(bot.prefix)) return
 
-    // ------------------------------------------------------------- command check and execution
+    // ------------------------------------------------------------- command check
 
     const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
     if (!command) return
@@ -127,9 +127,7 @@ bot.on("message", async msg => {
         return msg.reply(__("command_not_available_in_dm") + " <:kirinopout:698923065773522944>")
     }
 
-    if (command.args && !args.length) {
-        return bot.commands.get("help").execute(bot, msg, [].concat(commandName))
-    }
+    // ------------------------------------------------------------- cooldown check
 
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection())
@@ -150,6 +148,11 @@ bot.on("message", async msg => {
 
     timestamps.set(msg.author.id, now)
     setTimeout(() => timestamps.delete(msg.author.id), cooldown)
+
+    if (command.args && !args.length) {
+        if (command.category === "ignore") return;
+        return bot.commands.get("help").execute(bot, msg, [].concat(commandName))
+    }
 
     try {
         command.execute(bot, msg, args)
