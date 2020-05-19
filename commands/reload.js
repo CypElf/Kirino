@@ -9,17 +9,16 @@ module.exports = {
             const commandName = args[0]
             const command = bot.commands.get(commandName) || bot.commands.find(command => command.aliases && command.aliases.includes(commandName))
 
-            if (!command) return msg.channel.send(`Command \`${commandName}\` not found.`)
+            if (!command) return msg.channel.send(`${__("command")} \`${commandName}\` ${__("not_found")}.`)
 
             delete require.cache[require.resolve(`./${command.name}.js`)];
             try {
                 const newCommand = require(`./${command.name}.js`);
                 msg.client.commands.set(newCommand.name, newCommand);
-                msg.channel.send(`Command \`${command.name}\` was reloaded!`);
+                msg.channel.send(`${__("command")} \`${command.name}\` ${__("was_reloaded")}`);
             }
             catch (err) {
-                console.log(err)
-                msg.channel.send(`There was an error while reloading a command \`${command.name}\`.`);
+                msg.channel.send(`${__("error_while_reloading_command")} \`${command.name}\`.`);
             }
             
         }

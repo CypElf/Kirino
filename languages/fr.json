@@ -297,5 +297,10 @@
 	"learn_php": "Apprendre le PHP",
 	"learn_python": "Apprendre le Python",
 	"learn_reverse": "Apprendre le reverse engineering",
-	"learn_rust": "Apprendre le Rust"
+	"learn_rust": "Apprendre le Rust",
+	"please_wait": "Veuillez patienter",
+	"more_sec_before_reusing_command": "seconde(s) de plus avant de réutiliser cette commande",
+	"not_found": "non trouvée",
+	"was_reloaded": "a été rechargée !",
+	"error_while_reloading_command": "Une erreur est survenue durant le rechargement de la commande"
 }

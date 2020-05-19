@@ -300,5 +300,10 @@
 	"learn_php": "Learn PHP",
 	"learn_python": "Learn Python",
 	"learn_reverse": "Learn reverse engineering",
-	"learn_rust": "Learn Rust"
+	"learn_rust": "Learn Rust",
+	"please_wait": "Please wait",
+	"more_sec_before_reusing_command": "more second(s) before reusing the command",
+	"not_found": "not found",
+	"was_reloaded": "was reloaded!",
+	"error_while_reloading_command": "There was an error while reloading the command"
 }

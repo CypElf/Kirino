@@ -142,7 +142,7 @@ bot.on("message", async msg => {
     
         if (now < expiration) {
             const timeLeft = (expiration - now) / 1000
-            return msg.channel.send(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
+            return msg.channel.send(`${__("please_wait")} ${timeLeft.toFixed(1)} ${__("more_sec_before_reusing_command")} \`${command.name}\`.`)
         }
     }
 
