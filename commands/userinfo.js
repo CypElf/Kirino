@@ -104,7 +104,7 @@ module.exports = {
         .addField(__("booster"), premiumSince)
         .addField(__n("roles", nbRoles), roles, true)
         .addField(__("permissions"), perms)
-        .setThumbnail(member.user.displayAvatarURL())
+        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
         msg.channel.send(informations)
     }

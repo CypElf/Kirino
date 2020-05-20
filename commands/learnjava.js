@@ -13,6 +13,7 @@ module.exports = {
             .addField(__("french"), `[${__("complete_course")}](https://koor.fr/Java/Tutorial/Index.wp) (${__("also_available")} [${__("on_youtube")}](https://www.youtube.com/playlist?list=PLBNheBxhHLQxfJhoz193-dRwvc2rl8AOW) ${__("as_video_formation")})\n[${__("video_formation")}](https://www.youtube.com/playlist?list=PLrSOXFDHBtfHkq8dd3BbSaopVgRSYtgPv) (${__("not_finished")})`)
 			.setThumbnail("http://assets.stickpng.com/images/58480979cef1014c0b5e4901.png")
             .setColor("#6666FF")
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(linksEmbed)
 	}
 }

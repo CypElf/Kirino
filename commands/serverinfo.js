@@ -117,7 +117,7 @@ module.exports = {
         
         informations.addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
         .addField(__("server_creation_date"), creationDate, true)
-        .setThumbnail(msg.guild.iconURL())
+        .setThumbnail(msg.guild.iconURL({ dynamic: true }))
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
         msg.channel.send(informations)
     }

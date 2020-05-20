@@ -14,6 +14,7 @@ module.exports = {
             .addField(__("french"), `[${__("pdf_course")}](https://inforef.be/swi/download/apprendre_python3_5.pdf)\n[${__("video_formation")}](https://www.youtube.com/playlist?list=PLrSOXFDHBtfHg8fWBd7sKPxEmahwyVBkC)`)
 			.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png")
             .setColor("#6666FF")
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(linksEmbed)
 	}
 }

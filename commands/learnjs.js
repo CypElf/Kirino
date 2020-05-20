@@ -14,6 +14,7 @@ module.exports = {
             .addField(__("french"), `[${__("mozilla_guide")}](https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide)`)
             .setThumbnail("https://cdn.pixabay.com/photo/2015/04/23/17/41/javascript-736400_960_720.png")
             .setColor("#E4B400")
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(linksEmbed)
 	}
 }

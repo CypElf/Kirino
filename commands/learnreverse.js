@@ -15,6 +15,7 @@ module.exports = {
             .addField(__("french"), `[${__("nasm_x86_course")}](http://www.pageperso.lif.univ-mrs.fr/~alexis.nasr/Ens/Compilation/cm06_x86.pdf)\n[Hackndo](https://beta.hackndo.com/archives/) (${__("contains_many_articles")})`)
 			.setThumbnail("https://cdn.icon-icons.com/icons2/1155/PNG/512/1486564730-gears-cogs_81537.png")
             .setColor("#888888")
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(linksEmbed)
 	}
 }

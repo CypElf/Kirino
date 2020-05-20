@@ -14,6 +14,7 @@ module.exports = {
             .addField(__("french"), `[${__("guillaume_gomez_blog")}](https://blog.guillaume-gomez.fr/Rust/)\n[${__("video_formation")}](https://www.youtube.com/playlist?list=PLFxge2NokeDu8tP7uDfy8VUZOIS0tADNp)`)
 			.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png")
             .setColor("#555555")
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(linksEmbed)
 	}
 }

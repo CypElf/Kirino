@@ -13,6 +13,7 @@ module.exports = {
             .addField(__("english"), `[${__("complete_course")}](https://discordjs.guide/)\n[${__("documentation")}](https://discord.js.org/#/docs/main/stable/general/welcome)`)
 			.setThumbnail("https://upload.wikimedia.org/wikipedia/fr/thumb/0/05/Discord.svg/1200px-Discord.svg.png")
             .setColor("#7777FF")
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(linksEmbed)
 	}
 }
