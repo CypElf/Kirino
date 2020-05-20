@@ -306,5 +306,8 @@
 	"not_found": "not found",
 	"was_reloaded": "was reloaded!",
 	"error_while_reloading_command": "There was an error while reloading the command",
-	"cooldown": "Cooldown"
+	"cooldown": "Cooldown",
+	"description_learncsharp": "Sends useful links to learn the C# programming language.",
+	"learn_csharp": "Learn C#",
+	"microsoft_learning_cs_material": "Microsoft learning material"
 }

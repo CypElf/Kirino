@@ -216,4 +216,4 @@ const updateActivity = () => {
     bot.user.setActivity(`${guildsCount} servers | ;help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
 }
 
-bot.login(process.env.KIRINO_BETA_TOKEN)
+bot.login(process.env.KIRINO_TOKEN)
