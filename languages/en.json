@@ -312,5 +312,8 @@
 	"microsoft_learning_cs_material": "Microsoft learning material",
 	"description_openclassrooms": "Displays a warning about Openclassrooms courses.",
 	"openclassrooms_explanation": "It is generally inadvisable to follow the free courses available on the Openclassrooms website.\n\nNot all courses are to be thrown away: for example, the courses `Take back control using Linux` and `Learn how TCP/IP networks work` are still good and can be followed today.\n\nThe real problem lies in the **programming** courses. Some are more affected than others, but the most affected, for example **C** and **C++** courses, have aged horribly. They give bad habits, make people use things that are sometimes depreciated and should no longer be used, as new features have been added as replacements.\nI'm not going to detail the problems of each obsolete course here, that would be too long.\n\nJust keep in mind that you should **beware** of the programming courses available on this site. If possible, ask for advice from people who are informed about the course you plan to take, to make sure it's not a bad idea. The Openclassrooms forums are open, many discord servers about computing exist, you should find answers to your questions.",
-	"careful_with_openclassrooms": "Be careful with Openclassrooms"
+	"careful_with_openclassrooms": "Be careful with Openclassrooms",
+	"description_codeblock": "Displays an explanation on how to send code on discord.",
+	"send_code": "Send code on discord",
+	"explanation_code": "To send code on discord, use 3 symbols with a grave accent **`** (ALT GR + 7) to open a code block and then 3 more to close it. Finally, to activate the syntax highlighting appropriate to the programming language used, write the name of this programming language after the 3 opening **`** symbols.\n\nExample:"
 }

@@ -265,7 +265,7 @@
 	"not_finished": "non terminée",
 	"description_discordjs": "Envoie des liens utiles pour apprendre à utiliser la bibliothèque discord.js.",
 	"complete_course": "Cours complet",
-	"description_learnjava":  "Envoie des liens utiles pour apprendre le langage de programmation Java.",
+	"description_learnjava": "Envoie des liens utiles pour apprendre le langage de programmation Java.",
 	"also_available": "aussi disponible",
 	"on_youtube": "sur YouTube",
 	"as_video_formation": "en tant que formation vidéo",
@@ -309,5 +309,8 @@
 	"microsoft_learning_cs_material": "Matériel d'apprentissage de Microsoft",
 	"description_openclassrooms": "Affiche un avertissement par rapport aux cours de Openclassrooms.",
 	"openclassrooms_explanation": "Il est globalement déconseillé de suivre les cours gratuits disponibles sur le site Openclassrooms.\n\nTous les cours ne sont pas à jeter : par exemple, les cours `Reprenez le contrôle à l'aide de Linux` ainsi que `Apprenez le fonctionnement des réseaux TCP/IP` sont encore bons et peuvent être suivis aujourd'hui.\n\nLe réel problème réside dans les cours de **programmation**. Certains sont plus touchés que d'autres, mais les plus touchés, par exemple les cours de **C** ainsi que de **C++**, ont affreusement mal vieilli. Ils donnent de mauvaises habitudes, font utiliser des choses parfois dépréciées et ne devant plus être utilisées, des nouvelles fonctionnalités servant de remplacantes ayant été ajoutées.\nJe ne vais pas détailler les problèmes de chaque cours obsolète ici, ce serait trop long.\n\nRetenez simplement qu'il faut **se méfier** des cours sur la programmation disponibles sur ce site. Si possible, demandez l'avis de gens qui sont renseignés sur le cours que vous comptez suivre, afin d'être sur que ce n'est pas une mauvaise idée. Les forums d'Openclassrooms ou Zeste de Savoir sont ouverts, de nombreux serveurs discord sur l'informatique existent, vous devriez trouver des réponses à vos questions.",
-	"careful_with_openclassrooms": "Faites attention avec Openclassrooms"
+	"careful_with_openclassrooms": "Faites attention avec Openclassrooms",
+	"description_codeblock": "Affiche une explication sur comment envoyer du code sur discord.",
+	"send_code": "Envoyer du code sur discord",
+	"explanation_code": "Pour envoyer du code sur discord, utilisez 3 symboles accent grave **`** (ALT GR + 7) pour ouvrir un bloc de code puis 3 autres pour le fermer. Enfin, pour activer la coloration syntaxique adéquate au langage de programmation utilisé, écrivez le nom de ce langage de programmation collé aux 3 **`** ouvrants.\n\nExemple :"
 }
