@@ -15,9 +15,9 @@ module.exports = {
                         return "https://discord.gg/" + guildInvite.code
                     })
                     let invites
-                    if (invitesArray.length === 0) invites = __("no_invit_available") + "\n"
-                    else invites = invitesArray.join("\n") + "\n"
-                    allInvites += invites + "\n"
+                    if (invitesArray.length === 0) invites = __("no_invit_available")
+                    else invites = invitesArray.join("\n")
+                    allInvites += invites + "\n\n"
                 }
                 catch (err) {
                     allInvites += __("missing_permissions_to_get_invits") + "\n\n"
