@@ -6,6 +6,7 @@ module.exports = {
     cooldown: 3,
     category: "admin",
     usage: "usage_ban",
+    autodelete: true,
     permissions: ["ban members"],
 
     async execute (bot, msg, [userToBan, ...reason]) {

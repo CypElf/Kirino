@@ -5,6 +5,7 @@ module.exports = {
     args: true,
     category: "admin",
     usage: "usage_say",
+    autodelete: true,
     permissions: ["administrator"],
     
     async execute(bot, msg, args) {

@@ -6,6 +6,7 @@ module.exports = {
     cooldown: 3,
     category: "admin",
     usage: "usage_kick",
+    autodelete: true,
     permissions: ["kick members"],
 
     async execute (bot, msg, [userToKick, ...reason]) {
