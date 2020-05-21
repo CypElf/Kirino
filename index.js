@@ -196,7 +196,9 @@ const checkWords = (msg, messageArray, db) => {
                 if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0])
                 const loweredMessageArray = messageArray.map(word => word.toLowerCase())
                 for (let word of banwords) {
-                    if (loweredMessageArray.includes(word.toLowerCase()) && !bot.commands.get(word.toLowerCase().substring(bot.prefix.length)).autodelete) return msg.delete()
+                    let isAutoDelete = bot.commands.get(word.toLowerCase().substring(bot.prefix.length))
+                    if (isAutoDelete) isAutoDelete = isAutoDelete.autodelete
+                    if (loweredMessageArray.includes(word.toLowerCase()) && !isAutoDelete) return msg.delete()
                     if (emojiNames) {
                         if (word.startsWith(":") && word.endsWith(":")) {
                             word = word.substring(1, word.length - 1)
