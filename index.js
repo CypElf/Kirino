@@ -59,6 +59,7 @@ bot.on("message", async msg => {
     if (msg.guild) {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
         if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
+        if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("EMBED_LINKS")) return msg.channel.send(__("need_embed_links"))
     }
 
     const messageArray = msg.content.split(" ")

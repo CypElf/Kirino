@@ -1,5 +1,6 @@
 {
-	"need_handle_messages_perm": "I need the permission manage message to be usable.",
+	"need_handle_messages_perm": "I need the permission manage message to be used.",
+	"need_embed_links": "I need the permission embed links to be used.",
 	"afk_with_reason": " is currently AFK for the following reason : ",
 	"afk_without_reason": " is currently AFK, and didn't left any reason why.",
 	"added_to_afk_with_reason": "you've been set AFK for the following reason",

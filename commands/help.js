@@ -12,7 +12,6 @@ module.exports = {
 		// ------------------------------------------------------------------- general help
 	
 		if (!args.length) {
-			
 			let help_embed = new Discord.MessageEmbed()
 				.setColor('#DFC900')
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
@@ -39,9 +38,6 @@ module.exports = {
 			}
 	
 			return msg.channel.send(help_embed)
-			.catch(err => {
-				console.error(err)
-			})
 		}
 
 		// ------------------------------------------------------------------- help on specitif command
