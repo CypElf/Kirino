@@ -170,6 +170,16 @@ bot.on("guildCreate", guild  => {
 })
 bot.on("guildDelete", guild => {
     console.log(`Server left: ${guild.name}`)
+    const id = guild.id
+    const db = new bsqlite3("database.db", { fileMustExist: true })
+    let deletionRequest = db.prepare("DELETE FROM banwords WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = db.prepare("DELETE FROM languages WHERE id = ?")
+    deletionRequest.run(id)
+    deletionRequest = db.prepare("DELETE FROM prefixs WHERE id = ?")
+    deletionRequest.run(id)
+    deletionRequest = db.prepare("DELETE FROM rules WHERE guild_id = ?")
+    deletionRequest.run(id)
     updateActivity()
 })
 
