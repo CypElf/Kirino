@@ -27,13 +27,13 @@ module.exports = {
         const convertedToOutputBase = convertedToDecimal.toString(outputBase)
 
         const Discord = require("discord.js")
-        let linksEmbed = new Discord.MessageEmbed()
+        let baseEmbed = new Discord.MessageEmbed()
             .setTitle("Conversion de base numérique")
             .setThumbnail("https://image.flaticon.com/icons/png/512/2115/2115955.png")
             .setColor("#000000")
             .addField(`${__("original_number_in_base")} ${inputBase}`, `**${number}**`)
             .addField(`${__("converted_number_in_base")} ${outputBase}`, `**${convertedToOutputBase}**`)
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send(linksEmbed)
+		msg.channel.send(baseEmbed)
 	}
 }

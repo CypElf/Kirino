@@ -324,5 +324,15 @@
 	"base_out_of_range": "Please enter numeric bases only between 2 and 36.",
 	"bad_number": "Error, please enter a valid number to convert.",
 	"original_number_in_base": "Original number in base",
-	"converted_number_in_base": "Number converted to base"
+	"converted_number_in_base": "Number converted to base",
+	"description_base64": "Allows to encode or decode a message with base64 encoding. The available modes are: `encode` to encode a base64 encoded message, `decode` to decode a base64 encoded message.",
+	"usage_base64": "[mode] [message]",
+	"not_enough_args_for_base64": "Insufficient number of arguments: please enter a mode followed by an encoded or decoded message.",
+	"enter_valid_mode": "Please enter a valid mode.",
+	"message_too_long_for_encoding": "Message too long, please enter 760 characters or less.",
+	"message_too_long_for_decoding": "Message too long, please enter 1024 characters or less.",
+	"base64_encoding": "Base64 encoding",
+	"base64_decoding": "Base64 decoding",
+	"original_message": "Original message",
+	"encoded_message": "Encoded message"
 }
