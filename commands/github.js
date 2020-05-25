@@ -22,7 +22,7 @@ module.exports = {
             const ColorThief = require("colorthief")
             
             let createdAt = data.created_at
-            // github give us date as `YYYY-MM-DDTHH:MM:SSZ` with T and Z hardcoded
+            // github give us date as `YYYY-MM-DDTHH:MM:SSZ` with T and Z as letters
             const creationDate = createdAt.split("T")[0].split("-").reverse().join("/")
             const creationTime = createdAt.split("T")[1].split("Z")[0]
 

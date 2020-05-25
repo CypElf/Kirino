@@ -93,9 +93,12 @@ module.exports = {
             premiumSince = __("no_capitalized")
         }
 
+        const ColorThief = require("colorthief")
+        const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
+
         let informations = new Discord.MessageEmbed()
         .setAuthor(member.user.tag, member.user.displayAvatarURL())
-        .setColor("#000000")
+        .setColor(color)
         .addField(__("id"), member.user.id, true)
         .addField(__("game"), presence, true)
         .addField(__("nickname"), nickname, true)
