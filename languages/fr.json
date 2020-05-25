@@ -314,5 +314,12 @@
 	"careful_with_openclassrooms": "Faites attention avec Openclassrooms",
 	"description_codeblock": "Affiche une explication sur comment envoyer du code sur discord.",
 	"send_code": "Envoyer du code sur discord",
-	"explanation_code": "Pour envoyer du code sur discord, utilisez 3 symboles accent grave **`** (ALT GR + 7) pour ouvrir un bloc de code puis 3 autres pour le fermer. Enfin, pour activer la coloration syntaxique adéquate au langage de programmation utilisé, écrivez le nom de ce langage de programmation collé aux 3 **`** ouvrants.\n\nExemple :"
+	"explanation_code": "Pour envoyer du code sur discord, utilisez 3 symboles accent grave **`** (ALT GR + 7) pour ouvrir un bloc de code puis 3 autres pour le fermer. Enfin, pour activer la coloration syntaxique adéquate au langage de programmation utilisé, écrivez le nom de ce langage de programmation collé aux 3 **`** ouvrants.\n\nExemple :",
+	"description_base": "Permet de convertir un nombre d'une base numérique à une autre.",
+	"usage_base": "[nombre] [base d'entrée] [base de sortie]",
+	"not_much_arguments": "Nombre d'arguments insuffisants : veuillez préciser la base d'entrée, la base de sortie ainsi que le nombre à convertir.",
+	"base_out_of_range": "Veuillez saisir des bases numérique comprises entre 2 et 36.",
+	"bad_number": "Erreur, veuillez saisir un nombre à convertir valide.",
+	"original_number_in_base": "Nombre d'origine en base",
+	"converted_number_in_base": "Nombre converti en base"
 }
