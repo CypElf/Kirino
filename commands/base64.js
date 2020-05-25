@@ -30,8 +30,8 @@ module.exports = {
             const convertedInput = buffer.toString("base64")
             
             base64Embed.setTitle(__("base64_encoding"))
-                .addField(__("original_message"), `**${input}**`)
-                .addField(__("encoded_message"), `**${convertedInput}**`)
+                .addField(__("original_message"), `${input}`)
+                .addField(__("encoded_message"), `${convertedInput}`)
         }
 
         else {
