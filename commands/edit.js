@@ -5,14 +5,13 @@ module.exports = {
 	args: true,
 	category: "admin",
 	usage: "edit_usage",
-	autodelete: true,
 	permissions: ["administrator"],
 	
 	async execute(bot, msg, [ID, ...editMsg]) {
 		if (msg.author.id !== bot.config.ownerID && !msg.member.hasPermission("ADMINISTRATOR")) {
             return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
-                .then(msg => msg.delete({ timeout: 5000 }))
-                .catch()
+                .then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
+                .catch(() => {})
         }
 
 		msg.channel.messages.fetch(ID)
@@ -25,7 +24,7 @@ module.exports = {
 				msg2.edit(replacementText)
 					.catch()
 
-				msg.delete()
+				msg.delete().catch(() => {})
 			})
 			.catch(err => {
 				return msg.channel.send(__("bad_message_id") + " <:kirinopout:698923065773522944>")

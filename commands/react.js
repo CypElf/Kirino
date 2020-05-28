@@ -5,14 +5,12 @@ module.exports = {
     args: true,
     category: "admin",
     usage: "usage_react",
-    autodelete: true,
     permissions: ["administrator"],
     
     async execute(bot, msg, args) {
 		if (msg.author.id !== bot.config.ownerID && !msg.member.hasPermission("ADMINISTRATOR")) {
             return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
-                .then(msg => msg.delete({ timeout: 5000 }))
-                .catch()
+                .then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
         }
 
         if (msg.guild) {
@@ -30,7 +28,7 @@ module.exports = {
 			.then(msg2 => {
                 msg2.react(emoji)
                     .then(() => {
-                        msg.delete()
+                        msg.delete().catch(() => {})
                     })
                     .catch(() => {
                         let customEmoji = emoji.match(/<:(.*?):[0-9]*>/gm)
@@ -38,7 +36,7 @@ module.exports = {
                         else customEmoji = "nop"
                         msg2.react(customEmoji)
                             .then(() => {
-                                msg.delete()
+                                msg.delete().catch(() => {})
                             })
                             .catch(() => {
                                 return msg.channel.send(__("access_to_emoji_denied") + " <:kirinopout:698923065773522944>")

@@ -6,7 +6,6 @@ module.exports = {
     cooldown: 3,
     category: "admin",
     usage: "usage_ban",
-    autodelete: true,
     permissions: ["ban members"],
 
     async execute (bot, msg, [userToBan, ...reason]) {
@@ -27,7 +26,7 @@ module.exports = {
                     else {
                         msg.channel.send(member.username + __("has_been_banned") + " <:hammer:568068459485855752>")
                     }
-                    msg.delete()
+                    msg.delete().catch(() => {})
                 })
         }
 

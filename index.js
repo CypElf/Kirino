@@ -109,7 +109,7 @@ bot.on("message", async msg => {
     if (!(selfAfkRow === undefined)) {
         const deletionRequest = db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
-        msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 }))
+        msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
     }
     
     // ------------------------------------------------------------- banwords check on message
@@ -208,13 +208,11 @@ const checkWords = (msg, messageArray, db) => {
                 if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0])
                 const loweredMessageArray = messageArray.map(word => word.toLowerCase())
                 for (let word of banwords) {
-                    let isAutoDelete = bot.commands.get(word.toLowerCase().substring(bot.prefix.length))
-                    if (isAutoDelete) isAutoDelete = isAutoDelete.autodelete
-                    if (loweredMessageArray.includes(word.toLowerCase()) && !isAutoDelete) return msg.delete()
+                    if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete().catch(() => {})
                     if (emojiNames) {
                         if (word.startsWith(":") && word.endsWith(":")) {
                             word = word.substring(1, word.length - 1)
-                            if (emojiNames.includes(word) && !bot.commands.get(word.toLowerCase()).autodelete) return msg.delete()
+                            if (emojiNames.includes(word) && !bot.commands.get(word.toLowerCase()).autodelete) return msg.delete().catch(() => {})
                         }
                     }
                 }

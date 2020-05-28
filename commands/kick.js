@@ -6,7 +6,6 @@ module.exports = {
     cooldown: 3,
     category: "admin",
     usage: "usage_kick",
-    autodelete: true,
     permissions: ["kick members"],
 
     async execute (bot, msg, [userToKick, ...reason]) {
@@ -48,7 +47,7 @@ module.exports = {
             .then(member => {
                 msg.channel.send(member.user.username + __("has_been_kicked") + " <:boot:568041855523094549>")
 
-                msg.delete()
+                msg.delete().catch(() => {})
             })
     }
 }
