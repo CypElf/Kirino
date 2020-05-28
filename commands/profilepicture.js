@@ -3,7 +3,7 @@ module.exports = {
     description: "description_profilepicture",
     guildOnly: true,
     args: false,
-    aliases: ["pp"],
+    aliases: ["pp", "avatar"],
     category: "utility",
     usage: "usage_profilepicture",
 
