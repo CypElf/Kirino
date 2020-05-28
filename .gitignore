@@ -22,7 +22,7 @@ deploy/deploy_key.pub
 docs/docs.json
 webpack/
 
-old_console_hack_commands/
+# Others Kirino specific files
 TODO.txt
 database.db
 .env
