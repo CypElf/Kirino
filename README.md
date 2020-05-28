@@ -31,7 +31,7 @@ If you want to invit Kirino to your server, [here is the link](https://discord.c
 
 ## Support me
 
-To help Kirino and me, you can star this repository to give it more visibility.
+To help Kirino and me, you can **star** this repository to give it more visibility.
 
 You can also upvote Kirino on [top.gg](https://top.gg/bot/493470054415859713/vote) for the same purposes.
 
