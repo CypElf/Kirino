@@ -72,11 +72,8 @@ module.exports = {
         if (nickname === undefined || nickname === null) {
             nickname = __("nothing")
         }
-        let presence
-        try {
-            presence = member.presence.game.name
-        }
-        catch(err) {
+        let presence = member.presence.activities.map(activity => activity.name).join(", ")
+        if (!presence) {
             presence = __("nothing")
         }
         let premiumSince = member.premiumSince
