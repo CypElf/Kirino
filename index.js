@@ -228,4 +228,8 @@ const updateActivity = () => {
     bot.user.setActivity(`${guildsCount} servers | ;help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING ou WATCHING*/ })
 }
 
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
+});
+
 bot.login(process.env.KIRINO_TOKEN)
