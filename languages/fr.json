@@ -331,5 +331,16 @@
 	"base64_encoding": "Encodage en base64",
 	"base64_decoding": "Décodage de base64",
 	"original_message": "Message d'origine",
-	"encoded_message": "Message encodé"
+	"encoded_message": "Message encodé",
+	"description_ascii": "Permet d'encoder ou de décoder de l'ASCII.\nLes deux modes disponibles sont :\n- `encode` pour encoder,\n- `decode` pour décoder.",
+	"usage_ascii": "[mode] [message encodé ou à encoder]",
+	"two_args_needed": "Deux arguments sont requis pour utiliser cette commande.",
+	"less_or_equal_to_340": "Le message doit être inférieur ou égal à 340 caractères.",
+	"less_or_equal_to_1024": "Le message doit être inférieur ou égal à 1024 caractères.",
+	"description_md5": "Permet de hasher un message avec l'algorithme de hashage MD5.",
+	"usage_md5": "[message à hasher]",
+	"md5_hashing": "Hashage MD5",
+	"hash": "Hash",
+	"description_rot13": "Permet d'encoder / décoder du ROT13 (13 lettres de décalage alphabétique).",
+	"usage_rot13": "[message encodé ou à décoder]"
 }

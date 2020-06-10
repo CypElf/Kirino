@@ -4,7 +4,7 @@ module.exports = {
     guildOnly: false,
 	args: false,
     category: "programming",
-    aliases: ["learncs"],
+    aliases: ["learncs", "learnc#"],
 
 	async execute (bot, msg) {
         const Discord = require("discord.js")

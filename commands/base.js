@@ -29,7 +29,7 @@ module.exports = {
         const Discord = require("discord.js")
         let baseEmbed = new Discord.MessageEmbed()
             .setTitle("Conversion de base numérique")
-            .setThumbnail("https://image.flaticon.com/icons/png/512/2115/2115955.png")
+            .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/720178440078229554/binary_flat.png")
             .setColor("#000000")
             .addField(`${__("original_number_in_base")} ${inputBase}`, `**${number}**`)
             .addField(`${__("converted_number_in_base")} ${outputBase}`, `**${convertedToOutputBase}**`)

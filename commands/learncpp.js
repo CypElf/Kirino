@@ -2,7 +2,8 @@ module.exports = {
 	name: "learncpp",
     description: "description_learncpp",
     guildOnly: false,
-	args: false,
+    args: false,
+    aliases: ["learnc++"],
 	category: "programming",
 
 	async execute (bot, msg) {
