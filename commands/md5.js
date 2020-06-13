@@ -20,7 +20,7 @@ module.exports = {
             .setTitle(__("md5_hashing"))
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/720180307063472179/md5.png")
             .setColor("#559955")
-            .addField(__("original_text"), plaintext)
+            .addField(__("original_message"), plaintext)
             .addField(__("hash"), encrypted.hex().toUpperCase())
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 		msg.channel.send(baseEmbed)
