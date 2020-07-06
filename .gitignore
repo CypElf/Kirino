@@ -21,8 +21,6 @@ deploy/deploy_key.pub
 .vscode/
 docs/docs.json
 webpack/
-
-# Others Kirino specific files
 TODO.txt
 database.db
 .env
