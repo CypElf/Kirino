@@ -212,7 +212,7 @@ const checkWords = (msg, messageArray, db) => {
                     if (emojiNames) {
                         if (word.startsWith(":") && word.endsWith(":")) {
                             word = word.substring(1, word.length - 1)
-                            if (emojiNames.includes(word) && !bot.commands.get(word.toLowerCase()).autodelete) return msg.delete().catch(() => {})
+                            if (emojiNames.includes(word)) return msg.delete().catch(() => {})
                         }
                     }
                 }
