@@ -10,7 +10,8 @@ Kirino is a multi languages, IT / programming oriented discord bot.
 She brings some programming functionnalities such as :
 - a lot of guide's links to learn **programming** in a given language properly
 - numeric base **conversion**
-- **base64** encoding and decoding
+- **base64, ascii and rot13** encoding and decoding
+- **md5** hashing
 - search though **Rust**'s documentation
 - **GitHub** profile search
 
