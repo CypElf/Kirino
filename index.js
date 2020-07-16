@@ -8,7 +8,8 @@ require("dotenv").config()
 
 const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
 bot.commands = new Discord.Collection()
-const cooldowns = new Discord.Collection()
+const commandsCooldowns = new Discord.Collection()
+const xpCooldowns = new Discord.Collection()
 bot.config = config
 
 i18n.configure({
@@ -24,6 +25,8 @@ for (const file of commandFiles) {
     const command = require(`./commands/${file}`)
 	bot.commands.set(command.name, command)
 }
+
+const db = new bsqlite3("database.db", { fileMustExist: true })
 
 bot.once("ready", async () => {
     updateActivity()
@@ -41,7 +44,6 @@ bot.once("ready", async () => {
 // -------------------------------------------------------------
 
 bot.on("message", async msg => {
-    const db = new bsqlite3("database.db", { fileMustExist: true })
     const prefixRequest = db.prepare("SELECT * FROM prefixs WHERE id = ?")
     let id
     if (msg.guild) id = msg.guild.id
@@ -99,7 +101,7 @@ bot.on("message", async msg => {
     mentions.forEach(mention => {
         const mentionnedAfkRow = afkRequest.get(mention.id)
 
-        if (!(mentionnedAfkRow === undefined)) {
+        if (mentionnedAfkRow !== undefined) {
             if (mentionnedAfkRow.id != msg.author.id) {
                 if (mentionnedAfkRow.reason) {
                     msg.channel.send(`**${mention.username}**` + __("afk_with_reason") + mentionnedAfkRow.reason)
@@ -113,7 +115,7 @@ bot.on("message", async msg => {
 
     const selfAfkRow = afkRequest.get(msg.author.id)
 
-    if (!(selfAfkRow === undefined)) {
+    if (selfAfkRow !== undefined) {
         const deletionRequest = db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
         msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
@@ -123,26 +125,81 @@ bot.on("message", async msg => {
 
     checkWords(msg, db)
 
-    // ------------------------------------------------------------- ignore non command messages
+    // ------------------------------------------------------------- xp
 
-    if (!msg.content.startsWith(bot.prefix)) return
+    if (msg.guild) {
+        const xpActivationRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
+        let isEnabled = xpActivationRequest.get(msg.guild.id).enabled
+
+        if (isEnabled === undefined) {
+            isEnabled = 0
+            const xpDisabledRequest = db.prepare("INSERT INTO xp_activations(guild_id,enabled) VALUES(?,?)")
+            xpDisabledRequest.run(msg.guild.id, 0)
+        }
+
+        if (!xpCooldowns.has(msg.guild.id)) {
+            xpCooldowns.set(msg.guild.id, new Discord.Collection())
+        }
+        let isReady = true
+
+        const now = Date.now()
+        const timestamps = xpCooldowns.get(msg.guild.id)
+        const cooldown = 60_000
+        
+        if (timestamps.has(msg.author.id)) {
+            const expiration = timestamps.get(msg.author.id) + cooldown // 1 minute cooldown
+        
+            if (now < expiration) {
+                isReady = false
+            }
+        }
+    
+        timestamps.set(msg.author.id, now)
+        setTimeout(() => timestamps.delete(msg.author.id), cooldown)
+
+        if (isEnabled && isReady) {
+            const xpRequest = db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
+            let xpRow = xpRequest.get(msg.guild.id, msg.author.id)
+
+            if (xpRow === undefined) {
+                xpRow = { guild_id: msg.guild.id, user_id: msg.author.id, xp: 0, level: 0 }
+            }
+    
+            const currentXp = xpRow.xp
+            const currentLvl = xpRow.level
+            let newXp = currentXp + Math.floor(Math.random() * (25 - 15 + 1)) + 15; // the xp added to the user is generated between 15 and 25
+            let newLvl = currentLvl
+    
+            const nextLevelXp = 5 * (currentLvl * currentLvl) + 50 * currentLvl + 100
+    
+            if (newXp >= nextLevelXp) {
+                newLvl += 1
+                newXp = newXp - nextLevelXp
+                msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} !`)
+            }
+    
+            const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, level=excluded.level")
+            xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newLvl)
+        }
+    }
 
     // ------------------------------------------------------------- command check
 
+    if (!msg.content.startsWith(bot.prefix)) return
     if (!command) return
 
     if (command.guildOnly && !msg.guild) {
         return msg.reply(__("command_not_available_in_dm") + " <:kirinopout:698923065773522944>")
     }
 
-    // ------------------------------------------------------------- cooldown check
+    // ------------------------------------------------------------- commands cooldown check
 
-    if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection())
+    if (!commandsCooldowns.has(command.name)) {
+        commandsCooldowns.set(command.name, new Discord.Collection())
     }
     
     const now = Date.now()
-    const timestamps = cooldowns.get(command.name)
+    const timestamps = commandsCooldowns.get(command.name)
     const cooldown = (command.cooldown || 2) * 1000 // default cooldown is 2 seconds, for commands without a cooldown
     
     if (timestamps.has(msg.author.id)) {

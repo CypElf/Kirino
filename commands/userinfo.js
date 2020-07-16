@@ -11,19 +11,14 @@ module.exports = {
     async execute(bot, msg, args) {
         let member
 
-        if (!args.length) member = msg.member
-
+        if (args.length === 0) member = msg.member
         else {
-            member = msg.mentions.members.first()
+            const getUser = require("../res/get_user")
+
+            member = getUser(msg, args)
+            
             if (member === undefined) {
-                let usernameOrID = args.join(" ")
-                member = msg.guild.members.cache.array().find(currentMember => currentMember.user.username.toLowerCase() === usernameOrID.toLowerCase())
-                if (member === undefined) {
-                    member = msg.guild.members.cache.array().find(currentMember => currentMember.id === usernameOrID)
-                    if (member === undefined) {
-                        return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
-                    }
-                }
+                return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
             }
         }
 
