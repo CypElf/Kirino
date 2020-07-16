@@ -56,16 +56,23 @@ bot.on("message", async msg => {
     // else return
 
     if (msg.author.bot) return
-    if (msg.guild) {
-        if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
-        if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
-        if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("EMBED_LINKS")) return msg.channel.send(__("need_embed_links"))
-        if (msg.content.startsWith(bot.prefix) && !msg.guild.me.hasPermission("READ_MESSAGE_HISTORY")) return msg.channel.send(__("need_read_message_history"))
-    }
 
     const messageArray = msg.content.split(" ")
     const commandName = messageArray[0].toLowerCase().slice(bot.prefix.length)
     const args = messageArray.slice(1)
+
+    const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+
+    if (msg.guild) {
+        if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
+
+        if (msg.content.startsWith(bot.prefix) && command) {
+
+            if (!msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
+            if (!msg.guild.me.hasPermission("EMBED_LINKS")) return msg.channel.send(__("need_embed_links"))
+            if (!msg.guild.me.hasPermission("READ_MESSAGE_HISTORY")) return msg.channel.send(__("need_read_message_history"))
+        }
+    }
 
     // ------------------------------------------------------------- language settings
 
@@ -114,7 +121,7 @@ bot.on("message", async msg => {
     
     // ------------------------------------------------------------- banwords check on message
 
-    checkWords(msg, messageArray, db)
+    checkWords(msg, db)
 
     // ------------------------------------------------------------- ignore non command messages
 
@@ -122,7 +129,6 @@ bot.on("message", async msg => {
 
     // ------------------------------------------------------------- command check
 
-    const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
     if (!command) return
 
     if (command.guildOnly && !msg.guild) {
@@ -189,13 +195,12 @@ bot.on("guildDelete", guild => {
 
 bot.on("messageUpdate", async (oldMsg, newMsg) => {
     const db = new bsqlite3("database.db", { fileMustExist: true })
-    const messageArray = newMsg.content.split(" ")
-    checkWords(newMsg, messageArray, db)
+    checkWords(newMsg, db)
 })
 
 // ------------------------------------------------------------- banword check function for message and edit events
 
-const checkWords = (msg, messageArray, db) => {
+const checkWords = (msg, db) => {
     if (msg.guild) {
         if (!msg.content.startsWith(bot.prefix + "banword remove") && !msg.content.startsWith(bot.prefix + "banword add")) {
     
@@ -206,6 +211,7 @@ const checkWords = (msg, messageArray, db) => {
                 banwords = banwords.map(row => row.word.toLowerCase())
                 let emojiNames = msg.content.match(/<:(.*?):[0-9]*>/gm)
                 if (emojiNames) emojiNames = emojiNames.map(emoji => emoji.split(":")[1].split(":")[0])
+                const messageArray = msg.content.split(" ")
                 const loweredMessageArray = messageArray.map(word => word.toLowerCase())
                 for (let word of banwords) {
                     if (loweredMessageArray.includes(word.toLowerCase())) return msg.delete().catch(() => {})
