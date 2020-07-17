@@ -168,19 +168,23 @@ bot.on("message", async msg => {
     
             const currentXp = xpRow.xp
             const currentLvl = xpRow.level
-            let newXp = currentXp + Math.floor(Math.random() * (25 - 15 + 1)) + 15; // the xp added to the user is generated between 15 and 25
-            let newLvl = currentLvl
-    
-            const nextLevelXp = 5 * (currentLvl * currentLvl) + 50 * currentLvl + 100
-    
-            if (newXp >= nextLevelXp) {
-                newLvl += 1
-                newXp = newXp - nextLevelXp
-                msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} !`)
+
+            if (currentLvl < 100) {
+                let newXp = currentXp + Math.floor(Math.random() * (25 - 15 + 1)) + 15; // the xp added to the user is generated between 15 and 25
+                let newLvl = currentLvl
+        
+                const nextLevelXp = 5 * (currentLvl * currentLvl) + 50 * currentLvl + 100
+        
+                if (newXp >= nextLevelXp) {
+                    newLvl += 1
+                    newXp = newXp - nextLevelXp
+                    if (newLvl < 100) msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} !`)
+                    else msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} : c'était le tout dernier niveau ! Merci d'avoir utilisé mon système d'expérience pendant autant de temps, et merci beaucoup de m'utiliser, plus globalement ! Encore félicitations !`)
+                }
+        
+                const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, level=excluded.level")
+                xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newLvl)
             }
-    
-            const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, level=excluded.level")
-            xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newLvl)
         }
     }
 

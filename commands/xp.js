@@ -14,13 +14,17 @@ module.exports = {
 
         if (args[0] === "enable" || args[0] === "disable") {
             const enableRequest = db.prepare("INSERT INTO xp_activations(guild_id,enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET enabled=excluded.enabled")
+            const alreadyEnabledRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
+            const isAlreadyEnabled = alreadyEnabledRequest.get(msg.guild.id).enabled
 
             if (args[0] === "enable") {
+                if (isAlreadyEnabled) return msg.channel.send("Le système d'XP est déjà activé.")
                 enableRequest.run(msg.guild.id, 1)
                 msg.channel.send("Système d'XP activé !")
             }
 
             else {
+                if (!isAlreadyEnabled) return msg.channel.send("Le système d'XP est déjà désactivé.")
                 enableRequest.run(msg.guild.id, 0)
                 msg.channel.send("Système d'XP désactivé !")
             }
@@ -110,18 +114,7 @@ module.exports = {
                 const offsetLevelPrefix = offsetLevel - levelPrefixMeasure.width - spaceMeasure.width * 2
                 ctx.fillText("LEVEL", offsetLevelPrefix, 85)
 
-                ctx.fillStyle = "#AAAAAA" // next level xp
-                if (nextLvlXp >= 1000) nextLvlXp = (nextLvlXp / 1000).toPrecision(3) + "K"
-                const nextLvlXpMeasure = ctx.measureText(`/ ${nextLvlXp} XP`)
-                const offsetNextLvlXpMeasure = canvas.width - nextLvlXpMeasure.width - 50
-                ctx.fillText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
-
-                ctx.fillStyle = "#FFFFFF" // current xp
-                if (xp >= 1000) xp = (xp / 1000).toPrecision(3) + "K"
-                const xpMeasure = ctx.measureText(xp)
-                const offsetXp = offsetNextLvlXpMeasure - xpMeasure.width - spaceMeasure.width
-                ctx.fillText(xp, offsetXp, 176)
-
+                ctx.fillStyle = "#FFFFFF"
                 ctx.font = "70px ubuntu" // rank
                 const rankMeasure = ctx.measureText(`#${rank}`)
                 const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
@@ -132,24 +125,44 @@ module.exports = {
                 const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
                 ctx.fillText("RANK", offsetRankPrefix, 85)
 
-                ctx.save()
+                if (level < 100) {
+                    ctx.fillStyle = "#AAAAAA" // next level xp
+                    if (nextLvlXp >= 1000) nextLvlXp = (nextLvlXp / 1000).toPrecision(3) + "K"
+                    const nextLvlXpMeasure = ctx.measureText(`/ ${nextLvlXp} XP`)
+                    const offsetNextLvlXpMeasure = canvas.width - nextLvlXpMeasure.width - 50
+                    ctx.fillText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
+    
+                    ctx.fillStyle = "#FFFFFF" // current xp
+                    if (xp >= 1000) xp = (xp / 1000).toPrecision(3) + "K"
+                    const xpMeasure = ctx.measureText(xp)
+                    const offsetXp = offsetNextLvlXpMeasure - xpMeasure.width - spaceMeasure.width
+                    ctx.fillText(xp, offsetXp, 176)
 
-                const progressBarWidth = 620
-                const progressBarHeight = 40
-                
-                ctx.fillStyle = "#555555" // progress bar background
-                ctx.beginPath()
-                ctx.roundedRectangle(270, 200, progressBarWidth, progressBarHeight, 20)
-                ctx.fill()
-                ctx.clip()
+                    ctx.save()
 
-                ctx.fillStyle = "#CCCC44" // progress bar foreground
-                ctx.beginPath()
-                const offsetXpBar = percent / 100 * progressBarWidth
-                ctx.roundedRectangle(270, 200, offsetXpBar, progressBarHeight, 20)
-                ctx.fill()
+                    const progressBarWidth = 620
+                    const progressBarHeight = 40
+                    
+                    ctx.fillStyle = "#555555" // progress bar background
+                    ctx.beginPath()
+                    ctx.roundedRectangle(270, 200, progressBarWidth, progressBarHeight, 20)
+                    ctx.fill()
+                    ctx.clip()
 
-                ctx.restore()
+                    ctx.fillStyle = "#CCCC44" // progress bar foreground
+                    ctx.beginPath()
+                    const offsetXpBar = percent / 100 * progressBarWidth
+                    ctx.roundedRectangle(270, 200, offsetXpBar, progressBarHeight, 20)
+                    ctx.fill()
+
+                    ctx.restore()
+                }
+
+                else {
+                    ctx.fillStyle = "#CCCC44" // max reached
+                    ctx.font = "70px ubuntu"
+                    ctx.fillText("MAX REACHED", 320, 255)
+                }                
 
                 ctx.beginPath() // user avatar circle filter
                 ctx.arc(140, 140, 100, 0, Math.PI * 2, true)
