@@ -1,6 +1,7 @@
 {
 	"need_handle_messages_perm": "J'ai besoin de la permission gérer les messages pour pouvoir être utilisée.",
 	"need_embed_links": "J'ai besoin de la permission intégrer des liens pour pouvoir être utilisée.",
+	"need_attach_files": "J'ai besoin de la permission joindre des fichiers pour pouvoir être utilisée.",
 	"need_read_message_history": "J'ai besoin de la permission voir les anciens messages pour pouvoir être utilisée.",
 	"afk_with_reason": " est actuellement AFK pour la raison suivante : ",
 	"afk_without_reason": " est actuellement AFK, et n'a pas laissé de raison pour cela.",
@@ -11,7 +12,7 @@
 	"request_from": "Requête de ",
 	"command_not_available_in_dm": "Cette commande n'est pas faite pour être utilisée en messages privés.",
 	"i_am": "Je suis ",
-	"remaining_about": ", un bot développé en node.js à l'aide de l'API discord.js.\nOriginairement hébergée sur Glitch, j'ai maintenant un VPS pour moi toute seule.\nJe suis originaire de l'animé *Ore no imōto ga konna ni kawaii wake ga nai*, ou *Oreimo* pour les intimes, duquel je suis le second personnage principal.\nMon créateur se nomme CypElf, et son serveur qui est aussi mon serveur d'origine se nomme Avdray. Il a pour thème l'informatique en général, bien qu'axé sur le langage de programmation Rust.\nVous êtes les bienvenues dessus !\nMerci de m'avoir ajoutée à votre serveur et de m'utiliser ! <:kirinoglad:698923046819594351>\nhttps://discord.gg/btJhreB",
+	"remaining_about": ", un bot développé en node.js à l'aide de l'API discord.js.\nOriginairement hébergée sur Glitch, j'ai maintenant un VPS pour moi toute seule.\nJe suis originaire de l'animé *Ore no imōto ga konna ni kawaii wake ga nai*, ou *Oreimo* pour les intimes, duquel je suis le second personnage principal.\nMon créateur se nomme CypElf, et son serveur qui est aussi mon serveur d'origine se nomme Avdray. Il a pour thème l'informatique en général, bien qu'axé sur le langage de programmation Rust.\nVous êtes les bienvenus dessus !\nMerci de m'avoir ajoutée à votre serveur et de m'utiliser ! <:kirinoglad:698923046819594351>\nhttps://discord.gg/btJhreB",
 	"description_about": "Affiche des informations sur moi.",
 	"description_afk": "Permet de laisser un message à ceux qui voudraient vous mentionner pendant que vous êtes AFK. La raison est optionnelle.",
 	"usage_afk": "{raison de l'absence}",

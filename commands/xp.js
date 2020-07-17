@@ -1,3 +1,5 @@
+const Canvas = require("canvas")
+
 module.exports = {
 	name: "xp",
     description: "description_xp",
@@ -62,15 +64,123 @@ module.exports = {
                     xpUpdateRequest.run(msg.guild.id, member.id, 0, 0)
                 }
     
-                const nextLvlXp = 5 * (xpRow.level * xpRow.level) + 50 * xpRow.level + 100
-                const percent = (xpRow.xp / nextLvlXp * 100).toFixed(1)
-    
-                msg.channel.send(`${member.user.username} : niveau ${xpRow.level}, ${xpRow.xp} XP. Le prochain niveau sera atteint à ${nextLvlXp} (${percent}% atteints).`)
+                const level = xpRow.level
+                let xp = xpRow.xp
+
+                let nextLvlXp = 5 * (level * level) + 50 * level + 100
+                const percent = (xp / nextLvlXp * 100).toFixed(1)
+
+                const serverRankingRequest = db.prepare("SELECT user_id FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id)
+
+                const rank = serverRankingRows.indexOf(member.id) + 1
+                    
+                const canvas = Canvas.createCanvas(934, 282)
+                const ctx = canvas.getContext("2d")
+
+                ctx.fillStyle = "black"
+                ctx.fillRect(0, 0, canvas.width, canvas.height) // black background
+
+                ctx.strokeStyle = "#CCCC44"
+                ctx.strokeRect(0, 0, canvas.width, canvas.height) // border
+
+                const totalName = member.user.tag.split("#")
+                const tag = totalName.pop()
+                const username = totalName.join("#")
+
+                ctx.font = "25px ubuntu"
+                const spaceMeasure = ctx.measureText(" ")
+
+                ctx.font = "40px ubuntu" // username and tag
+                ctx.fillStyle = "#FFFFFF"
+                const usernameMeasure = ctx.measureText(username)
+                ctx.fillText(username, 270, 176)
+                ctx.font = "23px ubuntu"
+                ctx.fillStyle = "#AAAAAA"
+                ctx.fillText("#" + tag, usernameMeasure.width + 280, 176)
+
+                ctx.fillStyle = "#CCCC44" // level
+                ctx.font = "70px ubuntu"
+                const levelMeasure = ctx.measureText(level)
+                const offsetLevel = canvas.width - levelMeasure.width - 40
+                ctx.fillText(level, offsetLevel, 85)
+
+                ctx.font = "25px ubuntu" // level prefix
+                const levelPrefixMeasure = ctx.measureText("LEVEL")
+                const offsetLevelPrefix = offsetLevel - levelPrefixMeasure.width - spaceMeasure.width * 2
+                ctx.fillText("LEVEL", offsetLevelPrefix, 85)
+
+                ctx.fillStyle = "#AAAAAA" // next level xp
+                if (nextLvlXp >= 1000) nextLvlXp = (nextLvlXp / 1000).toPrecision(3) + "K"
+                const nextLvlXpMeasure = ctx.measureText(`/ ${nextLvlXp} XP`)
+                const offsetNextLvlXpMeasure = canvas.width - nextLvlXpMeasure.width - 50
+                ctx.fillText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
+
+                ctx.fillStyle = "#FFFFFF" // current xp
+                if (xp >= 1000) xp = (xp / 1000).toPrecision(3) + "K"
+                const xpMeasure = ctx.measureText(xp)
+                const offsetXp = offsetNextLvlXpMeasure - xpMeasure.width - spaceMeasure.width
+                ctx.fillText(xp, offsetXp, 176)
+
+                ctx.font = "70px ubuntu" // rank
+                const rankMeasure = ctx.measureText(`#${rank}`)
+                const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
+                ctx.fillText(`#${rank}`, offsetRank, 85)
+
+                ctx.font = "25px ubuntu" // rank prefix
+                const rankPrefixMeasure = ctx.measureText("RANK")
+                const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
+                ctx.fillText("RANK", offsetRankPrefix, 85)
+
+                ctx.save()
+
+                const progressBarWidth = 620
+                const progressBarHeight = 40
+                
+                ctx.fillStyle = "#555555" // progress bar background
+                ctx.beginPath()
+                ctx.roundedRectangle(270, 200, progressBarWidth, progressBarHeight, 20)
+                ctx.fill()
+                ctx.clip()
+
+                ctx.fillStyle = "#CCCC44" // progress bar foreground
+                ctx.beginPath()
+                const offsetXpBar = percent / 100 * progressBarWidth
+                ctx.roundedRectangle(270, 200, offsetXpBar, progressBarHeight, 20)
+                ctx.fill()
+
+                ctx.restore()
+
+                ctx.beginPath() // user avatar circle filter
+                ctx.arc(140, 140, 100, 0, Math.PI * 2, true)
+                ctx.closePath()
+                ctx.clip()
+
+                const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "png" }))
+                ctx.drawImage(avatar, 40, 40, 200, 200)
+
+                const Discord = require("discord.js")
+                const card = new Discord.MessageAttachment(canvas.toBuffer(), "card.png")
+
+                msg.channel.send(card)
             }
     
             else {
-                msg.channel.send("Le système d'XP est désactivé, sur ce serveur.")
+                msg.channel.send(`Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer avec la commande \`${bot.prefix}xp enable\`.`)
             }
         }
     }
+}
+
+Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, width, height, rounded) {
+    const halfRadians = (2 * Math.PI) / 2
+    const quarterRadians = (2 * Math.PI) / 4  
+    this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
+    this.lineTo(x, y + height - rounded)
+    this.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)  
+    this.lineTo(x + width - rounded, y + height)
+    this.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)  
+    this.lineTo(x + width, y + rounded)  
+    this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)  
+    this.lineTo(x + rounded, y)  
 }

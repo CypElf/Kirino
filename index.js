@@ -72,6 +72,7 @@ bot.on("message", async msg => {
 
             if (!msg.guild.me.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("need_handle_messages_perm"))
             if (!msg.guild.me.hasPermission("EMBED_LINKS")) return msg.channel.send(__("need_embed_links"))
+            if (!msg.guild.me.hasPermission("ATTACH_FILES")) return msg.channel.send(__("need_attach_files"))
             if (!msg.guild.me.hasPermission("READ_MESSAGE_HISTORY")) return msg.channel.send(__("need_read_message_history"))
         }
     }
@@ -259,7 +260,7 @@ bot.on("messageUpdate", async (oldMsg, newMsg) => {
 
 const checkWords = (msg, db) => {
     if (msg.guild) {
-        if (!msg.content.startsWith(bot.prefix + "banword remove") && !msg.content.startsWith(bot.prefix + "banword add")) {
+        if (!msg.content.startsWith(bot.prefix + "banword remove") && !msg.content.startsWith(bot.prefix + "bw remove") && !msg.content.startsWith(bot.prefix + "banword add") && !msg.content.startsWith(bot.prefix + "bw add")) {
     
             const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwords = banwordsRequest.all(msg.guild.id)

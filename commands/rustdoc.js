@@ -10,7 +10,7 @@ module.exports = {
 
     async execute (bot, msg, args) {
         const Discord = require("discord.js")
-        const rustDocResearcher = require("../res/rustdoc_logic/rustdoc_researcher")
+        const rustDocResearcher = require("../res/rustdoc/rustdoc_researcher")
 
         const keywords = args.join(" ")
         const results = rustDocResearcher(keywords)
