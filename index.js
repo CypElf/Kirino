@@ -9,10 +9,13 @@ const i18n = require("i18n")
 require("dotenv").config()
 
 const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
+
 bot.commands = new Discord.Collection()
+bot.config = config
+bot.db = new bsqlite3("database.db", { fileMustExist: true })
+
 const commandsCooldowns = new Discord.Collection()
 const xpCooldowns = new Discord.Collection()
-bot.config = config
 
 i18n.configure({
     locales: ['en', 'fr'],
@@ -28,7 +31,6 @@ for (const file of commandFiles) {
 	bot.commands.set(command.name, command)
 }
 
-const db = new bsqlite3("database.db", { fileMustExist: true })
 
 bot.once("ready", async () => {
     updateActivity()
@@ -46,7 +48,7 @@ bot.once("ready", async () => {
 // -------------------------------------------------------------
 
 bot.on("message", async msg => {
-    const prefixRequest = db.prepare("SELECT * FROM prefixs WHERE id = ?")
+    const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
     let id
     if (msg.guild) id = msg.guild.id
     else id = msg.author.id
@@ -85,7 +87,7 @@ bot.on("message", async msg => {
     if (msg.guild) callerID = msg.guild.id
     else callerID = msg.author.id
 
-    const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?")
+    const languagesRequest = bot.db.prepare("SELECT * FROM languages WHERE id = ?")
     const languageRow = languagesRequest.get(callerID)
     if (languageRow !== undefined) {
         setLocale(languageRow.language)
@@ -99,7 +101,7 @@ bot.on("message", async msg => {
 
     const mentions = msg.mentions.users
 
-    const afkRequest = db.prepare("SELECT * FROM afk WHERE user_id = ?")
+    const afkRequest = bot.db.prepare("SELECT * FROM afk WHERE user_id = ?")
 
     mentions.forEach(mention => {
         const mentionnedAfkRow = afkRequest.get(mention.id)
@@ -119,19 +121,19 @@ bot.on("message", async msg => {
     const selfAfkRow = afkRequest.get(msg.author.id)
 
     if (selfAfkRow !== undefined) {
-        const deletionRequest = db.prepare("DELETE FROM afk WHERE user_id = ?")
+        const deletionRequest = bot.db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
         msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
     }
     
     // ------------------------------------------------------------- banwords check on message
 
-    checkWords(msg, db)
+    checkWords(msg, bot.db)
 
     // ------------------------------------------------------------- xp
 
     if (msg.guild) {
-        const xpMetadataRequest = db.prepare("SELECT is_enabled, level_up_message FROM xp_metadata WHERE guild_id = ?")
+        const xpMetadataRequest = bot.db.prepare("SELECT is_enabled, level_up_message FROM xp_metadata WHERE guild_id = ?")
         const xpMetadata = xpMetadataRequest.get(msg.guild.id)
         
         let isEnabled
@@ -162,7 +164,7 @@ bot.on("message", async msg => {
         setTimeout(() => timestamps.delete(msg.author.id), cooldown)
 
         if (isEnabled && isReady) {
-            const xpRequest = db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
+            const xpRequest = bot.db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
             let xpRow = xpRequest.get(msg.guild.id, msg.author.id)
 
             if (xpRow === undefined) {
@@ -183,7 +185,7 @@ bot.on("message", async msg => {
                     newLvl += 1
                     newXp = newXp - nextLevelXp
 
-                    if (levelUpMsg === null) levelUpMsg = `Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} !`
+                    if (levelUpMsg === null) levelUpMsg = `Congratulations ${msg.author.username}, you've passed level ${newLvl} !`
                     else {
                         levelUpMsg = levelUpMsg
                             .replace("{user}", `<@${msg.author.id}>`)
@@ -194,10 +196,10 @@ bot.on("message", async msg => {
                     }
 
                     msg.channel.send(levelUpMsg)
-                    if (newLvl === 100) msg.channel.send(`C'était le tout dernier niveau ! Merci d'avoir utilisé mon système d'expérience pendant autant de temps, et merci beaucoup de m'utiliser, plus globalement ! Encore félicitations !`)
+                    if (newLvl === 100) msg.channel.send(`That was the very last level! Thank you for using my experience system for so long, and thank you very much for using me, more globally! Congratulations again!`)
                 }
         
-                const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
+                const xpUpdateRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
                 xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newTotalXp, newLvl)
             }
         }
@@ -258,7 +260,7 @@ http.createServer(async (req, res) => {
         const guild = bot.guilds.cache.find(guild => guild.id === gid)
 
         if (guild) {
-            const serverRequest = db.prepare("SELECT user_id, xp, total_xp, level FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+            const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
             const serverRows = serverRequest.all(gid)
     
             if (serverRows.length > 0) {
@@ -307,14 +309,13 @@ bot.on("guildCreate", guild  => {
 bot.on("guildDelete", guild => {
     console.log(`Server left: ${guild.name}`)
     const id = guild.id
-    const db = new bsqlite3("database.db", { fileMustExist: true })
-    let deletionRequest = db.prepare("DELETE FROM banwords WHERE guild_id = ?")
+    let deletionRequest = bot.db.prepare("DELETE FROM banwords WHERE guild_id = ?")
     deletionRequest.run(id)
-    deletionRequest = db.prepare("DELETE FROM languages WHERE id = ?")
+    deletionRequest = bot.db.prepare("DELETE FROM languages WHERE id = ?")
     deletionRequest.run(id)
-    deletionRequest = db.prepare("DELETE FROM prefixs WHERE id = ?")
+    deletionRequest = bot.db.prepare("DELETE FROM prefixs WHERE id = ?")
     deletionRequest.run(id)
-    deletionRequest = db.prepare("DELETE FROM rules WHERE guild_id = ?")
+    deletionRequest = bot.db.prepare("DELETE FROM rules WHERE guild_id = ?")
     deletionRequest.run(id)
     updateActivity()
 })
@@ -322,8 +323,7 @@ bot.on("guildDelete", guild => {
 // ------------------------------------------------------------- banwords check on edit
 
 bot.on("messageUpdate", async (oldMsg, newMsg) => {
-    const db = new bsqlite3("database.db", { fileMustExist: true })
-    checkWords(newMsg, db)
+    checkWords(newMsg, bot.db)
 })
 
 // ------------------------------------------------------------- banword check function for message and edit events

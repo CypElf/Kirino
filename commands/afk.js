@@ -7,9 +7,6 @@ module.exports = {
     usage: "usage_afk",
 
     async execute (bot, msg, args) {
-        const bsqlite3 = require("better-sqlite3")
-        let db = new bsqlite3("database.db", { fileMustExist: true })
-
         let reason
         if (args) {
             reason = args.join(' ')
@@ -19,7 +16,7 @@ module.exports = {
             return msg.channel.send(__("afk_reason_too_long") + " <:kirinopout:698923065773522944>")
         }
 
-        const afkRequest = db.prepare("INSERT INTO afk(user_id,reason) VALUES(?,?)")
+        const afkRequest = bot.db.prepare("INSERT INTO afk(user_id,reason) VALUES(?,?)")
         afkRequest.run(msg.author.id, reason)
 
         if (reason) {

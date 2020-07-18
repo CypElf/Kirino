@@ -11,9 +11,6 @@ module.exports = {
     async execute (bot, msg, [mode, ...words]) {
         if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("missing_permissions_to_execute_this_command") + " <:kirinopout:698923065773522944>")
 
-        const bsqlite3 = require("better-sqlite3")
-        const db = new bsqlite3("database.db", { fileMustExist: true })
-
         const guild = msg.guild.id
 
         const parseEmoji = mot => {
@@ -26,7 +23,7 @@ module.exports = {
         if (mode === "add") {
             if (words.length < 1) return msg.channel.send(__("please_insert_banwords_to_add"))
                 
-            const banwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            const banwordsRequest = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwordsRows = banwordsRequest.all(guild)
             let banwordsCount
             if (banwordsRows.length !== 0) {
@@ -46,7 +43,7 @@ module.exports = {
             if (words.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " <:kirinopout:698923065773522944>")
 
             words.forEach(mot => {
-                const addBanwordCommand = db.prepare("INSERT INTO banwords(guild_id,word) VALUES(?,?)")
+                const addBanwordCommand = bot.db.prepare("INSERT INTO banwords(guild_id,word) VALUES(?,?)")
                 addBanwordCommand.run(guild, mot)
             })
             let content = __n("the_word", words.length) + " `"
@@ -63,7 +60,7 @@ module.exports = {
 
         else if (mode === "list") {
             let list = __("here_is_banword_list") + " :\n"
-            const listBanwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            const listBanwordsRequest = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let wordsList = listBanwordsRequest.all(guild)
 
             if (wordsList.length !== 0) {
@@ -81,7 +78,7 @@ module.exports = {
             if (words.length < 1) return msg.channel.send(__("precise_banwords_to_remove"))
             let removed = []
             let notRemoved = []
-            const removeBanwordsRequest = db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
+            const removeBanwordsRequest = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwords = removeBanwordsRequest.all(guild)
 
             if (banwords.length !== 0) {
@@ -96,7 +93,7 @@ module.exports = {
                         notRemoved.push(word)
                     }
                     
-                    const deleteCommand = db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?")
+                    const deleteCommand = bot.db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?")
                     deleteCommand.run(guild, parseEmoji(word))
                 })
             }

@@ -11,17 +11,15 @@ module.exports = {
 
     async execute (bot, msg, args) {
         const getUser = require("../res/get_user")
-        const bsqlite3 = require("better-sqlite3")
-        const db = new bsqlite3("database.db", { fileMustExist: true })
 
-        const xpActivationRequest = db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
+        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
         const request = args[0]
 
         if (request === "enable" || request === "disable") {
-            const enableRequest = db.prepare("INSERT INTO xp_metadata(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
+            const enableRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (request === "enable") {
                 if (isEnabled) return msg.channel.send("XP system already enabled.")
@@ -57,7 +55,7 @@ module.exports = {
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
-                                const profileDeletionRequest = db.prepare("DELETE FROM xp WHERE guild_id = ?")
+                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
                                 profileDeletionRequest.run(msg.guild.id)
                                 msg.channel.send(`All the server XP records have been successfully deleted.`)
                             }
@@ -76,7 +74,7 @@ module.exports = {
                         if (!member) return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
                         else if (member.user.bot) return msg.channel.send("Bots are not allowed")
                         
-                        const isInXpTableRequest = db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
+                        const isInXpTableRequest = bot.db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
                         const isInXpTable = isInXpTableRequest.get(msg.guild.id, member.id)
         
                         if (!isInXpTable) return msg.channel.send("This member is not registered in the XP system yet.")
@@ -92,7 +90,7 @@ module.exports = {
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
-                                const profileDeletionRequest = db.prepare("DELETE FROM xp WHERE guild_id = ? AND user_id = ?")
+                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ? AND user_id = ?")
                                 profileDeletionRequest.run(msg.guild.id, member.id)
                                 if (args[0] === undefined) msg.channel.send("Your XP has been successfully reset.")
                                 else msg.channel.send(`${member.user.username}'s XP has been successfully reset.`)
@@ -110,7 +108,7 @@ module.exports = {
                     let newMsg = args.join(" ")
 
                     if (newMsg === "reset") newMsg = null
-                    const msgUpdateRequest = db.prepare("INSERT INTO xp_metadata VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
+                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
                     msgUpdateRequest.run(msg.guild.id, 1, newMsg)
                     if (newMsg === null) msg.channel.send("Level up message successfully reset.")
                     else msg.channel.send("Level up message successfully updated.")
@@ -130,7 +128,7 @@ module.exports = {
                     }
             
 
-                    const xpRequest = db.prepare("SELECT xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
+                    const xpRequest = bot.db.prepare("SELECT xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
         
                     if (xpRow === undefined) return msg.channel.send("The designated member has not gained any XP yet.")
@@ -141,7 +139,7 @@ module.exports = {
                     let nextLvlXp = 5 * (level * level) + 50 * level + 100
                     const percent = (xp / nextLvlXp * 100).toFixed(1)
     
-                    const serverRankingRequest = db.prepare("SELECT user_id FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                    const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
                     const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id)
     
                     const rank = serverRankingRows.indexOf(member.id) + 1

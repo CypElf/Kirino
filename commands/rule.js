@@ -9,9 +9,6 @@ module.exports = {
     permissions: ["manage guild"],
     
     async execute(bot, msg, args) {
-        const bsqlite3 = require("better-sqlite3")
-        let db = new bsqlite3("database.db", { fileMustExist: true })
-        
         const request = args[0]
 
         // ------------------------------------------------------------------- add
@@ -26,7 +23,7 @@ module.exports = {
 
             let r = getRules(false).length
             if (r >= 30) return msg.channel.send(__("max_rules_number_reached") + " <:kirinopout:698923065773522944>")
-            const newRuleRequest = db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
+            const newRuleRequest = bot.db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
             newRuleRequest.run(msg.guild.id, newRule)
 
             return msg.channel.send(__("the_following_rule") + "\n```" + newRule + "```\n" + __("has_been_added_to_rules"))
@@ -57,11 +54,11 @@ module.exports = {
 
             rules.splice(index, 1)
 
-            const deleteRequest = db.prepare("DELETE FROM rules WHERE guild_id = ?")
+            const deleteRequest = bot.db.prepare("DELETE FROM rules WHERE guild_id = ?")
             deleteRequest.run(msg.guild.id)
 
             if (rules.length !== 0) {
-                const newRuleRequest = db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
+                const newRuleRequest = bot.db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
                 rules.forEach(rule => {
                     newRuleRequest.run(msg.guild.id, rule)
                 })
@@ -104,7 +101,7 @@ module.exports = {
         msg.channel.send(emb)
 
         function getRules(verbose = true) {
-            const rulesRequest = db.prepare("SELECT * FROM rules WHERE guild_id = ?")
+            const rulesRequest = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?")
             const rulesRow = rulesRequest.all(msg.guild.id)
     
             if (rulesRow.length === 0 && verbose) {

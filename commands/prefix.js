@@ -14,10 +14,8 @@ module.exports = {
         if (args.length > 1) return msg.channel.send(__("no_spaces_in_prefixs"))
         const newPrefix = args[0]
         if (newPrefix.length > 3) return msg.channel.send(__("three_chars_max"))
-
-        const bsqlite3 = require("better-sqlite3")
-        let db = new bsqlite3("database.db", { fileMustExist: true })       
-        const prefixRequest = db.prepare("INSERT INTO prefixs(id,prefix) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET prefix=excluded.prefix")
+      
+        const prefixRequest = bot.db.prepare("INSERT INTO prefixs(id,prefix) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET prefix=excluded.prefix")
 
         let id
         if (msg.guild) id = msg.guild.id
