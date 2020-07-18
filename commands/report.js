@@ -11,9 +11,7 @@ module.exports = {
         let origin
         let originAvatar
         if (msg.guild) {
-            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) {
-                return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
-            }
+            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
             origin = msg.guild.name
             originAvatar = msg.guild.iconURL()
         }

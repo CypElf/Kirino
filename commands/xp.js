@@ -5,10 +5,12 @@ module.exports = {
     description: "description_xp",
     guildOnly: true,
     args: false,
+    cooldown: 5,
     category: "utility",
     usage: "usage_xp",
 
     async execute (bot, msg, args) {
+        const getUser = require("../res/get_user")
         const bsqlite3 = require("better-sqlite3")
         const db = new bsqlite3("database.db", { fileMustExist: true })
 
@@ -20,15 +22,78 @@ module.exports = {
             const isAlreadyEnabled = alreadyEnabledRequest.get(msg.guild.id).enabled
 
             if (request === "enable") {
-                if (isAlreadyEnabled) return msg.channel.send("Le système d'XP est déjà activé.")
+                if (isAlreadyEnabled) return msg.channel.send("XP system already enabled.")
                 enableRequest.run(msg.guild.id, 1)
-                msg.channel.send("Système d'XP activé !")
+                msg.channel.send("XP system enabled!")
             }
 
             else {
-                if (!isAlreadyEnabled) return msg.channel.send("Le système d'XP est déjà désactivé.")
+                if (!isAlreadyEnabled) return msg.channel.send("XP system already disabled.")
                 enableRequest.run(msg.guild.id, 0)
-                msg.channel.send("Système d'XP désactivé !")
+                msg.channel.send("XP system disabled!")
+            }
+        }
+
+        else if (request === "reset") {
+            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("You're not allowed to reset XP profiles.")
+            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
+
+            args.shift()
+            const filter = (reaction, user) => {
+                return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+            }
+
+            if (args[0] === "all") {
+                const validationMessage = await msg.channel.send(`Are you sure you want to reset the XP for all the server?`)
+
+                validationMessage.react('✅')
+                validationMessage.react('❌')
+
+                const collector = validationMessage.createReactionCollector(filter, { max: 1, time: 30_000 })
+        
+                collector.on("collect", (reaction) => {
+                    if (reaction.emoji.name === '✅') {
+                        const profileDeletionRequest = db.prepare("DELETE FROM xp WHERE guild_id = ?")
+                        profileDeletionRequest.run(msg.guild.id)
+                        msg.channel.send(`All the server XP records have been successfully deleted.`)
+                    }
+                    else {
+                        msg.channel.send(`The XP reset of the entire server has been cancelled.`)
+                    }
+                })
+
+
+                
+            }
+            else {
+                let member
+                if (args[0] === undefined) member = msg.member
+                else member = getUser(msg, args)
+                if (!member) return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
+                else if (member.user.bot) return msg.channel.send("Bots are not allowed")
+                
+                const isInXpTableRequest = db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
+                const isInXpTable = isInXpTableRequest.get(msg.guild.id, member.id)
+
+                if (!isInXpTable) return msg.channel.send("This member is not registered in the XP system yet.")
+
+                const validationMessage = await msg.channel.send(`Are you sure you want to reset ${member.user.username}'s XP?`)
+
+                validationMessage.react('✅')
+                validationMessage.react('❌')
+
+                const collector = validationMessage.createReactionCollector(filter, { max: 1, time: 30_000 })
+        
+                collector.on("collect", (reaction) => {
+                    if (reaction.emoji.name === '✅') {
+                        const profileDeletionRequest = db.prepare("DELETE FROM xp WHERE guild_id = ? AND user_id = ?")
+                        profileDeletionRequest.run(msg.guild.id, member.id)
+                        msg.channel.send(`${member.user.username}'s XP profile has been successfully deleted.`)
+                    }
+                    else {
+                        msg.channel.send(`${member.user.username}'s XP profile reset have been cancelled.`)
+                    }
+                })
             }
         }
 
@@ -40,15 +105,9 @@ module.exports = {
             }
     
             else {
-                const getUser = require("../res/get_user")
-    
                 member = getUser(msg, args)
-                if (member === undefined) {
-                    return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
-                }
-                else if (member.user.bot) {
-                    return msg.channel.send("Bots are not allowed")
-                }
+                if (member === undefined) return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
+                else if (member.user.bot) return msg.channel.send("Bots are not allowed")
             }
             
             const xpActivationRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
@@ -64,7 +123,7 @@ module.exports = {
                 const xpRequest = db.prepare("SELECT xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
                 let xpRow = xpRequest.get(msg.guild.id, member.id)
     
-                if (xpRow === undefined) return msg.channel.send("Le membre désigné n'a encore envoyé aucun message et n'a donc pas encore de profil d'XP.")
+                if (xpRow === undefined) return msg.channel.send("The designated member has not gained any XP yet.")
     
                 const level = xpRow.level
                 let xp = xpRow.xp
@@ -177,13 +236,13 @@ module.exports = {
             }
     
             else {
-                msg.channel.send(`Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer avec la commande \`${bot.prefix}xp enable\`.`)
+                msg.channel.send(`The XP system is currently disabled. You must first activate it with the command \`${bot.prefix}xp enable\`.`)
             }
         }
     }
 }
 
-Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = (x, y, width, height, rounded) => {
+Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, width, height, rounded) {
     const halfRadians = (2 * Math.PI) / 2
     const quarterRadians = (2 * Math.PI) / 4  
     this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
