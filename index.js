@@ -1,6 +1,8 @@
 const Discord = require("discord.js")
 const config = require("./config.json")
 const fs = require("fs")
+const http = require("http")
+const url = require("url")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 
@@ -163,14 +165,15 @@ bot.on("message", async msg => {
             let xpRow = xpRequest.get(msg.guild.id, msg.author.id)
 
             if (xpRow === undefined) {
-                xpRow = { guild_id: msg.guild.id, user_id: msg.author.id, xp: 0, level: 0 }
+                xpRow = { guild_id: msg.guild.id, user_id: msg.author.id, xp: 0, total_xp: 0, level: 0 }
             }
     
             const currentXp = xpRow.xp
             const currentLvl = xpRow.level
 
             if (currentLvl < 100) {
-                let newXp = currentXp + Math.floor(Math.random() * (25 - 15 + 1)) + 15; // the xp added to the user is generated between 15 and 25
+                let newXp = currentXp + Math.floor(Math.random() * (25 - 15 + 1)) + 15 // the xp added to the user is generated between 15 and 25
+                let newTotalXp = xpRow.total_xp + newXp
                 let newLvl = currentLvl
         
                 const nextLevelXp = 5 * (currentLvl * currentLvl) + 50 * currentLvl + 100
@@ -182,8 +185,8 @@ bot.on("message", async msg => {
                     else msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} : c'était le tout dernier niveau ! Merci d'avoir utilisé mon système d'expérience pendant autant de temps, et merci beaucoup de m'utiliser, plus globalement ! Encore félicitations !`)
                 }
         
-                const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, level=excluded.level")
-                xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newLvl)
+                const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
+                xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newTotalXp, newLvl)
             }
         }
     }
@@ -220,7 +223,7 @@ bot.on("message", async msg => {
     setTimeout(() => timestamps.delete(msg.author.id), cooldown)
 
     if (command.args && !args.length) {
-        if (command.category === "ignore") return;
+        if (command.category === "ignore") return
         return bot.commands.get("help").execute(bot, msg, [].concat(commandName))
     }
 
@@ -231,6 +234,57 @@ bot.on("message", async msg => {
         console.error(err)
     }
 })
+
+// ------------------------------------------------------------- xp leaderboard
+
+http.createServer(async (req, res) => {
+    const queries = url.parse(req.url, true).query
+    const gid = queries.gid
+    if (gid) {
+        let data = []
+
+        const guild = bot.guilds.cache.find(guild => guild.id === gid)
+
+        if (guild) {
+            const serverRequest = db.prepare("SELECT user_id, xp, total_xp, level FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+            const serverRows = serverRequest.all(gid)
+    
+            if (serverRows.length > 0) {
+                data.push([guild.name, guild.iconURL()])
+                for (const row of serverRows) {
+                    try {
+                        const member = await guild.members.fetch(row.user_id)
+                    
+                        const avatarUrl = member.user.displayAvatarURL({ format: "png", dynamic: true })
+                        const tag = member.user.tag
+                        data.push([tag, avatarUrl, row.xp, row.total_xp, row.level])
+                    }
+                    catch {}
+                }
+
+                res.writeHead(200, {"Content-Type": "text/html"})
+                res.write(JSON.stringify(data))
+                res.end()
+            }
+            else {
+                res.writeHead(404, {"Content-Type": "text/html"})
+                res.write("No members have any XP on this server.")
+                res.end()
+            }
+        }
+        else {
+            res.writeHead(404, {"Content-Type": "text/html"})
+            res.write("Server not found.")
+            res.end()
+        }
+    }
+    else {
+        res.writeHead(404, {"Content-Type": "text/html"})
+        res.write("No server ID provided as a GET parameter.")
+        res.end()
+    }
+    
+}).listen(62150)
 
 // ------------------------------------------------------------- join / leave
 
@@ -297,7 +351,7 @@ const updateActivity = () => {
 }
 
 process.on('unhandledRejection', error => {
-	console.error('Unhandled promise rejection:', error);
-});
+	console.error('Unhandled promise rejection:', error)
+})
 
 bot.login(process.env.KIRINO_TOKEN)

@@ -12,12 +12,14 @@ module.exports = {
         const bsqlite3 = require("better-sqlite3")
         const db = new bsqlite3("database.db", { fileMustExist: true })
 
-        if (args[0] === "enable" || args[0] === "disable") {
+        const request = args[0]
+
+        if (request === "enable" || request === "disable") {
             const enableRequest = db.prepare("INSERT INTO xp_activations(guild_id,enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET enabled=excluded.enabled")
             const alreadyEnabledRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
             const isAlreadyEnabled = alreadyEnabledRequest.get(msg.guild.id).enabled
 
-            if (args[0] === "enable") {
+            if (request === "enable") {
                 if (isAlreadyEnabled) return msg.channel.send("Le système d'XP est déjà activé.")
                 enableRequest.run(msg.guild.id, 1)
                 msg.channel.send("Système d'XP activé !")
@@ -62,11 +64,7 @@ module.exports = {
                 const xpRequest = db.prepare("SELECT xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
                 let xpRow = xpRequest.get(msg.guild.id, member.id)
     
-                if (xpRow === undefined) {
-                    xpRow = { guild_id: msg.guild.id, user_id: member.id, xp: 0, level: 0 }
-                    const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?)")
-                    xpUpdateRequest.run(msg.guild.id, member.id, 0, 0)
-                }
+                if (xpRow === undefined) return msg.channel.send("Le membre désigné n'a encore envoyé aucun message et n'a donc pas encore de profil d'XP.")
     
                 const level = xpRow.level
                 let xp = xpRow.xp
@@ -185,7 +183,7 @@ module.exports = {
     }
 }
 
-Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, width, height, rounded) {
+Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = (x, y, width, height, rounded) => {
     const halfRadians = (2 * Math.PI) / 2
     const quarterRadians = (2 * Math.PI) / 4  
     this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
