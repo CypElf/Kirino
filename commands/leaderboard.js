@@ -5,7 +5,7 @@ module.exports = {
     args: false,
     category: "utility",
     usage: "usage_leaderboard",
-    aliases: [ "lb" ],
+    aliases: ["lb"],
 
     async execute (bot, msg, args) {
         const xpActivationRequest = bot.db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
