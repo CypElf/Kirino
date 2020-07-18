@@ -5,7 +5,7 @@ module.exports = {
     description: "description_xp",
     guildOnly: true,
     args: false,
-    cooldown: 5,
+    cooldown: 4,
     category: "utility",
     usage: "usage_xp",
 
@@ -14,14 +14,14 @@ module.exports = {
         const bsqlite3 = require("better-sqlite3")
         const db = new bsqlite3("database.db", { fileMustExist: true })
 
-        const xpActivationRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
+        const xpActivationRequest = db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
-        if (isEnabled) isEnabled = isEnabled.enabled
+        if (isEnabled) isEnabled = isEnabled.is_enabled
 
         const request = args[0]
 
         if (request === "enable" || request === "disable") {
-            const enableRequest = db.prepare("INSERT INTO xp_activations(guild_id,enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET enabled=excluded.enabled")
+            const enableRequest = db.prepare("INSERT INTO xp_metadata(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (request === "enable") {
                 if (isEnabled) return msg.channel.send("XP system already enabled.")
@@ -81,7 +81,9 @@ module.exports = {
         
                         if (!isInXpTable) return msg.channel.send("This member is not registered in the XP system yet.")
         
-                        const validationMessage = await msg.channel.send(`Are you sure you want to reset ${member.user.username}'s XP?`)
+                        let validationMessage
+                        if (args[0] === undefined) validationMessage = await msg.channel.send(`Are you sure you want to reset your own XP?`)
+                        else validationMessage = await msg.channel.send(`Are you sure you want to reset ${member.user.username}'s XP?`)
         
                         validationMessage.react('✅')
                         validationMessage.react('❌')
@@ -92,13 +94,26 @@ module.exports = {
                             if (reaction.emoji.name === '✅') {
                                 const profileDeletionRequest = db.prepare("DELETE FROM xp WHERE guild_id = ? AND user_id = ?")
                                 profileDeletionRequest.run(msg.guild.id, member.id)
-                                msg.channel.send(`${member.user.username}'s XP profile has been successfully deleted.`)
+                                if (args[0] === undefined) msg.channel.send("Your XP has been successfully reset.")
+                                else msg.channel.send(`${member.user.username}'s XP has been successfully reset.`)
                             }
                             else {
-                                msg.channel.send(`${member.user.username}'s XP profile reset have been cancelled.`)
+                                msg.channel.send(`${member.user.username}'s XP reset have been cancelled.`)
                             }
                         })
                     }
+                }
+
+                else if (request === "message" || request === "msg") {
+                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("You're not allowed to change the level up message.")
+                    args.shift()
+                    let newMsg = args.join(" ")
+
+                    if (newMsg === "reset") newMsg = null
+                    const msgUpdateRequest = db.prepare("INSERT INTO xp_metadata VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
+                    msgUpdateRequest.run(msg.guild.id, 1, newMsg)
+                    if (newMsg === null) msg.channel.send("Level up message successfully reset.")
+                    else msg.channel.send("Level up message successfully updated.")
                 }
         
                 else {

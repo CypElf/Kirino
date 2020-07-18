@@ -131,9 +131,15 @@ bot.on("message", async msg => {
     // ------------------------------------------------------------- xp
 
     if (msg.guild) {
-        const xpActivationRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
-        let isEnabled = xpActivationRequest.get(msg.guild.id)
-        if (isEnabled) isEnabled = isEnabled.enabled
+        const xpMetadataRequest = db.prepare("SELECT is_enabled, level_up_message FROM xp_metadata WHERE guild_id = ?")
+        const xpMetadata = xpMetadataRequest.get(msg.guild.id)
+        
+        let isEnabled
+        let levelUpMsg = null
+        if (xpMetadata) {
+            isEnabled = xpMetadata.is_enabled
+            levelUpMsg = xpMetadata.level_up_message
+        }
 
         if (!xpCooldowns.has(msg.guild.id)) {
             xpCooldowns.set(msg.guild.id, new Discord.Collection())
@@ -176,8 +182,19 @@ bot.on("message", async msg => {
                 if (newXp >= nextLevelXp) {
                     newLvl += 1
                     newXp = newXp - nextLevelXp
-                    if (newLvl < 100) msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} !`)
-                    else msg.channel.send(`Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} : c'était le tout dernier niveau ! Merci d'avoir utilisé mon système d'expérience pendant autant de temps, et merci beaucoup de m'utiliser, plus globalement ! Encore félicitations !`)
+
+                    if (levelUpMsg === null) levelUpMsg = `Félicitations ${msg.author.username}, tu es passé niveau ${newLvl} !`
+                    else {
+                        levelUpMsg = levelUpMsg
+                            .replace("{user}", `<@${msg.author.id}>`)
+                            .replace("{username}", msg.author.username)
+                            .replace("{tag}", msg.author.tag)
+                            .replace("{level}", newLvl)
+                            .replace("{server}", msg.guild.name)
+                    }
+
+                    msg.channel.send(levelUpMsg)
+                    if (newLvl === 100) msg.channel.send(`C'était le tout dernier niveau ! Merci d'avoir utilisé mon système d'expérience pendant autant de temps, et merci beaucoup de m'utiliser, plus globalement ! Encore félicitations !`)
                 }
         
                 const xpUpdateRequest = db.prepare("INSERT INTO xp VALUES(?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
