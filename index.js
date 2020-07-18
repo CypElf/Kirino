@@ -132,13 +132,8 @@ bot.on("message", async msg => {
 
     if (msg.guild) {
         const xpActivationRequest = db.prepare("SELECT enabled FROM xp_activations WHERE guild_id = ?")
-        let isEnabled = xpActivationRequest.get(msg.guild.id).enabled
-
-        if (isEnabled === undefined) {
-            isEnabled = 0
-            const xpDisabledRequest = db.prepare("INSERT INTO xp_activations(guild_id,enabled) VALUES(?,?)")
-            xpDisabledRequest.run(msg.guild.id, 0)
-        }
+        let isEnabled = xpActivationRequest.get(msg.guild.id)
+        if (isEnabled) isEnabled = isEnabled.enabled
 
         if (!xpCooldowns.has(msg.guild.id)) {
             xpCooldowns.set(msg.guild.id, new Discord.Collection())
