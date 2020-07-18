@@ -343,5 +343,9 @@
 	"md5_hashing": "MD5 hashing",
 	"hash": "Hash",
 	"description_rot13": "Allows encoding / decoding of ROT13 (13 letter alphabetic shift).",
-	"usage_rot13": "[message encoded or to be decoded]"
+	"usage_rot13": "[message encoded or to be decoded]",
+	"description_emoji": "Displays the image used for a custom emoji.",
+	"usage_emoji": "[emoji] {emoji} {emoji} {emoji} {emoji}",
+	"specify_custom_emojis": "Please specify one or more custom emojis.",
+	"five_emojis_max": "Only a maximum of 5 emojis are accepted at a time."
 }

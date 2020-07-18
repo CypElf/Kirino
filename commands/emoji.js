@@ -19,8 +19,8 @@ module.exports = {
             if (emoji) emojis.push([emoji.toString().split(":")[2].split(">").slice(0, -1).join(">"), extension])
         }
         
-        if (emojis.length === 0) return msg.channel.send("Please specify one or more custom emojis.")
-        if (emojis.length > 5) return msg.channel.send("Only a maximum of 5 emojis are accepted at a time.")
+        if (emojis.length === 0) return msg.channel.send(__("specify_custom_emojis"))
+        if (emojis.length > 5) return msg.channel.send(__("five_emojis_max"))
         for (const [emojiID, extension] of emojis) {
             msg.channel.send(`https://cdn.discordapp.com/emojis/${emojiID}.${extension}`)
         }

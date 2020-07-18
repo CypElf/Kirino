@@ -340,5 +340,9 @@
 	"md5_hashing": "Hashage MD5",
 	"hash": "Hash",
 	"description_rot13": "Permet d'encoder / décoder du ROT13 (13 lettres de décalage alphabétique).",
-	"usage_rot13": "[message encodé ou à décoder]"
+	"usage_rot13": "[message encodé ou à décoder]",
+	"description_emoji": "Permet d'afficher l'image utilisée pour un émoji personnalisé.",
+	"usage_emoji": "[emoji] {emoji} {emoji} {emoji} {emoji}",
+	"specify_custom_emojis": "Veuillez spécifier un ou plusieurs emojis personnalisés.",
+	"five_emojis_max": "Seuls 5 emojis maximum sont acceptés à la fois."
 }
