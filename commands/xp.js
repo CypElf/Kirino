@@ -139,6 +139,9 @@ module.exports = {
                             do {
                                 const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${msg.guild.id}?limit=1000&page=${i}`)
                                 const data = await res.json()
+
+                                if (!res.ok) return importMessage.edit("Your guild doesn't seem to be on MEE6's API. I can't import MEE6's levels if you've never used MEE6.")
+                                if (data.players.length === 0) return importMessage.edit("No one has any XP with MEE6 on this server. Instead of trying to import MEE6 levels, you can just continue using my XP system directly.")
         
                                 pagePlayers = data.players
                                 players.push(...pagePlayers)
