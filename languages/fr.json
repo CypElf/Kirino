@@ -344,6 +344,5 @@
 	"description_emoji": "Permet d'afficher l'image utilisée pour un émoji personnalisé.",
 	"usage_emoji": "[emoji] {emoji} {emoji} {emoji} {emoji}",
 	"specify_custom_emojis": "Veuillez spécifier un ou plusieurs emojis personnalisés.",
-	"five_emojis_max": "Seuls 5 emojis maximum sont acceptés à la fois.",
-	"description_xp": "Commande multi fonction permettant de gérer le système d'XP.\nCette commande possède de nombreux modes :\n- `enable` ou `disable` pour activer ou désactiver le système d'XP (il est désactivé par défaut)\n- `import` pour importer les niveaux depuis MEE6\n- `reset` pour réinitialiser l'XP d'un membre ou bien du serveur entier"
+	"five_emojis_max": "Seuls 5 emojis maximum sont acceptés à la fois."
 }

@@ -19,6 +19,7 @@ module.exports = {
         const request = args[0]
 
         if (request === "enable" || request === "disable") {
+            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("You're not allowed to reset XP profiles.")
             const enableRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (request === "enable") {
@@ -210,7 +211,7 @@ module.exports = {
                     ctx.font = "25px ubuntu"
                     const spaceMeasure = ctx.measureText(" ")
     
-                    ctx.font = "40px ubuntu" // username and tag
+                    ctx.font = "40px sans-serif" // username and tag
                     ctx.fillStyle = "#FFFFFF"
                     let usernameMeasure = ctx.measureText(username)
 
