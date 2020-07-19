@@ -12,7 +12,7 @@ module.exports = {
 		// ------------------------------------------------------------------- general help
 	
 		if (!args.length) {
-			let help_embed = new Discord.MessageEmbed()
+			let helpEmbed = new Discord.MessageEmbed()
 				.setColor('#DFC900')
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
@@ -25,24 +25,23 @@ module.exports = {
 			const othersCommands = "`" + dataJoined.filter(command => command.category === "others" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
 
 			if (adminCommands) {
-				help_embed.addField(__("administration"), adminCommands)
+				helpEmbed.addField(__("administration"), adminCommands)
 			}
 			if (utilityCommands) {
-				help_embed.addField(__("utility"), utilityCommands)
+				helpEmbed.addField(__("utility"), utilityCommands)
 			}
 			if (programmingCommands) {
-				help_embed.addField(__("programming"), programmingCommands)
+				helpEmbed.addField(__("programming"), programmingCommands)
 			}
 			if (othersCommands) {
-				help_embed.addField(__("others"), othersCommands + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"))
+				helpEmbed.addField(__("others"), othersCommands + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"))
 			}
 	
-			return msg.channel.send(help_embed)
+			return msg.channel.send(helpEmbed)
 		}
 
 		// ------------------------------------------------------------------- help on specitif command
 
-		let data = []
 		const commandName = args[0].toLowerCase()
 
 		let command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
@@ -50,34 +49,27 @@ module.exports = {
 			command = undefined
 		}
 
-    	if (!command) return msg.channel.send(__("this_command_does_not_exist"))
-	
-		if (command.description) data.push("**" + __("description") + "**" + " : " + __(command.description))
-		command.guildOnly ? data.push("**" + __("available_in_dm") + "** : " + __("no")) : data.push("**" + __("available_in_dm") + "** : " + __("yes"))
-		if (command.aliases) {
-			let aliasesStr = ""
-			command.aliases.forEach(aliase => {
-				aliasesStr += "`" + aliase + "`, "
-			})
-			aliasesStr = aliasesStr.substring(0, aliasesStr.length - 2)
+		if (!command) return msg.channel.send(__("this_command_does_not_exist"))
+		
+		const helpEmbed = new Discord.MessageEmbed()
+			.setColor('#DFC900')
+			.setTitle(`**${__("command")} : ${command.name}**`)
+			.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
-			data.push("**" + __("aliases") + "** : " + aliasesStr)
-		}
-		if (command.usage) data.push("**" + __("usage") + "** : `" + prefix + command.name + " " + __(command.usage) + "`")
+	
+		if (command.description) helpEmbed.addField(`**${__("description")}**`,__(command.description))
+		command.guildOnly ? helpEmbed.addField(`**${__("available_in_dm")}**`, __("no")) : helpEmbed.addField(`**${__("available_in_dm")}**`, __("yes"))
+		if (command.aliases) helpEmbed.addField(`**${__("aliases")}**`, `\`${command.aliases.join("`, `")}\``)
+		
+		if (command.usage) helpEmbed.addField(`**${__("usage")}**`, __(command.usage).split("\n").map(usage => `\`${prefix}${command.name} ${usage}\``).join("\n"))
 
 		let cooldown = 2
 		if (command.cooldown) cooldown = command.cooldown
-		data.push("**" + __("cooldown") + "** : `" + cooldown + "`")
+		helpEmbed.addField(`**${__("cooldown")}**`, `\`${cooldown}\``, true)
 
-		if (command.permissions) data.push("**" + __("required_permissions") + "** : `" + command.permissions.join("`, `") + "`")
-		else data.push("**" + __("required_permissions") + "** : `" + __("nothingF") + "`")
-		
-		const text = data.join("\n")
-	
-		const help_embed = new Discord.MessageEmbed()
-			.setColor('#DFC900')
-			.addField("**" + __("command") + " : " + command.name + "**", text)
-			.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send(help_embed)
+		if (command.permissions) helpEmbed.addField(`**${__("required_permissions")}**`, `\`${command.permissions.join("`, `")}\``, true)
+		else helpEmbed.addField(`**${__("required_permissions")}**`, `\`${__("nothingF")}\``, true)
+				
+		msg.channel.send(helpEmbed)
 	}
 }

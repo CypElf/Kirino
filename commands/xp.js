@@ -8,6 +8,7 @@ module.exports = {
     cooldown: 4,
     category: "utility",
     usage: "usage_xp",
+    permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
         const getUser = require("../res/get_user")
