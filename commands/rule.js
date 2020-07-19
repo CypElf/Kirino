@@ -6,7 +6,7 @@ module.exports = {
     usage: "usage_rule",
     aliases: ["r"],
     category: "admin",
-    permissions: ["manage guild"],
+    permissions: ["{manage guild}"],
     
     async execute(bot, msg, args) {
         const request = args[0]
