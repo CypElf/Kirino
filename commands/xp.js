@@ -202,7 +202,7 @@ module.exports = {
                     ctx.fillStyle = "black"
                     ctx.fillRect(0, 0, canvas.width, canvas.height) // black background
     
-                    ctx.strokeStyle = "#CCCC44"
+                    ctx.strokeStyle = "#E4B400"
                     ctx.strokeRect(0, 0, canvas.width, canvas.height) // border
     
                     const totalName = member.user.tag.split("#")
@@ -212,7 +212,7 @@ module.exports = {
                     ctx.font = "25px ubuntu"
                     const spaceMeasure = ctx.measureText(" ")
     
-                    ctx.font = "40px sans-serif" // username and tag
+                    ctx.font = "40px ubuntu" // username and tag
                     ctx.fillStyle = "#FFFFFF"
                     let usernameMeasure = ctx.measureText(username)
 
@@ -236,7 +236,7 @@ module.exports = {
                     ctx.fillStyle = "#AAAAAA"
                     ctx.fillText("#" + tag, usernameMeasure.width + 280, 176)
     
-                    ctx.fillStyle = "#CCCC44" // level
+                    ctx.fillStyle = "#E4B400" // level
                     ctx.font = "70px ubuntu"
                     const levelMeasure = ctx.measureText(level)
                     const offsetLevel = canvas.width - levelMeasure.width - 40
@@ -284,7 +284,7 @@ module.exports = {
                         ctx.fill()
                         ctx.clip()
     
-                        ctx.fillStyle = "#CCCC44" // progress bar foreground
+                        ctx.fillStyle = "#E4B400" // progress bar foreground
                         ctx.beginPath()
                         const offsetXpBar = percent / 100 * progressBarWidth
                         ctx.roundedRectangle(270, 200, offsetXpBar, progressBarHeight, 20)
@@ -294,7 +294,7 @@ module.exports = {
                     }
     
                     else {
-                        ctx.fillStyle = "#CCCC44" // max reached
+                        ctx.fillStyle = "#E4B400" // max reached
                         ctx.font = "70px ubuntu"
                         ctx.fillText(__("max_reached"), 320, 255)
                     }                
