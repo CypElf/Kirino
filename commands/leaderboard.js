@@ -11,7 +11,7 @@ module.exports = {
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
-        if (isEnabled) msg.channel.send(`${"leaderboard_of"}${msg.guild.name}${"is_available_at"} https://www.avdray.com/leaderboards?gid=${msg.guild.id}`)
+        if (isEnabled) msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.avdray.com/leaderboards?gid=${msg.guild.id}`)
         else msg.channel.send(`${currently_disabled_enable_with} \`${bot.prefix}xp enable\`.`)
     }
 }
