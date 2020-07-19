@@ -254,7 +254,23 @@ bot.on("message", async msg => {
 http.createServer(async (req, res) => {
     const queries = url.parse(req.url, true).query
     const gid = queries.gid
-    if (gid) {
+    let limit = queries.limit
+    let page = queries.page
+
+    if (!limit) limit = 20 // default values
+    if (!page) page = 1
+
+    if (limit <= 0 || limit > 1000 || page <= 0) {
+        res.writeHead(422, {"Content-Type": "application/json"})
+        let error = ""
+        if (limit <= 0 || limit > 1000) error += "Invalid limit. Minimum is 1 and maximum is 1000."
+        if (error.length > 0) error += "\n"
+        if (page <= 0) error += "Invalid page. Minimum is 1."
+
+        res.write(JSON.stringify({ "error": error }))
+        res.end()
+    }
+    else if (gid) {
         let data = []
 
         const guild = bot.guilds.cache.find(guild => guild.id === gid)
@@ -264,31 +280,70 @@ http.createServer(async (req, res) => {
             const serverRows = serverRequest.all(gid)
     
             if (serverRows.length > 0) {
-                data.push([guild.name, guild.iconURL(), serverRows.length])
+                let data = {
+                    "guild_metadata": {
+                        "name": guild.name,
+                        "icon": guild.iconURL({ format: "png", dynamic: true }),
+                        "players": serverRows.length
+                    },
+                    "players": []
+                }
+
+                let i = 1
+                let j = 1
+                let currentPage = 1
+
                 for (const row of serverRows) {
                     try {
-                        const member = await guild.members.fetch(row.user_id)
+                        if (i > limit) {
+                            i = 1
+                            currentPage += 1
+                            if (currentPage > page) break
+                        }
+                        if (currentPage == page) {
+                            const member = await guild.members.fetch(row.user_id)
                     
-                        const avatarUrl = member.user.displayAvatarURL({ format: "png", dynamic: true })
-                        const tag = member.user.tag
-                        data.push([tag, avatarUrl, row.xp, row.total_xp, row.level])
+                            if (member) {
+                                const avatarUrl = member.user.displayAvatarURL({ format: "png", dynamic: true })
+                                const tag = member.user.tag
+                                data.players.push({
+                                    "tag": tag,
+                                    "id": member.id,
+                                    "avatar": avatarUrl,
+                                    "xp": row.xp,
+                                    "total_xp": row.total_xp,
+                                    "level": row.level,
+                                    "rank": j
+                                })
+                            }
+                        }
+                        i++
+                        j++
                     }
                     catch {}
                 }
 
-                res.writeHead(200, {"Content-Type": "text/html"})
-                res.write(JSON.stringify(data))
-                res.end()
+                if (data.players.length === 0) {
+                    res.writeHead(404, {"Content-Type": "application/json",})
+                    res.write(JSON.stringify({ "error": "Page out of bounds." }))
+                    res.end()
+                }
+
+                else {
+                    res.writeHead(200, {"Content-Type": "application/json",})
+                    res.write(JSON.stringify(data))
+                    res.end()
+                }
             }
             else {
-                res.writeHead(404, {"Content-Type": "text/html"})
-                res.write("No members have any XP on this server.")
+                res.writeHead(404, {"Content-Type": "application/json"})
+                res.write(JSON.stringify({ "error": "No members have any XP on this server." }))
                 res.end()
             }
         }
         else {
-            res.writeHead(404, {"Content-Type": "text/html"})
-            res.write("Server not found.")
+            res.writeHead(404, {"Content-Type": "application/json"})
+            res.write(JSON.stringify({ "error": "Server not found." }))
             res.end()
         }
     }
