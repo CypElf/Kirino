@@ -6,7 +6,7 @@ module.exports = {
     guildOnly: true,
     args: false,
     cooldown: 4,
-    category: "utility",
+    category: "xp",
     usage: "usage_xp",
     permissions: ["{administrator}"],
 

@@ -3,7 +3,7 @@ module.exports = {
     description: "description_leaderboard",
     guildOnly: true,
     args: false,
-    category: "utility",
+    category: "xp",
     aliases: ["lb"],
 
     async execute (bot, msg, args) {
