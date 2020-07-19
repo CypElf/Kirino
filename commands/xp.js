@@ -113,6 +113,53 @@ module.exports = {
                     if (newMsg === null) msg.channel.send("Level up message successfully reset.")
                     else msg.channel.send("Level up message successfully updated.")
                 }
+
+                else if (request === "import")  {
+                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("You're not allowed to import MEE6's levels.")
+                    const filter = (reaction, user) => {
+                        return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+                    }
+
+                    validationMessage = await msg.channel.send(`Are you sure you want to import MEE6's levels? This will overwrite all existing levels.`)
+    
+                    validationMessage.react('✅')
+                    validationMessage.react('❌')
+    
+                    const collector = validationMessage.createReactionCollector(filter, { max: 1, time: 30_000 })
+            
+                    collector.on("collect", async (reaction) => {
+                        if (reaction.emoji.name === '✅') {
+                            const importMessage = await msg.channel.send("Starting to import MEE6's levels -- this may take a while...")
+
+                            let players = []
+                            let pagePlayers = []
+                            const fetch = require("node-fetch");
+        
+                            let i = 0
+                            do {
+                                const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${msg.guild.id}?limit=1000&page=${i}`)
+                                const data = await res.json()
+        
+                                pagePlayers = data.players
+                                players.push(...pagePlayers)
+        
+                                i++
+                            } while (pagePlayers.length > 0)
+
+                            const xpDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
+                            xpDeletionRequest.run(msg.guild.id)
+
+                            const xpImportRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?)")
+                            for (const player of players) {
+                                xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level)
+                            }
+                            importMessage.edit("Done! MEE6's levels imported successfully.")
+                        }
+                        else {
+                            msg.channel.send(`${member.user.username}'s XP reset have been cancelled.`)
+                        }
+                    })   
+                }
         
                 else {
                     let member

@@ -264,7 +264,7 @@ http.createServer(async (req, res) => {
             const serverRows = serverRequest.all(gid)
     
             if (serverRows.length > 0) {
-                data.push([guild.name, guild.iconURL()])
+                data.push([guild.name, guild.iconURL(), serverRows.length])
                 for (const row of serverRows) {
                     try {
                         const member = await guild.members.fetch(row.user_id)
