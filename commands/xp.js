@@ -202,14 +202,30 @@ module.exports = {
     
                     const totalName = member.user.tag.split("#")
                     const tag = totalName.pop()
-                    const username = totalName.join("#")
+                    let username = totalName.join("#")
     
                     ctx.font = "25px ubuntu"
                     const spaceMeasure = ctx.measureText(" ")
     
                     ctx.font = "40px ubuntu" // username and tag
                     ctx.fillStyle = "#FFFFFF"
-                    const usernameMeasure = ctx.measureText(username)
+                    let usernameMeasure = ctx.measureText(username)
+
+                    
+                    if (usernameMeasure.width > 330) {
+                        let i = 0
+                        let sum = 0
+                        for (const char of username) {
+                            const charMeasure = ctx.measureText(char)
+                            sum += charMeasure.width
+                            i++
+                            if (sum > 330) break
+                        }
+
+                        username = `${username.substring(0, i)}...`
+                        usernameMeasure = ctx.measureText(username)
+                    }
+
                     ctx.fillText(username, 270, 176)
                     ctx.font = "23px ubuntu"
                     ctx.fillStyle = "#AAAAAA"

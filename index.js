@@ -271,8 +271,6 @@ http.createServer(async (req, res) => {
         res.end()
     }
     else if (gid) {
-        let data = []
-
         const guild = bot.guilds.cache.find(guild => guild.id === gid)
 
         if (guild) {
