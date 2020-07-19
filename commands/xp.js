@@ -141,13 +141,14 @@ module.exports = {
                                 const data = await res.json()
 
                                 if (!res.ok) return importMessage.edit(__("guild_not_found_on_mee6_api"))
-                                if (data.players.length === 0) return importMessage.edit(__("zero_xp_found_on_mee6_api"))
         
                                 pagePlayers = data.players
                                 players.push(...pagePlayers)
         
                                 i++
                             } while (pagePlayers.length > 0)
+
+                            if (players.length === 0) return importMessage.edit(__("zero_xp_found_on_mee6_api"))
 
                             const xpDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
                             xpDeletionRequest.run(msg.guild.id)
