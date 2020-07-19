@@ -185,18 +185,16 @@ bot.on("message", async msg => {
                     newLvl += 1
                     newXp = newXp - nextLevelXp
 
-                    if (levelUpMsg === null) levelUpMsg = `Congratulations ${msg.author.username}, you've passed level ${newLvl} !`
-                    else {
-                        levelUpMsg = levelUpMsg
+                    if (levelUpMsg === null) levelUpMsg = __("default_lvl_up_msg")
+                    levelUpMsg = levelUpMsg
                             .replace("{user}", `<@${msg.author.id}>`)
                             .replace("{username}", msg.author.username)
                             .replace("{tag}", msg.author.tag)
                             .replace("{level}", newLvl)
                             .replace("{server}", msg.guild.name)
-                    }
 
                     msg.channel.send(levelUpMsg)
-                    if (newLvl === 100) msg.channel.send(`That was the very last level! Thank you for using my experience system for so long, and thank you very much for using me, more globally! Congratulations again!`)
+                    if (newLvl === 100) msg.channel.send(__("lvl_100_congrats"))
                 }
         
                 const xpUpdateRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
