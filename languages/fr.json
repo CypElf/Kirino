@@ -379,5 +379,8 @@
 	"max_reached": "MAX ATTEINT",
 	"default_lvl_up_msg": "Félicitations {username}, tu as passé le niveau {level} !",
 	"lvl_100_congrats": "C'était le tout dernier niveau ! Merci d'avoir utilisé mon système d'expérience pendant si longtemps, et merci beaucoup de m'avoir utilisé, plus globalement ! Félicitations encore une fois !",
-	"member_zero_xp": "Cet utilisateur n'a déjà pas d'XP."
+	"member_zero_xp": "Cet utilisateur n'a déjà pas d'XP.",
+	"leaderboard_of": "La leaderboard de ",
+	"is_available_at": " est disponible à",
+	"description_leaderboard": "Envoie le lien de la leaderboard d'XP du serveur."
 }

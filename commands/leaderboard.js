@@ -4,7 +4,6 @@ module.exports = {
     guildOnly: true,
     args: false,
     category: "utility",
-    usage: "usage_leaderboard",
     aliases: ["lb"],
 
     async execute (bot, msg, args) {
@@ -12,7 +11,7 @@ module.exports = {
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
-        if (isEnabled) msg.channel.send(`${msg.guild.name}'s leaderboard is available at https://www.avdray.com/leaderboards?gid=${msg.guild.id}`)
-        else msg.channel.send(`The XP system is currently disabled. You must first activate it with the command \`${bot.prefix}xp enable\`.`)
+        if (isEnabled) msg.channel.send(`${"leaderboard_of"}${msg.guild.name}${"is_available_at"} https://www.avdray.com/leaderboards?gid=${msg.guild.id}`)
+        else msg.channel.send(`${currently_disabled_enable_with} \`${bot.prefix}xp enable\`.`)
     }
 }
