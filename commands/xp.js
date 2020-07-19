@@ -77,7 +77,7 @@ module.exports = {
                         const isInXpTableRequest = bot.db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
                         const isInXpTable = isInXpTableRequest.get(msg.guild.id, member.id)
         
-                        if (!isInXpTable) return msg.channel.send(__("member_not_registered"))
+                        if (!isInXpTable) return msg.channel.send(__("member_zero_xp"))
         
                         let validationMessage
                         if (args[0] === undefined) validationMessage = await msg.channel.send(__("your_xp_reset_validation"))

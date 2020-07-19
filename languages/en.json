@@ -381,5 +381,6 @@
 	"rank": "Rank",
 	"max_reached": "MAX REACHED",
 	"default_lvl_up_msg": "Congratulations {username}, you've passed level {level} !",
-	"lvl_100_congrats": "That was the very last level! Thank you for using my experience system for so long, and thank you very much for using me, more globally! Congratulations again!"
+	"lvl_100_congrats": "That was the very last level! Thank you for using my experience system for so long, and thank you very much for using me, more globally! Congratulations again!",
+	"member_zero_xp": "This user does not have any XP yet."
 }
