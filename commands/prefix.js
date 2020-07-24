@@ -16,12 +16,14 @@ module.exports = {
         if (newPrefix.length > 3) return msg.channel.send(__("three_chars_max"))
       
         const prefixRequest = bot.db.prepare("INSERT INTO prefixs(id,prefix) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET prefix=excluded.prefix")
+        const resetRequest = bot.db.prepare("DELETE FROM prefixs WHERE id = ?")
 
         let id
         if (msg.guild) id = msg.guild.id
         else id = msg.author.id
 
-        prefixRequest.run(id, newPrefix)
+        if (newPrefix === ";") resetRequest.run(id)
+        else prefixRequest.run(id, newPrefix)
 
         msg.channel.send(__("new_prefix_is_now") + " `" + newPrefix + "` <:kirinoglad:698923046819594351> !")
 	}

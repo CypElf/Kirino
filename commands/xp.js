@@ -164,6 +164,31 @@ module.exports = {
                         }
                     })   
                 }
+
+                else if (request === "color") {
+                    let color = args[1]
+                    if (!color) return msg.channel.send("Please specify a new color.")
+
+                    const xpRequest = bot.db.prepare("SELECT xp, total_xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
+                    const xpRow = xpRequest.get(msg.guild.id, msg.author.id)
+
+                    const updateColorRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET color=excluded.color")
+                    
+
+                    if (color === "reset") {
+                        updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
+                        msg.channel.send("Color reset.")
+                    }
+                    else {
+                        if (!color.startsWith("#")) color = `#${color}`
+
+                        const colorRegex = /^#[0-9A-F]{6}$/i
+                        if (!colorRegex.test(color)) return msg.channel.send("Invalid color, not valid hexadecimal.")
+
+                        updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
+                        msg.channel.send("Color updated.")
+                    }
+                }
         
                 else {
                     let member
@@ -179,13 +204,16 @@ module.exports = {
                     }
             
 
-                    const xpRequest = bot.db.prepare("SELECT xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
+                    const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
         
-                    if (xpRow === undefined) xpRow = { "xp": 0, "level": 0 }
+                    if (xpRow === undefined) xpRow = { "xp": 0, "level": 0, "color": null }
         
                     const level = xpRow.level
-                    let xp = xpRow.xp
+                    const xp = xpRow.xp
+                    let color = xpRow.color
+
+                    if (!color) color = "#E4B400"
     
                     let nextLvlXp = 5 * (level * level) + 50 * level + 100
                     const percent = (xp / nextLvlXp * 100).toFixed(1)
@@ -202,7 +230,7 @@ module.exports = {
                     ctx.fillStyle = "black"
                     ctx.fillRect(0, 0, canvas.width, canvas.height) // black background
     
-                    ctx.strokeStyle = "#E4B400"
+                    ctx.strokeStyle = color
                     ctx.strokeRect(0, 0, canvas.width, canvas.height) // border
     
                     const totalName = member.user.tag.split("#")
@@ -236,7 +264,7 @@ module.exports = {
                     ctx.fillStyle = "#AAAAAA"
                     ctx.fillText("#" + tag, usernameMeasure.width + 280, 176)
     
-                    ctx.fillStyle = "#E4B400" // level
+                    ctx.fillStyle = color // level
                     ctx.font = "70px ubuntu"
                     const levelMeasure = ctx.measureText(level)
                     const offsetLevel = canvas.width - levelMeasure.width - 40
@@ -284,7 +312,7 @@ module.exports = {
                         ctx.fill()
                         ctx.clip()
     
-                        ctx.fillStyle = "#E4B400" // progress bar foreground
+                        ctx.fillStyle = color // progress bar foreground
                         ctx.beginPath()
                         const offsetXpBar = percent / 100 * progressBarWidth
                         ctx.roundedRectangle(270, 200, offsetXpBar, progressBarHeight, 20)
@@ -294,7 +322,7 @@ module.exports = {
                     }
     
                     else {
-                        ctx.fillStyle = "#E4B400" // max reached
+                        ctx.fillStyle = color // max reached
                         ctx.font = "70px ubuntu"
                         ctx.fillText(__("max_reached"), 320, 255)
                     }                

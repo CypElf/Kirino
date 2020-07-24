@@ -19,12 +19,13 @@ But also some useful general commands :
 - the capability to set **rules** for a server and display the one wanted at any time
 - a banword system to **block** certain words from your server
 - an afk system to leave a message to those who would mention you while you're away
+- a full **xp** system
 
-And lots of others more classic commands : ban, kick, purge, serverinfo, userinfo, roleinfo, avatar...
+And a lot more.
 
 ## Notes
 
-The two languages available are English and French. To see all commands available, you can use the help command in any place where Kirino has access.
+Two languages are available: English and French. To see all commands available, you can use the `help` command in any place where Kirino has access (including DM).
 
 ## Invit Kirino
 

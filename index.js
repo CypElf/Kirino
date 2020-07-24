@@ -168,7 +168,7 @@ bot.on("message", async msg => {
             let xpRow = xpRequest.get(msg.guild.id, msg.author.id)
 
             if (xpRow === undefined) {
-                xpRow = { guild_id: msg.guild.id, user_id: msg.author.id, xp: 0, total_xp: 0, level: 0 }
+                xpRow = { guild_id: msg.guild.id, user_id: msg.author.id, xp: 0, total_xp: 0, level: 0, color: null }
             }
     
             const currentXp = xpRow.xp
@@ -197,8 +197,8 @@ bot.on("message", async msg => {
                     if (newLvl === 100) msg.channel.send(__("lvl_100_congrats"))
                 }
         
-                const xpUpdateRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
-                xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newTotalXp, newLvl)
+                const xpUpdateRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
+                xpUpdateRequest.run(msg.guild.id, msg.author.id, newXp, newTotalXp, newLvl, xpRow.color)
             }
         }
     }
