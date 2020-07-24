@@ -20,27 +20,27 @@ module.exports = {
         const request = args[0]
 
         if (request === "enable" || request === "disable") {
-            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("not_allowed_to_enable_or_disable"))
+            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_enable_or_disable")} ${__("kirino_pff")}`)
             const enableRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (request === "enable") {
-                if (isEnabled) return msg.channel.send(__("xp_already_enabled"))
+                if (isEnabled) return msg.channel.send(`${__("xp_already_enabled")} ${__("kirino_pout")}`)
                 enableRequest.run(msg.guild.id, 1)
-                msg.channel.send(__("xp_enabled"))
+                msg.channel.send(`${__("xp_enabled")} ${__("kirino_glad")}`)
             }
 
             else {
-                if (!isEnabled) return msg.channel.send(__("xp_already_disabled"))
+                if (!isEnabled) return msg.channel.send(`${__("xp_already_disabled")} ${__("kirino_pout")}`)
                 enableRequest.run(msg.guild.id, 0)
-                msg.channel.send(__("xp_disabled"))
+                msg.channel.send(`${__("xp_disabled")} ${__("kirino_glad")}`)
             }
         }
 
         else {
             if (isEnabled) {
                 if (request === "reset") {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("not_allowed_to_reset_xp"))
-                    if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(`${__("cannot_react_to_messages")} <:kirinopout:698923065773522944>`)
+                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_reset_xp")} ${__("kirino_pff")}`)
+                    if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(`${__("cannot_react_to_messages")} ${__("kirino_pout")}`)
         
                     args.shift()
                     const filter = (reaction, user) => {
@@ -59,7 +59,7 @@ module.exports = {
                             if (reaction.emoji.name === '✅') {
                                 const profileDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
                                 profileDeletionRequest.run(msg.guild.id)
-                                msg.channel.send(__("server_xp_successfully_reset"))
+                                msg.channel.send(`${__("server_xp_successfully_reset")} ${__("kirino_glad")}`)
                             }
                             else {
                                 msg.channel.send(__("server_xp_canceled"))
@@ -71,8 +71,8 @@ module.exports = {
                         let member
                         if (args[0] === undefined) member = msg.member
                         else member = getUser(msg, args)
-                        if (!member) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} <:kirinopout:698923065773522944>`)
-                        else if (member.user.bot) return msg.channel.send("Bots are not allowed")
+                        if (!member) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
+                        else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pout")}`)
                         
                         const isInXpTableRequest = bot.db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
                         const isInXpTable = isInXpTableRequest.get(msg.guild.id, member.id)
@@ -92,8 +92,8 @@ module.exports = {
                             if (reaction.emoji.name === '✅') {
                                 const profileDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ? AND user_id = ?")
                                 profileDeletionRequest.run(msg.guild.id, member.id)
-                                if (args[0] === undefined) msg.channel.send(__("your_xp_successfully_reset"))
-                                else msg.channel.send(`${__("xp_reset_of")}${member.user.username}${__("successfully_reset")}`)
+                                if (args[0] === undefined) msg.channel.send(`${__("your_xp_successfully_reset")} ${__("kirino_glad")}`)
+                                else msg.channel.send(`${__("xp_reset_of")}${member.user.username}${__("successfully_reset")} ${__("kirino_glad")}`)
                             }
                             else {
                                 msg.channel.send(`${__("xp_reset_of")}${member.user.username}${__("cancelled")}`)
@@ -103,19 +103,19 @@ module.exports = {
                 }
 
                 else if (request === "message" || request === "msg") {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("not_allowed_to_change_lvl_up_msg"))
+                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_lvl_up_msg")} ${__("kirino_pff")}`)
                     args.shift()
                     let newMsg = args.join(" ")
 
                     if (newMsg === "reset") newMsg = null
                     const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
                     msgUpdateRequest.run(msg.guild.id, 1, newMsg)
-                    if (newMsg === null) msg.channel.send(__("lvl_up_msg_reset"))
-                    else msg.channel.send(__("lvl_up_msg_updated"))
+                    if (newMsg === null) msg.channel.send(`${__("lvl_up_msg_reset")} ${__("kirino_glad")}`)
+                    else msg.channel.send(`${__("lvl_up_msg_updated")} ${__("kirino_glad")}`)
                 }
 
                 else if (request === "import")  {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("not_allowed_to_import"))
+                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_import")} ${__("kirino_pff")}`)
                     const filter = (reaction, user) => {
                         return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
                     }
@@ -157,7 +157,7 @@ module.exports = {
                             for (const player of players) {
                                 xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level)
                             }
-                            importMessage.edit(__("mee6_levels_successfully_imported"))
+                            importMessage.edit(`${__("mee6_levels_successfully_imported")} ${__("kirino_glad")}`)
                         }
                         else {
                             msg.channel.send(__("import_cancelled"))
@@ -167,7 +167,7 @@ module.exports = {
 
                 else if (request === "color") {
                     let color = args[1]
-                    if (!color) return msg.channel.send(__("specify_color"))
+                    if (!color) return msg.channel.send(`${__("specify_color")} ${__("kirino_pout")}`)
 
                     const xpRequest = bot.db.prepare("SELECT xp, total_xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
                     const xpRow = xpRequest.get(msg.guild.id, msg.author.id)
@@ -177,16 +177,16 @@ module.exports = {
 
                     if (color === "reset") {
                         updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
-                        msg.channel.send(__("color_reset"))
+                        msg.channel.send(`${__("color_reset")} ${__("kirino_glad")}`)
                     }
                     else {
                         if (!color.startsWith("#")) color = `#${color}`
 
                         const colorRegex = /^#[0-9A-F]{6}$/i
-                        if (!colorRegex.test(color)) return msg.channel.send(__("invalid_color"))
+                        if (!colorRegex.test(color)) return msg.channel.send(`${__("invalid_color")} ${__("kirino_pout")}`)
 
                         updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
-                        msg.channel.send(__("color_updated"))
+                        msg.channel.send(`${__("color_updated")} ${__("kirino_glad")}`)
                     }
                 }
         
@@ -199,8 +199,8 @@ module.exports = {
             
                     else {
                         member = getUser(msg, args)
-                        if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} <:kirinopout:698923065773522944>`)
-                        else if (member.user.bot) return msg.channel.send(__("bots_not_allowed"))
+                        if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
+                        else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pff")}`)
                     }
             
 

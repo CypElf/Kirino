@@ -9,7 +9,7 @@ module.exports = {
 	
 	async execute(bot, msg, args) {
         if (args.length > 1) {
-            return msg.channel.send(`${__("too_much_args_for_github")} <:kirinopout:698923065773522944>`)
+            return msg.channel.send(`${__("too_much_args_for_github")} ${__("kirino_pout")}`)
         }
         const fetch = require("node-fetch")
 
@@ -55,7 +55,7 @@ module.exports = {
         }
 
         else {
-            msg.channel.send(`${__("user_not_found")} <:kirinowhat:698923096752783401>`)
+            msg.channel.send(`${__("user_not_found")} ${__("kirino_what")}`)
         }
 	}
 }

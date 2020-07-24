@@ -13,13 +13,13 @@ module.exports = {
 
         if (msg.guild) {
             if (!msg.member.hasPermission("MANAGE_GUILD")) {
-                return msg.channel.send(__("not_enough_permission_to_change_language") + " <:kirinopout:698923065773522944>")
+                return msg.channel.send(`${__("not_enough_permission_to_change_language")} ${__("kirino_pout")}`)
             }
         }
 
         const language = args[0]
         if (!getLocales().includes(language)) {
-            return msg.channel.send(__("bad_language_code") + " <:kirinopout:698923065773522944>")
+            return msg.channel.send(`${__("bad_language_code")} ${__("kirino_pout")}`)
         }
 
         let id
@@ -32,10 +32,10 @@ module.exports = {
         setLocale(language)
 
         if (msg.guild) {
-            msg.channel.send(__("server_language_changed") + language + "` <:kirinoglad:698923046819594351> !")
+            msg.channel.send(`${__("server_language_changed") + language}\` ${__("kirino_glad")} !`)
         }
         else {
-            msg.channel.send(__("dm_language_changed") + language + "` <:kirinoglad:698923046819594351> !")
+            msg.channel.send(`${__("dm_language_changed") + language}\` ${__("kirino_glad")} !`)
         }
 	}
 }

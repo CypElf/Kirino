@@ -20,7 +20,7 @@ module.exports = {
                 if (member === undefined) {
                     member = msg.guild.members.cache.array().find(currentMember => currentMember.id === usernameOrID)
                     if (member === undefined) {
-                        return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
+                        return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                     }
                 }
             }

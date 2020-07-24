@@ -25,6 +25,6 @@ module.exports = {
         if (newPrefix === ";") resetRequest.run(id)
         else prefixRequest.run(id, newPrefix)
 
-        msg.channel.send(__("new_prefix_is_now") + " `" + newPrefix + "` <:kirinoglad:698923046819594351> !")
+        msg.channel.send(`${__("new_prefix_is_now")} \`${newPrefix}\` ${__("kirino_glad")} !`)
 	}
 }

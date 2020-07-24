@@ -11,7 +11,7 @@ module.exports = {
         let origin
         let originAvatar
         if (msg.guild) {
-            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
+            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(`${__("cannot_react_to_messages")} ${__("kirino_pout")}`)
             origin = msg.guild.name
             originAvatar = msg.guild.iconURL()
         }
@@ -64,13 +64,13 @@ module.exports = {
                         setLocale(senderLanguage)
                     }
                     else {
-                        return msg.channel.send(__("report_channel_unavailable") + " <:kirinowhat:698923096752783401> " + __("contact_dev"))
+                        return msg.channel.send(`${__("report_channel_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
                     }
                 }
                 else {
-                    return msg.channel.send(__("report_server_unavailable") + " <:kirinowhat:698923096752783401> " + __("contact_dev"))
+                    return msg.channel.send(`${__("report_server_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
                 }
-                msg.channel.send(__("report_sent") + " <:kirinoglad:698923046819594351> !")
+                msg.channel.send(`${__("report_sent")} ${__("kirino_glad")} !`)
             }
             else {
                 msg.channel.send(__("report_cancelled"))

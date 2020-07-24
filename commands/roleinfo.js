@@ -21,7 +21,7 @@ module.exports = {
             if (role === undefined) {
                 role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === roleNameOrID)
                 if (role === undefined) {
-                    return msg.channel.send(__("bad_role") + " <:kirinopout:698923065773522944>")
+                    return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
                 }
             }
         }

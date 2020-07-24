@@ -17,9 +17,7 @@ module.exports = {
 
             member = getUser(msg, args)
             
-            if (member === undefined) {
-                return msg.channel.send(__("please_correctly_write_or_mention_a_member") + " <:kirinopout:698923065773522944>")
-            }
+            if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }
 
         const Discord = require('discord.js')

@@ -9,16 +9,16 @@ module.exports = {
     
     async execute(bot, msg, args) {
 		if (msg.author.id !== bot.config.ownerID && !msg.member.hasPermission("ADMINISTRATOR")) {
-            return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
+            return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
                 .then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
         }
 
         if (msg.guild) {
-            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(__("cannot_react_to_messages") + " <:kirinopout:698923065773522944>")
+            if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(`${__("cannot_react_to_messages")} ${__("kirino_pout")}`)
         }
 
         if (args.length < 2) {
-            return msg.channel.send(__("insert_only_id_and_emoji") + " <:kirinopout:698923065773522944>")
+            return msg.channel.send(`${__("insert_only_id_and_emoji")} ${__("kirino_pout")}`)
         }
 
         const ID = args[0]
@@ -39,12 +39,12 @@ module.exports = {
                                 msg.delete().catch(() => {})
                             })
                             .catch(() => {
-                                return msg.channel.send(__("access_to_emoji_denied") + " <:kirinopout:698923065773522944>")
+                                return msg.channel.send(__("access_to_emoji_denied") + " " + __("kirino_pout"))
                             })
                     })
 			})
 			.catch(err => {
-				return msg.channel.send(__("bad_message_id") + " <:kirinopout:698923065773522944>")
+				return msg.channel.send(__("bad_message_id") + " " + __("kirino_pout"))
 			})
     }
 }

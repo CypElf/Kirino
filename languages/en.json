@@ -1,4 +1,8 @@
 {
+	"kirino_pout": "<:kirinopout:698923065773522944>",
+	"kirino_glad": "<:kirinoglad:698923046819594351>",
+	"kirino_pff": "<:kirinopff:698922942268047391>",
+	"kirino_what": "<:kirinowhat:698923096752783401>",
 	"need_handle_messages_perm": "I need the permission manage message to be used.",
 	"need_embed_links": "I need the permission embed links to be used.",
 	"need_attach_files": "I need the permission attach files to be used.",
@@ -388,7 +392,7 @@
 	"description_leaderboard": "Sends the server's XP leaderboard link.",
 	"xp": "XP",
 	"specify_color": "Please specify a new color.",
-	"color_reset": "Your color has been successfully reset.",
+	"color_reset": "Your color have been successfully reset.",
 	"invalid_color": "Invalid color. Please specify a valid hexadecimal color.",
 	"color_updated": "Your color has been successfully updated."
 }

@@ -9,7 +9,7 @@ module.exports = {
     
     async execute(bot, msg, args) {
 		if (msg.author.id !== bot.config.ownerID && !msg.member.hasPermission("ADMINISTRATOR")) {
-            return msg.channel.send(__("not_allowed_to_use_this_command") + " <:kirinopff:698922942268047391>")
+            return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
                 .then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
         }
         let text = args.join(" ")

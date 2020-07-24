@@ -9,7 +9,7 @@ module.exports = {
     permissions: ["manage messages"],
 
     async execute (bot, msg, [mode, ...words]) {
-        if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(__("missing_permissions_to_execute_this_command") + " <:kirinopout:698923065773522944>")
+        if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(`${__("missing_permissions_to_execute_this_command")} ${__("kirino_pout")}`)
 
         const guild = msg.guild.id
 
@@ -35,12 +35,12 @@ module.exports = {
             }
 
             if (banwordsCount + words.length > 40) {
-                return msg.channel.send(__("banwords_count_limited") + " <:kirinopout:698923065773522944>")
+                return msg.channel.send(`${__("banwords_count_limited")} ${__("kirino_pout")}`)
             }
 
             words = words.map(mot => parseEmoji(mot))
 
-            if (words.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " <:kirinopout:698923065773522944>")
+            if (words.filter(mot => mot.length > 25).length !== 0) return msg.channel.send(__("word_beyond_25_chars") + " " + __("kirino_pout"))
 
             words.forEach(mot => {
                 const addBanwordCommand = bot.db.prepare("INSERT INTO banwords(guild_id,word) VALUES(?,?)")
