@@ -34,24 +34,16 @@ module.exports = {
             if (reaction.emoji.name === '✅') {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === bot.config.kirinoDebugID)
                 if (kirinoDebug) {
-                    const reportChannel = kirinoDebug.channels.cache.find(channel => {
-                        return channel.id === bot.config.reportChannelID
-                    })
+                    const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === bot.config.reportChannelID)
                     if (reportChannel) {
                         const Discord = require("discord.js")
-                        const bsqlite3 = require('better-sqlite3')
 
                         const senderLanguage = getLocale()
 
-                        const db = new bsqlite3("database.db", { fileMustExist: true })
-                        const languagesRequest = db.prepare("SELECT * FROM languages WHERE id = ?")
+                        const languagesRequest = bot.db.prepare("SELECT * FROM languages WHERE id = ?")
                         const languageRow = languagesRequest.get(bot.config.kirinoDebugID)
-                        if (!(languageRow === undefined)) {
-                            setLocale(languageRow.language)
-                        }
-                        else {
-                            setLocale("en")
-                        }
+                        if (!(languageRow === undefined)) setLocale(languageRow.language)
+                        else setLocale("en")
     
                         let reportEmbed = new Discord.MessageEmbed()
                             .setTitle("**" + __("new_report") + "**")
@@ -59,22 +51,16 @@ module.exports = {
                             .setDescription("**" + __("report_origin") + "** " + origin + "\n**" + __("message") + " :** " + report)
                             .setColor("#CC0101")
                             .setFooter(__("report_from") + msg.author.tag, msg.author.displayAvatarURL())
-                        reportChannel.send(reportEmbed)
+                        await reportChannel.send(reportEmbed)
 
                         setLocale(senderLanguage)
+                        msg.channel.send(`${__("report_sent")} ${__("kirino_glad")} !`)
                     }
-                    else {
-                        return msg.channel.send(`${__("report_channel_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
-                    }
+                    else msg.channel.send(`${__("report_channel_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
                 }
-                else {
-                    return msg.channel.send(`${__("report_server_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
-                }
-                msg.channel.send(`${__("report_sent")} ${__("kirino_glad")} !`)
+                else msg.channel.send(`${__("report_server_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
             }
-            else {
-                msg.channel.send(__("report_cancelled"))
-            }
+            else msg.channel.send(__("report_cancelled"))
         })
 	}
 }
