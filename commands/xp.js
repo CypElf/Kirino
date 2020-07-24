@@ -167,7 +167,7 @@ module.exports = {
 
                 else if (request === "color") {
                     let color = args[1]
-                    if (!color) return msg.channel.send("Please specify a new color.")
+                    if (!color) return msg.channel.send(__("specify_color"))
 
                     const xpRequest = bot.db.prepare("SELECT xp, total_xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
                     const xpRow = xpRequest.get(msg.guild.id, msg.author.id)
@@ -177,16 +177,16 @@ module.exports = {
 
                     if (color === "reset") {
                         updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
-                        msg.channel.send("Color reset.")
+                        msg.channel.send(__("color_reset"))
                     }
                     else {
                         if (!color.startsWith("#")) color = `#${color}`
 
                         const colorRegex = /^#[0-9A-F]{6}$/i
-                        if (!colorRegex.test(color)) return msg.channel.send("Invalid color, not valid hexadecimal.")
+                        if (!colorRegex.test(color)) return msg.channel.send(__("invalid_color"))
 
                         updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
-                        msg.channel.send("Color updated.")
+                        msg.channel.send(__("color_updated"))
                     }
                 }
         

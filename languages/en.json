@@ -386,5 +386,9 @@
 	"leaderboard_of": "",
 	"is_available_at": "'s leaderboard is available at",
 	"description_leaderboard": "Sends the server's XP leaderboard link.",
-	"xp": "XP"
+	"xp": "XP",
+	"specify_color": "Please specify a new color.",
+	"color_reset": "Your color has been successfully reset.",
+	"invalid_color": "Invalid color. Please specify a valid hexadecimal color.",
+	"color_updated": "Your color has been successfully updated."
 }
