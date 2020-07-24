@@ -30,7 +30,7 @@ module.exports = {
         }
         const collector = confirmationMsg.createReactionCollector(filter, { max: 1, time: 30_000 })
 
-        collector.on("collect", (reaction) => {
+        collector.on("collect", async reaction => {
             if (reaction.emoji.name === '✅') {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === bot.config.kirinoDebugID)
                 if (kirinoDebug) {
