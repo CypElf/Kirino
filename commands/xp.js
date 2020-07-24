@@ -210,7 +210,7 @@ module.exports = {
                     if (xpRow === undefined) xpRow = { "xp": 0, "level": 0, "color": null }
         
                     const level = xpRow.level
-                    const xp = xpRow.xp
+                    let xp = xpRow.xp
                     let color = xpRow.color
 
                     if (!color) color = "#E4B400"
