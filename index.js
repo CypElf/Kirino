@@ -272,7 +272,7 @@ http.createServer(async (req, res) => {
         const guild = bot.guilds.cache.find(guild => guild.id === gid)
 
         if (guild) {
-            const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+            const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
             const serverRows = serverRequest.all(gid)
     
             if (serverRows.length > 0) {
@@ -309,6 +309,7 @@ http.createServer(async (req, res) => {
                                     "xp": row.xp,
                                     "total_xp": row.total_xp,
                                     "level": row.level,
+                                    "color": row.color,
                                     "rank": j
                                 })
                             }
