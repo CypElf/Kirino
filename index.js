@@ -57,10 +57,6 @@ bot.on("message", async msg => {
     else prefix = prefix.prefix
     bot.prefix = prefix
 
-    // maintenance
-    // if (msg.content.startsWith(bot.prefix)) return msg.channel.send(__("maintenance"))
-    // else return
-
     if (msg.author.bot) return
 
     const messageArray = msg.content.split(" ")
@@ -68,6 +64,12 @@ bot.on("message", async msg => {
     const args = messageArray.slice(1)
 
     const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+
+    // maintenance
+    // if (!msg.content.startsWith(bot.prefix)) return
+    // if (!command) return
+    // if (msg.content.startsWith(bot.prefix)) return msg.channel.send(__("maintenance"))
+    // else return
 
     if (msg.guild) {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
