@@ -16,6 +16,7 @@ bot.db = new bsqlite3("database.db", { fileMustExist: true })
 
 const commandsCooldowns = new Discord.Collection()
 const xpCooldowns = new Discord.Collection()
+const apiCooldowns = new Map()
 
 i18n.configure({
     locales: ['en', 'fr'],
@@ -252,6 +253,30 @@ bot.on("message", async msg => {
 // ------------------------------------------------------------- xp leaderboard
 
 http.createServer(async (req, res) => {
+    const ip = req.connection.remoteAddress
+    const auth = req.headers.authorization
+
+    if (auth !== process.env.API_TOKEN) {
+        res.writeHead(403, {"Content-Type": "application/json",})
+        res.write(JSON.stringify({ "error": "Invalid authentification token." }))
+        return res.end()
+    }
+
+    const now = Date.now()
+
+    if (apiCooldowns.has(ip)) {
+        const expiration = apiCooldowns.get(ip) + 1000
+    
+        if (now < expiration) {
+            res.writeHead(403, {"Content-Type": "application/json",})
+            res.write(JSON.stringify({ "error": "Too many requests. Please wait before retrying." }))
+            return res.end()
+        }
+    }
+
+    apiCooldowns.set(ip, now)
+    setTimeout(() => apiCooldowns.delete(ip), 1000)
+
     const queries = url.parse(req.url, true).query
     const gid = queries.gid
     let limit = queries.limit
