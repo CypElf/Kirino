@@ -372,8 +372,8 @@ http.createServer(async (req, res) => {
         }
     }
     else {
-        res.writeHead(404, {"Content-Type": "text/html"})
-        res.write("No server ID provided as a GET parameter.")
+        res.writeHead(404, {"Content-Type": "application/json"})
+        res.write(JSON.stringify({ "error": "No server ID provided as a GET parameter." }))
         res.end()
     }
     
