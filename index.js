@@ -178,8 +178,9 @@ bot.on("message", async msg => {
             const currentLvl = xpRow.level
 
             if (currentLvl < 100) {
-                let newXp = currentXp + Math.floor(Math.random() * (25 - 15 + 1)) + 15 // the xp added to the user is generated between 15 and 25
-                let newTotalXp = xpRow.total_xp + newXp
+                const xpAdded = Math.floor(Math.random() * (25 - 15 + 1)) + 15 // the xp added to the user is generated between 15 and 25
+                let newXp = currentXp + xpAdded
+                let newTotalXp = xpRow.total_xp + xpAdded
                 let newLvl = currentLvl
         
                 const nextLevelXp = 5 * (currentLvl * currentLvl) + 50 * currentLvl + 100
