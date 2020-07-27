@@ -213,7 +213,7 @@ module.exports = {
                     let xp = xpRow.xp
                     let color = xpRow.color
 
-                    if (!color) color = "#E4B400"
+                    if (!color) color = "#1FE7F0"
     
                     let nextLvlXp = 5 * (level * level) + 50 * level + 100
                     const percent = (xp / nextLvlXp * 100).toFixed(1)
