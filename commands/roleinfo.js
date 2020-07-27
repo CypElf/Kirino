@@ -11,20 +11,10 @@ module.exports = {
     category: "utility",
     
     async execute(bot, msg, args) {
-        let member
 
-        let role = msg.mentions.roles.first()
-
-        if (role === undefined) {
-            let roleNameOrID = args.join(" ")
-            role = msg.guild.roles.cache.array().find(currentRole => currentRole.name.toLowerCase() === roleNameOrID.toLowerCase())
-            if (role === undefined) {
-                role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === roleNameOrID)
-                if (role === undefined) {
-                    return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
-                }
-            }
-        }
+        const getUser = require("../res/get_role")
+        let role = getUser(msg, args)
+        if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
 
         // ------------------------------------------ //
 

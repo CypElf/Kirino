@@ -6,7 +6,7 @@ module.exports = {
     category: "xp",
     aliases: ["lb"],
 
-    async execute (bot, msg, args) {
+    async execute (bot, msg) {
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
