@@ -142,7 +142,7 @@
 	"no_permissions": "This role has no permission",
 	"rules_from": "Rules from ",
 	"rule_title": "Rule ",
-	"description_rustdoc": "Allows you to retrieve the results of a search in the Rust documentation. Current version: 1.43.1",
+	"description_rustdoc": "Allows you to retrieve the results of a search in the Rust documentation. Current version: 1.45.0",
 	"usage_rustdoc": "[word]",
 	"results": "Results",
 	"in_name": "In the name",

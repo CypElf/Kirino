@@ -74,6 +74,7 @@ if (!String.prototype.endsWith) {
 
 var levenshtein_row2 = [];
 function levenshtein(s1, s2) {
+  if (s1 === undefined || s2 === undefined) return 999999999999999999
   if (s1 === s2) {
     return 0;
   }
