@@ -209,14 +209,14 @@ bot.on("message", async msg => {
                     for (const row of rolesRows) {
                         if (row.level === newLvl) {
                             const role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === row.role_id)
-                            if (msg.member.roles.cache.array().includes(role)) msg.channel.send(`Tu as déjà le rôle ${role.name}, donc je ne te l'ai pas ajouté, mais en tout cas, tu as atteint le niveau nécessaire pour ce rôle.`)
+                            if (msg.member.roles.cache.array().includes(role)) msg.channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`)
                             else {
                                 try {
                                     await msg.member.roles.add(role)
-                                    msg.channel.send(`Je t'ai donné le rôle ${role.name}.`)
+                                    msg.channel.send(`${__("i_gave_you_the_role")} ${role.name}.`)
                                 }
                                 catch {
-                                    msg.channel.send(`Normalement, tu aurais du récupérer le rôle ${role.name}, mais je n'ai pas pu te l'ajouter... Soit je n'ai pas la permission d'ajouter des rôles, soit le rôle que je devais vous ajouter est au dessus de mon plus haut rôle. Pour régler ce problème, veuillez contacter un modérateur ou administrateur de votre serveur.`)
+                                    msg.channel.send(`${__("i_should_have_given_you")} ${role.name}, ${__("could_not_add_you_role")}`)
                                 }
                             }
                         }

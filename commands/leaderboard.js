@@ -12,6 +12,6 @@ module.exports = {
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
         if (isEnabled) msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.avdray.com/leaderboards?gid=${msg.guild.id} ${__("kirino_glad")}`)
-        else msg.channel.send(`${currently_disabled_enable_with} \`${bot.prefix}xp enable\`.`)
+        else msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
     }
 }
