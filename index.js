@@ -199,6 +199,28 @@ bot.on("message", async msg => {
 
                     msg.channel.send(levelUpMsg)
                     if (newLvl === 100) msg.channel.send(__("lvl_100_congrats"))
+
+                    const removeDeletedRoles = require("./res/remove_deleted_roles")
+                    removeDeletedRoles(bot.db, msg.guild)
+
+                    const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
+                    rolesRows = roleRequest.all(msg.guild.id)
+
+                    for (const row of rolesRows) {
+                        if (row.level === newLvl) {
+                            const role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === row.role_id)
+                            if (msg.member.roles.cache.array().includes(role)) msg.channel.send(`Tu as déjà le rôle ${role.name}, donc je ne te l'ai pas ajouté, mais en tout cas, tu as atteint le niveau nécessaire pour ce rôle.`)
+                            else {
+                                try {
+                                    await msg.member.roles.add(role)
+                                    msg.channel.send(`Je t'ai donné le rôle ${role.name}.`)
+                                }
+                                catch {
+                                    msg.channel.send(`Normalement, tu aurais du récupérer le rôle ${role.name}, mais je n'ai pas pu te l'ajouter... Soit je n'ai pas la permission d'ajouter des rôles, soit le rôle que je devais vous ajouter est au dessus de mon plus haut rôle. Pour régler ce problème, veuillez contacter un modérateur ou administrateur de votre serveur.`)
+                                }
+                            }
+                        }
+                    }
                 }
         
                 const xpUpdateRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")

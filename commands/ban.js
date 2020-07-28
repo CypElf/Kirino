@@ -17,7 +17,7 @@ module.exports = {
             return msg.channel.send(`${__("i_am_missing_permissions_to_ban_members")} ${__("kirino_pout")}`)
         }
 
-        const ban = (banMember, guildMemberOrUser=true) => { // true = GuildMember, false = User
+        function ban(banMember, guildMemberOrUser=true) { // true = GuildMember, false = User
             msg.guild.members.ban(banMember, { reason: reason.join(" ") + " (" + __("banned_by") + msg.author.tag + ")" })
                 .then(member => {
                     if (guildMemberOrUser) {

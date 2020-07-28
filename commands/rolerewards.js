@@ -11,17 +11,10 @@ module.exports = {
         if (!arg) return msg.channel.send("Il manque des arguments. Faites `;help xp` pour voir comment utiliser ce mode.")
         const getRole = require("../res/get_role")
 
-        // roles that do not exist anymore are removed from database
         const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
-        let rolesRows = roleRequest.all(msg.guild.id)
 
-        const deletionRoleRequest = bot.db.prepare("DELETE FROM xp_roles WHERE guild_id = ? AND role_id = ?")
-
-        for (const row of rolesRows) {
-            if (msg.guild.roles.cache.array().find(currentRole => currentRole.id === row.role_id) === undefined) {
-                deletionRoleRequest.run(msg.guild.id, row.role_id)
-            }
-        }
+        const removeDeletedRoles = require("../res/remove_deleted_roles")
+        removeDeletedRoles(bot.db, msg.guild)
 
         if (arg === "list") {
             rolesRows = roleRequest.all(msg.guild.id)
@@ -62,13 +55,14 @@ module.exports = {
 
             if (!roleRow) return msg.channel.send("Le rôle n'est déjà pas présent.")
 
+            const deletionRoleRequest = bot.db.prepare("DELETE FROM xp_roles WHERE guild_id = ? AND role_id = ?")
             deletionRoleRequest.run(msg.guild.id, role.id)
 
             msg.channel.send("Le rôle a été supprimé avec succès.")
         }
         else {
-            const level = arg
-            let role = getRole(msg, args.slice(1))
+            const level = args.pop()
+            let role = getRole(msg, args)
             if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
             if (role.managed) return msg.channel.send("Ce rôle ne peut être ajouté car il est géré par un service externe.")
             if (isNaN(parseInt(level)) || level <= 0 || level > 100) return msg.channel.send("Niveau invalide, veuillez en préciser un entre 1 et 100.")
