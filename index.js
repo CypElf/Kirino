@@ -309,12 +309,12 @@ http.createServer(async (req, res) => {
     if (!limit) limit = 20 // default values
     if (!page) page = 1
 
-    if (limit <= 0 || limit > 1000 || page <= 0) {
+    if (isNaN(limit) || limit <= 0 || limit > 1000 || isNaN(page) || page <= 0) {
         res.writeHead(422, {"Content-Type": "application/json"})
         let error = ""
-        if (limit <= 0 || limit > 1000) error += "Invalid limit. Minimum is 1 and maximum is 1000."
+        if (isNaN(limit) || limit <= 0 || limit > 1000) error += "Invalid limit. The limit must be between 1 and 1000."
         if (error.length > 0) error += "\n"
-        if (page <= 0) error += "Invalid page. Minimum is 1."
+        if (isNaN(page) || page <= 0) error += "Invalid page. The page must be greater or equal to 1."
 
         res.write(JSON.stringify({ "error": error }))
         res.end()
