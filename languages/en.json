@@ -390,6 +390,7 @@
 	"leaderboard_of": "",
 	"is_available_at": "'s leaderboard is available at",
 	"description_leaderboard": "Sends the server's XP leaderboard link.",
+	"usage_leaderboard": "{limit} {page}",
 	"xp": "XP",
 	"specify_color": "Please specify a new color.",
 	"color_reset": "Your color have been successfully reset.",

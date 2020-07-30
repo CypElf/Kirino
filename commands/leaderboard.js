@@ -5,13 +5,19 @@ module.exports = {
     args: false,
     category: "xp",
     aliases: ["lb"],
+    usage: "usage_leaderboard",
 
-    async execute (bot, msg) {
+    async execute (bot, msg, args) {
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
-        if (isEnabled) msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.avdray.com/leaderboards?gid=${msg.guild.id} ${__("kirino_glad")}`)
+        if (isEnabled) {
+            let params = ""
+            if (args[0]) params = `&limit=${args[0]}`
+            if (args[1]) params += `&page=${args[1]}`
+            msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.avdray.com/leaderboards?gid=${msg.guild.id}${params} ${__("kirino_glad")}`)
+        }
         else msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
     }
 }

@@ -5,6 +5,7 @@ const http = require("http")
 const url = require("url")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
+const { __ } = require("i18n")
 
 require("dotenv").config()
 
@@ -235,7 +236,7 @@ bot.on("message", async msg => {
     if (!command) return
 
     if (command.guildOnly && !msg.guild) {
-        return msg.reply(__("command_not_available_in_dm") + " <:kirinopout:698923065773522944>")
+        return msg.reply(`${__("command_not_available_in_dm")} ${__("kirino_pout")}`)
     }
 
     // ------------------------------------------------------------- commands cooldown check
