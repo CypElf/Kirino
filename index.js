@@ -5,7 +5,6 @@ const http = require("http")
 const url = require("url")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
-const { __ } = require("i18n")
 
 require("dotenv").config()
 
