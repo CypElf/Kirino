@@ -1,5 +1,3 @@
-const Canvas = require("canvas")
-
 module.exports = {
 	name: "xp",
     description: "description_xp",
@@ -153,9 +151,9 @@ module.exports = {
                             const xpDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
                             xpDeletionRequest.run(msg.guild.id)
 
-                            const xpImportRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?)")
+                            const xpImportRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?,?)")
                             for (const player of players) {
-                                xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level)
+                                xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, null)
                             }
                             importMessage.edit(`${__("mee6_levels_successfully_imported")} ${__("kirino_glad")}`)
                         }
@@ -223,7 +221,9 @@ module.exports = {
     
                     let rank = serverRankingRows.indexOf(member.id) + 1
                     if (rank === 0) rank = serverRankingRows.length + 1
-                        
+                    
+                    const Canvas = require("canvas")
+
                     const canvas = Canvas.createCanvas(934, 282)
                     const ctx = canvas.getContext("2d")
     
