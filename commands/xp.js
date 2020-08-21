@@ -218,8 +218,11 @@ module.exports = {
                     let nextLvlXp = 5 * (level * level) + 50 * level + 100
                     const percent = (xp / nextLvlXp * 100).toFixed(1)
     
+                    let guildUsers = await msg.guild.members.fetch()
+                    guildUsers = guildUsers.array().map(user => user.id)
+
                     const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
-                    const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id)
+                    const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(user_id => guildUsers.includes(user_id))
     
                     let rank = serverRankingRows.indexOf(member.id) + 1
                     if (rank === 0) rank = serverRankingRows.length + 1
