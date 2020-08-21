@@ -245,17 +245,17 @@ module.exports = {
                     let usernameMeasure = ctx.measureText(username)
 
                     
-                    if (usernameMeasure.width > 310) {
+                    if (usernameMeasure.width > 270) {
                         let i = 0
                         let sum = 0
                         for (const char of username) {
                             const charMeasure = ctx.measureText(char)
                             sum += charMeasure.width
                             i++
-                            if (sum > 310) break
+                            if (sum > 270) break
                         }
 
-                        username = `${username.substring(0, i)}...`
+                        if (i !== username.length - 1) username = `${username.substring(0, i)}...`
                         usernameMeasure = ctx.measureText(username)
                     }
 
