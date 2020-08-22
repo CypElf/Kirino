@@ -319,6 +319,7 @@
 	"explanation_code": "Pour envoyer du code sur discord, utilisez 3 symboles accent grave **`** (ALT GR + 7) pour ouvrir un bloc de code puis 3 autres pour le fermer. Enfin, pour activer la coloration syntaxique adéquate au langage de programmation utilisé, écrivez le nom de ce langage de programmation collé aux 3 **`** ouvrants.\n\nExemple :",
 	"description_base": "Permet de convertir un nombre d'une base numérique à une autre.",
 	"usage_base": "[nombre] [base d'entrée] [base de sortie]",
+	"numeric_base_conversion": "Conversion de base numérique",
 	"not_much_arguments": "Nombre d'arguments insuffisants : veuillez préciser la base d'entrée, la base de sortie ainsi que le nombre à convertir.",
 	"base_out_of_range": "Veuillez saisir des bases numérique comprises entre 2 et 36.",
 	"bad_number": "Erreur, veuillez saisir un nombre à convertir valide.",
