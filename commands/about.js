@@ -6,6 +6,6 @@ module.exports = {
 	category: "others",
 	
 	async execute(bot, msg) {
-		msg.channel.send(__("i_am") + bot.user.username + __("remaining_about"))
+		msg.channel.send(`${__("about_first_part") + bot.user.username + __("remaining_about")} ${__("kirino_glad")}`)
 	}
 }
