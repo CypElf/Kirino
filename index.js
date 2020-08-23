@@ -151,8 +151,6 @@ bot.on("message", async msg => {
         let isBlacklisted = blacklistedChannels.map(row => row.channel_id).find(channel_id => channel_id === msg.channel.id)
         if (isBlacklisted) isBlacklisted = true
 
-        if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
-
         if (!xpCooldowns.has(msg.guild.id)) {
             xpCooldowns.set(msg.guild.id, new Discord.Collection())
         }
