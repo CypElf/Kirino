@@ -64,7 +64,7 @@
 	"description_help": "Lists available commands or information about a particular command. When an argument is written in square brackets `[]`, it is mandatory. However, if it is written between braces `{}`, it is optional. Some permissions may also be in braces `{}`, which means that they are only necessary in certain cases.",
 	"usage_help": "{command}",
 	"administration": "Administration",
-	"programming": "Programming",
+	"it": "IT",
 	"utility": "Utility",
 	"others": "Autres",
 	"required_permissions": "Required permissions",

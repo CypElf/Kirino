@@ -17,18 +17,17 @@ module.exports = {
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
 			const dataJoined = bot.commands.array()
-			const notOnAvdray = !msg.guild || msg.guild.id !== bot.config.avdrayID
 
-			const adminCommands = "`" + dataJoined.filter(command => command.category === "admin" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
-			const utilityCommands = "`" + dataJoined.filter(command => command.category === "utility" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
-			const xpCommands = "`" + dataJoined.filter(command => command.category === "xp" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
-			const programmingCommands = "`" + dataJoined.filter(command => command.category === "programming" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
-			const othersCommands = "`" + dataJoined.filter(command => command.category === "others" && !(command.avdrayExclusive && notOnAvdray)).map(command => command.name).join("`, `") + "`"
+			const adminCommands = "`" + dataJoined.filter(command => command.category === "admin").map(command => command.name).join("`, `") + "`"
+			const utilityCommands = "`" + dataJoined.filter(command => command.category === "utility").map(command => command.name).join("`, `") + "`"
+			const xpCommands = "`" + dataJoined.filter(command => command.category === "xp").map(command => command.name).join("`, `") + "`"
+			const programmingCommands = "`" + dataJoined.filter(command => command.category === "programming").map(command => command.name).join("`, `") + "`"
+			const othersCommands = "`" + dataJoined.filter(command => command.category === "others").map(command => command.name).join("`, `") + "`"
 
 			if (adminCommands) helpEmbed.addField(__("administration"), adminCommands)
 			if (utilityCommands) helpEmbed.addField(__("utility"), utilityCommands)
 			if (xpCommands) helpEmbed.addField(__("xp"), xpCommands)
-			if (programmingCommands) helpEmbed.addField(__("programming"), programmingCommands)
+			if (programmingCommands) helpEmbed.addField(__("it"), programmingCommands)
 			if (othersCommands) helpEmbed.addField(__("others"), othersCommands + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"))
 	
 			return msg.channel.send(helpEmbed)
@@ -39,9 +38,7 @@ module.exports = {
 		const commandName = args[0].toLowerCase()
 
 		let command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
-		if (command && command.category === "ignore" || !(msg.guild && msg.guild.id === bot.config.avdrayID) && command && command.avdrayExclusive) {
-			command = undefined
-		}
+		if (command && command.category === "ignore") command = undefined
 
 		if (!command) return msg.channel.send(__("this_command_does_not_exist"))
 		
