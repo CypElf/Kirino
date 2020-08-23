@@ -146,6 +146,13 @@ bot.on("message", async msg => {
             levelUpMsg = xpMetadata.level_up_message
         }
 
+        const blacklistedRequest = bot.db.prepare("SELECT channel_id FROM xp_channels WHERE guild_id = ?")
+        let blacklistedChannels = blacklistedRequest.all(msg.guild.id)
+        let isBlacklisted = blacklistedChannels.map(row => row.channel_id).find(channel_id => channel_id === msg.channel.id)
+        if (isBlacklisted) isBlacklisted = true
+
+        if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
+
         if (!xpCooldowns.has(msg.guild.id)) {
             xpCooldowns.set(msg.guild.id, new Discord.Collection())
         }
@@ -166,7 +173,7 @@ bot.on("message", async msg => {
         timestamps.set(msg.author.id, now)
         setTimeout(() => timestamps.delete(msg.author.id), cooldown)
 
-        if (isEnabled && isReady) {
+        if (isEnabled && isReady && !isBlacklisted) {
             const xpRequest = bot.db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
             let xpRow = xpRequest.get(msg.guild.id, msg.author.id)
 
