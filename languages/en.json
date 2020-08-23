@@ -416,5 +416,20 @@
 	"so_i_did_not_gave_it_to_you": "so I didn't gave it to you.",
 	"i_gave_you_the_role": "I gave you the role",
 	"i_should_have_given_you": "Normally, I would've given you the role",
-	"could_not_add_you_role": "but I couldn't...\nEither I don't have permission to add roles, or the role in question is above my highest role. Please ask a moderator or administrator of your server to check both of these things to resolve the issue."
+	"could_not_add_you_role": "but I couldn't...\nEither I don't have permission to add roles, or the role in question is above my highest role. Please ask a moderator or administrator of your server to check both of these things to resolve the issue.",
+	"description_blacklist": "Allows you to blacklist XP system rooms. These rooms will be completely ignored by the XP system.",
+	"usage_blacklist": "[channel]\nremove [channel]\nlist",
+	"missing_permissions_to_remove_channel": "You do not have the necessary permissions to remove a channel from the blacklisted channels.",
+	"precise_channel_to_remove": "Please specify a channel to be removed from the blacklisted channels.",
+	"bad_channel": "Please mention, write the name or ID of a server channel.",
+	"channel_not_in_db": "This channel is already not present in the blacklisted channels.",
+	"channel_removed_from_db": "This channel has successfully been removed from the blacklisted channels.",
+	"no_blacklisted_channels": "No channel has been blacklisted yet.",
+	"missing_perm_to_add_channel": "You do not have permissions to add a channel to the blacklisted channels.",
+	"channel_already_present": "This salon is already in the list of blacklisted channels.",
+	"max_channels_count_reached": "The maximum of 10 blacklisted channels has already been reached. If you want to add more, you have to remove them first.",
+	"the_channel": "The channel",
+	"has_been_added_to_list": "has been successfully added to the list of blacklisted channels.",
+	"has_been_removed_to_list": "has been successfully removed from the list of blacklisted channels.",
+	"channels_blacklisted": "Channels blacklisted"
 }
