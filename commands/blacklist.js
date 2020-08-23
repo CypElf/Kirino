@@ -41,6 +41,20 @@ module.exports = {
 
             msg.channel.send("channel removed from db")
         }
+        else if (arg === "list") {
+            const channelsRows = channelRequest.all(msg.guild.id).map(row => row.channel_id)
+            const blacklistedChannels = msg.guild.channels.cache.array().filter(channel => channelsRows.includes(channel.id)).map(channel => channel.name)
+
+            const Discord = require("discord.js")
+            const blacklistEmbed = new Discord.MessageEmbed()
+                .setTitle("Channels blacklisted")
+                .setColor("#000000")
+
+            if (blacklistedChannels.length === 0) blacklistEmbed.setDescription("No channel blacklisted for the moment.")
+            else blacklistEmbed.setDescription(`\`${blacklistedChannels.join("`, `")}\``)
+
+            msg.channel.send(blacklistEmbed)
+        }
         else {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("missing perm to add channel")
 
