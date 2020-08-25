@@ -417,7 +417,7 @@
 	"i_gave_you_the_role": "I gave you the role",
 	"i_should_have_given_you": "Normally, I would've given you the role",
 	"could_not_add_you_role": "but I couldn't...\nEither I don't have permission to add roles, or the role in question is above my highest role. Please ask a moderator or administrator of your server to check both of these things to resolve the issue.",
-	"description_blacklist": "Allows you to blacklist XP system rooms. These rooms will be completely ignored by the XP system.",
+	"description_blacklist": "Allows you to blacklist XP system channels. These channels will be completely ignored by the XP system.",
 	"usage_blacklist": "[channel]\nremove [channel]\nlist",
 	"missing_permissions_to_remove_channel": "You do not have the necessary permissions to remove a channel from the blacklisted channels.",
 	"precise_channel_to_remove": "Please specify a channel to be removed from the blacklisted channels.",
