@@ -47,7 +47,7 @@ module.exports = {
                 .addField(__("public_gists"), data.public_gists, true)
                 .addField(__("followers"), `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
                 .addField(__("following"), `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
-                .addField(__("account_creation_date"), `${creationDate} à ${creationTime}`, true)
+                .addField(__("account_creation_date"), `${creationDate} ${__("at")} ${creationTime}`, true)
             
             if (data.bio) profileEmbed.setDescription(data.bio)
 

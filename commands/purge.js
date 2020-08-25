@@ -5,6 +5,7 @@ module.exports = {
 	args: true,
 	category: "admin",
 	usage: "usage_purge",
+	aliases: ["clear"],
 	permissions: ["manage messages"],
 	
 	async execute(bot, msg, args) {
