@@ -1,4 +1,5 @@
 const Canvas = require("canvas")
+const { __ } = require("i18n")
 
 module.exports = {
 	name: "xp",
@@ -125,12 +126,12 @@ module.exports = {
                     if (args.slice(1)[0] === "reset") channel = null
                     else channel = channel.id
 
-                    if (channel === undefined) return msg.channel.send(__("bad_channel"))
+                    if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
                     changeChannelRequest.run(msg.guild.id, 1, null, channel)
 
-                    if (channel !== null) msg.channel.send(__("level_up_channel_added"))
-                    else msg.channel.send(__("level_up_channel_reset"))
+                    if (channel !== null) msg.channel.send(`${__("level_up_channel_added")} ${__("kirino_glad")}`)
+                    else msg.channel.send(`${__("level_up_channel_reset")} ${__("kirino_glad")}`)
                 }
 
                 else if (request === "import")  {
