@@ -11,7 +11,7 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
-        const getUser = require("../res/get_user")
+        const getUser = require("../lib/get_user")
 
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
@@ -38,14 +38,15 @@ module.exports = {
 
         else {
             if (isEnabled) {
+                const filter = (reaction, user) => {
+                    return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+                }
+
                 if (request === "reset") {
                     if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_reset_xp")} ${__("kirino_pff")}`)
                     if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(`${__("cannot_react_to_messages")} ${__("kirino_pout")}`)
         
                     args.shift()
-                    const filter = (reaction, user) => {
-                        return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
-                    }
         
                     if (args[0] === "all") {
                         const validationMessage = await msg.channel.send(__("server_xp_reset_validation"))
@@ -64,8 +65,7 @@ module.exports = {
                             else {
                                 msg.channel.send(__("server_xp_canceled"))
                             }
-                        })
-                        
+                        }) 
                     }
                     else {
                         let member
@@ -108,17 +108,33 @@ module.exports = {
                     let newMsg = args.join(" ")
 
                     if (newMsg === "reset") newMsg = null
-                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
-                    msgUpdateRequest.run(msg.guild.id, 1, newMsg)
+                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
+                    msgUpdateRequest.run(msg.guild.id, 1, newMsg, null)
                     if (newMsg === null) msg.channel.send(`${__("lvl_up_msg_reset")} ${__("kirino_glad")}`)
                     else msg.channel.send(`${__("lvl_up_msg_updated")} ${__("kirino_glad")}`)
                 }
 
+                else if (request === "channel") {
+                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`)
+
+                    const changeChannelRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
+
+                    const getChannel = require("../lib/get_channel")
+                    let channel = getChannel(msg, args.slice(1))
+
+                    if (args.slice(1)[0] === "reset") channel = null
+                    else channel = channel.id
+
+                    if (channel === undefined) return msg.channel.send(__("bad_channel"))
+
+                    changeChannelRequest.run(msg.guild.id, 1, null, channel)
+
+                    if (channel !== null) msg.channel.send(__("level_up_channel_added"))
+                    else msg.channel.send(__("level_up_channel_reset"))
+                }
+
                 else if (request === "import")  {
                     if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_import")} ${__("kirino_pff")}`)
-                    const filter = (reaction, user) => {
-                        return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
-                    }
 
                     validationMessage = await msg.channel.send(__("xp_import_verification"))
     

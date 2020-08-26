@@ -16,11 +16,11 @@ module.exports = {
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
         const arg = args[0]
-        const getChannel = require("../res/get_channel")
+        const getChannel = require("../lib/get_channel")
 
         const channelRequest = bot.db.prepare("SELECT * FROM xp_channels WHERE guild_id = ?")
 
-        const removeDeletedChannels = require("../res/remove_deleted_channels")
+        const removeDeletedChannels = require("../lib/remove_deleted_channels")
         removeDeletedChannels(bot.db, msg.guild)
 
         if (arg === "remove") {

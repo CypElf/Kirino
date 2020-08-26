@@ -16,11 +16,11 @@ module.exports = {
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
         const arg = args[0]
-        const getRole = require("../res/get_role")
+        const getRole = require("../lib/get_role")
 
         const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
 
-        const removeDeletedRoles = require("../res/remove_deleted_roles")
+        const removeDeletedRoles = require("../lib/remove_deleted_roles")
         removeDeletedRoles(bot.db, msg.guild)
 
         if (arg === "list") {

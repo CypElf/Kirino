@@ -69,8 +69,7 @@ bot.on("message", async msg => {
     // maintenance
     // if (!msg.content.startsWith(bot.prefix)) return
     // if (!command) return
-    // if (msg.content.startsWith(bot.prefix)) return msg.channel.send(__("maintenance"))
-    // else return
+    // return msg.channel.send(__("maintenance"))
 
     if (msg.guild) {
         if (!msg.guild.me.hasPermission("SEND_MESSAGES")) return
@@ -202,10 +201,38 @@ bot.on("message", async msg => {
                             .replace("{level}", newLvl)
                             .replace("{server}", msg.guild.name)
 
-                    msg.channel.send(levelUpMsg)
-                    if (newLvl === 100) msg.channel.send(__("lvl_100_congrats"))
 
-                    const removeDeletedRoles = require("./res/remove_deleted_roles")
+                    const channelRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_metadata WHERE guild_id = ?")
+                    let channel = channelRequest.get(msg.guild.id).level_up_channel_id
+                    
+                    function resetLevelUpChannel() {
+                        const resetChannelRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
+                        resetChannelRequest.run(msg.guild.id, 1, null, null)
+                    }
+
+                    if (channel !== null) {
+                        const getChannel = require("./lib/get_channel")
+                        channel = getChannel(msg, [channel])
+
+                        if (channel === undefined) {
+                            resetLevelUpChannel()
+                            channel = msg.channel
+                        }
+                    }
+
+                    else channel = msg.channel
+
+                    channel.send(levelUpMsg).catch(() => {
+                        resetLevelUpChannel()
+                        msg.channel.send(levelUpMsg)
+                    })
+
+                    if (newLvl === 100) channel.send(__("lvl_100_congrats")).catch(() => {
+                        resetLevelUpChannel()
+                        msg.channel.send(__("lvl_100_congrats"))
+                    })
+                    
+                    const removeDeletedRoles = require("./lib/remove_deleted_roles")
                     removeDeletedRoles(bot.db, msg.guild)
 
                     const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
@@ -214,14 +241,21 @@ bot.on("message", async msg => {
                     for (const row of rolesRows) {
                         if (row.level === newLvl) {
                             const role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === row.role_id)
-                            if (msg.member.roles.cache.array().includes(role)) msg.channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`)
+                            if (msg.member.roles.cache.array().includes(role)) channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`).catch(() => {
+                                msg.channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`)
+                            })
                             else {
                                 try {
                                     await msg.member.roles.add(role)
-                                    msg.channel.send(`${__("i_gave_you_the_role")} ${role.name}.`)
+
+                                    channel.send(`${__("i_gave_you_the_role")} ${role.name}.`).catch(() => {
+                                        msg.channel.send(`${__("i_gave_you_the_role")} ${role.name}.`)
+                                    })
                                 }
                                 catch {
-                                    msg.channel.send(`${__("i_should_have_given_you")} ${role.name}, ${__("could_not_add_you_role")}`)
+                                    channel.send(`${__("i_should_have_given_you")} ${role.name}, ${__("could_not_add_you_role")}`).catch(() => {
+                                        msg.channel.send(`${__("i_should_have_given_you")} ${role.name}, ${__("could_not_add_you_role")}`)
+                                    })
                                 }
                             }
                         }
