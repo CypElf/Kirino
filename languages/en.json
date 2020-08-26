@@ -72,6 +72,7 @@
 	"to_get_infos_on_a_command": "to get information on a particular command.",
 	"this_command_does_not_exist": "This command does not exist.",
 	"description": "Description",
+	"description_continuation": "Description continuation",
 	"available_in_dm": "Available in direct messages",
 	"no": "no",
 	"yes": "yes",

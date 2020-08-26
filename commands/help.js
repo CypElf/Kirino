@@ -48,7 +48,28 @@ module.exports = {
 			.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
 	
-		if (command.description) helpEmbed.addField(`**${__("description")}**`,__(command.description))
+		if (command.description) {
+			let first = true
+
+			let descriptions = [""]
+			let i = 0
+			for (const line of __(command.description).split("\n")) {
+				if (descriptions[i].length + line.length > 1024) {
+					i++
+					descriptions[i] = ""
+				}
+				if (descriptions[i] !== "") descriptions[i] += "\n"
+				descriptions[i] += line
+			}
+
+			for (const descriptionPart of descriptions) {
+				if (first) {
+					helpEmbed.addField(`**${__("description")}**`, descriptionPart)
+					first = false
+				}
+				else helpEmbed.addField(`**${__("description_continuation")}**`, descriptionPart)
+			}
+		}
 		command.guildOnly ? helpEmbed.addField(`**${__("available_in_dm")}**`, __("no")) : helpEmbed.addField(`**${__("available_in_dm")}**`, __("yes"))
 		if (command.aliases) helpEmbed.addField(`**${__("aliases")}**`, `\`${command.aliases.join("`, `")}\``)
 		

@@ -62,7 +62,7 @@ module.exports = {
         let displayedEmojisCount = ""
         if (emojisCount === 0) displayedEmojisCount = __("nothing")
 
-        displayedEmojisCount += " (" + emojisCount + " " + __n("emoji", emojisCount) + ")"
+        displayedEmojisCount += ` (${emojisCount} ${__n("emoji", emojisCount)})`
 
         let i = 0
         emojis.forEach(emoji => {
