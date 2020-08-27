@@ -109,8 +109,8 @@ module.exports = {
                     let newMsg = args.join(" ")
 
                     if (newMsg === "reset") newMsg = null
-                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
-                    msgUpdateRequest.run(msg.guild.id, 1, newMsg, null)
+                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
+                    msgUpdateRequest.run(msg.guild.id, 1, newMsg)
                     if (newMsg === null) msg.channel.send(`${__("lvl_up_msg_reset")} ${__("kirino_glad")}`)
                     else msg.channel.send(`${__("lvl_up_msg_updated")} ${__("kirino_glad")}`)
                 }
@@ -118,7 +118,7 @@ module.exports = {
                 else if (request === "channel") {
                     if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`)
 
-                    const changeChannelRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
+                    const changeChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
 
                     const getChannel = require("../lib/get_channel")
                     let channel = getChannel(msg, args.slice(1))
@@ -128,7 +128,7 @@ module.exports = {
 
                     if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
-                    changeChannelRequest.run(msg.guild.id, 1, null, channel)
+                    changeChannelRequest.run(msg.guild.id, 1, channel)
 
                     if (channel !== null) msg.channel.send(`${__("level_up_channel_added")} ${__("kirino_glad")}`)
                     else msg.channel.send(`${__("level_up_channel_reset")} ${__("kirino_glad")}`)

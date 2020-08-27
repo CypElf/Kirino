@@ -182,7 +182,12 @@ bot.on("message", async msg => {
             const currentLvl = xpRow.level
 
             if (currentLvl < 100) {
-                const xpAdded = Math.floor(Math.random() * (25 - 15 + 1)) + 15 // the xp added to the user is generated between 15 and 25
+                const scaleRequest = bot.db.prepare("SELECT scale FROM xp_metadata WHERE guild_id = ?")
+                let scale = scaleRequest.get(msg.guild.id).scale
+                if (scale === null) scale = 1
+
+                const xpAdded = Math.floor((Math.floor(Math.random() * (25 - 15 + 1)) + 15) * scale) // the xp added to the user is generated between 15 and 25 and multiplied by the server scale
+
                 let newXp = currentXp + xpAdded
                 let newTotalXp = xpRow.total_xp + xpAdded
                 let newLvl = currentLvl
@@ -206,8 +211,8 @@ bot.on("message", async msg => {
                     let channel = channelRequest.get(msg.guild.id).level_up_channel_id
                     
                     function resetLevelUpChannel() {
-                        const resetChannelRequest = bot.db.prepare("INSERT INTO xp_metadata VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
-                        resetChannelRequest.run(msg.guild.id, 1, null, null)
+                        const resetChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
+                        resetChannelRequest.run(msg.guild.id, 1, null)
                     }
 
                     if (channel !== null) {
