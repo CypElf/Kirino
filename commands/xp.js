@@ -117,20 +117,40 @@ module.exports = {
                 else if (request === "channel") {
                     if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`)
 
-                    const changeChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
+                    if (args.slice(1)[0] === undefined) {
+                        const getChannelRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_metadata WHERE guild_id = ?")
+                        let channel = getChannelRequest.get(msg.guild.id).level_up_channel_id
 
-                    const getChannel = require("../lib/get_channel")
-                    let channel = getChannel(msg, args.slice(1))
+                        if (channel === null) msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
+                        else {
+                            const getChannel = require("../lib/get_channel")
+                            channel = getChannel(msg, [channel])
+                            if (channel === undefined) {
+                                const resetChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
+                                resetChannelRequest.run(msg.guild.id, 1, null)
+                                msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
+                            }
+                            else {
+                                msg.channel.send(`${__("level_up_channel_is")} <#${channel.id}>. ${__("kirino_glad")}`)
+                            }
+                        }
+                    }
+                    else {
+                        const changeChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
 
-                    if (args.slice(1)[0] === "reset") channel = null
-                    else channel = channel.id
+                        const getChannel = require("../lib/get_channel")
+                        let channel = getChannel(msg, args.slice(1))
 
-                    if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
+                        if (args.slice(1)[0] === "reset") channel = null
+                        else channel = channel.id
 
-                    changeChannelRequest.run(msg.guild.id, 1, channel)
+                        if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
-                    if (channel !== null) msg.channel.send(`${__("level_up_channel_added")} ${__("kirino_glad")}`)
-                    else msg.channel.send(`${__("level_up_channel_reset")} ${__("kirino_glad")}`)
+                        changeChannelRequest.run(msg.guild.id, 1, channel)
+
+                        if (channel !== null) msg.channel.send(`${__("level_up_channel_added")} ${__("kirino_glad")}`)
+                        else msg.channel.send(`${__("level_up_channel_reset")} ${__("kirino_glad")}`)
+                    }
                 }
 
                 else if (request === "import")  {
