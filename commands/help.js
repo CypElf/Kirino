@@ -45,8 +45,7 @@ module.exports = {
 		const helpEmbed = new Discord.MessageEmbed()
 			.setColor('#DFC900')
 			.setTitle(`**${__("command")} : ${command.name}**`)
-			.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-
+			.setFooter(__("help_footer"), "https://cdn.discordapp.com/attachments/714381484617891980/748487155214712842/d95a24865c58c14548e439defc097222.png")
 	
 		if (command.description) {
 			let first = true

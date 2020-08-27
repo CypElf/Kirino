@@ -74,6 +74,7 @@
 	"description": "Description",
 	"description_continuation": "Suite de la description",
 	"available_in_dm": "Disponible en messages privés",
+	"help_footer": "[argument] = obligatoire | {argument} = optionnel | permission = toujours nécessaire | {permission} = nécessaire dans certains cas",
 	"no": "non",
 	"yes": "oui",
 	"aliases": "Aliases",
