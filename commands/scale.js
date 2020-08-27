@@ -17,19 +17,16 @@ module.exports = {
         if (args[0] !== undefined) {
             const updateScaleRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale")
 
-            if (args[0] === "reset") {
-                updateScaleRequest.run(msg.guild.id, 1, null)
-                msg.channel.send(`${__("scale_reset")} ${__("kirino_glad")}`)
-            }
-            else {
-                const scale = parseFloat(args[0])
-                const choices = [0.25, 0.5, 0.75, 1.5, 2, 2.5, 3]
-        
-                if (!choices.includes(scale)) return msg.channel.send(`${__("bad_scale")} ${__("kirino_pout")}`)
+            let scale = parseFloat(args[0])
+            const choices = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3]
+    
+            if (!choices.includes(scale)) return msg.channel.send(`${__("bad_scale")} ${__("kirino_pout")}`)
 
-                updateScaleRequest.run(msg.guild.id, 1, scale)
-                msg.channel.send(`${__("scale_set")} \`${scale}\`. ${__("kirino_glad")}`)
-            }
+            if (scale === 1) scale = null
+            updateScaleRequest.run(msg.guild.id, 1, scale)
+            if (scale === null) scale = 1
+            
+            msg.channel.send(`${__("scale_set")} \`${scale}\`. ${__("kirino_glad")}`)
         }
 
         else {

@@ -436,10 +436,10 @@
 	"level_up_channel_reset": "Le salon des messages de montée de niveau a bien été retiré. Les messages de montée de niveau seront envoyés dans le salon du message ayant déclenché la montée en niveau.",
 	"no_level_up_channel": "Il n'y a actuellement pas de salon spécifique pour les messages de montée de niveau.",
 	"level_up_channel_is": "Le salon pour les messages de montée de niveau est actuellement",
-	"description_scale": "Permet de changer la difficulté du système d'XP en multipliant la quantité d'XP donnée à chaque fois par un coefficient.\nLes coefficients possibles sont : `0.25`, `0.5`, `0.75`, `1.5`, `2`, `2.5` et `3`.\nPour remettre le coefficient à `1` (comportement par défaut), vous pouvez réinitialiser celui ci.",
-	"usage_scale": "{coefficient}\nreset",
+	"description_scale": "Permet de changer la difficulté du système d'XP en multipliant la quantité d'XP donnée à chaque fois par un coefficient.\nLes coefficients possibles sont : `0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` et `3`.\nPar défaut, il est à `1`.",
+	"usage_scale": "{coefficient}",
 	"scale_reset": "Le coefficient a bien été réinitialisé.",
 	"scale_set": "Le coefficient a bien été défini à",
 	"current_scale_is": "Le coefficient est actuellement de",
-	"bad_scale": "Veuillez saisir un coefficient valide parmi la liste de ceux disponibles (`0.25`, `0.5`, `0.75`, `1.5`, `2`, `2.5` et `3`)."
+	"bad_scale": "Veuillez saisir un coefficient valide parmi la liste de ceux disponibles (`0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` et `3`)."
 }

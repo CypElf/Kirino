@@ -436,10 +436,10 @@
 	"not_allowed_to_change_channel": "You are not allowed to edit the level up messages channel.",
 	"level_up_channel_added": "This channel has been successfully defined as the level up messages channel.",
 	"level_up_channel_reset": "The level up messages channel has been removed. Level up messages will now be sent in the channel where the level up was triggered.",
-	"description_scale": "Allows you to change the difficulty of the XP system by multiplying the given amount of XP each time by a coefficient. All possible coefficients are: `0.25`, `0.5`, `0.75`, `1.5`, `2`, `2.5` and `3`. To set the coefficient to `1` (default behavior), you can reset this one.",
-	"usage_scale": "{coefficient}\nreset",
+	"description_scale": "Allows you to change the difficulty of the XP system by multiplying the given amount of XP each time by a coefficient. All possible coefficients are: `0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` and `3`. By default, its value is `1`.",
+	"usage_scale": "{coefficient}",
 	"scale_reset": "The coefficient has successfully been reset.",
 	"scale_set": "The coefficient has been set to",
 	"current_scale_is": "The coefficient is currently",
-	"bad_scale": "Please enter a valid coefficient from the list of those available (`0.25`, `0.5`, `0.75`, `1.5`, `2`, `2.5` and `3`)."
+	"bad_scale": "Please enter a valid coefficient from the list of those available (`0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` and `3`)."
 }
