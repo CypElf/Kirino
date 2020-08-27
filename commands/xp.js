@@ -1,5 +1,4 @@
 const Canvas = require("canvas")
-const { __ } = require("i18n")
 
 module.exports = {
 	name: "xp",

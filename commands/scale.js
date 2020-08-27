@@ -4,8 +4,9 @@ module.exports = {
     guildOnly: true,
     args: false,
     category: "xp",
-    aliases: ["rate"],
+    aliases: ["rate", "coefficient", "coeff"],
     usage: "usage_scale",
+    permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
@@ -18,16 +19,16 @@ module.exports = {
 
             if (args[0] === "reset") {
                 updateScaleRequest.run(msg.guild.id, 1, null)
-                msg.channel.send("reset")
+                msg.channel.send(`${__("scale_reset")} ${__("kirino_glad")}`)
             }
             else {
                 const scale = parseFloat(args[0])
                 const choices = [0.25, 0.5, 0.75, 1.5, 2, 2.5, 3]
         
-                if (!choices.includes(scale)) return msg.channel.send("navn")
+                if (!choices.includes(scale)) return msg.channel.send(`${__("bad_scale")} ${__("kirino_pout")}`)
 
                 updateScaleRequest.run(msg.guild.id, 1, scale)
-                msg.channel.send("done")
+                msg.channel.send(`${__("scale_set")} \`${scale}\`. ${__("kirino_glad")}`)
             }
         }
 
@@ -36,7 +37,7 @@ module.exports = {
             let scale = getScaleRequest.get(msg.guild.id).scale
             if (scale === null) scale = 1
 
-            msg.channel.send(scale)
+            msg.channel.send(`${__("current_scale_is")} \`${scale}\`. ${__("kirino_glad")}`)
         }
     }
 }

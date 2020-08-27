@@ -407,8 +407,8 @@
 	"role_removed_from_database": "This role was successfully removed from the reward roles.",
 	"role_externally_managed": "This role cannot be added, because it is handled by an external service.",
 	"bad_level": "Invalid level. Please specify one between 1 and 100.",
-	"missing_permissions_to_remove_role" : "You do not have the necessary permissions to remove a role from the reward roles.",
-	"missing_permissions_to_add_role" : "You do not have the necessary permissions to add a role to the reward roles.",
+	"missing_permissions_to_remove_role": "You do not have the necessary permissions to remove a role from the reward roles.",
+	"missing_permissions_to_add_role": "You do not have the necessary permissions to add a role to the reward roles.",
 	"max_roles_count_reached": "The maximum of 10 reward roles has already been reached. If you want to add more, you must first remove some of them.",
 	"role_already_present": "This role is already in the reward roles list. If you want to change the level associated with it, you must first remove it.",
 	"the_role": "The role",
@@ -435,5 +435,11 @@
 	"channels_blacklisted": "Channels blacklisted",
 	"not_allowed_to_change_channel": "You are not allowed to edit the level up messages channel.",
 	"level_up_channel_added": "This channel has been successfully defined as the level up messages channel.",
-	"level_up_channel_reset": "The level up messages channel has been removed. Level up messages will now be sent in the channel where the level up was triggered."
+	"level_up_channel_reset": "The level up messages channel has been removed. Level up messages will now be sent in the channel where the level up was triggered.",
+	"description_scale": "Allows you to change the difficulty of the XP system by multiplying the given amount of XP each time by a coefficient. All possible coefficients are: `0.25`, `0.5`, `0.75`, `1.5`, `2`, `2.5` and `3`. To set the coefficient to `1` (default behavior), you can reset this one.",
+	"usage_scale": "{coefficient}\nreset",
+	"scale_reset": "The coefficient has successfully been reset.",
+	"scale_set": "The coefficient has been set to",
+	"current_scale_is": "The coefficient is currently",
+	"bad_scale": "Please enter a valid coefficient from the list of those available (`0.25`, `0.5`, `0.75`, `1.5`, `2`, `2.5` and `3`)."
 }
