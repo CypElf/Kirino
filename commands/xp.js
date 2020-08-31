@@ -279,11 +279,12 @@ module.exports = {
                     ctx.font = "25px ubuntu"
                     const spaceMeasure = ctx.measureText(" ")
     
-                    ctx.font = "40px ubuntu" // username and tag
+                    ctx.font = "40px ubuntu"
                     ctx.fillStyle = "#FFFFFF"
                     let usernameMeasure = ctx.measureText(username)
 
-                    
+                    let tooLongText = ""
+                    let usernameTotalMeasure = usernameMeasure
                     if (usernameMeasure.width > 270) {
                         let i = 0
                         let sum = 0
@@ -293,15 +294,24 @@ module.exports = {
                             i++
                             if (sum > 270) break
                         }
-
-                        if (i !== username.length - 1) username = `${username.substring(0, i)}...`
+                        
+                        if (i !== username.length - 1) {
+                            username = username.substring(0, i)
+                            tooLongText = "..."
+                        }
                         usernameMeasure = ctx.measureText(username)
+                        ctx.font = "30px ubuntu"
+                        tooLongTextMeasure = ctx.measureText(tooLongText)
+                        usernameTotalMeasure = usernameMeasure + tooLongTextMeasure
                     }
 
+                    ctx.font = "40px ubuntu"
                     ctx.fillText(username, 270, 176)
+                    ctx.font = "30px ubuntu"
+                    ctx.fillText(tooLongText, 270 + usernameMeasure.width, 176)
                     ctx.font = "23px ubuntu"
                     ctx.fillStyle = "#AAAAAA"
-                    ctx.fillText("#" + tag, usernameMeasure.width + 280, 176)
+                    ctx.fillText("#" + tag, usernameTotalMeasure.width + 280, 176)
     
                     ctx.fillStyle = color // level
                     ctx.font = "70px ubuntu"
