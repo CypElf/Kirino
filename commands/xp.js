@@ -227,6 +227,7 @@ module.exports = {
                 }
         
                 else {
+                    if (!msg.guild.me.hasPermission("ATTACH_FILES")) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
                     let member
         
                     if (args.length === 0) {
