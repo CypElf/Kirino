@@ -285,7 +285,7 @@ module.exports = {
                     let usernameMeasure = ctx.measureText(username)
 
                     let tooLongText = ""
-                    let usernameTotalMeasure = usernameMeasure
+                    let usernameTotalMeasure = usernameMeasure.width
                     if (usernameMeasure.width > 270) {
                         let i = 0
                         let sum = 0
@@ -312,7 +312,7 @@ module.exports = {
                     ctx.fillText(tooLongText, 270 + usernameMeasure.width, 176)
                     ctx.font = "21px ubuntu"
                     ctx.fillStyle = "#AAAAAA"
-                    ctx.fillText("#" + tag, usernameTotalMeasure.width + 275, 176)
+                    ctx.fillText("#" + tag, usernameTotalMeasure + 275, 176)
     
                     ctx.fillStyle = color // level
                     ctx.font = "70px ubuntu"
