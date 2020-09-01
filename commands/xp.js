@@ -310,7 +310,7 @@ module.exports = {
                     ctx.fillText(username, 270, 176)
                     ctx.font = "30px ubuntu"
                     ctx.fillText(tooLongText, 270 + usernameMeasure.width, 176)
-                    ctx.font = "23px ubuntu"
+                    ctx.font = "21px ubuntu"
                     ctx.fillStyle = "#AAAAAA"
                     ctx.fillText("#" + tag, usernameTotalMeasure + 280, 176)
     
