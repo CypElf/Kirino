@@ -9,7 +9,7 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
-        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
+        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
@@ -18,10 +18,10 @@ module.exports = {
         const arg = args[0]
         const getChannel = require("../lib/get_channel")
 
-        const channelRequest = bot.db.prepare("SELECT * FROM xp_channels WHERE guild_id = ?")
+        const channelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
 
-        const removeDeletedChannels = require("../lib/remove_deleted_channels")
-        removeDeletedChannels(bot.db, msg.guild)
+        const removeDeletedBlacklistedChannels = require("../lib/remove_deleted_channels")
+        removeDeletedBlacklistedChannels(bot.db, msg.guild)
 
         if (arg === "remove") {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("missing_permissions_to_remove_channel")} ${__("kirino_pff")}`)
@@ -31,12 +31,12 @@ module.exports = {
             const channel = getChannel(msg, args.slice(1))
             if (!channel) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
-            const spChannelRequest = bot.db.prepare("SELECT * FROM xp_channels WHERE guild_id = ? AND channel_id = ?")
+            const spChannelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
             const channelRow = spChannelRequest.get(msg.guild.id, channel.id)
 
             if (!channelRow) return msg.channel.send(`${__("channel_not_in_db")} ${__("kirino_pout")}`)
 
-            const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_channels WHERE guild_id = ? AND channel_id = ?")
+            const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
             deletionChannelRequest.run(msg.guild.id, channel.id)
 
             msg.channel.send(`${__("the_channel")} ${channel.name} ${__("has_been_removed_to_list")} ${__("kirino_glad")}`)
@@ -68,7 +68,7 @@ module.exports = {
 
             if (channelsRows.length === 10) return msg.channel.send(`${__("max_channels_count_reached")} ${__("kirino_pout")}`)
 
-            const addChannelRequest = bot.db.prepare("INSERT INTO xp_channels VALUES(?,?)")
+            const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_channels VALUES(?,?)")
             addChannelRequest.run(msg.guild.id, channel.id)
 
             msg.channel.send(`${__("the_channel")} ${channel.name} ${__("has_been_added_to_list")} ${__("kirino_glad")}`)

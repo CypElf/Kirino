@@ -8,7 +8,7 @@ module.exports = {
     usage: "usage_leaderboard",
 
     async execute (bot, msg, args) {
-        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
+        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)

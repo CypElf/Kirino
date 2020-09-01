@@ -9,13 +9,13 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
-        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
+        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
         if (args[0] !== undefined) {
-            const updateScaleRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale")
+            const updateScaleRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale")
 
             let scale = parseFloat(args[0])
             const choices = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3]
@@ -30,7 +30,7 @@ module.exports = {
         }
 
         else {
-            getScaleRequest = bot.db.prepare("SELECT scale FROM xp_metadata WHERE guild_id = ?")
+            getScaleRequest = bot.db.prepare("SELECT scale FROM xp_guilds WHERE guild_id = ?")
             let scale = getScaleRequest.get(msg.guild.id).scale
             if (scale === null) scale = 1
 

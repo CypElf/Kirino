@@ -13,7 +13,7 @@ module.exports = {
     async execute (bot, msg, args) {
         const getUser = require("../lib/get_user")
 
-        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
+        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
@@ -21,7 +21,7 @@ module.exports = {
 
         if (request === "enable" || request === "disable") {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_enable_or_disable")} ${__("kirino_pff")}`)
-            const enableRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
+            const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (request === "enable") {
                 if (isEnabled) return msg.channel.send(`${__("xp_already_enabled")} ${__("kirino_pout")}`)
@@ -58,7 +58,7 @@ module.exports = {
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
-                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
+                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?")
                                 profileDeletionRequest.run(msg.guild.id)
                                 msg.channel.send(`${__("server_xp_successfully_reset")} ${__("kirino_glad")}`)
                             }
@@ -74,7 +74,7 @@ module.exports = {
                         if (!member) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pout")}`)
                         
-                        const isInXpTableRequest = bot.db.prepare("SELECT * FROM xp WHERE guild_id = ? AND user_id = ?")
+                        const isInXpTableRequest = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                         const isInXpTable = isInXpTableRequest.get(msg.guild.id, member.id)
         
                         if (!isInXpTable) return msg.channel.send(__("member_zero_xp"))
@@ -90,7 +90,7 @@ module.exports = {
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
-                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ? AND user_id = ?")
+                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                                 profileDeletionRequest.run(msg.guild.id, member.id)
                                 if (args[0] === undefined) msg.channel.send(`${__("your_xp_successfully_reset")} ${__("kirino_glad")}`)
                                 else msg.channel.send(`${__("xp_reset_of")}${member.user.username}${__("successfully_reset")} ${__("kirino_glad")}`)
@@ -108,7 +108,7 @@ module.exports = {
                     let newMsg = args.join(" ")
 
                     if (newMsg === "reset") newMsg = null
-                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
+                    const msgUpdateRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message")
                     msgUpdateRequest.run(msg.guild.id, 1, newMsg)
                     if (newMsg === null) msg.channel.send(`${__("lvl_up_msg_reset")} ${__("kirino_glad")}`)
                     else msg.channel.send(`${__("lvl_up_msg_updated")} ${__("kirino_glad")}`)
@@ -118,7 +118,7 @@ module.exports = {
                     if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`)
 
                     if (args.slice(1)[0] === undefined) {
-                        const getChannelRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_metadata WHERE guild_id = ?")
+                        const getChannelRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?")
                         let channel = getChannelRequest.get(msg.guild.id).level_up_channel_id
 
                         if (channel === null) msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
@@ -126,7 +126,7 @@ module.exports = {
                             const getChannel = require("../lib/get_channel")
                             channel = getChannel(msg, [channel])
                             if (channel === undefined) {
-                                const resetChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
+                                const resetChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
                                 resetChannelRequest.run(msg.guild.id, 1, null)
                                 msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
                             }
@@ -136,7 +136,7 @@ module.exports = {
                         }
                     }
                     else {
-                        const changeChannelRequest = bot.db.prepare("INSERT INTO xp_metadata(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
+                        const changeChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
 
                         const getChannel = require("../lib/get_channel")
                         let channel = getChannel(msg, args.slice(1))
@@ -186,10 +186,10 @@ module.exports = {
 
                             if (players.length === 0) return importMessage.edit(__("zero_xp_found_on_mee6_api"))
 
-                            const xpDeletionRequest = bot.db.prepare("DELETE FROM xp WHERE guild_id = ?")
+                            const xpDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?")
                             xpDeletionRequest.run(msg.guild.id)
 
-                            const xpImportRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?,?)")
+                            const xpImportRequest = bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?)")
                             for (const player of players) {
                                 xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, null)
                             }
@@ -205,10 +205,10 @@ module.exports = {
                     let color = args[1]
                     if (!color) return msg.channel.send(`${__("specify_color")} ${__("kirino_pout")}`)
 
-                    const xpRequest = bot.db.prepare("SELECT xp, total_xp, level FROM xp WHERE guild_id = ? AND user_id = ?")
+                    const xpRequest = bot.db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     const xpRow = xpRequest.get(msg.guild.id, msg.author.id)
 
-                    const updateColorRequest = bot.db.prepare("INSERT INTO xp VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET color=excluded.color")
+                    const updateColorRequest = bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET color=excluded.color")
                     
 
                     if (color === "reset") {
@@ -241,7 +241,7 @@ module.exports = {
                     }
             
 
-                    const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp WHERE guild_id = ? AND user_id = ?")
+                    const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
         
                     if (xpRow === undefined) xpRow = { "xp": 0, "level": 0, "color": null }
@@ -258,7 +258,7 @@ module.exports = {
                     let guildUsers = await msg.guild.members.fetch()
                     guildUsers = guildUsers.array().map(user => user.id)
 
-                    const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                    const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
                     const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(user_id => guildUsers.includes(user_id))
     
                     let rank = serverRankingRows.indexOf(member.id) + 1

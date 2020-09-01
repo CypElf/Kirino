@@ -9,7 +9,7 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
-        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_metadata WHERE guild_id = ?")
+        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
@@ -27,7 +27,7 @@ module.exports = {
             rolesRows = roleRequest.all(msg.guild.id)
             if (rolesRows.length === 0) return msg.channel.send(__("no_role_reward_for_now"))
 
-            const colorRequest = bot.db.prepare("SELECT color FROM xp WHERE guild_id = ? AND user_id = ?")
+            const colorRequest = bot.db.prepare("SELECT color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
             let color = colorRequest.get(msg.guild.id, msg.author.id)
 
             if (color && color.color) color = color.color
