@@ -19,7 +19,7 @@ But also some useful general commands :
 - the capability to set **rules** for a server and display the one wanted at any time
 - a banword system to **block** certain words from your server
 - an afk system to leave a message to those who would mention you while you're away
-- a complete **xp** system like MEE6's one
+- a complete **xp** system like MEE6's one, including its premium features like role rewards or xp scaling
 
 And a lot more.
 
