@@ -53,7 +53,7 @@ module.exports = {
 			let descriptions = [""]
 			let i = 0
 			for (const line of __(command.description).split("\n")) {
-				if (descriptions[i].length + line.length > 1024) {
+				if (descriptions[i].length + line.length + 1 > 1024) {
 					i++
 					descriptions[i] = ""
 				}
