@@ -241,13 +241,8 @@ module.exports = {
                         return msg.channel.send(`${__("background_reset")} ${__("kirino_glad")}`)
                     }
 
-                    let url
-                    if (arg !== undefined) {
-                        const isImageUrl = require("is-image-url")
-                        if (isImageUrl(arg)) {
-                            url = arg
-                        }
-                    }
+                    let url = arg
+
                     if (msg.attachments.size > 0) {
                         url = msg.attachments.first().url
                     }
