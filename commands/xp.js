@@ -453,10 +453,13 @@ module.exports = {
                         ctx.strokeText(__("max_reached"), 320, 255)
                     }                
     
+                    ctx.lineWidth = 2
+
                     ctx.beginPath() // user avatar circle filter
                     ctx.arc(140, 140, 100, 0, Math.PI * 2, true)
                     ctx.closePath()
                     ctx.clip()
+                    ctx.stroke()
     
                     const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "png" }))
                     ctx.drawImage(avatar, 40, 40, 200, 200)
