@@ -58,8 +58,14 @@ module.exports = {
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
-                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?")
-                                profileDeletionRequest.run(msg.guild.id)
+                                const profilesRequest = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ?")
+                                const profiles = profilesRequest.all(msg.guild.id)
+
+                                const resetProfileRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
+                                for (const profile of profiles) {
+                                    resetProfileRequest.run(profile.guild_id, profile.user_id, 0, 0, 0)
+                                }
+
                                 msg.channel.send(`${__("server_xp_successfully_reset")} ${__("kirino_glad")}`)
                             }
                             else {
