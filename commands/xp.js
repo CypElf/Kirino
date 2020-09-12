@@ -91,8 +91,8 @@ module.exports = {
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
-                                const profileDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-                                profileDeletionRequest.run(msg.guild.id, member.id)
+                                const profileDeletionRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
+                                profileDeletionRequest.run(msg.guild.id, member.id, 0, 0, 0)
                                 if (args[0] === undefined) msg.channel.send(`${__("your_xp_successfully_reset")} ${__("kirino_glad")}`)
                                 else msg.channel.send(`${__("xp_reset_of")}${member.user.username}${__("successfully_reset")} ${__("kirino_glad")}`)
                             }
@@ -190,9 +190,9 @@ module.exports = {
                             const xpDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?")
                             xpDeletionRequest.run(msg.guild.id)
 
-                            const xpImportRequest = bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?)")
+                            const xpImportRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?)")
                             for (const player of players) {
-                                xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, null)
+                                xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level)
                             }
                             importMessage.edit(`${__("mee6_levels_successfully_imported")} ${__("kirino_glad")}`)
                         }
@@ -278,7 +278,11 @@ module.exports = {
                     const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
         
-                    if (xpRow === undefined) xpRow = { "xp": 0, "level": 0, "color": null }
+                    if (xpRow === undefined) {
+                        xpRow = { "xp": 0, "total_xp": 0, "level": 0 }
+                        const createProfileRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?)")
+                        createProfileRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level)
+                    }
         
                     const level = xpRow.level
                     let xp = xpRow.xp
@@ -302,9 +306,10 @@ module.exports = {
                     const ctx = canvas.getContext("2d")
 
                     const backgroundUrlRequest = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-                    let backgroundUrl = backgroundUrlRequest.get(msg.guild.id, msg.author.id).background
+                    let backgroundUrl = backgroundUrlRequest.get(msg.guild.id, msg.author.id)
+                    if (backgroundUrl !== undefined) backgroundUrl = backgroundUrl.background
 
-                    if (backgroundUrl !== null) {
+                    if (backgroundUrl !== null && backgroundUrl !== undefined) {
                         try {
                             const background = await Canvas.loadImage(backgroundUrl)
                             ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
