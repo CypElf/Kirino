@@ -441,5 +441,8 @@
 	"scale_reset": "Le coefficient a bien été réinitialisé.",
 	"scale_set": "Le coefficient a bien été défini à",
 	"current_scale_is": "Le coefficient est actuellement de",
-	"bad_scale": "Veuillez saisir un coefficient valide parmi la liste de ceux disponibles (`0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` et `3`)."
+	"bad_scale": "Veuillez saisir un coefficient valide parmi la liste de ceux disponibles (`0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` et `3`).",
+	"background_reset": "Le background de votre carte XP a été réinitialisé avec succès.",
+	"background_set": "Le background de votre carte XP a été mis à jour avec succès.",
+	"bad_image": "Veuillez indiquer une URL d'image valide ou une image en pièce jointe."
 }
