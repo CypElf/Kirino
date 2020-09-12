@@ -1,4 +1,5 @@
 const Canvas = require("canvas")
+const { __ } = require("i18n")
 
 module.exports = {
 	name: "xp",
@@ -232,7 +233,7 @@ module.exports = {
                     const updateBackground = require("../lib/update_background")
                     if (arg === "reset") {
                         updateBackground(bot.db, msg, null)
-                        return msg.channel.send("Background reset")
+                        return msg.channel.send(`${__("background_reset")} ${__("kirino_glad")}`)
                     }
 
                     let url
@@ -246,17 +247,17 @@ module.exports = {
                         url = msg.attachments.first().url
                     }
                     
-                    if (url === undefined) return msg.channel.send("Please specify a valid image or image url")
+                    if (url === undefined) return msg.channel.send(`${__("bad_image")} ${__("kirino_pout")}`)
                     try {
                         await Canvas.loadImage(url)
                     }
                     catch {
-                        return msg.channel.send("Please specify a valid image or image url")
+                        return msg.channel.send(`${__("bad_image")} ${__("kirino_pout")}`)
                     }
 
                     updateBackground(bot.db, msg, url)
 
-                    msg.channel.send("Background set")
+                    msg.channel.send(`${__("background_set")} ${__("kirino_glad")}`)
                 }
         
                 else {
