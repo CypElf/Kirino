@@ -208,7 +208,7 @@ module.exports = {
                     const xpRequest = bot.db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     const xpRow = xpRequest.get(msg.guild.id, msg.author.id)
 
-                    const updateColorRequest = bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET color=excluded.color")
+                    const updateColorRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level, color) VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET color=excluded.color")
                     
 
                     if (color === "reset") {
@@ -224,6 +224,39 @@ module.exports = {
                         updateColorRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
                         msg.channel.send(`${__("color_updated")} ${__("kirino_glad")}`)
                     }
+                }
+
+                else if (request === "background" || request === "back") {
+                    const arg = args[1]
+
+                    const updateBackground = require("../lib/update_background")
+                    if (arg === "reset") {
+                        updateBackground(bot.db, msg, null)
+                        return msg.channel.send("Background reset")
+                    }
+
+                    let url
+                    if (arg !== undefined) {
+                        const isImageUrl = require("is-image-url")
+                        if (isImageUrl(arg)) {
+                            url = arg
+                        }
+                    }
+                    if (msg.attachments.size > 0) {
+                        url = msg.attachments.first().url
+                    }
+                    
+                    if (url === undefined) return msg.channel.send("Please specify a valid image or image url")
+                    try {
+                        await Canvas.loadImage(url)
+                    }
+                    catch {
+                        return msg.channel.send("Please specify a valid image or image url")
+                    }
+
+                    updateBackground(bot.db, msg, url)
+
+                    msg.channel.send("Background set")
                 }
         
                 else {
@@ -267,8 +300,26 @@ module.exports = {
                     const canvas = Canvas.createCanvas(934, 282)
                     const ctx = canvas.getContext("2d")
 
-                    ctx.fillStyle = "black"
-                    ctx.fillRect(0, 0, canvas.width, canvas.height) // black background
+                    const backgroundUrlRequest = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
+                    let backgroundUrl = backgroundUrlRequest.get(msg.guild.id, msg.author.id).background
+
+                    if (backgroundUrl !== null) {
+                        try {
+                            const background = await Canvas.loadImage(backgroundUrl)
+                            ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+                        }
+                        catch {
+                            const updateBackground = require("../lib/update_background")
+                            updateBackground(bot.db, msg, null)
+                            
+                            ctx.fillStyle = "black"
+                            ctx.fillRect(0, 0, canvas.width, canvas.height)
+                        }
+                    }
+                    else {
+                        ctx.fillStyle = "black"
+                        ctx.fillRect(0, 0, canvas.width, canvas.height) // default is a black background
+                    }
     
                     ctx.strokeStyle = color
                     ctx.strokeRect(0, 0, canvas.width, canvas.height) // border
@@ -319,7 +370,7 @@ module.exports = {
                     ctx.fillStyle = "#AAAAAA"
 
                     ctx.lineWidth = 0.25
-
+                    
                     ctx.fillText("#" + tag, usernameTotalMeasure + 275, 176)
                     ctx.strokeText("#" + tag, usernameTotalMeasure + 275, 176)
 
