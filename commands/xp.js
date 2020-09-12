@@ -286,7 +286,7 @@ module.exports = {
                     if (xpRow === undefined) {
                         xpRow = { "xp": 0, "total_xp": 0, "level": 0 }
                         const createProfileRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?)")
-                        createProfileRequest.run(msg.guild.id, msg.author.id, xpRow.xp, xpRow.total_xp, xpRow.level)
+                        createProfileRequest.run(msg.guild.id, member.id, xpRow.xp, xpRow.total_xp, xpRow.level)
                     }
         
                     const level = xpRow.level
@@ -311,7 +311,7 @@ module.exports = {
                     const ctx = canvas.getContext("2d")
 
                     const backgroundUrlRequest = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-                    let backgroundUrl = backgroundUrlRequest.get(msg.guild.id, msg.author.id)
+                    let backgroundUrl = backgroundUrlRequest.get(msg.guild.id, member.id)
                     if (backgroundUrl !== undefined) backgroundUrl = backgroundUrl.background
 
                     if (backgroundUrl !== null && backgroundUrl !== undefined) {
