@@ -266,12 +266,14 @@ module.exports = {
 
                     const canvas = Canvas.createCanvas(934, 282)
                     const ctx = canvas.getContext("2d")
-    
+
                     ctx.fillStyle = "black"
                     ctx.fillRect(0, 0, canvas.width, canvas.height) // black background
     
                     ctx.strokeStyle = color
                     ctx.strokeRect(0, 0, canvas.width, canvas.height) // border
+
+                    ctx.lineWidth = 0.5
     
                     const totalName = member.user.tag.split("#")
                     const tag = totalName.pop()
@@ -282,6 +284,7 @@ module.exports = {
     
                     ctx.font = "40px ubuntu"
                     ctx.fillStyle = "#FFFFFF"
+                    ctx.strokeStyle = "black"
                     let usernameMeasure = ctx.measureText(username)
 
                     let tooLongText = ""
@@ -308,35 +311,47 @@ module.exports = {
 
                     ctx.font = "40px ubuntu"
                     ctx.fillText(username, 270, 176)
+                    ctx.strokeText(username, 270, 176)
                     ctx.font = "30px ubuntu"
                     ctx.fillText(tooLongText, 270 + usernameMeasure.width, 176)
+                    ctx.strokeText(tooLongText, 270 + usernameMeasure.width, 176)
                     ctx.font = "21px ubuntu"
                     ctx.fillStyle = "#AAAAAA"
+
+                    ctx.lineWidth = 0.25
+
                     ctx.fillText("#" + tag, usernameTotalMeasure + 275, 176)
+                    ctx.strokeText("#" + tag, usernameTotalMeasure + 275, 176)
+
+                    ctx.lineWidth = 0.5
     
                     ctx.fillStyle = color // level
                     ctx.font = "70px ubuntu"
                     const levelMeasure = ctx.measureText(level)
                     const offsetLevel = canvas.width - levelMeasure.width - 40
                     ctx.fillText(level, offsetLevel, 85)
+                    ctx.strokeText(level, offsetLevel, 85)
     
                     ctx.font = "25px ubuntu" // level prefix
                     const levelPrefix = __("level").toUpperCase()
                     const levelPrefixMeasure = ctx.measureText(levelPrefix)
                     const offsetLevelPrefix = offsetLevel - levelPrefixMeasure.width - spaceMeasure.width * 2
                     ctx.fillText(levelPrefix, offsetLevelPrefix, 85)
+                    ctx.strokeText(levelPrefix, offsetLevelPrefix, 85)
     
                     ctx.fillStyle = "#FFFFFF"
                     ctx.font = "70px ubuntu" // rank
                     const rankMeasure = ctx.measureText(`#${rank}`)
                     const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
                     ctx.fillText(`#${rank}`, offsetRank, 85)
+                    ctx.strokeText(`#${rank}`, offsetRank, 85)
     
                     ctx.font = "25px ubuntu" // rank prefix
                     const rankPrefix = __("rank").toUpperCase()
                     const rankPrefixMeasure = ctx.measureText(rankPrefix)
                     const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
                     ctx.fillText(rankPrefix, offsetRankPrefix, 85)
+                    ctx.strokeText(rankPrefix, offsetRankPrefix, 85)
     
                     if (level < 100) {
                         ctx.fillStyle = "#AAAAAA" // next level xp
@@ -344,12 +359,14 @@ module.exports = {
                         const nextLvlXpMeasure = ctx.measureText(`/ ${nextLvlXp} XP`)
                         const offsetNextLvlXpMeasure = canvas.width - nextLvlXpMeasure.width - 50
                         ctx.fillText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
+                        ctx.strokeText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
         
                         ctx.fillStyle = "#FFFFFF" // current xp
                         if (xp >= 1000) xp = (xp / 1000).toPrecision(3) + "K"
                         const xpMeasure = ctx.measureText(xp)
                         const offsetXp = offsetNextLvlXpMeasure - xpMeasure.width - spaceMeasure.width
                         ctx.fillText(xp, offsetXp, 176)
+                        ctx.strokeText(xp, offsetXp, 176)
     
                         ctx.save()
     
@@ -360,6 +377,7 @@ module.exports = {
                         ctx.beginPath()
                         ctx.roundedRectangle(270, 200, progressBarWidth, progressBarHeight, 20)
                         ctx.fill()
+                        ctx.stroke()
                         ctx.clip()
     
                         ctx.fillStyle = color // progress bar foreground
@@ -375,6 +393,7 @@ module.exports = {
                         ctx.fillStyle = color // max reached
                         ctx.font = "70px ubuntu"
                         ctx.fillText(__("max_reached"), 320, 255)
+                        ctx.strokeText(__("max_reached"), 320, 255)
                     }                
     
                     ctx.beginPath() // user avatar circle filter
