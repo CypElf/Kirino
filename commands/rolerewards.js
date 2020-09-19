@@ -78,9 +78,9 @@ module.exports = {
 
             const rolesRows = roleRequest.all(msg.guild.id)
 
-            if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return msg.channel.send(__("role_already_present"))
+            if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return msg.channel.send(__("rrole_already_present"))
 
-            if (rolesRows.length === 10) return msg.channel.send(__("max_roles_count_reached"))
+            if (rolesRows.length === 10) return msg.channel.send(__("max_rroles_count_reached"))
 
             const addRoleRequest = bot.db.prepare("INSERT INTO xp_roles VALUES(?,?,?)")
             addRoleRequest.run(msg.guild.id, role.id, level)

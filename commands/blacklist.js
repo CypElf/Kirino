@@ -17,8 +17,10 @@ module.exports = {
 
         const arg = args[0]
         const getChannel = require("../lib/get_channel")
+        const getRole = require("../lib/get_role")
 
         const channelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
+        const roleRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_roles WHERE guild_id = ?")
 
         const removeDeletedBlacklistedChannels = require("../lib/remove_deleted_channels")
         removeDeletedBlacklistedChannels(bot.db, msg.guild)
@@ -29,29 +31,51 @@ module.exports = {
             if (!channelArg) return msg.channel.send(`${__("precise_channel_to_remove")} ${__("kirino_pout")}`)
             
             const channel = await getChannel(msg, args.slice(1))
-            if (!channel) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
-            const spChannelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
-            const channelRow = spChannelRequest.get(msg.guild.id, channel.id)
+            if (channel !== undefined) {
+                const spChannelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
+                const channelRow = spChannelRequest.get(msg.guild.id, channel.id)
 
-            if (!channelRow) return msg.channel.send(`${__("channel_not_in_db")} ${__("kirino_pout")}`)
+                if (!channelRow) return msg.channel.send(`${__("channel_not_in_db")} ${__("kirino_pout")}`)
 
-            const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
-            deletionChannelRequest.run(msg.guild.id, channel.id)
+                const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
+                deletionChannelRequest.run(msg.guild.id, channel.id)
 
-            msg.channel.send(`${__("the_channel")} ${channel.name} ${__("has_been_removed_to_list")} ${__("kirino_glad")}`)
+                return msg.channel.send(`${__("the_channel")} <#${channel.id}> ${__("has_been_removed_from_channels_list")} ${__("kirino_glad")}`)
+            }
+
+            const role = await getRole(msg, args.slice(1))
+
+            if (role !== undefined) {
+                const spRoleRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_roles WHERE guild_id = ? AND role_id = ?")
+                const roleRow = spRoleRequest.get(msg.guild.id, role.id)
+
+                if (!roleRow) return msg.channel.send(`${__("role_not_in_db")} ${__("kirino_pout")}`)
+
+                const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_blacklisted_roles WHERE guild_id = ? AND role_id = ?")
+                deletionChannelRequest.run(msg.guild.id, role.id)
+
+                return msg.channel.send(`${__("the_role")} ${role.name} ${__("has_been_removed_from_roles_list")} ${__("kirino_glad")}`)
+            }
+
+            msg.channel.send(`${__("bad_channel_or_role")} ${__("kirino_pout")}`)
         }
         else if (arg === "list") {
             const channelsRows = channelRequest.all(msg.guild.id).map(row => row.channel_id)
-            const blacklistedChannels = msg.guild.channels.cache.array().filter(channel => channelsRows.includes(channel.id)).map(channel => channel.name)
+            const rolesRows = roleRequest.all(msg.guild.id).map(row => row.role_id)
+            let blacklistedChannels = msg.guild.channels.cache.array().filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
+            let blacklistedRoles = msg.guild.roles.cache.array().filter(role => rolesRows.includes(role.id)).map(role => role.id)
 
             const Discord = require("discord.js")
             const blacklistEmbed = new Discord.MessageEmbed()
-                .setTitle(__("channels_blacklisted"))
+                .setTitle(__("blacklist"))
                 .setColor("#000000")
 
-            if (blacklistedChannels.length === 0) blacklistEmbed.setDescription(__("no_blacklisted_channels"))
-            else blacklistEmbed.setDescription(`\`${blacklistedChannels.join("`, `")}\``)
+            if (blacklistedChannels.length === 0 && blacklistedRoles.length === 0) blacklistEmbed.setDescription(__("no_blacklisted_channels_or_roles"))
+            else {
+                if (blacklistedChannels.length > 0) blacklistEmbed.addField(__("blacklisted_channels"), `<#${blacklistedChannels.join(">, <#")}>`)
+                if (blacklistedRoles.length > 0) blacklistEmbed.addField(__("blacklisted_roles"), `<@&${blacklistedRoles.join(">, <@&")}>`) 
+            }
 
             msg.channel.send(blacklistEmbed)
         }
@@ -60,18 +84,35 @@ module.exports = {
 
             let channel = await getChannel(msg, args)
 
-            if (!channel) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
+            if (channel !== undefined) {
+                const channelsRows = channelRequest.all(msg.guild.id)
 
-            const channelsRows = channelRequest.all(msg.guild.id)
+                if (channelsRows.map(row => row.channel_id).filter(channel_id => channel_id === channel.id).length > 0) return msg.channel.send(__("channel_already_present"))
+    
+                if (channelsRows.length === 10) return msg.channel.send(`${__("max_channels_count_reached")} ${__("kirino_pout")}`)
+    
+                const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_channels VALUES(?,?)")
+                addChannelRequest.run(msg.guild.id, channel.id)
+    
+                return msg.channel.send(`${__("the_channel")} <#${channel.id}> ${__("has_been_added_to_channels_list")} ${__("kirino_glad")}`)
+            }
 
-            if (channelsRows.map(row => row.channel_id).filter(channel_id => channel_id === channel.id).length > 0) return msg.channel.send(__("channel_already_present"))
+            const role = await getRole(msg, args)
 
-            if (channelsRows.length === 10) return msg.channel.send(`${__("max_channels_count_reached")} ${__("kirino_pout")}`)
+            if (role !== undefined) {
+                const rolesRows = roleRequest.all(msg.guild.id)
 
-            const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_channels VALUES(?,?)")
-            addChannelRequest.run(msg.guild.id, channel.id)
+                if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return msg.channel.send(__("bl_role_already_present"))
+    
+                if (rolesRows.length === 10) return msg.channel.send(`${__("max_bl_roles_count_reached")} ${__("kirino_pout")}`)
+    
+                const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_roles VALUES(?,?)")
+                addChannelRequest.run(msg.guild.id, role.id)
+    
+                return msg.channel.send(`${__("the_role")} ${role.name} ${__("has_been_added_to_roles_list")} ${__("kirino_glad")}`)
+            }
 
-            msg.channel.send(`${__("the_channel")} ${channel.name} ${__("has_been_added_to_list")} ${__("kirino_glad")}`)
+            msg.channel.send(`${__("bad_channel_or_role")} ${__("kirino_pout")}`)
         }
     }
 }
