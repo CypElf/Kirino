@@ -28,7 +28,7 @@ module.exports = {
             const channelArg = args[1]
             if (!channelArg) return msg.channel.send(`${__("precise_channel_to_remove")} ${__("kirino_pout")}`)
             
-            const channel = getChannel(msg, args.slice(1))
+            const channel = await getChannel(msg, args.slice(1))
             if (!channel) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
             const spChannelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
@@ -58,7 +58,7 @@ module.exports = {
         else {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_perm_to_add_channel"))
 
-            let channel = getChannel(msg, args)
+            let channel = await getChannel(msg, args)
 
             if (!channel) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 

@@ -435,7 +435,7 @@
 	"has_been_removed_to_list": "has been successfully removed from the list of blacklisted channels.",
 	"channels_blacklisted": "Channels blacklisted",
 	"not_allowed_to_change_channel": "You are not allowed to edit the level up messages channel.",
-	"level_up_channel_added": "This channel has been successfully defined as the level up messages channel.",
+	"has_been_set_as_level_up_channel": "has been successfully defined as the level up messages channel.",
 	"level_up_channel_reset": "The level up messages channel has been removed. Level up messages will now be sent in the channel where the level up was triggered.",
 	"description_scale": "Allows you to change the difficulty of the XP system by multiplying the given amount of XP each time by a coefficient. All possible coefficients are: `0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` and `3`. By default, its value is `1`.",
 	"usage_scale": "{coefficient}",
@@ -448,5 +448,7 @@
 	"bad_image": "Please specify a valid image URL or an image as an attachment.",
 	"i_found": "I found",
 	"members_who_do_you_want": "matching members for your research. Which one do you want?",
+	"roles_who_do_you_want": "matching roles for your research. Which one do you want?",
+	"channels_who_do_you_want": "matching channels for your research. Which one do you want?",
 	"nobody": "Nobody"
 }

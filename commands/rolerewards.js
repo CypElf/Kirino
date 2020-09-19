@@ -55,7 +55,7 @@ module.exports = {
             const roleArg = args[1]
             if (!roleArg) return msg.channel.send(__("precise_role_to_remove"))
             
-            const role = getRole(msg, args.slice(1))
+            const role = await getRole(msg, args.slice(1))
             if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
 
             const spRoleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? AND role_id = ?")
@@ -71,7 +71,7 @@ module.exports = {
         else {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_permissions_to_add_role"))
             const level = parseInt(args.pop())
-            let role = getRole(msg, args)
+            let role = await getRole(msg, args)
             if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
             if (role.managed) return msg.channel.send(__("role_externally_managed"))
             if (isNaN(level) || level <= 0 || level > 100) return msg.channel.send(__("bad_level"))

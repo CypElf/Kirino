@@ -130,7 +130,7 @@ module.exports = {
                         if (channel === null) msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
                         else {
                             const getChannel = require("../lib/get_channel")
-                            channel = getChannel(msg, [channel])
+                            channel = await getChannel(msg, [channel])
                             if (channel === undefined) {
                                 const resetChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
                                 resetChannelRequest.run(msg.guild.id, 1, null)
@@ -145,16 +145,16 @@ module.exports = {
                         const changeChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
 
                         const getChannel = require("../lib/get_channel")
-                        let channel = getChannel(msg, args.slice(1))
+                        let channel = await getChannel(msg, args.slice(1))
 
                         if (args.slice(1)[0] === "reset") channel = null
                         else channel = channel.id
-
+                        
                         if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
 
                         changeChannelRequest.run(msg.guild.id, 1, channel)
 
-                        if (channel !== null) msg.channel.send(`${__("level_up_channel_added")} ${__("kirino_glad")}`)
+                        if (channel !== null) msg.channel.send(`${__("the_channel")} <#${channel}> ${__("has_been_set_as_level_up_channel")} ${__("kirino_glad")}`)
                         else msg.channel.send(`${__("level_up_channel_reset")} ${__("kirino_glad")}`)
                     }
                 }

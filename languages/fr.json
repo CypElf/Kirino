@@ -420,7 +420,7 @@
 	"usage_blacklist": "[salon]\nremove [salon]\nlist",
 	"missing_permissions_to_remove_channel": "Vous n'avez pas les permissions nécessaires pour retirer un salon des salons blacklistés.",
 	"precise_channel_to_remove": "Veuillez préciser un salon à retirer des salons blacklistés.",
-	"bad_channel": 	"Veuillez mentionner, écrire le nom ou l'ID d'un salon du serveur.",
+	"bad_channel": "Veuillez mentionner, écrire le nom ou l'ID d'un salon du serveur.",
 	"channel_not_in_db": "Ce salon n'est déjà pas présent dans les salons blacklistés.",
 	"channel_removed_from_db": "Ce salon a bien été retiré des salons blacklistés.",
 	"no_blacklisted_channels": "Aucun salon n'a été blacklisté pour le moment.",
@@ -432,7 +432,7 @@
 	"has_been_removed_to_list": "a correctement été retiré de la liste des salons blacklistés.",
 	"channels_blacklisted": "Salons blacklistés",
 	"not_allowed_to_change_channel": "Vous n'êtes pas autorisé à modifier le salon des messages de montée de niveau.",
-	"level_up_channel_added": "Ce salon a bien été défini comme salon des messages de montée de niveau.",
+	"has_been_set_as_level_up_channel": "a bien été défini comme salon des messages de montée de niveau.",
 	"level_up_channel_reset": "Le salon des messages de montée de niveau a bien été retiré. Les messages de montée de niveau seront envoyés dans le salon du message ayant déclenché la montée en niveau.",
 	"no_level_up_channel": "Il n'y a actuellement pas de salon spécifique pour les messages de montée de niveau.",
 	"level_up_channel_is": "Le salon pour les messages de montée de niveau est actuellement",
@@ -447,5 +447,7 @@
 	"bad_image": "Veuillez indiquer une URL d'image valide ou une image en pièce jointe.",
 	"i_found": "J'ai trouvé",
 	"members_who_do_you_want": "membres pour votre saisie. Lequel vous intéresse ?",
+	"roles_who_do_you_want": "rôles pour votre saisie. Lequel vous intéresse ?",
+	"channels_who_do_you_want": "salons pour votre saisie. Lequel vous intéresse ?",
 	"nobody": "Aucun"
 }

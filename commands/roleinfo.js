@@ -12,8 +12,8 @@ module.exports = {
     
     async execute(bot, msg, args) {
 
-        const getUser = require("../lib/get_role")
-        let role = await getUser(msg, args)
+        const getRole = require("../lib/get_role")
+        let role = await getRole(msg, args)
         if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
 
         // ------------------------------------------ //
