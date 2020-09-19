@@ -15,7 +15,7 @@ module.exports = {
         else {
             const getUser = require("../lib/get_user")
 
-            member = getUser(msg, args)
+            member = await getUser(msg, args)
             
             if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }

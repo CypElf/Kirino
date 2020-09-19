@@ -25,9 +25,7 @@ module.exports = {
         confirmationMsg.react('✅')
         confirmationMsg.react('❌')
 
-        const filter = (reaction, user) => {
-            return reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
-        }
+        const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
         const collector = confirmationMsg.createReactionCollector(filter, { max: 1, time: 30_000 })
 
         collector.on("collect", async reaction => {

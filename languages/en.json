@@ -445,5 +445,8 @@
 	"bad_scale": "Please enter a valid coefficient from the list of those available (`0.25`, `0.5`, `0.75`, `1`, `1.5`, `2`, `2.5` and `3`).",
 	"background_reset": "Your XP card background has been successfully reset.",
 	"background_set": "Your XP card background has been successfully updated.",
-	"bad_image": "Please specify a valid image URL or an image as an attachment."
+	"bad_image": "Please specify a valid image URL or an image as an attachment.",
+	"i_found": "I found",
+	"members_who_do_you_want": "matching members for your research. Which one do you want?",
+	"nobody": "Nobody"
 }

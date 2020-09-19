@@ -76,7 +76,7 @@ module.exports = {
                     else {
                         let member
                         if (args[0] === undefined) member = msg.member
-                        else member = getUser(msg, args)
+                        else member = await getUser(msg, args)
                         if (!member) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pout")}`)
                         
@@ -269,7 +269,7 @@ module.exports = {
                     }
             
                     else {
-                        member = getUser(msg, args)
+                        member = await getUser(msg, args)
                         if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pff")}`)
                     }
