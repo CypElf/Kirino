@@ -1,6 +1,6 @@
 {
   "name": "kirino",
-  "version": "2.2.12",
+  "version": "2.2.13",
   "description": " A public, IT / programming oriented bot for discord. ",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
   "dependencies": {
     "better-sqlite3": "^6.0.1",
     "canvas": "^2.6.1",
-    "colorthief": "^2.3.0",
-    "discord.js": "^12.2.0",
+    "colorthief": "^2.3.2",
+    "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "i18n": "^0.13.2",
     "js-md5": "^0.7.3",
