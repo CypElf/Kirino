@@ -30,7 +30,7 @@ module.exports = {
         const joinMsg = args.join(" ")
 
         const joinRequest = bot.db.prepare("INSERT INTO joins_leaves(guild_id, joins_channel_id, join_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET joins_channel_id=excluded.joins_channel_id, join_message=excluded.join_message")
-        joinRequest.run(msg.guild.id,channel.id, joinMsg)
+        joinRequest.run(msg.guild.id, channel.id, joinMsg)
 
         msg.channel.send("Message successfully set")
     }
