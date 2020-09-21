@@ -163,6 +163,16 @@ bot.on("messageUpdate", async (oldMsg, newMsg) => {
     checkBanwords(bot, newMsg)
 })
 
+bot.on("guildMemberAdd", async member => {
+    const handleMemberAdd = require("./lib/handle_member_add")
+    handleMemberAdd(bot, member)
+})
+
+bot.on("guildMemberRemove", async member => {
+    const handleMemberRemove = require("./lib/handle_member_remove")
+    handleMemberRemove(bot, member)
+})
+
 function updateActivity () {
     guildsCount = bot.guilds.cache.size
     bot.user.setActivity(`${guildsCount} servers | ;help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING or WATCHING*/ })
