@@ -458,5 +458,19 @@
 	"members_who_do_you_want": "matching members for your research. Which one do you want?",
 	"roles_who_do_you_want": "matching roles for your research. Which one do you want?",
 	"channels_who_do_you_want": "matching channels for your research. Which one do you want?",
-	"nobody": "Nobody"
+	"nobody": "Nobody",
+	"description_join": "This command allows to define a message which will be automatically sent in the desired channel, when a user joins the server. You can specify in the message some special tags, which will be replaced by the value corresponding to the context:\n- `{user}` : mention of the user\n- `{username}` : username of the user\n- `{tag}` : tag of the user\n- `{server}` : name of the server\n- `{count}` : number of users in the server",
+	"usage_join": "[channel] [message]\ntest\nreset",
+	"already_no_join_message": "There is already no join message configured.",
+	"join_message_reset": "The join message has been successfully removed.",
+	"no_join_message_set": "There is currently no join message configured.",
+	"need_join_channel_and_message": "Please specify a channel in which to send the join messages, and the message to be sent there.",
+	"join_message_set": "The join message has been successfully defined and will be sent in",
+	"description_leave": "This command allows to define a message that will be automatically sent in the desired channel, when a user leaves the server. You can specify in the message some special tags, which will be replaced by the value corresponding to the context:\n- `{user}` : mention of the user\n- `{username}` : nickname of the user\n- `{tag}` : tag of the user\n- `{server}` : name of the server\n- `{count}` : number of users in the server",
+	"usage_leave": "[channel] [message]\ntest\nreset",
+	"already_no_leave_message": "There is already no leave message configured.",
+	"leave_message_reset": "The leave message has been successfully removed.",
+	"no_leave_message_set": "There is currently no leave message configured.",
+	"need_leave_channel_and_message": "Please specify a channel in which to send leave messages, and the message to be sent there.",
+	"leave_message_set": "The leave message has been successfully defined and will be sent in"
 }

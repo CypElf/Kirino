@@ -165,12 +165,12 @@ bot.on("messageUpdate", async (oldMsg, newMsg) => {
 
 bot.on("guildMemberAdd", async member => {
     const handleMemberAdd = require("./lib/handle_member_add")
-    handleMemberAdd(bot, member)
+    handleMemberAdd(bot.db, member)
 })
 
 bot.on("guildMemberRemove", async member => {
     const handleMemberRemove = require("./lib/handle_member_remove")
-    handleMemberRemove(bot, member)
+    handleMemberRemove(bot.db, member)
 })
 
 function updateActivity () {

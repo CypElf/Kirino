@@ -1,3 +1,5 @@
+const { __ } = require("i18n")
+
 module.exports = {
 	name: "leave",
     description: "description_leave",
@@ -8,29 +10,36 @@ module.exports = {
     permissions: ["manage_guild"],
 
     async execute (bot, msg, args) {
-        if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send("Not allowed to use this command")
+        if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
 
         if (args[0] === "reset") {
             const resetLeave = require("../lib/reset_leave")
 
-            if (!resetLeave(bot.db, msg.guild.id)) msg.channel.send("Already nothing")
+            if (!resetLeave(bot.db, msg.guild.id)) return msg.channel.send(`${__("already_no_leave_message")} ${__("kirino_pout")}`)
 
-            return msg.channel.send("Leave message successfully reset")
+            msg.channel.send(`${__("leave_message_reset")} ${__("kirino_glad")}`)
         }
 
-        if (args.length < 2) return msg.channel.send("Need 2 args")
+        else if (args[0] === "test") {
+            const handleMemberRemove = require("../lib/handle_member_remove")
+            if (!handleMemberRemove(bot.db, msg.member, msg.channel.id)) msg.channel.send(`${__("no_leave_message_set")} ${__("kirino_glad")}`)
+        }
 
-        const getChannel = require("../lib/get_channel")
-        const channel = await getChannel(msg, args.slice(0, 1))
+        else {
+            if (args.length < 2) return msg.channel.send(`${__("need_leave_channel_and_message")} ${__("kirino_pout")}`)
 
-        if (channel === undefined) return msg.channel.send(__("bad_channel"))
-        
-        args.shift()
-        const leaveMsg = args.join(" ")
+            const getChannel = require("../lib/get_channel")
+            const channel = await getChannel(msg, args.slice(0, 1))
 
-        const leaveRequest = bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id=excluded.leaves_channel_id, leave_message=excluded.leave_message")
-        leaveRequest.run(msg.guild.id,channel.id, leaveMsg)
+            if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
+            
+            args.shift()
+            const leaveMsg = args.join(" ")
 
-        msg.channel.send("Message successfully set")
+            const leaveRequest = bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id=excluded.leaves_channel_id, leave_message=excluded.leave_message")
+            leaveRequest.run(msg.guild.id,channel.id, leaveMsg)
+
+            msg.channel.send(`${__("leave_message_set")} <#${channel.id}>. ${__("kirino_glad")}`)
+        }
     }
 }

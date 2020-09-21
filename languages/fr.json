@@ -457,5 +457,19 @@
 	"members_who_do_you_want": "membres pour votre saisie. Lequel vous intéresse ?",
 	"roles_who_do_you_want": "rôles pour votre saisie. Lequel vous intéresse ?",
 	"channels_who_do_you_want": "salons pour votre saisie. Lequel vous intéresse ?",
-	"nobody": "Aucun"
+	"nobody": "Aucun",
+	"description_join": "Cette commande permet de définir un message qui sera automatiquement envoyé dans le salon voulu, lorsqu'un utilisateur rejoint le serveur.\nVous pouvez préciser dans le message certains tags spéciaux, qui seront remplacés par la valeur correspondante au contexte :\n- `{user}` : mention de l'utilisateur\n- `{username}` : pseudo de l'utilisateur\n- `{tag}` : tag de l'utilisateur\n- `{server}` : nom du serveur\n- `{count}` : nombre d'utilisateurs dans le serveur",
+	"usage_join": "[salon] [message]\ntest\nreset",
+	"already_no_join_message": "Il n'y a déjà pas de message de join de configuré.",
+	"join_message_reset": "Le message de join a bien été retiré.",
+	"no_join_message_set": "Il n'y a actuellement pas de message de join de configuré.",
+	"need_join_channel_and_message": "Veuillez préciser un salon dans lequel envoyer les messages de join, ainsi que le message à y envoyer.",
+	"join_message_set": "Le message de join a bien été défini et sera envoyé dans",
+	"description_leave": "Cette commande permet de définir un message qui sera automatiquement envoyé dans le salon voulu, lorsqu'un utilisateur quitte le serveur.\nVous pouvez préciser dans le message certains tags spéciaux, qui seront remplacés par la valeur correspondante au contexte :\n- `{user}` : mention de l'utilisateur\n- `{username}` : pseudo de l'utilisateur\n- `{tag}` : tag de l'utilisateur\n- `{server}` : nom du serveur\n- `{count}` : nombre d'utilisateurs dans le serveur",
+	"usage_leave": "[salon] [message]\ntest\nreset",
+	"already_no_leave_message": "Il n'y a déjà pas de message de leave de configuré.",
+	"leave_message_reset": "Le message de leave a bien été retiré.",
+	"no_leave_message_set": "Il n'y a actuellement pas de message de leave de configuré.",
+	"need_leave_channel_and_message": "Veuillez préciser un salon dans lequel envoyer les messages de leave, ainsi que le message à y envoyer.",
+	"leave_message_set": "Le message de leave a bien été défini et sera envoyé dans"
 }
