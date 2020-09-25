@@ -3,6 +3,7 @@ const config = require("./config.json")
 const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
+const yaml = require("js-yaml")
 
 require("dotenv").config()
 
@@ -18,8 +19,10 @@ const apiCooldowns = new Map()
 
 i18n.configure({
     locales: ['en', 'fr'],
-    directory: __dirname + "/languages",
-    autoReload: true,
+    staticCatalog: {
+        en: yaml.safeLoad(fs.readFileSync("./languages/en.yml", "utf-8")),
+        fr: yaml.safeLoad(fs.readFileSync("./languages/fr.yml", "utf-8")),
+    },
     register: global,
 })
 
