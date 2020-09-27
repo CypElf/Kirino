@@ -127,6 +127,8 @@ bad_role: "Please mention, write the name or ID of a server role."
 roles: 
  one: Role
  other: Roles
+too_much_roles: "Too much roles."
+too_much_emojis: "Too much emojis."
 id: ID
 color: Color
 mentionnable: Mentionable

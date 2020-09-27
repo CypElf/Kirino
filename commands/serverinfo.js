@@ -22,42 +22,17 @@ module.exports = {
         const membres = msg.guild.members
         const bots = membres.cache.filter(membre => membre.user.bot).size
         const humains = msg.guild.memberCount - bots
-        const arrayTotalRoles = msg.guild.roles.cache
-        let arrayRoles = []
-        let nbRoles = 0
-        arrayTotalRoles.forEach((role) => {
-            if (role.name !== "@everyone") {
-                arrayRoles.push(role.name)
-                nbRoles++
-            }
-        })
-        let roles = [""]
-        let displayedRolesCount = " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")"
-        let j = 0
-        arrayRoles.forEach(role => {
-            if (roles[j].length + role.length + 2 > 1024) {
-                j++
-                roles.push(role) + ", "
-            }
-            else {
-                roles[j] += role + ", "
-            }
-        })
-
-        roles[j] = roles[j].substring(0, roles[j].length - 2)
-
-        if (roles[j].length + displayedRolesCount.length + 2 > 1024) {
-            roles.push(displayedRolesCount.toString())
-        }
-        else {
-            roles[j] += displayedRolesCount.toString()
-        }
+        const roles = msg.guild.roles.cache.filter(role => role.name !== "@everyone")
+        let displayedRoles = `<@&${roles.map(role => role.id).join(">, <@&")}>`
+        let rolesCount = roles.size
+        let displayedRolesCount = ` (${rolesCount} ${__n("roles", rolesCount).toLowerCase()})`
 
         const salons = msg.guild.channels.cache
         const nbSalonsTxt = salons.filter(salon => salon.type == "text").size
         const nbSalonsVocaux = salons.filter(salon => salon.type == "voice").size
         let emojis = msg.guild.emojis.cache.array()
         const emojisCount = emojis.length
+
         let emojisArray = [""]
         let displayedEmojisCount = ""
         if (emojisCount === 0) displayedEmojisCount = __("nothing")
@@ -93,27 +68,28 @@ module.exports = {
         .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
         .addField(__("region"), msg.guild.region, true)
 
-        let first = true
-        emojisArray.forEach(msg1024 => {
-            if (first) {
-                informations.addField(__("emojis"), msg1024)
-                first = false
-            }
-            else {
-                informations.addField(__("emojis_continuation"), msg1024)
-            }
-        })
+        if (emojisCount <= 100) {
+            let first = true
+            emojisArray.forEach(msg1024 => {
+                if (first) {
+                    informations.addField(__("emojis"), msg1024)
+                    first = false
+                }
+                else {
+                    informations.addField(__("emojis_continuation"), msg1024)
+                }
+            })
+        }
+        else {
+            informations.addField(__("emojis"), `${__("too_much_emojis")} (${emojisCount})`)
+        }
 
-        first = true
-        roles.forEach(roles1024 => {
-            if (first) {
-                informations.addField(__n("roles", nbRoles), roles1024)
-                first = false
-            }
-            else {
-                informations.addField(__("roles_continuation"), roles1024)
-            }
-        })
+        if (displayedRoles.length <= 1024) {
+            informations.addField(__n("roles", rolesCount), `${displayedRoles} ${displayedRolesCount}`)
+        }
+        else {
+            informations.addField(__n("roles", rolesCount), `${__("too_much_roles")} (${rolesCount})`)
+        }
         
         informations.addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
         .addField(__("server_creation_date"), creationDate, true)
