@@ -9,9 +9,7 @@ module.exports = {
 	permissions: ["manage messages"],
 	
 	async execute(bot, msg, args) {
-		const config = require("../config.json")
-
-		if (!msg.member.hasPermission("MANAGE_MESSAGES") && msg.author.id != config.ownerID) {
+		if (!msg.member.hasPermission("MANAGE_MESSAGES")) {
 			return msg.channel.send(`${__("you_cannot_delete_messages")} ${__("kirino_pff")}`)
 		}
 

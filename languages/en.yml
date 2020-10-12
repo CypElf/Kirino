@@ -118,7 +118,7 @@ message: Message
 report_from: "Report from "
 report_channel_unavailable: "The server channel where I'm supposed to send your report is nowhere..."
 report_server_unavailable: "The server I'm supposed to send your report on is nowhere..."
-contact_dev: "Please contact my developer as soon as possible (CypElf#4541) to fix this problem!"
+contact_dev: "Please contact my developer as soon as possible to fix this problem!"
 report_sent: "The report has been sent. Thank you for helping to improve me"
 report_cancelled: "The report has been cancelled."
 description_roleinfo: "Displays information about the role mentioned or exactly named."

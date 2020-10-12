@@ -30,16 +30,16 @@ module.exports = {
 
         collector.on("collect", async reaction => {
             if (reaction.emoji.name === '✅') {
-                const kirinoDebug = bot.guilds.cache.find(guild => guild.id === bot.config.reportServerID)
+                const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.REPORT_SERVER_ID)
                 if (kirinoDebug) {
-                    const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === bot.config.reportChannelID)
+                    const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
                     if (reportChannel) {
                         const Discord = require("discord.js")
 
                         const senderLanguage = getLocale()
 
                         const languagesRequest = bot.db.prepare("SELECT * FROM languages WHERE id = ?")
-                        const languageRow = languagesRequest.get(bot.config.reportServerID)
+                        const languageRow = languagesRequest.get(process.env.REPORT_SERVER_ID)
                         if (!(languageRow === undefined)) setLocale(languageRow.language)
                         else setLocale("en")
     

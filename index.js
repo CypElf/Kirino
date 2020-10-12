@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const config = require("./config.json")
 const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
@@ -10,7 +9,6 @@ require("dotenv").config()
 const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
 
 bot.commands = new Discord.Collection()
-bot.config = config
 bot.db = new bsqlite3("database.db", { fileMustExist: true })
 
 const commandsCooldowns = new Discord.Collection()
