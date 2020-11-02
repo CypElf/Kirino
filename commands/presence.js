@@ -1,5 +1,3 @@
-const { __ } = require("i18n")
-
 module.exports = {
 	name: "presence",
     description: "description_presence",
