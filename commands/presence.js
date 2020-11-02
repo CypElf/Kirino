@@ -49,7 +49,7 @@ module.exports = {
 
                     const channel = channels[0]
                     msg.delete().catch(() => {})
-                    const recordMsg = await msg.channel.send(`**${__("record_started")}**\n${__("you_have")} ${duration} ${__("min_to_raise_the_hand")} 🙋. ${__("kirino_glad")}`)
+                    const recordMsg = await msg.channel.send(`**${__("record_started")}** ${__("kirino_glad")}\n${__("you_have")} ${duration} ${__("min_to_raise_the_hand")} 🙋.`)
                     recordMsg.react("🙋")
 
                     let presents = []
