@@ -1,12 +1,10 @@
-const { __ } = require("i18n")
-
 module.exports = {
 	name: "presence",
     description: "description_presence",
     usage: "usage_presence",
     guildOnly: true,
 	args: true,
-    category: "others",
+    category: "utility",
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 	
 	async execute(bot, msg, args) {
@@ -50,6 +48,7 @@ module.exports = {
                     lockRequest.run(1, msg.guild.id)
 
                     const channel = channels[0]
+                    msg.delete().catch(() => {})
                     const recordMsg = await msg.channel.send(`**${__("record_started")}**\n${__("you_have")} ${duration} ${__("min_to_raise_the_hand")} 🙋. ${__("kirino_glad")}`)
                     recordMsg.react("🙋")
 
