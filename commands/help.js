@@ -78,8 +78,8 @@ module.exports = {
 		if (command.cooldown) cooldown = command.cooldown
 		helpEmbed.addField(`**${__("cooldown")}**`, `\`${cooldown}\``, true)
 
-		if (command.permissions) helpEmbed.addField(`**${__("required_permissions")}**`, `\`${command.permissions.join("`, `")}\``, true)
-		else helpEmbed.addField(`**${__("required_permissions")}**`, `\`${__("nothingF")}\``, true)
+		if (command.permissions) helpEmbed.addField(`**${__("required_permissions")}**`, `${command.permissions.join(", ")}`, true)
+		else helpEmbed.addField(`**${__("required_permissions")}**`, `${__("nothingF")}`, true)
 				
 		msg.channel.send(helpEmbed)
 	}

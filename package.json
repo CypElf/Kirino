@@ -1,13 +1,10 @@
 {
   "name": "kirino",
-  "version": "2.2.14",
-  "description": " A public, IT / programming oriented bot for discord. ",
+  "version": "2.2.15",
+  "description": " A public, IT / programming oriented bot for discord.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "CypElf",
-  "license": "GPLV3",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "better-sqlite3": "^6.0.1",
     "canvas": "^2.6.1",

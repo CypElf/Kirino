@@ -138,8 +138,6 @@ bot.on("message", async msg => {
     }
 })
 
-
-
 bot.on("guildCreate", guild  => {
     console.log(`Server joined: ${guild.name}`)
     updateActivity()
@@ -155,6 +153,20 @@ bot.on("guildDelete", guild => {
     deletionRequest = bot.db.prepare("DELETE FROM prefixs WHERE id = ?")
     deletionRequest.run(id)
     deletionRequest = bot.db.prepare("DELETE FROM rules WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM presences WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM afk WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM joins_leaves WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM blacklisted_channels WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM blacklisted_roles WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM xp_guilds WHERE guild_id = ?")
+    deletionRequest.run(id)
+    deletionRequest = bot.db.prepare("DELETE FROM xp_roles WHERE guild_id = ?")
     deletionRequest.run(id)
     updateActivity()
 })
