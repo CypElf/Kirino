@@ -1,3 +1,5 @@
+const { __ } = require("i18n")
+
 module.exports = {
 	name: "presence",
     description: "description_presence",
@@ -22,12 +24,12 @@ module.exports = {
             else {
                 const getChannel = require("../lib/get_channel")
                 const channel = await getChannel(msg, args.slice(1))
-                if (channel === undefined) return msg.channel.send(__("bad_channel"))
+                if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
                 channel_id = channel.id
             }
 
             presenceRequest.run(msg.guild.id, channel_id, 0)
-            msg.channel.send(`${__("presence_channel_set")} <#${channel_id}>.`)
+            msg.channel.send(`${__("presence_channel_set")} <#${channel_id}>. ${__("kirino_glad")}`)
         }
 
         else {
