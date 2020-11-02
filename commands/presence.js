@@ -1,10 +1,11 @@
 module.exports = {
 	name: "presence",
     description: "description_presence",
-    usage: "usage_presence",
+    usage: "usage_presenc",
     guildOnly: true,
 	args: true,
     category: "utility",
+    aliases: ["call"],
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 	
 	async execute(bot, msg, args) {
