@@ -2,8 +2,10 @@ BEGIN TRANSACTION;
 DROP TABLE IF EXISTS "presences";
 CREATE TABLE IF NOT EXISTS "presences" (
 	"guild_id"	TEXT,
-	"channel_id"	TEXT NOT NULL,
+	"channel_id"	TEXT,
 	"locked"	INTEGER NOT NULL,
+	"dm"	INTEGER NOT NULL,
+	"current"	INTEGER NOT NULL,
 	PRIMARY KEY("guild_id")
 );
 DROP TABLE IF EXISTS "joins_leaves";
