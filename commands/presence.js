@@ -1,3 +1,5 @@
+const { __ } = require("i18n")
+
 module.exports = {
 	name: "presence",
     description: "description_presence",
@@ -14,37 +16,55 @@ module.exports = {
         const mode = args[0].toLowerCase()
 
         if (mode == "channel") {
-            if (args[1] === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
-            mode_arg = args[1].toLowerCase()
-
-            const presenceRequest = bot.db.prepare("INSERT INTO presences(guild_id,channel_id,locked,dm,current) VALUES(?,?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET channel_id=excluded.channel_id, dm=excluded.dm, current=excluded.current") 
-
-            if (mode_arg === "reset") {
-                const resetRequest = bot.db.prepare("DELETE FROM presences WHERE guild_id = ?")
-                resetRequest.run(msg.guild.id)
-                msg.channel.send(`${__("presence_channel_reset")} ${__("kirino_glad")}`)
-            }
-            else if (mode_arg === "current") {
-                presenceRequest.run(msg.guild.id, null, 0, 0, 1)
-                msg.channel.send(`${__("i_will_send_it_in_current")} ${__("kirino_glad")}`)
-            }
-            else if (mode_arg === "dm") {
-                presenceRequest.run(msg.guild.id, null, 0, 1, 0)
-                msg.channel.send(`${__("presence_channel_set_to_dm")} ${__("kirino_glad")}`)
-            }
-            else {
-                let channel_id
-                if (mode_arg === "here") channel_id = msg.channel.id
+            if (args[1] === undefined) { // no argument, the user wants to see what channel is set
+                const row = bot.db.prepare("SELECT channel_id, dm, current FROM presences WHERE guild_id = ?").get(msg.guild.id)
+                if (row === undefined) msg.channel.send(`${__("presence_channel_not_set")} ${__("kirino_what")}`)
                 else {
-                    const getChannel = require("../lib/get_channel")
-                    const channel = await getChannel(msg, args.slice(1))
-                    if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
-                    channel_id = channel.id
+                    if (row.dm) msg.channel.send(`${__("presence_channel_is_set_to_dm")} ${__("kirino_glad")}`)
+                    else if (row.current) msg.channel.send(`${__("presence_channel_is_set_to_current")} ${__("kirino_glad")}`)
+                    else {
+                        const channels = msg.guild.channels.cache.array().filter(channel => channel.id === row.channel_id)
+                        if (channels.length > 0) msg.channel.send(`${__("presence_channel_is_set_to_channel")} <#${row.channel_id}>. ${__("kirino_glad")}`)
+                        else {
+                            bot.db.prepare("DELETE FROM presences WHERE guild_id = ?").run(msg.guild.id)
+                            msg.channel.send(`${__("presence_channel_outdated")} ${__("kirino_pout")}`)
+                        }
+                    }
                 }
-
-                presenceRequest.run(msg.guild.id, channel_id, 0, 0, 0)
-                msg.channel.send(`${__("presence_channel_set")} <#${channel_id}>. ${__("kirino_glad")}`)
             }
+
+            else { // argument is set, the user wants to change the channel
+                mode_arg = args[1].toLowerCase()
+
+                const presenceRequest = bot.db.prepare("INSERT INTO presences(guild_id,channel_id,locked,dm,current) VALUES(?,?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET channel_id=excluded.channel_id, dm=excluded.dm, current=excluded.current") 
+    
+                if (mode_arg === "reset") {
+                    const resetRequest = bot.db.prepare("DELETE FROM presences WHERE guild_id = ?")
+                    resetRequest.run(msg.guild.id)
+                    msg.channel.send(`${__("presence_channel_reset")} ${__("kirino_glad")}`)
+                }
+                else if (mode_arg === "current") {
+                    presenceRequest.run(msg.guild.id, null, 0, 0, 1)
+                    msg.channel.send(`${__("i_will_send_it_in_current")} ${__("kirino_glad")}`)
+                }
+                else if (mode_arg === "dm") {
+                    presenceRequest.run(msg.guild.id, null, 0, 1, 0)
+                    msg.channel.send(`${__("presence_channel_set_to_dm")} ${__("kirino_glad")}`)
+                }
+                else {
+                    let channel_id
+                    if (mode_arg === "here") channel_id = msg.channel.id
+                    else {
+                        const getChannel = require("../lib/get_channel")
+                        const channel = await getChannel(msg, args.slice(1))
+                        if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
+                        channel_id = channel.id
+                    }
+    
+                    presenceRequest.run(msg.guild.id, channel_id, 0, 0, 0)
+                    msg.channel.send(`${__("presence_channel_set")} <#${channel_id}>. ${__("kirino_glad")}`)
+                }
+            }            
         }
 
         else {
@@ -123,8 +143,7 @@ module.exports = {
                 }
                 else {
                     msg.channel.send(`${__("presence_channel_not_found")} ${__("kirino_what")}`)
-                    const deletionRequest = bot.db.prepare("DELETE FROM presences WHERE guild_id = ?")
-                    deletionRequest.run(msg.guild.id)
+                    bot.db.prepare("DELETE FROM presences WHERE guild_id = ?").run(msg.guild.id)
                 }
                 
             }
