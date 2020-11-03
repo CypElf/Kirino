@@ -26,7 +26,7 @@ module.exports = {
             }
             else if (mode_arg === "current") {
                 presenceRequest.run(msg.guild.id, null, 0, 0, 1)
-                msg.channel.send(`I'll send it to the current channel ${__("kirino_glad")}`)
+                msg.channel.send(`${__("i_will_send_it_in_current")} ${__("kirino_glad")}`)
             }
             else if (mode_arg === "dm") {
                 presenceRequest.run(msg.guild.id, null, 0, 1, 0)
