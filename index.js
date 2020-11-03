@@ -34,6 +34,8 @@ for (const file of commandFiles) {
 const startXpApi = require("./lib/start_xp_api")
 startXpApi(bot, { cooldowns: apiCooldowns })
 
+bot.db.prepare("UPDATE presences SET locked = ?").run(0) // unlock calls if the bot stopped while there were some in progress that couldn't release the lock after their end
+
 bot.once("ready", async () => {
     updateActivity()
     let startDate = new Date()
