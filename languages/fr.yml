@@ -464,7 +464,7 @@ no_leave_message_set: "Il n'y a actuellement pas de message de leave de configur
 need_leave_channel_and_message: "Veuillez préciser un salon dans lequel envoyer les messages de leave, ainsi que le message à y envoyer."
 leave_message_set: "Le message de leave a bien été défini et sera envoyé dans"
 description_presence: "Cette commande permet de faire l'appel comme dans une classe de cours. Les membres du serveur auront un certain laps de temps (que vous décidez au moment de lancer l'appel) pour réagir au message d'appel. Une fois le temps écoulé, la liste des membres ayant réagi vous est envoyée dans un salon de votre choix. Vous ne pouvez avoir qu'un appel en attente à la fois. Attention : une fois un appel lancé, il n'est pas possible de l'arrêter autrement qu'en attendant le temps spécifié. Le temps à spécifier est en minutes et peut être un nombre à virgule."
-usage_presence: "channel [salon]\nchannel here\n[temps]"
+usage_presence: "channel [salon]\nchannel here\nchannel reset\n[temps]"
 not_enough_permissions_to_use_presence: "Tu n'as pas les permissions suffisantes pour faire un appel !"
 bad_duration: "Veuillez préciser une durée valide en minutes."
 duration_out_of_range: "Veuillez préciser une durée entre 0 (non inclus) et 30 minutes maximum."
@@ -479,3 +479,4 @@ presence_channel_not_found: "Le salon dans lequel je suis censée envoyer les en
 no_presence_channel_set: "Aucun salon n'est défini pour envoyer les enregistrements des appels. Veuillez d'abord en définir un."
 presence_channel_set: "Le salon dans lequel les enregistrements des appels seront envoyés à bien été défini à"
 presence_channel_deleted_during_call: "Désolée, mais entre le moment où vous avez lancé l'appel et sa fin à l'instant, j'ai perdu l'accès au salon où j'étais censée envoyer l'enregistrement de l'appel, alors que je l'avais quand je l'ai commencé. Je ne peux donc pas y envoyer l'enregistrement de l'appel."
+presence_channel_reset: "Le salon dans lequel je dois envoyer les enregistrements des appels a bien été réinitialisé."

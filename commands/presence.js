@@ -1,7 +1,7 @@
 module.exports = {
 	name: "presence",
     description: "description_presence",
-    usage: "usage_presenc",
+    usage: "usage_presence",
     guildOnly: true,
 	args: true,
     category: "utility",
@@ -13,12 +13,18 @@ module.exports = {
 
         const mode = args[0]
 
-
         if (mode == "channel") {
             mode_arg = args[1]
             const presenceRequest = bot.db.prepare("INSERT INTO presences(guild_id,channel_id,locked) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET channel_id=excluded.channel_id")
 
             let channel_id
+
+            if (mode_arg === "reset") {
+                const resetRequest = bot.db.prepare("DELETE FROM presences WHERE guild_id = ?")
+                resetRequest.run(msg.guild.id)
+                return msg.channel.send(`${__("presence_channel_reset")} ${__("kirino_glad")}`)
+            }
+
             if (mode_arg === "here") channel_id = msg.channel.id
             else {
                 const getChannel = require("../lib/get_channel")
