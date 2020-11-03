@@ -261,6 +261,7 @@ module.exports = {
                 }
         
                 else {
+                    return msg.channel.send(__("xp_maintenance")) // tmp
                     if (!msg.guild.me.hasPermission("ATTACH_FILES")) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
                     let member
         
