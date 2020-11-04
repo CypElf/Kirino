@@ -1,5 +1,3 @@
-const { __ } = require("i18n")
-
 module.exports = {
 	name: "presence",
     description: "description_presence",
@@ -11,7 +9,7 @@ module.exports = {
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 	
 	async execute(bot, msg, args) {
-        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
+        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
 
         const mode = args[0].toLowerCase()
 
