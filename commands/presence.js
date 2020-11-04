@@ -97,24 +97,32 @@ module.exports = {
 
                     let presents = []
                     const filter = reaction => reaction.emoji.name === '🙋'
-                    const collector = recordMsg.createReactionCollector(filter, {time: 1000 * 60 * duration })
+                    const collector = recordMsg.createReactionCollector(filter, { time: 1000 * 60 * duration })
 
                     collector.on("collect", async (reaction, user) => {
                         if (!presents.includes(user)) presents.push(user)
                     })
 
                     collector.on("end", async () => {
-                        presents = presents.filter(user => !user.bot).map(user => {
-                            member = msg.guild.member(user)
+                        presents = presents.filter(user => !user.bot)
+
+                        let members = []
+                        for (const user of presents) {
+                            const member = await msg.guild.members.fetch(user)
+                            if (member !== null) members.push(member)
+                        }
+
+                        members = members.map(member => {
                             txt = `- ${member.user.tag}`
                             if (member.nickname) txt += ` (${member.nickname})`
                             return txt
                         })
+
                         msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
                         txt = [`**${__("record_from")} ${msg.author.username}${__("s_call")}** :\n`]
-                        if (presents.length === 0) txt[0] += __("nobody")
+                        if (members.length === 0) txt[0] += __("nobody")
                         let i = 0
-                        for (const record of presents) {
+                        for (const record of members) {
                             if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
                             else {
                                 i++
