@@ -104,6 +104,7 @@ module.exports = {
                     })
 
                     collector.on("end", async () => {
+                        const languageBak = getLocale()
                         presents = presents.filter(user => !user.bot)
 
                         let members = []
@@ -117,6 +118,9 @@ module.exports = {
                             if (member.nickname) txt += ` (${member.nickname})`
                             return txt
                         })
+
+                        const setLanguage = require("../lib/set_language")
+                        setLanguage(bot, msg)
 
                         msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
                         txt = [`**${__("record_from")} ${msg.author.username}${__("s_call")}** :\n`]
@@ -144,6 +148,7 @@ module.exports = {
                                 await channel.send(chunk)
                             }
                         }
+                        setLocale(languageBak)
                         lockRequest.run(-1, msg.guild.id)
                     })
                 }
