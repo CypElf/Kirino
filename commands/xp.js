@@ -261,7 +261,6 @@ module.exports = {
                 }
         
                 else {
-                    return msg.channel.send(__("xp_maintenance")) // tmp
                     if (!msg.guild.me.hasPermission("ATTACH_FILES")) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
                     let member
         
@@ -293,15 +292,16 @@ module.exports = {
     
                     let nextLvlXp = 5 * (level * level) + 50 * level + 100
                     const percent = (xp / nextLvlXp * 100).toFixed(1)
-    
-                    let guildUsers = await msg.guild.members.fetch()
-                    guildUsers = guildUsers.array().map(user => user.id)
+                    
+                    // tmp
+                    // let guildUsers = await msg.guild.members.fetch()
+                    // guildUsers = guildUsers.array().map(user => user.id)
 
-                    const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
-                    const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(user_id => guildUsers.includes(user_id))
+                    // const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                    // const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(user_id => guildUsers.includes(user_id))
     
-                    let rank = serverRankingRows.indexOf(member.id) + 1
-                    if (rank === 0) rank = serverRankingRows.length + 1
+                    // let rank = serverRankingRows.indexOf(member.id) + 1
+                    // if (rank === 0) rank = serverRankingRows.length + 1
 
                     const canvas = Canvas.createCanvas(934, 282)
                     const ctx = canvas.getContext("2d")
@@ -397,19 +397,20 @@ module.exports = {
                     ctx.fillText(levelPrefix, offsetLevelPrefix, 85)
                     ctx.strokeText(levelPrefix, offsetLevelPrefix, 85)
     
-                    ctx.fillStyle = "#FFFFFF"
-                    ctx.font = "70px ubuntu" // rank
-                    const rankMeasure = ctx.measureText(`#${rank}`)
-                    const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
-                    ctx.fillText(`#${rank}`, offsetRank, 85)
-                    ctx.strokeText(`#${rank}`, offsetRank, 85)
+                    // tmp
+                    // ctx.fillStyle = "#FFFFFF"
+                    // ctx.font = "70px ubuntu" // rank
+                    // const rankMeasure = ctx.measureText(`#${rank}`)
+                    // const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
+                    // ctx.fillText(`#${rank}`, offsetRank, 85)
+                    // ctx.strokeText(`#${rank}`, offsetRank, 85)
     
-                    ctx.font = "25px ubuntu" // rank prefix
-                    const rankPrefix = __("rank").toUpperCase()
-                    const rankPrefixMeasure = ctx.measureText(rankPrefix)
-                    const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
-                    ctx.fillText(rankPrefix, offsetRankPrefix, 85)
-                    ctx.strokeText(rankPrefix, offsetRankPrefix, 85)
+                    // ctx.font = "25px ubuntu" // rank prefix
+                    // const rankPrefix = __("rank").toUpperCase()
+                    // const rankPrefixMeasure = ctx.measureText(rankPrefix)
+                    // const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
+                    // ctx.fillText(rankPrefix, offsetRankPrefix, 85)
+                    // ctx.strokeText(rankPrefix, offsetRankPrefix, 85)
     
                     if (level < 100) {
                         ctx.fillStyle = "#AAAAAA" // next level xp
