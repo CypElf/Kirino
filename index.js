@@ -190,7 +190,7 @@ bot.on("guildMemberRemove", async member => {
 
 function updateActivity () {
     guildsCount = bot.guilds.cache.size
-    bot.user.setActivity(`${guildsCount} servers | ;help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING or WATCHING*/ })
+    bot.user.setActivity(`${guildsCount} servers | some commands involving guild members events are broken for at least one week, please be careful! | ;help`, { type: "LISTENING" /*PLAYING, STREAMING, LISTENING or WATCHING*/ })
 }
 
 process.on('unhandledRejection', error => {
