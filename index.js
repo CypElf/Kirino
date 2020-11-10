@@ -158,8 +158,6 @@ bot.on("guildDelete", guild => {
     deletionRequest.run(id)
     deletionRequest = bot.db.prepare("DELETE FROM presences WHERE guild_id = ?")
     deletionRequest.run(id)
-    deletionRequest = bot.db.prepare("DELETE FROM afk WHERE guild_id = ?")
-    deletionRequest.run(id)
     deletionRequest = bot.db.prepare("DELETE FROM joins_leaves WHERE guild_id = ?")
     deletionRequest.run(id)
     deletionRequest = bot.db.prepare("DELETE FROM blacklisted_channels WHERE guild_id = ?")

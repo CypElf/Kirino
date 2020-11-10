@@ -42,6 +42,8 @@ module.exports = {
                     num = 0
                 }
             }
+
+            if (!(output.length > 0)) output = __("char_not_printable")
             asciiEmbed.addField(__("encoded_message"), input)
                 .addField(__("original_message"), output)
         }
