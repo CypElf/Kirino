@@ -61,9 +61,9 @@ module.exports = {
                                 const profilesRequest = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ?")
                                 const profiles = profilesRequest.all(msg.guild.id)
 
-                                const resetProfileRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level")
                                 for (const profile of profiles) {
-                                    resetProfileRequest.run(profile.guild_id, profile.user_id, 0, 0, 0)
+                                    bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level").run(profile.guild_id, profile.user_id, 0, 0, 0)
+                                    bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ? AND color IS NULL AND background IS NULL").run(profile.guild_id)
                                 }
 
                                 msg.channel.send(`${__("server_xp_successfully_reset")} ${__("kirino_glad")}`)
@@ -292,16 +292,20 @@ module.exports = {
     
                     let nextLvlXp = 5 * (level * level) + 50 * level + 100
                     const percent = (xp / nextLvlXp * 100).toFixed(1)
-                    
-                    // tmp
-                    // let guildUsers = await msg.guild.members.fetch()
-                    // guildUsers = guildUsers.array().map(user => user.id)
 
-                    // const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
-                    // const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(user_id => guildUsers.includes(user_id))
+                    const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                    const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(async user_id => {
+                        try {
+                            await bot.users.fetch(user_id)
+                            return true
+                        }
+                        catch {
+                            return false
+                        }
+                    })
     
-                    // let rank = serverRankingRows.indexOf(member.id) + 1
-                    // if (rank === 0) rank = serverRankingRows.length + 1
+                    let rank = serverRankingRows.indexOf(member.id) + 1
+                    if (rank === 0) rank = serverRankingRows.length + 1
 
                     const canvas = Canvas.createCanvas(934, 282)
                     const ctx = canvas.getContext("2d")
@@ -397,20 +401,19 @@ module.exports = {
                     ctx.fillText(levelPrefix, offsetLevelPrefix, 85)
                     ctx.strokeText(levelPrefix, offsetLevelPrefix, 85)
     
-                    // tmp
-                    // ctx.fillStyle = "#FFFFFF"
-                    // ctx.font = "70px ubuntu" // rank
-                    // const rankMeasure = ctx.measureText(`#${rank}`)
-                    // const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
-                    // ctx.fillText(`#${rank}`, offsetRank, 85)
-                    // ctx.strokeText(`#${rank}`, offsetRank, 85)
+                    ctx.fillStyle = "#FFFFFF"
+                    ctx.font = "70px ubuntu" // rank
+                    const rankMeasure = ctx.measureText(`#${rank}`)
+                    const offsetRank = offsetLevelPrefix - rankMeasure.width - 20
+                    ctx.fillText(`#${rank}`, offsetRank, 85)
+                    ctx.strokeText(`#${rank}`, offsetRank, 85)
     
-                    // ctx.font = "25px ubuntu" // rank prefix
-                    // const rankPrefix = __("rank").toUpperCase()
-                    // const rankPrefixMeasure = ctx.measureText(rankPrefix)
-                    // const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
-                    // ctx.fillText(rankPrefix, offsetRankPrefix, 85)
-                    // ctx.strokeText(rankPrefix, offsetRankPrefix, 85)
+                    ctx.font = "25px ubuntu" // rank prefix
+                    const rankPrefix = __("rank").toUpperCase()
+                    const rankPrefixMeasure = ctx.measureText(rankPrefix)
+                    const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
+                    ctx.fillText(rankPrefix, offsetRankPrefix, 85)
+                    ctx.strokeText(rankPrefix, offsetRankPrefix, 85)
     
                     if (level < 100) {
                         ctx.fillStyle = "#AAAAAA" // next level xp
