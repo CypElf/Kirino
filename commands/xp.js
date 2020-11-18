@@ -278,11 +278,7 @@ module.exports = {
                     const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
         
-                    if (xpRow === undefined) {
-                        xpRow = { "xp": 0, "total_xp": 0, "level": 0 }
-                        const createProfileRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?)")
-                        createProfileRequest.run(msg.guild.id, member.id, xpRow.xp, xpRow.total_xp, xpRow.level)
-                    }
+                    if (xpRow === undefined) xpRow = { "xp": 0, "total_xp": 0, "level": 0 }
         
                     const level = xpRow.level
                     let xp = xpRow.xp
