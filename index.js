@@ -6,7 +6,7 @@ const yaml = require("js-yaml")
 
 require("dotenv").config()
 
-const bot = new Discord.Client(Discord.Intents.NON_PRIVILEGED)
+const bot = new Discord.Client({ ws: { intents: [Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }})
 
 bot.commands = new Discord.Collection()
 bot.db = new bsqlite3("database.db", { fileMustExist: true })
