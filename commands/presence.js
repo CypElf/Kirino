@@ -95,62 +95,62 @@ module.exports = {
                     const recordMsg = await msg.channel.send(`**${__("record_started")}** ${__("kirino_glad")}\n${__("you_have")} ${duration} ${__("min_to_raise_the_hand")} 🙋.`)
                     recordMsg.react("🙋")
 
-                    let presents = []
                     const filter = reaction => reaction.emoji.name === '🙋'
-                    const collector = recordMsg.createReactionCollector(filter, { time: 1000 * 60 * duration })
 
-                    collector.on("collect", async (reaction, user) => {
-                        if (!presents.includes(user)) presents.push(user)
-                    })
-
-                    collector.on("end", async () => {
+                    try {
                         const languageBak = getLocale()
-                        presents = presents.filter(user => !user.bot)
+                        const collected = await recordMsg.awaitReactions(filter, { time: 1000 * 60 * duration })
+                        
+                        for (const reaction of collected.array()) {
+                            let presents = await reaction.users.fetch()
+                            presents = presents.array().filter(user => !user.bot)
 
-                        let members = []
-                        for (const user of presents) {
-                            const member = await msg.guild.members.fetch(user)
-                            if (member !== null) members.push(member)
-                        }
-
-                        members = members.map(member => {
-                            txt = `- ${member.user.tag}`
-                            if (member.nickname) txt += ` (${member.nickname})`
-                            return txt
-                        })
-
-                        const setLanguage = require("../lib/set_language")
-                        setLanguage(bot, msg)
-
-                        msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
-                        txt = [`**${__("record_from")} ${msg.author.username}${__("s_call")}** :\n`]
-                        if (members.length === 0) txt[0] += __("nobody")
-                        let i = 0
-                        for (const record of members) {
-                            if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
-                            else {
-                                i++
-                                txt.push("")
+                            let members = []
+                            for (const user of presents) {
+                                const member = await msg.guild.members.fetch(user)
+                                if (member !== null) members.push(member)
                             }
-                        }
 
-                        for (const chunk of txt) {
-                            try {
-                                await channel.send(chunk)
+                            members = members.map(member => {
+                                txt = `- ${member.user.tag}`
+                                if (member.nickname) txt += ` (${member.nickname})`
+                                return txt
+                            })
+
+                            const setLanguage = require("../lib/set_language")
+                            setLanguage(bot, msg)
+
+                            msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
+                            txt = [`**${__("record_from")} ${msg.author.username}${__("s_call")}** :\n`]
+                            if (members.length === 0) txt[0] += __("nobody")
+                            let i = 0
+                            for (const record of members) {
+                                if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
+                                else {
+                                    i++
+                                    txt.push("")
+                                }
                             }
-                            catch {
-                                channel = msg.channel
 
-                                if (row.dm) msg.channel.send(`${__("presence_dm_disabled")} ${__("kirino_what")}`)
-                                else msg.channel.send(`${__("presence_channel_deleted_during_call")} ${__("kirino_what")}`)
-                                channel.send(__("so_i_will_send_it_here"))
+                            for (const chunk of txt) {
+                                try {
+                                    await channel.send(chunk)
+                                }
+                                catch {
+                                    channel = msg.channel
 
-                                await channel.send(chunk)
+                                    if (row.dm) msg.channel.send(`${__("presence_dm_disabled")} ${__("kirino_what")}`)
+                                    else msg.channel.send(`${__("presence_channel_deleted_during_call")} ${__("kirino_what")}`)
+                                    channel.send(__("so_i_will_send_it_here"))
+
+                                    await channel.send(chunk)
+                                }
                             }
+                            setLocale(languageBak)
+                            lockRequest.run(-1, msg.guild.id)
                         }
-                        setLocale(languageBak)
-                        lockRequest.run(-1, msg.guild.id)
-                    })
+                    }
+                    catch {}
                 }
                 else {
                     msg.channel.send(`${__("presence_channel_not_found")} ${__("kirino_what")}`)
