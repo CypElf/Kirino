@@ -18,5 +18,5 @@ jobs:
           script: |
             cd Kirino
             git reset --hard 2>> ./.tmp/deploy.log
-            git pull < "${{SSH_LOGIN}}\n${{SSH_GITHUB_TOKEN}}" 2>> ./.tmp/deploy.log
+            git pull < "${{secrets.SSH_LOGIN}}\n${{secrets.SSH_GITHUB_TOKEN}}" 2>> ./.tmp/deploy.log
             pm2 restart kirino 2>> ./.tmp/deploy.log
