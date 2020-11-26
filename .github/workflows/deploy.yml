@@ -1,0 +1,22 @@
+name: deploy
+
+on:
+	push:
+		branches: [ master ]
+
+jobs:
+	deploy:
+		runs-on: ubuntu-latest
+		steps:
+      - name: Deploy Kirino's update on her VPS
+        uses: appleboy/ssh-action@0.1.4
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_LOGIN}}
+          password: ${{secrets.SSH_PASSWORD}}
+          port: ${{secrets.SSH_PORT}}
+          script: |
+            cd Kirino
+            git reset --hard 2>> ./.tmp/deploy.log
+            git pull < "${{SSH_LOGIN}}\n${{SSH_GITHUB_TOKEN}}" 2>> ./.tmp/deploy.log
+            pm2 restart kirino 2>> ./.tmp/deploy.log
