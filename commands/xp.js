@@ -175,7 +175,7 @@ module.exports = {
 
                             let players = []
                             let pagePlayers = []
-                            const fetch = require("node-fetch");
+                            const fetch = require("node-fetch")
         
                             let i = 0
                             do {
@@ -192,12 +192,20 @@ module.exports = {
 
                             if (players.length === 0) return importMessage.edit(__("zero_xp_found_on_mee6_api"))
 
-                            const xpDeletionRequest = bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?")
-                            xpDeletionRequest.run(msg.guild.id)
+                            const oldPlayersRow = bot.db.prepare("SELECT user_id, color, background FROM xp_profiles WHERE guild_id = ?").all(msg.guild.id)
+                            bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?").run(msg.guild.id)
 
-                            const xpImportRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?)")
                             for (const player of players) {
-                                xpImportRequest.run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level)
+                                let color = null
+                                let background = null
+
+                                const filtered = oldPlayersRow.filter(row => row.user_id === player.id)
+                                if (filtered.length > 0) {
+                                    color = filtered[0].color
+                                    background = filtered[0].background
+                                }
+
+                                bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?,?)").run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, color, background)
                             }
                             importMessage.edit(`${__("mee6_levels_successfully_imported")} ${__("kirino_glad")}`)
                         }
