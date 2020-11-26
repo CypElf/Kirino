@@ -18,10 +18,10 @@ module.exports = {
 
 			const dataJoined = bot.commands.array()
 
-			const adminCommands = "`" + dataJoined.filter(command => command.category === "admin").map(command => command.name).join("`, `") + "`"
-			const utilityCommands = "`" + dataJoined.filter(command => command.category === "utility").map(command => command.name).join("`, `") + "`"
-			const xpCommands = "`" + dataJoined.filter(command => command.category === "xp").map(command => command.name).join("`, `") + "`"
-			const programmingCommands = "`" + dataJoined.filter(command => command.category === "programming").map(command => command.name).join("`, `") + "`"
+			const adminCommands = `\`${dataJoined.filter(command => command.category === "admin").map(command => command.name).join("`, `")}\``
+			const utilityCommands = `\`${dataJoined.filter(command => command.category === "utility").map(command => command.name).join("`, `")}\``
+			const xpCommands = `\`${dataJoined.filter(command => command.category === "xp").map(command => command.name).join("`, `")}\``
+			const programmingCommands = `\`${dataJoined.filter(command => command.category === "programming").map(command => command.name).join("`, `")}\``
 			const othersCommands = "`" + dataJoined.filter(command => command.category === "others").map(command => command.name).join("`, `") + "`"
 
 			if (adminCommands) helpEmbed.addField(__("administration"), adminCommands)

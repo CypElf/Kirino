@@ -16,13 +16,12 @@ module.exports = {
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
         const arg = args[0]
-        const getChannel = require("../lib/get_channel")
-        const getRole = require("../lib/get_role")
+        const getChannel = require("../lib/getters/get_channel")
+        const getRole = require("../lib/getters/get_role")
 
         const channelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
         const roleRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_roles WHERE guild_id = ?")
 
-        const removeDeletedBlacklistedChannels = require("../lib/remove_deleted_channels")
         removeDeletedBlacklistedChannels(bot.db, msg.guild)
 
         if (arg === "remove") {
@@ -113,6 +112,19 @@ module.exports = {
             }
 
             msg.channel.send(`${__("bad_channel_or_role")} ${__("kirino_pout")}`)
+        }
+    }
+}
+
+function removeDeletedBlacklistedChannels(db, guild) {
+    const channelsRequest = db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
+    let channelsRows = channelsRequest.all(guild.id)
+
+    const deletionChannelRequest = db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
+
+    for (const row of channelsRows) {
+        if (guild.channels.cache.array().find(currentChannel => currentChannel.id === row.channel_id) === undefined) {
+            deletionChannelRequest.run(guild.id, row.channel_id)
         }
     }
 }

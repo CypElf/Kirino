@@ -13,7 +13,7 @@ module.exports = {
 
         if (args.length === 0) member = msg.member
         else {
-            const getUser = require("../lib/get_user")
+            const getUser = require("../lib/getters/get_user")
 
             member = await getUser(msg, args)
             

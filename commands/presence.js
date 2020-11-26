@@ -53,7 +53,7 @@ module.exports = {
                     let channel_id
                     if (mode_arg === "here") channel_id = msg.channel.id
                     else {
-                        const getChannel = require("../lib/get_channel")
+                        const getChannel = require("../lib/getters/get_channel")
                         const channel = await getChannel(msg, args.slice(1))
                         if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
                         channel_id = channel.id
@@ -117,8 +117,8 @@ module.exports = {
                                 return txt
                             })
 
-                            const setLanguage = require("../lib/set_language")
-                            setLanguage(bot, msg)
+                            const setLanguage = require("../lib/language/set_language")
+                            setLanguage(bot.db, msg)
 
                             msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
                             txt = [`**${__("record_from")} ${msg.author.username}${__("s_call")}** :\n`]

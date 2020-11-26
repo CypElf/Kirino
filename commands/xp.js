@@ -11,7 +11,7 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
-        const getUser = require("../lib/get_user")
+        const getUser = require("../lib/getters/get_user")
 
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
@@ -129,7 +129,7 @@ module.exports = {
 
                         if (channel === null) msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
                         else {
-                            const getChannel = require("../lib/get_channel")
+                            const getChannel = require("../lib/getters/get_channel")
                             channel = await getChannel(msg, [channel])
                             if (channel === undefined) {
                                 const resetChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
@@ -144,7 +144,7 @@ module.exports = {
                     else {
                         const changeChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")                    
 
-                        const getChannel = require("../lib/get_channel")
+                        const getChannel = require("../lib/getters/get_channel")
                         let channel = await getChannel(msg, args.slice(1))
 
                         if (args.slice(1)[0] === "reset") channel = null
@@ -235,7 +235,6 @@ module.exports = {
                 else if (request === "background" || request === "back") {
                     const arg = args[1]
 
-                    const updateBackground = require("../lib/update_background")
                     if (arg === "reset") {
                         updateBackground(bot.db, msg, null)
                         return msg.channel.send(`${__("background_reset")} ${__("kirino_glad")}`)
@@ -484,4 +483,9 @@ Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, widt
     this.lineTo(x + width, y + rounded)  
     this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)  
     this.lineTo(x + rounded, y)  
+}
+
+function updateBackground(db, msg, background) {
+    const userRow = db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(msg.guild.id, msg.author.id)
+    db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level, background) VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET background=excluded.background").run(msg.guild.id, msg.author.id, userRow.xp, userRow.total_xp, userRow.level, background)
 }
