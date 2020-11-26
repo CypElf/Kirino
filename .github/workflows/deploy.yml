@@ -1,4 +1,4 @@
-name: deploy
+name: Deploy
 
 on:
   push:
@@ -8,8 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Kirino's update on her VPS
-        uses: appleboy/ssh-action@0.1.4
+      - name: Deploy Kirino
+        uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_LOGIN}}
