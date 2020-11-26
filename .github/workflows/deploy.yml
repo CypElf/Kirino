@@ -17,6 +17,6 @@ jobs:
           port: ${{secrets.SSH_PORT}}
           script: |
             cd Kirino
-            git reset --hard 2>> ./.tmp/deploy.log
-            git pull < "${{secrets.SSH_LOGIN}}\n${{secrets.SSH_GITHUB_TOKEN}}" 2>> ./.tmp/deploy.log
-            pm2 restart kirino 2>> ./.tmp/deploy.log
+            git reset --hard >> ./.tmp/deploy.log 2>&1
+            git pull < "${{secrets.SSH_LOGIN}}\n${{secrets.SSH_GITHUB_TOKEN}}" >> ./.tmp/deploy.log 2>&1
+            pm2 restart kirino >> ./.tmp/deploy.log 2>&1
