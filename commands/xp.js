@@ -323,7 +323,6 @@ module.exports = {
                             ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
                         }
                         catch {
-                            const updateBackground = require("../lib/update_background")
                             updateBackground(bot.db, msg, null)
                             
                             ctx.fillStyle = "black"
