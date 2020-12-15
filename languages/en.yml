@@ -310,7 +310,7 @@ openclassrooms_explanation: "It is generally inadvisable to follow the free cour
 careful_with_openclassrooms: "Be careful with Openclassrooms"
 description_codeblock: "Displays an explanation on how to send code on discord."
 send_code: "Send code on discord"
-explanation_code: "To send code on discord, use 3 symbols with a grave accent **`** (ALT GR + 7) to open a code block and then 3 more to close it. Finally, to activate the syntax highlighting appropriate to the programming language used, write the name of this programming language after the 3 opening **`** symbols.\n\nExample:"
+explanation_code: "To send code on discord, use 3 symbols with a backquote **`** (ALT GR + 7) to open a code block and then 3 more to close it. Finally, to activate the syntax highlighting appropriate to the programming language used, write the name of this programming language after the 3 opening **`** symbols.\n\nExample:"
 description_base: "Converts a number from one numeric base to another."
 usage_base: "[number] [input base] [output base]"
 numeric_base_conversion: "Numerical base conversion"
