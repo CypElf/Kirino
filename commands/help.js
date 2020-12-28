@@ -16,26 +16,23 @@ module.exports = {
 
 			const dataJoined = bot.commands.array()
 
-			const adminCommands = `\`${dataJoined.filter(command => command.category === "admin").map(command => command.name).join("`, `")}\``
-			const utilityCommands = `\`${dataJoined.filter(command => command.category === "utility").map(command => command.name).join("`, `")}\``
-			const xpCommands = `\`${dataJoined.filter(command => command.category === "xp").map(command => command.name).join("`, `")}\``
-			const programmingCommands = `\`${dataJoined.filter(command => command.category === "programming").map(command => command.name).join("`, `")}\``
-			const othersCommands = "`" + dataJoined.filter(command => command.category === "others").map(command => command.name).join("`, `") + "`"
-
-			if (adminCommands) helpEmbed.addField(__("administration"), adminCommands)
-			if (utilityCommands) helpEmbed.addField(__("utility"), utilityCommands)
-			if (xpCommands) helpEmbed.addField(__("xp"), xpCommands)
-			if (programmingCommands) helpEmbed.addField(__("it"), programmingCommands)
-			if (othersCommands) helpEmbed.addField(__("others"), othersCommands + "\n\n" + __("you_can_do") + " `" + prefix + "help " + __("usage_help") + "` " + __("to_get_infos_on_a_command"))
+			const categories = [["admin", "administration"], ["utility", "utility"], ["xp", "xp"], ["programming", "it"], ["others", "others"]]
+			for (const category of categories) {
+				let commands = `\`${dataJoined.filter(command => command.category === category[0]).map(command => command.name).join("`, `")}\``
+				
+				if (commands) {
+					if (category == categories[categories.length - 1]) commands += `\n\n${__("you_can_do")} \`${prefix}help ${__("usage_help")}\` ${__("to_get_infos_on_a_command")}`
+					helpEmbed.addField(__(category[1]), commands)
+				} 
+			}
 	
 			return msg.channel.send(helpEmbed)
 		}
 
 		// ------------------------------------------------------------------- help on specitif command
 
-		const commandName = args[0].toLowerCase()
-
-		let command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+		const commandId = args[0].toLowerCase()
+		let command = bot.commands.get(commandId) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandId))
 		if (command && command.category === "ignore") command = undefined
 
 		if (!command) return msg.channel.send(__("this_command_does_not_exist"))
@@ -46,28 +43,20 @@ module.exports = {
 			.setFooter(__("help_footer"), "https://cdn.discordapp.com/attachments/714381484617891980/748487155214712842/d95a24865c58c14548e439defc097222.png")
 	
 		if (__(`description_${command.name}`) !== `description_${command.name}`) {
-			let first = true
 
-			let descriptions = [""]
-			let i = 0
-			for (const line of __(`description_${command.name}`).split("\n")) {
-				if (descriptions[i].length + line.length + 1 > 1024) {
-					i++
-					descriptions[i] = ""
-				}
-				if (descriptions[i] !== "") descriptions[i] += "\n"
-				descriptions[i] += line
-			}
+			const to1024Chunks = require("../lib/string/to_1024_chunks")
+			let descriptions = to1024Chunks(__(`description_${command.name}`))
 
 			for (const descriptionPart of descriptions) {
-				if (first) {
-					helpEmbed.addField(`**${__("description")}**`, descriptionPart)
-					first = false
-				}
+				if (descriptionPart === descriptions[0]) helpEmbed.addField(`**${__("description")}**`, descriptionPart)
 				else helpEmbed.addField(`**${__("description_continuation")}**`, descriptionPart)
 			}
 		}
-		command.guildOnly ? helpEmbed.addField(`**${__("available_in_dm")}**`, __("no")) : helpEmbed.addField(`**${__("available_in_dm")}**`, __("yes"))
+
+		let dm = __("yes")
+		if (command.guildOnly) dm = __("no")
+		helpEmbed.addField(`**${__("available_in_dm")}**`, dm)
+
 		if (command.aliases) helpEmbed.addField(`**${__("aliases")}**`, `\`${command.aliases.join("`, `")}\``)
 		
 		if (__(`usage_${command.name}`) !== `usage_${command.name}`) helpEmbed.addField(`**${__("usage")}**`, __(`usage_${command.name}`).split("\n").map(usage => `\`${prefix}${command.name} ${usage}\``).join("\n"))
