@@ -1,9 +1,7 @@
 module.exports = {
 	name: "github",
-    description: "description_github",
     guildOnly: false,
 	args: true,
-    usage: "usage_github",
     cooldown: 3,
 	category: "programming",
 	

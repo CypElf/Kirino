@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learnphp",
-    description: "description_learnphp",
     guildOnly: false,
 	args: false,
     category: "programming",

@@ -1,10 +1,8 @@
 module.exports = {
 	name: "base",
-    description: "description_base",
     guildOnly: false,
 	args: true,
     category: "programming",
-    usage: "usage_base",
 
 	async execute (bot, msg, args) {
         if (args.length < 3) {

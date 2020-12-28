@@ -1,11 +1,9 @@
 module.exports = {
 	name: "report",
-    description: "description_report",
     guildOnly: false,
     args: true,
     cooldown: 5,
 	category: "others",
-	usage: "usage_report",
 	
 	async execute(bot, msg, args) {
         let origin

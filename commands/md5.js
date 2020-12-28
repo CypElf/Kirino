@@ -1,10 +1,8 @@
 module.exports = {
 	name: "md5",
-    description: "description_md5",
     guildOnly: false,
 	args: true,
     category: "programming",
-    usage: "usage_md5",
 
 	async execute (bot, msg, args) {
         const md5 = require("js-md5")

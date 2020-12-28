@@ -1,10 +1,8 @@
 module.exports = {
 	name: "rolerewards",
-    description: "description_rolerewards",
     guildOnly: true,
     args: true,
     category: "xp",
-    usage: "usage_rolerewards",
     aliases: ["rr"],
     permissions: ["{administrator}"],
 

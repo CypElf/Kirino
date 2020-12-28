@@ -1,10 +1,8 @@
 module.exports = {
 	name: "react",
-    description: "description_react",
     guildOnly: false,
     args: true,
     category: "admin",
-    usage: "usage_react",
     permissions: ["administrator"],
     
     async execute(bot, msg, args) {

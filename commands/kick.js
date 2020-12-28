@@ -1,11 +1,9 @@
 module.exports = {
 	name: "kick",
-    description: "description_kick",
     guildOnly: true,
     args: true,
     cooldown: 3,
     category: "admin",
-    usage: "usage_kick",
     permissions: ["kick members"],
 
     async execute (bot, msg, [userToKick, ...reason]) {

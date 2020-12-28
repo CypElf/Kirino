@@ -1,6 +1,5 @@
 module.exports = {
 	name: "codeblock",
-    description: "description_codeblock",
     guildOnly: false,
 	args: false,
     category: "programming",

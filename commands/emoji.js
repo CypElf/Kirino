@@ -1,11 +1,9 @@
 module.exports = {
 	name: "emoji",
-    description: "description_emoji",
     guildOnly: true,
     args: true,
     aliases: ["emote"],
     category: "utility",
-    usage: "usage_emoji",
 
     async execute (bot, msg, args) {
         let emojis = []

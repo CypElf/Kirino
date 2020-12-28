@@ -1,10 +1,8 @@
 module.exports = {
 	name: "blacklist",
-    description: "description_blacklist",
     guildOnly: true,
     args: true,
     category: "xp",
-    usage: "usage_blacklist",
     aliases: ["bl"],
     permissions: ["{administrator}"],
 

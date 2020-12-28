@@ -1,10 +1,8 @@
 module.exports = {
 	name: "base64",
-    description: "description_base64",
     guildOnly: false,
 	args: true,
     category: "programming",
-    usage: "usage_base64",
 
 	async execute (bot, msg, args) {
         if (args.length < 2) {

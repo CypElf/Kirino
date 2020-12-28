@@ -1,11 +1,9 @@
 module.exports = {
 	name: "scale",
-    description: "description_scale",
     guildOnly: true,
     args: false,
     category: "xp",
     aliases: ["rate", "coefficient", "coeff"],
-    usage: "usage_scale",
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {

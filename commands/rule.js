@@ -1,9 +1,7 @@
 module.exports = {
 	name: "rule",
-    description: "description_rule",
     guildOnly: true,
     args: true,
-    usage: "usage_rule",
     aliases: ["r"],
     category: "admin",
     permissions: ["{manage guild}"],

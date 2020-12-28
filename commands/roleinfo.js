@@ -2,10 +2,8 @@ const Discord = require('discord.js')
 
 module.exports = {
 	name: "roleinfo",
-    description: "description_roleinfo",
     guildOnly: true,
     args: true,
-    usage: "usage_roleinfo",
     aliases: ["ri"],
     cooldown: 3,
     category: "utility",

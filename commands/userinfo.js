@@ -1,9 +1,7 @@
 module.exports = {
 	name: "userinfo",
-    description: "description_userinfo",
     guildOnly: true,
     args: false,
-    usage: "usage_userinfo",
     aliases: ["ui"],
     cooldown: 3,
     category: "utility",

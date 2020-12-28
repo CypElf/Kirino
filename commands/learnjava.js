@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learnjava",
-    description: "description_learnjava",
     guildOnly: false,
 	args: false,
     category: "programming",

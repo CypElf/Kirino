@@ -2,7 +2,6 @@ const Discord = require("discord.js")
 
 module.exports = {
 	name: "donation",
-    description: "description_donation",
     guildOnly: false,
 	args: false,
 	aliases: ["don"],

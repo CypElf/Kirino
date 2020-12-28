@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learnpython",
-    description: "description_learnpython",
     guildOnly: false,
 	args: false,
     category: "programming",

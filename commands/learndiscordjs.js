@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learndiscordjs",
-    description: "description_discordjs",
     guildOnly: false,
 	args: false,
     category: "programming",

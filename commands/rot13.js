@@ -1,10 +1,8 @@
 module.exports = {
 	name: "rot13",
-    description: "description_rot13",
     guildOnly: false,
 	args: true,
     category: "programming",
-    usage: "usage_rot13",
 
 	async execute (bot, msg, args) {
         const plaintext = args.join(" ").toLowerCase()

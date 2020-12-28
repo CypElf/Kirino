@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learncsharp",
-    description: "description_learncsharp",
     guildOnly: false,
 	args: false,
     category: "programming",

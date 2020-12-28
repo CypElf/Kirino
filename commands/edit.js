@@ -1,10 +1,8 @@
 module.exports = {
 	name: "edit",
-    description: "edit_description",
     guildOnly: true,
 	args: true,
 	category: "admin",
-	usage: "edit_usage",
 	permissions: ["administrator"],
 	
 	async execute(bot, msg, [ID, ...editMsg]) {

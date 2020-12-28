@@ -1,11 +1,9 @@
 module.exports = {
 	name: "profilepicture",
-    description: "description_profilepicture",
     guildOnly: true,
     args: false,
     aliases: ["pp", "avatar"],
     category: "utility",
-    usage: "usage_profilepicture",
 
     async execute (bot, msg, args) {
         let member

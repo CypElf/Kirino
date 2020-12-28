@@ -1,10 +1,8 @@
 module.exports = {
 	name: "leave",
-    description: "description_leave",
     guildOnly: true,
     args: true,
     category: "admin",
-    usage: "usage_leave",
     permissions: ["manage_guild"],
 
     async execute (bot, msg, args) {

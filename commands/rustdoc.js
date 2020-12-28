@@ -1,9 +1,7 @@
 module.exports = {
 	name: "rustdoc",
-    description: "description_rustdoc",
     guildOnly: false,
     args: true,
-    usage: "usage_rustdoc",
     aliases: ["rd"],
     cooldown: 3,
     category: "programming",

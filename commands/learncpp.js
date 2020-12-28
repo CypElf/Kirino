@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learncpp",
-    description: "description_learncpp",
     guildOnly: false,
     args: false,
     aliases: ["learnc++"],

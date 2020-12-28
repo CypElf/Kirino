@@ -1,6 +1,5 @@
 module.exports = {
 	name: "about",
-    description: "description_about",
     guildOnly: false,
 	args: false,
 	category: "others",

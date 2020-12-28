@@ -1,10 +1,8 @@
 module.exports = {
 	name: "ascii",
-    description: "description_ascii",
     guildOnly: false,
 	args: true,
     category: "programming",
-    usage: "usage_ascii",
 
 	async execute (bot, msg, args) {
         if (args.length < 2) return msg.channel.send(__("two_args_needed"))

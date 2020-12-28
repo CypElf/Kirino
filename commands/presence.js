@@ -1,7 +1,5 @@
 module.exports = {
 	name: "presence",
-    description: "description_presence",
-    usage: "usage_presence",
     guildOnly: true,
 	args: true,
     category: "utility",

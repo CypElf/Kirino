@@ -1,10 +1,8 @@
 module.exports = {
 	name: "afk",
-    description: "description_afk",
     guildOnly: true,
     args: false,
     category: "utility",
-    usage: "usage_afk",
 
     async execute (bot, msg, args) {
         let reason

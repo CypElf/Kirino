@@ -1,9 +1,7 @@
 module.exports = {
 	name: "banword",
-    description: "banword_description",
     guildOnly: true,
     args: true,
-    usage: "banword_usage",
     aliases: ["bw"],
     category: "admin",
     permissions: ["manage messages"],

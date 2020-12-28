@@ -2,12 +2,10 @@ const Canvas = require("canvas")
 
 module.exports = {
 	name: "xp",
-    description: "description_xp",
     guildOnly: true,
     args: false,
     cooldown: 3,
     category: "xp",
-    usage: "usage_xp",
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {

@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learnrust",
-    description: "description_learnrust",
     guildOnly: false,
 	args: false,
     category: "programming",

@@ -1,9 +1,7 @@
 module.exports = {
 	name: "prefix",
-    description: "description_prefix",
     guildOnly: false,
     args: true,
-    usage: "usage_prefix",
     cooldown: 5,
     category: "others",
     permissions: ["manage guild"],

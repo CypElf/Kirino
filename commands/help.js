@@ -1,8 +1,6 @@
 module.exports = {
 	name: "help",
-	description: "description_help",
 	guildOnly: false,
-	usage: "usage_help",
 	category: "utility",
 
 	async execute (bot, msg, args) {
@@ -47,12 +45,12 @@ module.exports = {
 			.setTitle(`**${__("command")} : ${command.name}**`)
 			.setFooter(__("help_footer"), "https://cdn.discordapp.com/attachments/714381484617891980/748487155214712842/d95a24865c58c14548e439defc097222.png")
 	
-		if (command.description) {
+		if (__(`description_${command.name}`) !== `description_${command.name}`) {
 			let first = true
 
 			let descriptions = [""]
 			let i = 0
-			for (const line of __(command.description).split("\n")) {
+			for (const line of __(`description_${command.name}`).split("\n")) {
 				if (descriptions[i].length + line.length + 1 > 1024) {
 					i++
 					descriptions[i] = ""
@@ -72,7 +70,7 @@ module.exports = {
 		command.guildOnly ? helpEmbed.addField(`**${__("available_in_dm")}**`, __("no")) : helpEmbed.addField(`**${__("available_in_dm")}**`, __("yes"))
 		if (command.aliases) helpEmbed.addField(`**${__("aliases")}**`, `\`${command.aliases.join("`, `")}\``)
 		
-		if (command.usage) helpEmbed.addField(`**${__("usage")}**`, __(command.usage).split("\n").map(usage => `\`${prefix}${command.name} ${usage}\``).join("\n"))
+		if (__(`usage_${command.name}`) !== `usage_${command.name}`) helpEmbed.addField(`**${__("usage")}**`, __(`usage_${command.name}`).split("\n").map(usage => `\`${prefix}${command.name} ${usage}\``).join("\n"))
 
 		let cooldown = 2
 		if (command.cooldown) cooldown = command.cooldown

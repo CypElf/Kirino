@@ -1,10 +1,8 @@
 module.exports = {
 	name: "say",
-    description: "description_say",
     guildOnly: true,
     args: true,
     category: "admin",
-    usage: "usage_say",
     permissions: ["administrator"],
     
     async execute(bot, msg, args) {

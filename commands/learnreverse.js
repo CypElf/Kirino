@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learnreverse",
-    description: "description_learnreverse",
     guildOnly: false,
 	args: false,
     category: "programming",

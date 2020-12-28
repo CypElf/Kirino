@@ -1,6 +1,5 @@
 module.exports = {
 	name: "openclassrooms",
-    description: "description_openclassrooms",
     guildOnly: false,
 	args: false,
     category: "programming",

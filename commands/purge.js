@@ -1,10 +1,8 @@
 module.exports = {
 	name: "purge",
-    description: "description_purge",
     guildOnly: true,
 	args: true,
 	category: "admin",
-	usage: "usage_purge",
 	aliases: ["clear"],
 	permissions: ["manage messages"],
 	

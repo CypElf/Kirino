@@ -1,11 +1,9 @@
 module.exports = {
 	name: "leaderboard",
-    description: "description_leaderboard",
     guildOnly: true,
     args: false,
     category: "xp",
     aliases: ["lb"],
-    usage: "usage_leaderboard",
 
     async execute (bot, msg, args) {
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")

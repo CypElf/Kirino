@@ -1,6 +1,5 @@
 module.exports = {
 	name: "learngit",
-    description: "description_learngit",
     guildOnly: false,
 	args: false,
     category: "programming",

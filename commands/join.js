@@ -1,10 +1,8 @@
 module.exports = {
 	name: "join",
-    description: "description_join",
     guildOnly: true,
     args: true,
     category: "admin",
-    usage: "usage_join",
     permissions: ["manage_guild"],
 
     async execute (bot, msg, args) {
