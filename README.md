@@ -1,7 +1,7 @@
 # Kirino
 
 [![Discord Bots](https://top.gg/api/widget/493470054415859713.svg)](https://top.gg/bot/493470054415859713)
-[![Kirino](https://cdn.discordapp.com/avatars/493470054415859713/bb426d26625a94c6f0d6136cbc6b494c.webp?size=128)](https://discord.com/oauth2/authorize?client_id=493470054415859713&scope=bot&permissions=8)
+[![Kirino](https://cdn.discordapp.com/avatars/493470054415859713/f7a38ab9355b1b67096502618036e967.png?size=128)](https://discord.com/oauth2/authorize?client_id=493470054415859713&scope=bot&permissions=8)
 
 ## Presentation
 
