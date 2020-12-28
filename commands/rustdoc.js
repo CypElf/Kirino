@@ -21,7 +21,7 @@ module.exports = {
         let contentReturned = ""
 
         for (let i = 0 ; i < 5 ; i++) {
-            const result = results.returned[i]
+            const result = results.others[i]
             if (result === undefined) break
             contentNames += "- ["
             if (result.path !== "") contentNames += result.path + "::"
@@ -31,7 +31,7 @@ module.exports = {
         }
 
         for (let i = 0 ; i < 5 ; i++) {
-            const result = results.returned[i]
+            const result = results.in_args[i]
             if (result === undefined) break
             contentIsArgs += "- ["
             if (result.path !== "") contentIsArgs += result.path + "::"
