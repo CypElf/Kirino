@@ -9,7 +9,7 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
-        const getUser = require("../lib/getters/get_user")
+        const getMember = require("../lib/getters/get_member")
 
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
@@ -74,7 +74,7 @@ module.exports = {
                     else {
                         let member
                         if (args[0] === undefined) member = msg.member
-                        else member = await getUser(msg, args)
+                        else member = await getMember(msg, args)
                         if (!member) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pout")}`)
                         
@@ -274,7 +274,7 @@ module.exports = {
                     }
             
                     else {
-                        member = await getUser(msg, args)
+                        member = await getMember(msg, args)
                         if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pff")}`)
                     }

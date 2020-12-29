@@ -6,14 +6,14 @@
   "author": "CypElf",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "better-sqlite3": "^6.0.1",
+    "better-sqlite3": "^7.1.2",
     "canvas": "^2.6.1",
     "colorthief": "^2.3.2",
-    "discord.js": "^12.4.1",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "i18n": "^0.13.2",
     "js-md5": "^0.7.3",
-    "js-yaml": "^3.14.0",
+    "js-yaml": "^3.14.1",
     "node-fetch": "^2.6.1"
   }
 }

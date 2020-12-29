@@ -1,26 +1,25 @@
 module.exports = {
 	name: "profilepicture",
-    guildOnly: true,
+    guildOnly: false,
     args: false,
     aliases: ["pp", "avatar"],
     category: "utility",
 
     async execute (bot, msg, args) {
-        let member
+        let user
 
-        if (!args.length) member = msg.member
-
+        if (!args.length || !msg.guild) user = msg.author
         else {
-            const getUser = require("../lib/getters/get_user")
-
-            member = await getUser(msg, args)
+            const getMember = require("../lib/getters/get_member")
+            user = await getMember(msg, args)
+            user = user.user
             
-            if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
+            if (user === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }
 
-        msg.channel.send(member.user.displayAvatarURL({
+        msg.channel.send(user.displayAvatarURL({
             dynamic: true,
-            size: 2048
+            size: 4096
         }))
     }
 }
