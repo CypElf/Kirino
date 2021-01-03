@@ -213,7 +213,7 @@ async function handleXp(bot, msg, obj) {
                     }
 
                     if (channel !== null) {
-                        const getChannel = require("./lib/getters/get_channel")
+                        const getChannel = require("../lib/getters/get_channel")
                         channel = await getChannel(msg, [channel])
 
                         if (channel === undefined) {
@@ -234,7 +234,7 @@ async function handleXp(bot, msg, obj) {
                         msg.channel.send(__("lvl_100_congrats"))
                     })
                     
-                    const removeDeletedRolesRewards = require("./lib/rolerewards/remove_deleted_roles_rewards")
+                    const removeDeletedRolesRewards = require("../lib/rolerewards/remove_deleted_roles_rewards")
                     await removeDeletedRolesRewards(bot.db, msg.guild)
 
                     const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
