@@ -88,8 +88,10 @@ function startXpApi(bot, obj) {
             res.writeHead(422, {"Content-Type": "application/json"})
             let error = ""
             if (isNaN(limit) || limit <= 0 || limit > 1000) error += "Invalid limit. The limit must be between 1 and 1000."
-            if (error.length > 0) error += "\n"
-            if (isNaN(page) || page <= 0) error += "Invalid page. The page must be greater or equal to 1."
+            if (isNaN(page) || page <= 0) {
+                if (error.length > 0) error += "\n"
+                error += "Invalid page. The page must be greater or equal to 1."
+            }
     
             res.write(JSON.stringify({ "error": error }))
             res.end()
