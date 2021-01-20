@@ -107,7 +107,7 @@ function startXpApi(bot, obj) {
                     let data = {
                         "guild_metadata": {
                             "name": guild.name,
-                            "icon": guild.iconURL({ format: "png", dynamic: true }),
+                            "icon": guild.iconURL({ format: "png", dynamic: true, size: 128 }),
                             "players": serverRows.length
                         },
                         "players": []
@@ -128,7 +128,7 @@ function startXpApi(bot, obj) {
                             try {
                                 const user = await bot.users.fetch(row.user_id)
 
-                                const avatarUrl = user.displayAvatarURL({ format: "png", dynamic: true })
+                                const avatarUrl = user.displayAvatarURL({ format: "png", dynamic: true, size: 128 })
                                 const tag = user.tag
                                 data.players.push({
                                     "tag": tag,
