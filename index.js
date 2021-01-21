@@ -52,23 +52,21 @@ function startXpApi(bot, obj) {
     const url = require("url")
 
     http.createServer(async (req, res) => {
-        const ip = req.connection.remoteAddress
-        const auth = req.headers.authorization
-    
-        if (auth !== process.env.API_TOKEN) {
+        if (req.headers.authorization !== process.env.API_TOKEN) {
             res.writeHead(403, {"Content-Type": "application/json",})
             res.write(JSON.stringify({ "error": "Invalid authentification token." }))
             return res.end()
         }
         
         const now = Date.now()
-    
+        const ip = req.connection.remoteAddress
+
         if (obj.cooldowns.has(ip)) {
             const expiration = obj.cooldowns.get(ip) + 1000
         
             if (now < expiration) {
                 res.writeHead(403, {"Content-Type": "application/json",})
-                res.write(JSON.stringify({ "error": "Too many requests. Please wait before retrying." }))
+                res.write(JSON.stringify({ "error": "Too many requests. Please stop sending requests that fast." }))
                 return res.end()
             }
         }
@@ -87,10 +85,10 @@ function startXpApi(bot, obj) {
         if (isNaN(limit) || limit <= 0 || limit > 1000 || isNaN(page) || page <= 0) {
             res.writeHead(422, {"Content-Type": "application/json"})
             let error = ""
-            if (isNaN(limit) || limit <= 0 || limit > 1000) error += "Invalid limit. The limit must be between 1 and 1000."
+            if (isNaN(limit) || limit <= 0 || limit > 1000) error += "Invalid limit, the limit must be between 1 and 1000."
             if (isNaN(page) || page <= 0) {
                 if (error.length > 0) error += "\n"
-                error += "Invalid page. The page must be greater or equal to 1."
+                error += "Invalid page, the page must be greater or equal to 1."
             }
     
             res.write(JSON.stringify({ "error": error }))
@@ -148,7 +146,7 @@ function startXpApi(bot, obj) {
     
                     if (data.players.length === 0) {
                         res.writeHead(404, {"Content-Type": "application/json",})
-                        res.write(JSON.stringify({ "error": "Page out of bounds." }))
+                        res.write(JSON.stringify({ "error": "The specified page is out of bounds." }))
                         res.end()
                     }
     
@@ -160,19 +158,19 @@ function startXpApi(bot, obj) {
                 }
                 else {
                     res.writeHead(404, {"Content-Type": "application/json"})
-                    res.write(JSON.stringify({ "error": "No members have any XP on this server." }))
+                    res.write(JSON.stringify({ "error": "No members have any XP yet on this server." }))
                     res.end()
                 }
             }
             else {
                 res.writeHead(404, {"Content-Type": "application/json"})
-                res.write(JSON.stringify({ "error": "Server not found." }))
+                res.write(JSON.stringify({ "error": "I didn't find the specified server." }))
                 res.end()
             }
         }
         else {
             res.writeHead(404, {"Content-Type": "application/json"})
-            res.write(JSON.stringify({ "error": "No server ID provided." }))
+            res.write(JSON.stringify({ "error": "You didn't specified the ID of the server you want." }))
             res.end()
         }
     }).listen(62150)
