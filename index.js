@@ -3,6 +3,7 @@ const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const yaml = require("js-yaml")
+const { exception, assert } = require("console")
 
 require("dotenv").config()
 
@@ -52,9 +53,10 @@ function startXpApi(bot, obj) {
     const url = require("url")
 
     http.createServer(async (req, res) => {
+        res.setHeader("Content-Type", "application/json")
         if (req.headers.authorization !== process.env.API_TOKEN) {
-            res.writeHead(403, {"Content-Type": "application/json",})
-            res.write(JSON.stringify({ "error": "Invalid authentification token." }))
+            res.writeHead(403) // HTTP status code 403 = Forbidden
+            res.write(JSON.stringify({ "errors": ["Invalid authentification token."] }))
             return res.end()
         }
         
@@ -65,8 +67,8 @@ function startXpApi(bot, obj) {
             const expiration = obj.cooldowns.get(ip) + 1000
         
             if (now < expiration) {
-                res.writeHead(403, {"Content-Type": "application/json",})
-                res.write(JSON.stringify({ "error": "Too many requests. Please stop sending requests that fast." }))
+                res.writeHead(429) // HTTP status code 429 = Too Many Requests
+                res.write(JSON.stringify({ "errors": ["Too many requests. Please stop sending requests that fast."] }))
                 return res.end()
             }
         }
@@ -74,104 +76,90 @@ function startXpApi(bot, obj) {
         obj.cooldowns.set(ip, now)
         setTimeout(() => obj.cooldowns.delete(ip), 1000)
     
-        const queries = url.parse(req.url, true).query
-        const gid = queries.gid
-        let limit = queries.limit
-        let page = queries.page
+        let { id, limit, page } = url.parse(req.url, true).query
     
         if (!limit) limit = 20 // default values
         if (!page) page = 1
     
         if (isNaN(limit) || limit <= 0 || limit > 1000 || isNaN(page) || page <= 0) {
-            res.writeHead(422, {"Content-Type": "application/json"})
-            let error = ""
-            if (isNaN(limit) || limit <= 0 || limit > 1000) error += "Invalid limit, the limit must be between 1 and 1000."
+            res.writeHead(400) // HTTP status code 400 = Bad Request
+            
+            let errors = []
+            if (isNaN(limit) || limit <= 0 || limit > 1000) {
+                errors.push("Invalid limit, the limit must be between 1 and 1000.")
+            }
             if (isNaN(page) || page <= 0) {
-                if (error.length > 0) error += "\n"
-                error += "Invalid page, the page must be greater or equal to 1."
+                errors.push("Invalid page, the page must be greater or equal to 1.")
             }
     
-            res.write(JSON.stringify({ "error": error }))
-            res.end()
+            res.write(JSON.stringify({ "errors": errors }))
+            return res.end()
         }
-        else if (gid) {
-            const guild = bot.guilds.cache.find(guild => guild.id === gid)
-    
-            if (guild) {
-                const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
-                const serverRows = serverRequest.all(gid)
-        
-                if (serverRows.length > 0) {
-                    let data = {
-                        "guild_metadata": {
-                            "name": guild.name,
-                            "icon": guild.iconURL({ format: "png", dynamic: true, size: 128 }),
-                            "players": serverRows.length
-                        },
-                        "players": []
-                    }
-    
-                    let i = 1
-                    let j = 1
-                    let currentPage = 1
-    
-                    for (const row of serverRows) {
-                    
-                        if (i > limit) {
-                            i = 1
-                            currentPage += 1
-                            if (currentPage > page) break
-                        }
-                        if (currentPage == page) {
-                            try {
-                                const user = await bot.users.fetch(row.user_id)
+        else if (id) {
+            let guild
+            try {
+                guild = await bot.guilds.fetch(id)
+                if (guild.id !== id) id = guild.id // fetch can match a server even if the provided ID is not exactly the same as the server's one
+            }
+            catch {
+                res.writeHead(404) // HTTP status code 404 = Not Found
+                res.write(JSON.stringify({ "errors": ["I didn't find the specified server. Please ensure that the ID you provided is a valid server ID and that Kirino has access to it."] }))
+                return res.end()
+            }
 
-                                const avatarUrl = user.displayAvatarURL({ format: "png", dynamic: true, size: 128 })
-                                const tag = user.tag
-                                data.players.push({
-                                    "tag": tag,
-                                    "id": user.id,
-                                    "avatar": avatarUrl,
-                                    "xp": row.xp,
-                                    "total_xp": row.total_xp,
-                                    "level": row.level,
-                                    "color": row.color,
-                                    "rank": j
-                                })
-                            } catch {}
-                        }
-                        i++
-                        j++
-                    }
+            const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+            const serverRows = serverRequest.all(id)
     
-                    if (data.players.length === 0) {
-                        res.writeHead(404, {"Content-Type": "application/json",})
-                        res.write(JSON.stringify({ "error": "The specified page is out of bounds." }))
-                        res.end()
-                    }
-    
-                    else {
-                        res.writeHead(200, {"Content-Type": "application/json",})
-                        res.write(JSON.stringify(data))
-                        res.end()
-                    }
+            if (serverRows.length > 0) {
+                const page_start = (page - 1) * limit
+                const page_end = page * limit - 1
+
+                if (page_start >= serverRows.length) {
+                    res.writeHead(400) // HTTP status code 400 = Bad Request
+                    res.write(JSON.stringify({ "errors": ["The specified page is out of bounds."] }))
+                    return res.end()
                 }
-                else {
-                    res.writeHead(404, {"Content-Type": "application/json"})
-                    res.write(JSON.stringify({ "error": "No members have any XP yet on this server." }))
-                    res.end()
+
+                let data = {
+                    "guild_metadata": {
+                        "name": guild.name,
+                        "icon": guild.iconURL({ format: "png", dynamic: true, size: 128 }),
+                        "players": serverRows.length
+                    },
+                    "players": []
                 }
+
+                const askedRows = serverRows.slice(page_start, page_end + 1)
+
+                for (const [i, row] of askedRows.entries()) {
+                    try {
+                        const user = await bot.users.fetch(row.user_id)
+
+                        data.players.push({
+                            "id": user.id,
+                            "tag": user.tag,
+                            "avatar": user.displayAvatarURL({ dynamic: true, size: 128 }),
+                            "xp": row.xp,
+                            "total_xp": row.total_xp,
+                            "level": row.level,
+                            "color": row.color,
+                            "rank": page_start + i + 1
+                        })
+                    } catch {}
+                }
+                
+                res.writeHead(200) // HTTP status code 200 = OK
+                res.write(JSON.stringify(data))
             }
             else {
-                res.writeHead(404, {"Content-Type": "application/json"})
-                res.write(JSON.stringify({ "error": "I didn't find the specified server." }))
-                res.end()
+                res.writeHead(400) // HTTP status code 400 = Bad Request
+                res.write(JSON.stringify({ "errors": ["Nobody has any XP on this server."] }))
             }
         }
         else {
-            res.writeHead(404, {"Content-Type": "application/json"})
-            res.write(JSON.stringify({ "error": "You didn't specified the ID of the server you want." }))
-            res.end()
+            res.writeHead(400) // HTTP status code 400 = Bad Request
+            res.write(JSON.stringify({ "errors": ["You didn't specified the ID of the server you want."] }))
         }
+        res.end()
     }).listen(62150)
 }
