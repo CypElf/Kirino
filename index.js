@@ -95,7 +95,7 @@ function startXpApi(bot, obj) {
             res.write(JSON.stringify({ "errors": errors }))
             return res.end()
         }
-        else if (id) {
+        else if (id && id !== "undefined") {
             let guild
             try {
                 guild = await bot.guilds.fetch(id)
@@ -158,7 +158,7 @@ function startXpApi(bot, obj) {
         }
         else {
             res.writeHead(400) // HTTP status code 400 = Bad Request
-            res.write(JSON.stringify({ "errors": ["You didn't specified the ID of the server you want."] }))
+            res.write(JSON.stringify({ "errors": ["You must specify the ID of the server you want."] }))
         }
         res.end()
     }).listen(62150)
