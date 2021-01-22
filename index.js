@@ -81,7 +81,7 @@ function startXpApi(bot, obj) {
         if (!limit) limit = 20 // default values
         if (!page) page = 1
     
-        if (isNaN(limit) || limit <= 0 || limit > 1000 || isNaN(page) || page <= 0) {
+        if (isNaN(limit) || limit <= 0 || limit > 100 || isNaN(page) || page <= 0) {
             res.writeHead(400) // HTTP status code 400 = Bad Request
             
             let errors = []
