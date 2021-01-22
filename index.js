@@ -86,7 +86,7 @@ function startXpApi(bot, obj) {
             
             let errors = []
             if (isNaN(limit) || limit <= 0 || limit > 1000) {
-                errors.push("Invalid limit, the limit must be between 1 and 1000.")
+                errors.push("Invalid limit, the limit must be between 1 and 100.")
             }
             if (isNaN(page) || page <= 0) {
                 errors.push("Invalid page, the page must be greater or equal to 1.")
