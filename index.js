@@ -4,6 +4,7 @@ const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const yaml = require("js-yaml")
 const { exception, assert } = require("console")
+const { __ } = require("i18n")
 
 require("dotenv").config()
 
@@ -198,7 +199,7 @@ function startCommandsApi(bot, obj) {
             for (const cat of categoriesToGet) {
                 const currentCommands = allCommands.filter(command => command.category === cat).map(command => {
                     command.description = __(`description_${command.name}`)
-                    command.usage = __(`usage_${command.name}`)
+                    if (`usage_${command.name}` !== __(`usage_${command.name}`)) command.usage = __(`usage_${command.name}`)
                     return command
                 })
     
