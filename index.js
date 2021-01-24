@@ -196,7 +196,11 @@ function startCommandsApi(bot, obj) {
             let commands = []
 
             for (const cat of categoriesToGet) {
-                const currentCommands = allCommands.filter(command => command.category === cat)
+                const currentCommands = allCommands.filter(command => command.category === cat).map(command => {
+                    command.description = __(`description_${command.name}`)
+                    command.usage = __(`usage_${command.name}`)
+                    return command
+                })
     
                 if (currentCommands) {
                     commands = commands.concat(currentCommands)
