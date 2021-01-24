@@ -25,6 +25,7 @@ i18n.configure({
 })
 
 startXpApi(bot, { cooldowns: bot.apiCooldowns })
+startCommandsApi(bot, { cooldowns: bot.apiCooldowns })
 
 bot.db.prepare("UPDATE presences SET locked = ?").run(0) // unlock calls if the bot restarted while there were some calls in progress that couldn't release the lock
 
@@ -48,118 +49,163 @@ bot.login(process.env.KIRINO_TOKEN)
 
 // ------------------------------------------------------------- utility functions
 
+function controlRequest(req, res, obj) {
+    res.setHeader("Content-Type", "application/json")
+    if (req.headers.authorization !== process.env.API_TOKEN) {
+        res.writeHead(403) // HTTP status code 403 = Forbidden
+        res.write(JSON.stringify({ "errors": ["Invalid authentification token."] }))
+        res.end()
+        return false
+    }
+    
+    const now = Date.now()
+    const ip = req.connection.remoteAddress
+
+    if (obj.cooldowns.has(ip)) {
+        const expiration = obj.cooldowns.get(ip) + 1000
+    
+        if (now < expiration) {
+            res.writeHead(429) // HTTP status code 429 = Too Many Requests
+            res.write(JSON.stringify({ "errors": ["Too many requests. Please stop sending requests that fast."] }))
+            res.end()
+            return false
+        }
+    }
+
+    obj.cooldowns.set(ip, now)
+    setTimeout(() => obj.cooldowns.delete(ip), 1000)
+    return true
+}
+
 function startXpApi(bot, obj) {
     const http = require("http")
     const url = require("url")
 
     http.createServer(async (req, res) => {
-        res.setHeader("Content-Type", "application/json")
-        if (req.headers.authorization !== process.env.API_TOKEN) {
-            res.writeHead(403) // HTTP status code 403 = Forbidden
-            res.write(JSON.stringify({ "errors": ["Invalid authentification token."] }))
-            return res.end()
-        }
+        if (controlRequest(req, res, obj)) {
+            let { id, limit, page } = url.parse(req.url, true).query
         
-        const now = Date.now()
-        const ip = req.connection.remoteAddress
-
-        if (obj.cooldowns.has(ip)) {
-            const expiration = obj.cooldowns.get(ip) + 1000
+            if (!limit) limit = 20 // default values
+            if (!page) page = 1
         
-            if (now < expiration) {
-                res.writeHead(429) // HTTP status code 429 = Too Many Requests
-                res.write(JSON.stringify({ "errors": ["Too many requests. Please stop sending requests that fast."] }))
+            if (isNaN(limit) || limit <= 0 || limit > 100 || isNaN(page) || page <= 0) {
+                res.writeHead(400) // HTTP status code 400 = Bad Request
+                
+                let errors = []
+                if (isNaN(limit) || limit <= 0 || limit > 1000) {
+                    errors.push("Invalid limit, the limit must be between 1 and 100.")
+                }
+                if (isNaN(page) || page <= 0) {
+                    errors.push("Invalid page, the page must be greater or equal to 1.")
+                }
+        
+                res.write(JSON.stringify({ "errors": errors }))
                 return res.end()
             }
-        }
-    
-        obj.cooldowns.set(ip, now)
-        setTimeout(() => obj.cooldowns.delete(ip), 1000)
-    
-        let { id, limit, page } = url.parse(req.url, true).query
-    
-        if (!limit) limit = 20 // default values
-        if (!page) page = 1
-    
-        if (isNaN(limit) || limit <= 0 || limit > 100 || isNaN(page) || page <= 0) {
-            res.writeHead(400) // HTTP status code 400 = Bad Request
-            
-            let errors = []
-            if (isNaN(limit) || limit <= 0 || limit > 1000) {
-                errors.push("Invalid limit, the limit must be between 1 and 100.")
-            }
-            if (isNaN(page) || page <= 0) {
-                errors.push("Invalid page, the page must be greater or equal to 1.")
-            }
-    
-            res.write(JSON.stringify({ "errors": errors }))
-            return res.end()
-        }
-        else if (id && id !== "undefined") {
-            let guild
-            try {
-                guild = await bot.guilds.fetch(id)
-                if (guild.id !== id) id = guild.id // fetch can match a server even if the provided ID is not exactly the same as the server's one
-            }
-            catch {
-                res.writeHead(404) // HTTP status code 404 = Not Found
-                res.write(JSON.stringify({ "errors": ["I didn't find the specified server. Please ensure that the ID you provided is a valid server ID and that Kirino has access to it."] }))
-                return res.end()
-            }
-
-            const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
-            const serverRows = serverRequest.all(id)
-    
-            if (serverRows.length > 0) {
-                const page_start = (page - 1) * limit
-                const page_end = page * limit - 1
-
-                if (page_start >= serverRows.length) {
-                    res.writeHead(400) // HTTP status code 400 = Bad Request
-                    res.write(JSON.stringify({ "errors": ["The specified page is out of bounds."] }))
+            else if (id && id !== "undefined") {
+                let guild
+                try {
+                    guild = await bot.guilds.fetch(id)
+                    if (guild.id !== id) id = guild.id // fetch can match a server even if the provided ID is not exactly the same as the server's one
+                }
+                catch {
+                    res.writeHead(404) // HTTP status code 404 = Not Found
+                    res.write(JSON.stringify({ "errors": ["I didn't find the specified server. Please ensure that the ID you provided is a valid server ID and that Kirino has access to it."] }))
                     return res.end()
                 }
 
-                let data = {
-                    "guild_metadata": {
-                        "name": guild.name,
-                        "icon": guild.iconURL({ format: "png", dynamic: true, size: 128 }),
-                        "players": serverRows.length
-                    },
-                    "players": []
+                const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                const serverRows = serverRequest.all(id)
+        
+                if (serverRows.length > 0) {
+                    const page_start = (page - 1) * limit
+                    const page_end = page * limit - 1
+
+                    if (page_start >= serverRows.length) {
+                        res.writeHead(400) // HTTP status code 400 = Bad Request
+                        res.write(JSON.stringify({ "errors": ["The specified page is out of bounds."] }))
+                        return res.end()
+                    }
+
+                    let data = {
+                        "guild_metadata": {
+                            "name": guild.name,
+                            "icon": guild.iconURL({ format: "png", dynamic: true, size: 128 }),
+                            "players": serverRows.length
+                        },
+                        "players": []
+                    }
+
+                    const askedRows = serverRows.slice(page_start, page_end + 1)
+
+                    for (const [i, row] of askedRows.entries()) {
+                        try {
+                            const user = await bot.users.fetch(row.user_id)
+
+                            data.players.push({
+                                "id": user.id,
+                                "tag": user.tag,
+                                "avatar": user.displayAvatarURL({ dynamic: true, size: 128 }),
+                                "xp": row.xp,
+                                "total_xp": row.total_xp,
+                                "level": row.level,
+                                "color": row.color,
+                                "rank": page_start + i + 1
+                            })
+                        } catch {}
+                    }
+                    
+                    res.writeHead(200) // HTTP status code 200 = OK
+                    res.write(JSON.stringify(data))
                 }
-
-                const askedRows = serverRows.slice(page_start, page_end + 1)
-
-                for (const [i, row] of askedRows.entries()) {
-                    try {
-                        const user = await bot.users.fetch(row.user_id)
-
-                        data.players.push({
-                            "id": user.id,
-                            "tag": user.tag,
-                            "avatar": user.displayAvatarURL({ dynamic: true, size: 128 }),
-                            "xp": row.xp,
-                            "total_xp": row.total_xp,
-                            "level": row.level,
-                            "color": row.color,
-                            "rank": page_start + i + 1
-                        })
-                    } catch {}
+                else {
+                    res.writeHead(400) // HTTP status code 400 = Bad Request
+                    res.write(JSON.stringify({ "errors": ["Nobody has any XP on this server."] }))
                 }
-                
-                res.writeHead(200) // HTTP status code 200 = OK
-                res.write(JSON.stringify(data))
             }
             else {
                 res.writeHead(400) // HTTP status code 400 = Bad Request
-                res.write(JSON.stringify({ "errors": ["Nobody has any XP on this server."] }))
+                res.write(JSON.stringify({ "errors": ["You must specify the ID of the server you want."] }))
             }
+            res.end()
         }
-        else {
-            res.writeHead(400) // HTTP status code 400 = Bad Request
-            res.write(JSON.stringify({ "errors": ["You must specify the ID of the server you want."] }))
-        }
-        res.end()
     }).listen(62150)
+}
+
+function startCommandsApi(bot, obj) {
+    const http = require("http")
+    const url = require("url")
+
+    http.createServer(async (req, res) => {
+        if (controlRequest(req, res, obj)) {
+            let { category } = url.parse(req.url, true).query
+        
+            if (!category) category = "all"
+
+            const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"]])
+            
+            if (category !== "all" && !Array.from(categories.keys()).includes(category.toLowerCase())) {
+                res.writeHead(404) // HTTP status code 400 = Not Found
+                res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
+                return res.end()
+            }
+
+            const categoriesToGet = category === "all" ? categories.values() : [categories.get(category)]
+
+            const allCommands = bot.commands.array()
+            let commands = []
+
+            for (const cat of categoriesToGet) {
+                const currentCommands = allCommands.filter(command => command.category === cat)
+    
+                if (currentCommands) {
+                    commands = commands.concat(currentCommands)
+                }
+            }
+            
+            res.writeHead(200) // HTTP status code 200 = OK
+            res.write(JSON.stringify({ "category": category, "commands": commands }))
+            res.end()
+        }
+    }).listen(62151)
 }
