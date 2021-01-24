@@ -49,7 +49,7 @@ bot.login(process.env.KIRINO_TOKEN)
 
 // ------------------------------------------------------------- utility functions
 
-function controlRequest(req, res, obj) {
+function controlRequest(req, res, obj, cooldown) {
     res.setHeader("Content-Type", "application/json")
     if (req.headers.authorization !== process.env.API_TOKEN) {
         res.writeHead(403) // HTTP status code 403 = Forbidden
@@ -62,7 +62,7 @@ function controlRequest(req, res, obj) {
     const ip = req.connection.remoteAddress
 
     if (obj.cooldowns.has(ip)) {
-        const expiration = obj.cooldowns.get(ip) + 1000
+        const expiration = obj.cooldowns.get(ip) + cooldown
     
         if (now < expiration) {
             res.writeHead(429) // HTTP status code 429 = Too Many Requests
@@ -82,7 +82,7 @@ function startXpApi(bot, obj) {
     const url = require("url")
 
     http.createServer(async (req, res) => {
-        if (controlRequest(req, res, obj)) {
+        if (controlRequest(req, res, obj, 1000)) {
             let { id, limit, page } = url.parse(req.url, true).query
         
             if (!limit) limit = 20 // default values
@@ -177,7 +177,7 @@ function startCommandsApi(bot, obj) {
     const url = require("url")
 
     http.createServer(async (req, res) => {
-        if (controlRequest(req, res, obj)) {
+        if (controlRequest(req, res, obj, 50)) {
             let { category } = url.parse(req.url, true).query
         
             if (!category) category = "all"
