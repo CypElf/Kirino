@@ -3,6 +3,7 @@ module.exports = {
     guildOnly: false,
 	args: true,
     category: "programming",
+    aliases: ["radix"],
 
 	async execute (bot, msg, args) {
         if (args.length < 3) {
