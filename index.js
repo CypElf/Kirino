@@ -3,8 +3,6 @@ const fs = require("fs")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const yaml = require("js-yaml")
-const { exception, assert } = require("console")
-const { __ } = require("i18n")
 
 require("dotenv").config()
 
@@ -180,9 +178,12 @@ function startCommandsApi(bot, obj) {
 
     http.createServer(async (req, res) => {
         if (controlRequest(req, res, obj, 50)) {
-            let { category } = url.parse(req.url, true).query
+            let { category, lang } = url.parse(req.url, true).query
         
             if (!category) category = "all"
+            
+            const localeBak = getLocale()
+            setLocale(lang === "fr" ? "fr" : "en")
 
             const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"]])
             
@@ -208,6 +209,8 @@ function startCommandsApi(bot, obj) {
                     commands = commands.concat(currentCommands)
                 }
             }
+
+            setLocale(localeBak)
             
             res.writeHead(200) // HTTP status code 200 = OK
             res.write(JSON.stringify({ "category": category, "commands": commands }))
