@@ -130,6 +130,7 @@ function startXpApi(bot, obj) {
 
                     let data = {
                         "guild_metadata": {
+                            "id": guild.id,
                             "name": guild.name,
                             "icon": guild.iconURL({ format: "png", dynamic: true, size: 128 }),
                             "players": serverRows.length
