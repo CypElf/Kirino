@@ -382,7 +382,7 @@ member_zero_xp: "Cet utilisateur n'a déjà pas d'XP."
 leaderboard_of: "La leaderboard de "
 is_available_at: " est disponible à"
 description_leaderboard: "Envoie le lien de la leaderboard d'XP du serveur."
-usage_leaderboard: "{limite} {page}"
+usage_leaderboard: "{page} {limite}"
 xp: XP
 specify_color: "Veuillez spécifier une nouvelle couleur."
 color_reset: "Votre couleur a été réinitialisée avec succès."

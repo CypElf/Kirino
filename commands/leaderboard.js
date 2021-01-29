@@ -11,9 +11,11 @@ module.exports = {
         if (isEnabled) isEnabled = isEnabled.is_enabled
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
-        let params = ""
-            if (args[0]) params = `&limit=${args[0]}`
-            if (args[1]) params += `&page=${args[1]}`
-            msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.kirino.xyz/leaderboards?gid=${msg.guild.id}${params} ${__("kirino_glad")}`)
+        const page = args[0]
+        const limit = args[1]
+        let params = (page ? `/${page}` : "") + (limit ? `/${limit}` : "")
+
+        const lang = getLocale() === "fr" ? "/fr" : ""
+        msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.kirino.xyz${lang}/leaderboards/${msg.guild.id}${params} ${__("kirino_glad")}`)
     }
 }
