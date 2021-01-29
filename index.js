@@ -177,7 +177,7 @@ function startCommandsApi(bot, obj) {
     const url = require("url")
 
     http.createServer(async (req, res) => {
-        if (controlRequest(req, res, obj, 50)) {
+        if (controlRequest(req, res, obj, 0)) {
             let { category, lang } = url.parse(req.url, true).query
         
             if (!category) category = "all"
