@@ -16,6 +16,6 @@ module.exports = {
         let params = (page ? `/${page}` : "") + (limit ? `/${limit}` : "")
 
         const lang = getLocale() === "fr" ? "/fr" : ""
-        msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://www.kirino.xyz${lang}/leaderboards/${msg.guild.id}${params} ${__("kirino_glad")}`)
+        msg.channel.send(`${__("leaderboard_of")}${msg.guild.name}${__("is_available_at")} https://kirino.xyz${lang}/leaderboards/${msg.guild.id}${params} ${__("kirino_glad")}`)
     }
 }
