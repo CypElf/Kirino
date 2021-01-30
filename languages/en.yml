@@ -298,6 +298,7 @@ learn_rust: "Learn Rust"
 please_wait: "Please wait"
 more_sec_before_reusing_command: "more second(s) before reusing the command"
 not_found: "not found"
+the_command: "The command"
 was_reloaded: "was reloaded!"
 error_while_reloading_command: "There was an error while reloading the command"
 cooldown: Cooldown
