@@ -76,10 +76,10 @@ yes: yes
 aliases: Aliases
 usage: Usage
 command: Command
-description_invit: "Sends the link to invite me to a server."
-invit_bot: "Invite the bot"
+description_invite: "Sends the link to invite me to a server."
+invite_bot: "Invite the bot"
 on_a_server: "on a server"
-the_link_to_invit_me_is_available: "The link allowing to invite me on a server is available"
+the_link_to_invite_me_is_available: "The link allowing to invite me on a server is available"
 here: "[here]"
 description_kick: "Kick the member mentioned or whose nickname is written with no mistake (in this case, the nickname must be only one word to be able to differentiate the nickname from the reason of the ban)."
 usage_kick: "[user] {reason}"

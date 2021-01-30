@@ -76,10 +76,10 @@ yes: oui
 aliases: Aliases
 usage: Utilisation
 command: Commande
-description_invit: "Envoie le lien permettant de m'inviter dans un serveur."
-invit_bot: "Inviter le bot"
+description_invite: "Envoie le lien permettant de m'inviter dans un serveur."
+invite_bot: "Inviter le bot"
 on_a_server: "sur un serveur"
-the_link_to_invit_me_is_available: "Le lien permettant de m'inviter sur un serveur est disponible"
+the_link_to_invite_me_is_available: "Le lien permettant de m'inviter sur un serveur est disponible"
 here: "[ici]"
 description_kick: "Kick le membre mentionné ou dont le pseudo est écrit sans faute (dans ce cas, le pseudo doit faire uniquement un mot pour pouvoir différencier le pseudo de la raison du kick)."
 usage_kick: "[utilisateur] {raison}"
