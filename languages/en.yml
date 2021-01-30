@@ -493,3 +493,4 @@ presence_channel_outdated: "I was set up to send the call records in a specific 
 description_learngit: "Sends useful links to learn how to use Git."
 learn_git: "Learn to use Git"
 description_serverpicture: "Display the profile picture of the server."
+description_support: "Display the support server invitation link."

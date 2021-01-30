@@ -494,3 +494,4 @@ presence_channel_outdated: "J'étais configurée pour envoyer les enregistrement
 description_learngit: "Envoie des liens utiles pour apprendre à utiliser Git."
 learn_git: "Apprendre à utiliser Git"
 description_serverpicture: "Permet d'afficher la photo de profil du serveur."
+description_support: "Affiche le lien d'invitation de mon serveur de support"
