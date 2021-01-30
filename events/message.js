@@ -1,3 +1,5 @@
+const { __ } = require("i18n")
+
 module.exports = bot => {
     bot.on("message", async msg => {
         const Discord = require("discord.js")
@@ -43,6 +45,10 @@ module.exports = bot => {
     
         await handleXp(bot, msg, { cooldowns: bot.xpCooldowns })
     
+        // ------------------------------------------------------------- prefix reminder
+
+        if (msg.mentions.users.has(bot.user.id) && msg.content === `<@!${bot.user.id}>`) return msg.channel.send(`${__("bot_mention")} \`${bot.prefix}\`.`)
+
         // ------------------------------------------------------------- command validity check
     
         if (!msg.content.startsWith(bot.prefix)) return
