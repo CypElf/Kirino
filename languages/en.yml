@@ -260,7 +260,7 @@ video_formation: "Video formation"
 description_learncpp: "Sends useful links to learn the C++ programming language."
 create_account_to_access_beta: "course still under construction, you can create an account to access the beta of the course that contains the beginnings of chapters being written"
 not_finished: unfinished
-description_discordjs: "Sends useful links to learn how to use the discord.js library."
+description_learndiscordjs: "Sends useful links to learn how to use the discord.js library."
 complete_course: "Complete course"
 description_learnjava: "Sends useful links to learn the Java programming language."
 also_available: "also available"
