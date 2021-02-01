@@ -1,5 +1,3 @@
-const { __ } = require("i18n")
-
 module.exports = bot => {
     bot.on("message", async msg => {
         const Discord = require("discord.js")
