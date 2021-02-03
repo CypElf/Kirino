@@ -1,19 +1,19 @@
 {
-  "name": "kirino",
-  "version": "2.2.16",
-  "description": " A public, IT / programming oriented bot for discord.",
-  "main": "index.js",
-  "author": "CypElf",
-  "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "better-sqlite3": "^7.1.2",
-    "canvas": "^2.6.1",
-    "colorthief": "^2.3.2",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "i18n": "^0.13.2",
-    "js-md5": "^0.7.3",
-    "js-yaml": "^3.14.1",
-    "node-fetch": "^2.6.1"
-  }
+	"name": "kirino",
+	"version": "2.2.16",
+	"description": " A public, IT / programming oriented bot for discord.",
+	"main": "index.js",
+	"author": "CypElf",
+	"license": "GPL-3.0-or-later",
+	"dependencies": {
+		"better-sqlite3": "^7.1.2",
+		"canvas": "^2.6.1",
+		"colorthief": "^2.3.2",
+		"discord.js": "^12.5.1",
+		"dotenv": "^8.2.0",
+		"i18n": "^0.13.2",
+		"js-md5": "^0.7.3",
+		"js-yaml": "^3.14.1",
+		"node-fetch": "^2.6.1"
+	}
 }
