@@ -1,15 +1,15 @@
 module.exports = {
-	name: "presence",
+	name: "call",
     guildOnly: true,
 	args: true,
     category: "utility",
-    aliases: ["call"],
+    aliases: ["presence"],
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 	
 	async execute(bot, msg, args) {
-        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
-
         const mode = args[0].toLowerCase()
+
+        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)        
 
         if (mode == "channel") {
             if (args[1] === undefined) { // no argument, the user wants to see what channel is set
