@@ -1,5 +1,3 @@
-const { __ } = require("i18n")
-
 module.exports = {
 	name: "run",
     guildOnly: false,
@@ -62,27 +60,42 @@ module.exports = {
                 let text = buff.toString("utf8")
                 const token = text.slice(0, 16)
 
-                while (text.includes(token)) text = text.replace(token, "") // replaceAll is only available in node js 15.0 and later, and the current LTS version is below this
+                while (text.includes(token)) text = text.replace(token, "") // replaceAll is only available in Node.js 15.0 and later, and the current LTS version is below this
 
                 return text
             }
         }
 
-        const language = args[0].split("\n")[0]
+        let language = args[0].split("\n")[0]
+
+        if (language.startsWith("```")) {
+            language = language.slice(3)
+        }
 
         args = args.join(" ")
         let code = args.split("\n").length > 1 ? args.split("\n").slice(1).join("\n") : args.split(" ").slice(1).join(" ")
+
+        const inputs = []
+        code = code.split("\n").filter(line => {
+            if (line.slice(0, 6) === "input " && line.length > 6) {
+                let input = line.slice(6)
+                if (input.startsWith("`") && input.endsWith("`")) input = input.slice(1, input.length - 1)
+                inputs.push(input)
+                return false
+            }
+            return true
+        }).join("\n")
 
         if (code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n")
         else if (code.startsWith("```")) code = code.slice(3)
         if (code.endsWith("```")) code = code.slice(0, code.length - 3)
        
-        const tio = new Tio(language, code)
+        const tio = new Tio(language, code, inputs.join("\n"))
 
         msg.channel.startTyping()
 
         let data = await tio.send()
-        data = data.split("\n").filter(line => !line.startsWith("Real time:") && !line.startsWith("User time:") && !line.startsWith("Sys. time:") && !line.startsWith("CPU share:")).join("\n")
+        data = data.split("\n").filter(line => !line.startsWith("Real time: ") && !line.startsWith("User time: ") && !line.startsWith("Sys. time: ") && !line.startsWith("CPU share: ")).join("\n")
 
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
             const paste = require("../lib/misc/paste")
