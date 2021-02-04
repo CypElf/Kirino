@@ -18,7 +18,7 @@ module.exports = bot => {
         const commandName = msg.content.split(separator)[0].toLowerCase().slice(bot.prefix.length)
         let args = msg.content.split(separator).slice(1)
 
-        if (separator == "\n") args = args.join("\n").split(" ")
+        if (separator == "\n" && args.length > 0) args = args.join("\n").split(" ")
 
         const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
     

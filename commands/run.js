@@ -5,7 +5,6 @@ module.exports = {
     category: "programming",
 
     async execute (bot, msg, args) {
-        if (args.length < 2 && args.join(" ").split("\n").length < 2 && msg.attachments.size === 0) return msg.channel.send(`${__("run_need_two_args")} ${__("kirino_pout")}`)
 
         const fetch = require("node-fetch")
         const { deflateSync } = require("zlib")
