@@ -76,11 +76,25 @@ module.exports = {
         let code = args.split("\n").length > 1 ? args.split("\n").slice(1).join("\n") : args.split(" ").slice(1).join(" ")
 
         const inputs = []
+        const cmdArgs = []
+        const flags = []
         code = code.split("\n").filter(line => {
             if (line.slice(0, 6) === "input " && line.length > 6) {
                 let input = line.slice(6)
                 if (input.startsWith("`") && input.endsWith("`")) input = input.slice(1, input.length - 1)
                 inputs.push(input)
+                return false
+            }
+            else if (line.slice(0, 5) === "args " && line.length > 5) {
+                let args = line.slice(5)
+                if (args.startsWith("`") && args.endsWith("`")) args = args.slice(1, args.length - 1)
+                args.split(" ").map(arg => cmdArgs.push(arg))
+                return false
+            }
+            else if (line.slice(0, 6) === "flags " && line.length > 6) {
+                let flag = line.slice(6)
+                if (flag.startsWith("`") && flag.endsWith("`")) flag = flag.slice(1, flag.length - 1)
+                flag.split(" ").map(f => flags.push(f))
                 return false
             }
             return true
@@ -90,7 +104,7 @@ module.exports = {
         else if (code.startsWith("```")) code = code.slice(3)
         if (code.endsWith("```")) code = code.slice(0, code.length - 3)
        
-        const tio = new Tio(language, code, inputs.join("\n"))
+        const tio = new Tio(language, code, inputs.join("\n"), flags, [] ,cmdArgs)
 
         msg.channel.startTyping()
 
