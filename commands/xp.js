@@ -278,7 +278,8 @@ module.exports = {
                         if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pff")}`)
                     }
-            
+
+                    msg.channel.startTyping()
 
                     const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
@@ -469,6 +470,7 @@ module.exports = {
                     const Discord = require("discord.js")
                     const card = new Discord.MessageAttachment(canvas.toBuffer(), "card.png")
     
+                    msg.channel.stopTyping()
                     msg.channel.send(card)
                 }
             }
