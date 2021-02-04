@@ -74,7 +74,6 @@ module.exports = {
         class Tio {
             constructor(language, code, input = "", compilerFlags = [], commandLineOptions = [], args = []) {
                 this.api = "https://tio.run/cgi-bin/run/api/"
-                this.available = "https://tio.run/languages.json"
 
                 const strings = {
                     lang: [language],
