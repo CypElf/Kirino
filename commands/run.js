@@ -5,8 +5,9 @@ module.exports = {
     category: "programming",
 
     async execute (bot, msg, args) {
-        if (args.length < 2 && args.join(" ").split("\n").length < 2) return msg.channel.send(`${__("run_need_two_args")} ${__("kirino_pout")}`)
+        if (args.length < 2 && args.join(" ").split("\n").length < 2 && msg.attachments.size === 0) return msg.channel.send(`${__("run_need_two_args")} ${__("kirino_pout")}`)
 
+        const fetch = require("node-fetch")
         const { deflateSync } = require("zlib")
 
         const to_bytes = (str) => Buffer.from(str, "utf8")
@@ -47,8 +48,6 @@ module.exports = {
             }
 
             async send() {
-                const fetch = require("node-fetch")
-
                 const res = await fetch(this.api, {
                     method: "POST",
                     body: this.request,
@@ -67,10 +66,7 @@ module.exports = {
         }
 
         let language = args[0].split("\n")[0]
-
-        if (language.startsWith("```")) {
-            language = language.slice(3)
-        }
+        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer its language
 
         args = args.join(" ")
         let code = args.split("\n").length > 1 ? args.split("\n").slice(1).join("\n") : args.split(" ").slice(1).join(" ")
@@ -100,9 +96,24 @@ module.exports = {
             return true
         }).join("\n")
 
-        if (code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n")
-        else if (code.startsWith("```")) code = code.slice(3)
-        if (code.endsWith("```")) code = code.slice(0, code.length - 3)
+        let gotFromAttachment = false
+        if (msg.attachments.size > 0) {
+            const attachment = msg.attachments.array()[0]
+            if (attachment.size > 4000000) return msg.channel.send(`${__("file_too_big")} (> 4 Mo). ${__("kirino_pout")}`)
+            const res = await fetch(attachment.url)
+            if (res.ok) {
+                code = await res.text()
+                gotFromAttachment = true
+            }
+        }
+
+        if (!gotFromAttachment) {
+            if (code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
+            else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
+            if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
+        }
+
+        if (code === "") return msg.channel.send(__(`${__("code_empty")} ${__("kirino_pff")}`))
        
         const tio = new Tio(language, code, inputs.join("\n"), flags, [] ,cmdArgs)
 
