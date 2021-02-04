@@ -9,6 +9,51 @@ module.exports = {
         const fetch = require("node-fetch")
         const { deflateSync } = require("zlib")
 
+        const defaults = new Map(Object.entries({
+            asm: "assembly-nasm",
+            ada: 'ada-gnat',
+            apl: 'apl-dyalog-classic',
+            assembly: 'assembly-gcc',
+            b: 'ybc',
+            sh: 'bash',
+            c: 'c-gcc',
+            cobol: 'cobol-gnu',
+            cpp: 'cpp-gcc',
+            "c++": 'cpp-gcc',
+            cs: 'cs-core',
+            csharp: 'cs-core',
+            "c#": 'cs-core',
+            erlang: 'erlang-escript',
+            euphoria: 'euphoria4',
+            fasm: 'assembly-fasm',
+            fs: 'fs-core',
+            "f#": 'fs-core',
+            fsharp: 'fs-core',
+            java: 'java-jdk',
+            javascript: 'javascript-node',
+            js: 'javascript-node',
+            node: "javascript-node",
+            julia: 'julia1x',
+            k: 'kona',
+            "kobeři-c": 'koberi-c',
+            nasm: 'assembly-nasm',
+            nimrod: 'nim',
+            "objective-c": 'objective-c-gcc',
+            pascal: 'pascal-fpc',
+            perl: 'perl6',
+            pilot: 'pilot-rpilot',
+            postscript: 'postscript-xpost',
+            py: 'python3',
+            python: 'python3',
+            'q#': 'qs',
+            qs: 'qs-core',
+            rs: 'rust',
+            snobol: 'snobol4',
+            sql: 'sqlite',
+            u6: 'mu6',
+            vb: 'vb-core',
+        }))
+
         const to_bytes = (str) => Buffer.from(str, "utf8")
         const zip = (array1, array2) => array1.map((e, i) => [e, array2[i]])
 
@@ -65,7 +110,8 @@ module.exports = {
         }
 
         let language = args[0].split("\n")[0]
-        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer its language
+        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer its 
+        if (defaults.has(language)) language = defaults.get(language)
 
         args = args.join(" ")
         let code = args.split("\n").length > 1 ? args.split("\n").slice(1).join("\n") : args.split(" ").slice(1).join(" ")
