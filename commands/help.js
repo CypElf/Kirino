@@ -59,7 +59,7 @@ module.exports = {
 
 		if (command.aliases) helpEmbed.addField(`**${__("aliases")}**`, `\`${command.aliases.join("`, `")}\``)
 		
-		if (__(`usage_${command.name}`) !== `usage_${command.name}`) helpEmbed.addField(`**${__("usage")}**`, __(`usage_${command.name}`).split("\n").map(usage => `\`${prefix}${command.name} ${usage}\``).join("\n"))
+		if (__(`usage_${command.name}`) !== `usage_${command.name}`) helpEmbed.addField(`**${__("usage")}**`, __(`usage_${command.name}`).split("\n").map(usage => usage.startsWith("nocommand ") ? `\`${usage.slice(10)}\`` : `\`${prefix}${command.name} ${usage}\``).join("\n"))
 
 		let cooldown = 2
 		if (command.cooldown) cooldown = command.cooldown

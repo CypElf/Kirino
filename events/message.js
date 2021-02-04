@@ -13,10 +13,13 @@ module.exports = bot => {
     
         if (msg.author.bot) return
     
-        const messageArray = msg.content.split(" ")
-        const commandName = messageArray[0].toLowerCase().slice(bot.prefix.length)
-        const args = messageArray.slice(1)
-    
+        let separator = msg.content.split("\n")[0].split(" ").length > 1 ? " " : "\n"
+
+        const commandName = msg.content.split(separator)[0].toLowerCase().slice(bot.prefix.length)
+        let args = msg.content.split(separator).slice(1)
+
+        if (separator == "\n" && args.length > 0) args = args.join("\n").split(" ")
+
         const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
     
         // maintenance
