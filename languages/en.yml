@@ -512,3 +512,4 @@ description_run: "Execute a program in any given programming language and get it
 usage_run: "[language] [code]"
 file_too_big: "The attached file is too big for me"
 code_empty: "You didn't give me any code to execute."
+language_empty: "You didn't specify the language in which the code is written."

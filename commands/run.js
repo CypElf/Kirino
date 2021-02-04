@@ -112,6 +112,7 @@ module.exports = {
             if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
         }
 
+        if (language === "") return msg.channel.send(__(`${__("language_empty")} ${__("kirino_pff")}`))
         if (code === "") return msg.channel.send(__(`${__("code_empty")} ${__("kirino_pff")}`))
        
         const tio = new Tio(language, code, inputs.join("\n"), flags, [] ,cmdArgs)

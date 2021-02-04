@@ -513,3 +513,4 @@ description_run: "Exécutez un programme dans le langage de programmation que vo
 usage_run: "[langage] [code]"
 file_too_big: "Le fichier attaché est trop gros pour moi"
 code_empty: "Vous n'avez fourni aucun code à exécuter."
+language_empty: "Vous n'avez pas précisé le langage dans lequel est écrit le code."
