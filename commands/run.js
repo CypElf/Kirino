@@ -3,6 +3,7 @@ module.exports = {
     guildOnly: false,
 	args: true,
     category: "programming",
+    aliases: ["execute", "exe"],
 
     async execute (bot, msg, args) {
 
