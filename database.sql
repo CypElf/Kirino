@@ -1,11 +1,12 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "presences";
-CREATE TABLE IF NOT EXISTS "presences" (
+DROP TABLE IF EXISTS "calls";
+CREATE TABLE IF NOT EXISTS "calls" (
 	"guild_id"	TEXT,
 	"channel_id"	TEXT,
 	"locked"	INTEGER NOT NULL,
 	"dm"	INTEGER NOT NULL,
 	"current"	INTEGER NOT NULL,
+	"asfile"	INTEGER NOT NULL,
 	PRIMARY KEY("guild_id")
 );
 DROP TABLE IF EXISTS "joins_leaves";
@@ -58,11 +59,6 @@ DROP TABLE IF EXISTS "rules";
 CREATE TABLE IF NOT EXISTS "rules" (
 	"guild_id"	TEXT NOT NULL,
 	"rule"	TEXT
-);
-DROP TABLE IF EXISTS "banwords";
-CREATE TABLE IF NOT EXISTS "banwords" (
-	"guild_id"	TEXT NOT NULL,
-	"word"	TEXT NOT NULL
 );
 DROP TABLE IF EXISTS "afk";
 CREATE TABLE IF NOT EXISTS "afk" (
