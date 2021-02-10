@@ -9,20 +9,20 @@ module.exports = {
 	async execute(bot, msg, args) {
         const mode = args[0].toLowerCase()
 
-        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)        
+        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
 
         if (mode === "asfile") {
             const asfileRequest = bot.db.prepare("INSERT INTO calls VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET asfile=excluded.asfile")
-            const mode_arg = args[1] ?? "on"
+            const mode_arg = args[1] ? args[1].toLowerCase() : "on"
 
-            if (mode_arg !== "on" && mode_arg !== "off") return msg.channel.send("invalid mode")
+            if (mode_arg !== "on" && mode_arg !== "off") return msg.channel.send(`${__("bad_call_asfile_option")} ${__("kirino_pout")}`)
 
             const state = mode_arg === "on" ? 1 : 0
             asfileRequest.run(msg.guild.id, null, 0, 0, 0, state)
 
             deleteRowIfEmpty(bot.db, msg.guild.id)
 
-            msg.channel.send("success")
+            msg.channel.send(state === 1 ? __("asfile_success_on") : __("asfile_success_off"))
         }
 
         else if (mode == "channel") {
