@@ -8,6 +8,7 @@ module.exports = {
 	
 	async execute(bot, msg, args) {
         const { MessageAttachment } = require("discord.js")
+        const formatDate = require("../lib/misc/format_date")
         const mode = args[0].toLowerCase()
 
         if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
@@ -143,7 +144,7 @@ module.exports = {
 
                             msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
 
-                            let txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} :\n`]
+                            let txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${formatDate(new Date())})` : ""} :\n`]
                             if (members.length === 0) txt[0] += __("nobody")
 
                             if (row.asfile) txt[0] += members.join("\n")
