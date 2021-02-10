@@ -7,6 +7,7 @@ module.exports = {
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 	
 	async execute(bot, msg, args) {
+        const { MessageAttachment } = require("discord.js")
         const mode = args[0].toLowerCase()
 
         if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
@@ -120,7 +121,7 @@ module.exports = {
                     try {
                         const languageBak = getLocale()
                         const collected = await recordMsg.awaitReactions(filter, { time: 1000 * 60 * duration })
-                        
+
                         for (const reaction of collected.array()) {
                             let presents = await reaction.users.fetch()
                             presents = presents.array().filter(user => !user.bot)
@@ -132,7 +133,7 @@ module.exports = {
                             }
 
                             members = members.map(member => {
-                                txt = `- ${member.user.tag}`
+                                let txt = `- ${member.user.tag}`
                                 if (member.nickname) txt += ` (${member.nickname})`
                                 return txt
                             })
@@ -141,20 +142,27 @@ module.exports = {
                             setLanguage(bot.db, msg)
 
                             msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
-                            txt = [`**${__("record_from")} ${msg.author.username}${__("s_call")}** :\n`]
+
+                            let txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} :\n`]
                             if (members.length === 0) txt[0] += __("nobody")
-                            let i = 0
-                            for (const record of members) {
-                                if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
-                                else {
-                                    i++
-                                    txt.push("")
+
+                            if (row.asfile) txt[0] += members.join("\n")
+                            else {
+                                let i = 0
+                                for (const record of members) {
+                                    if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
+                                    else {
+                                        i++
+                                        txt.push("")
+                                    }
                                 }
                             }
 
                             for (const chunk of txt) {
+                                let content = row.asfile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
+
                                 try {
-                                    await channel.send(chunk)
+                                    await channel.send(content)
                                 }
                                 catch {
                                     channel = msg.channel
@@ -163,9 +171,10 @@ module.exports = {
                                     else msg.channel.send(`${__("presence_channel_deleted_during_call")} ${__("kirino_what")}`)
                                     channel.send(__("so_i_will_send_it_here"))
 
-                                    await channel.send(chunk)
+                                    await channel.send(content)
                                 }
                             }
+
                             setLocale(languageBak)
                             lockRequest.run(-1, msg.guild.id)
                         }
