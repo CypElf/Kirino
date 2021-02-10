@@ -13,16 +13,23 @@ module.exports = {
 
         if (mode === "asfile") {
             const asfileRequest = bot.db.prepare("INSERT INTO calls VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET asfile=excluded.asfile")
-            const mode_arg = args[1] ? args[1].toLowerCase() : "on"
+            const mode_arg = args[1]?.toLowerCase()
 
-            if (mode_arg !== "on" && mode_arg !== "off") return msg.channel.send(`${__("bad_call_asfile_option")} ${__("kirino_pout")}`)
+            if (mode_arg === undefined) {
+                const { asfile } = bot.db.prepare("SELECT asfile FROM calls WHERE guild_id = ?").get(msg.guild.id) ?? { asfile: 0 }
+                msg.channel.send(`${__("currently_results_sent")} ${asfile === 0 ? __("as_message") : __("as_file")} ${__("kirino_glad")}`)
+            }
 
-            const state = mode_arg === "on" ? 1 : 0
-            asfileRequest.run(msg.guild.id, null, 0, 0, 0, state)
+            else {
+                if (mode_arg !== "on" && mode_arg !== "off") return msg.channel.send(`${__("bad_call_asfile_option")} ${__("kirino_pout")}`)
 
-            deleteRowIfEmpty(bot.db, msg.guild.id)
+                const state = mode_arg === "on" ? 1 : 0
+                asfileRequest.run(msg.guild.id, null, 0, 0, 0, state)
 
-            msg.channel.send(state === 1 ? __("asfile_success_on") : __("asfile_success_off"))
+                deleteRowIfEmpty(bot.db, msg.guild.id)
+
+                msg.channel.send(state === 1 ? __("asfile_success_on") : __("asfile_success_off"))
+            }
         }
 
         else if (mode == "channel") {
