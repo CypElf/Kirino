@@ -134,7 +134,7 @@ module.exports = {
                             }
 
                             members = members.map(member => {
-                                let txt = `- ${member.user.tag}`
+                                let txt = `- ${member.user.username}`
                                 if (member.nickname) txt += ` (${member.nickname})`
                                 return txt
                             })
