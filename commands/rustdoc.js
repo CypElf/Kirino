@@ -18,34 +18,39 @@ module.exports = {
         let contentIsArgs = ""
         let contentReturned = ""
 
-        for (let i = 0 ; i < 5 ; i++) {
-            const result = results.others[i]
+        const replaceAll = require("../lib/string/replace_all")
+
+        for (const result of results.others) {
             if (result === undefined) break
+
             contentNames += "- ["
             if (result.path !== "") contentNames += result.path + "::"
             contentNames += `**${result.name}**](${result.href})`
-            if (result.desc !== "") contentNames += " : " + result.desc
+            if (result.desc !== "") contentNames += " : " + replaceAll(replaceAll(result.desc, "<code>", "`"), "</code>", "`")
             contentNames += "\n"
         }
 
-        for (let i = 0 ; i < 5 ; i++) {
-            const result = results.in_args[i]
+        for (const result of results.in_args) {
             if (result === undefined) break
+
             contentIsArgs += "- ["
             if (result.path !== "") contentIsArgs += result.path + "::"
             contentIsArgs += `**${result.name}**](${result.href})`
-            if (result.desc !== "") contentIsArgs += " : " + result.desc
+            if (result.desc !== "") contentIsArgs += " : " + replaceAll(replaceAll(result.desc, "<code>", "`"), "</code>", "`")
             contentIsArgs += "\n"
         }
 
-        for (let i = 0 ; i < 5 ; i++) {
-            const result = results.returned[i]
+        for (const result of results.returned) {
             if (result === undefined) break
-            contentReturned += "- ["
-            if (result.path !== "") contentReturned += result.path + "::"
-            contentReturned += `**${result.name}**](${result.href})`
-            if (result.desc !== "") contentReturned += " : " + result.desc
-            contentReturned += "\n"
+
+            let buffer = "- ["
+            if (result.path !== "") buffer += result.path + "::"
+            buffer += `**${result.name}**](${result.href})`
+            if (result.desc !== "") buffer += " : " + replaceAll(replaceAll(result.desc, "<code>", "`"), "</code>", "`")
+            buffer += "\n"
+
+            if (contentReturned.length + buffer.length <= 1024) contentReturned += buffer
+            else break
         }
 
         let embed = new Discord.MessageEmbed()

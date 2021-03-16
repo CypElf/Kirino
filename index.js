@@ -188,7 +188,7 @@ function startCommandsApi(bot, obj) {
             const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"]])
             
             if (category !== "all" && !Array.from(categories.keys()).includes(category.toLowerCase())) {
-                res.writeHead(404) // HTTP status code 400 = Not Found
+                res.writeHead(404) // HTTP status code 404 = Not Found
                 res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
                 return res.end()
             }

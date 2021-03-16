@@ -141,7 +141,7 @@ permissions: Permissions
 no_permissions: "Ce rôle n'a aucune permission"
 rules_from: "Règlement de "
 rule_title: "Règle "
-description_rustdoc: "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.48.0"
+description_rustdoc: "Permet de récupérer les résultats d'une recherche dans la documentation de Rust. Version actuelle : 1.50.0"
 usage_rustdoc: "[mot à rechercher]"
 results: "Résultats"
 in_name: "Dans le nom"
