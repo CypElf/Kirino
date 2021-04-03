@@ -13,6 +13,7 @@ bot.db = new bsqlite3("database.db", { fileMustExist: true })
 bot.commandsCooldowns = new Discord.Collection()
 bot.xpCooldowns = new Discord.Collection()
 bot.apiCooldowns = new Map()
+bot.voicesQueues = new Discord.Collection()
 
 i18n.configure({
     locales: ['en', 'fr'],
