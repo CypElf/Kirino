@@ -24,8 +24,8 @@ module.exports = {
                     url : video_url,
                     title: title,
                     description: description,
-                    thumbnail: thumbnails[thumbnails.length - 1],
-                    author_name: author.author_name,
+                    thumbnail: thumbnails[thumbnails.length - 1].url,
+                    author_name: author.name,
                     channel_url: author.channel_url
                 }
             }
@@ -36,37 +36,40 @@ module.exports = {
                     const search = args.join(" ")
                     const result = await yts(search)
                     const videos = result.videos.slice(0, 10)
-                    let video
+                    let video = videos[0]
 
-                    const choicesMsg = await msg.channel.send("Here are the results matching your search:\n" + videos.map((video, i) => (i + 1) + " - " + video.title).join("\n") + "\nN - cancel")
+                    if (video.title.toLowerCase() !== search.toLowerCase()) {
+                        const choicesMsg = await msg.channel.send("Here are the results matching your search:\n" + videos.map((video, i) => (i + 1) + " - " + video.title).join("\n") + "\nN - cancel")
     
-                    const filter = cMsg => cMsg.author.id === msg.author.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
-                    try {
-                        let cMsg = await msg.channel.awaitMessages(filter, { max: 1, time: 30_000 })
-                        cMsg = cMsg.array()
-                        if (cMsg.length === 1) {
-                            if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
-                            else return msg.channel.send("Cancelled.")
+                        const filter = cMsg => cMsg.author.id === msg.author.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
+                        try {
+                            let cMsg = await msg.channel.awaitMessages(filter, { max: 1, time: 30_000 })
+                            cMsg = cMsg.array()
+                            if (cMsg.length === 1) {
+                                if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
+                                else return msg.channel.send("Cancelled.")
 
-                            cMsg[0].delete().catch(() => {})
+                                cMsg[0].delete().catch(() => {})
+                            }
                         }
+                        catch {}
+
+                        choicesMsg.delete().catch(() => {})
                     }
-                    catch {}
 
-                    choicesMsg.delete().catch(() => {})
+                    readable = await ytdl(video.url)
 
-                    const { author, title, description, url, thumbnail } = video
-
-                    readable = await ytdl(url)
+                    const videoInfo = await ytdl.getInfo(video.url)
+                    const { author, title, description, video_url, thumbnails } = videoInfo.videoDetails                    
 
                     song = {
                         stream: readable,
-                        url : url,
+                        url : video_url,
                         title: title,
                         description: description,
-                        thumbnail: thumbnail,
+                        thumbnail: thumbnails[thumbnails.length - 1].url,
                         author_name: author.name,
-                        channel_url: author.url
+                        channel_url: author.channel_url
                     }
                 }
                 catch {
@@ -95,7 +98,20 @@ async function play(channel, queue) {
             play(channel, queue)
         })
         dispatcher.setVolume(queue.volume)
-        channel.send("Currently playing : " + nextSong.title + " (" + nextSong.url + ")")
+
+        const Discord = require("discord.js")
+        const youtubeRed = "#DF1F18"
+
+        const description = nextSong.description.length > 200 ? nextSong.description.slice(0, 200) + "..." : nextSong.description
+
+        const embed = new Discord.MessageEmbed()
+            .setTitle(`Now playing: ${nextSong.title}`)
+            .setURL(nextSong.url)
+            .setDescription(description)
+            .setColor(youtubeRed)
+            .setImage(nextSong.thumbnail)
+            .setAuthor(nextSong.author_name)
+        channel.send(embed)
     }
     else {
         channel.send("Queue end reached.")
