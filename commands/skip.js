@@ -10,7 +10,7 @@ module.exports = {
         if (!msg.guild.me.voice.channel) {
             msg.channel.send("I'm not in a voice channel!")
         }
-        else if (msg.guild.me.voice.channel !== msg.member.voice.channel) {
+        else if (!msg.member.voice.channel || msg.guild.me.voice.channel.id !== msg.member.voice.channel.id) {
             msg.channel.send("You're not in my voice channel, so you're not allowed to skip songs!")
         }
         else if (queue.songs.length === 0) {

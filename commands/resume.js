@@ -10,8 +10,8 @@ module.exports = {
         if (!msg.guild.me.voice.channel) {
             msg.channel.send("I'm not in a voice channel!")
         }
-        else if (msg.guild.me.voice.channel !== msg.member.voice.channel) {
-            msg.channel.send("You're not in my voice channel, you're not allowed to pause the queue!")
+        else if (!msg.member.voice.channel || msg.guild.me.voice.channel.id !== msg.member.voice.channel.id) {
+            msg.channel.send("You're not in my voice channel, you're not allowed to resume the queue!")
         }
         else if (queue.songs.length === 0) {
             msg.channel.send("There's nothing to resume.")
