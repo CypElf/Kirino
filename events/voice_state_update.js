@@ -11,5 +11,8 @@ module.exports = bot => {
                 }, timeOut * 60 * 1000)
             }
         }
+        else if (oldState.id === bot.user.id && oldState.channelID !== null && newState.channelID === null) {
+            bot.voicesQueues.delete(oldState.guild.id)
+        }
     })
 }

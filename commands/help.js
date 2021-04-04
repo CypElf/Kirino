@@ -44,8 +44,8 @@ module.exports = {
 	
 		if (__(`description_${command.name}`) !== `description_${command.name}`) {
 
-			const to1024Chunks = require("../lib/string/to_1024_chunks")
-			let descriptions = to1024Chunks(__(`description_${command.name}`))
+			const toChunks = require("../lib/string/to_chunks")
+			let descriptions = toChunks(__(`description_${command.name}`))
 
 			for (const descriptionPart of descriptions) {
 				if (descriptionPart === descriptions[0]) helpEmbed.addField(`**${__("description")}**`, descriptionPart)

@@ -1,3 +1,5 @@
+const ytdl = require("ytdl-core-discord")
+
 module.exports = {
 	name: "play",
     guildOnly: true,
@@ -5,14 +7,13 @@ module.exports = {
     category: "others",
 
     async execute (bot, msg, args) {
-        const ytdl = require("ytdl-core-discord")
         const url = args[0]
 
         if (bot.voicesQueues.has(msg.guild.id)) {
             try {
                 const readable = await ytdl(url)
                 const videoInfo = await ytdl.getInfo(url)
-                const { author: { name, channel_url }, title, description, video_url, thumbnails } = videoInfo.videoDetails
+                const { author: { author_name, channel_url }, title, description, video_url, thumbnails } = videoInfo.videoDetails
 
                 const song = {
                     stream: readable,
@@ -20,7 +21,7 @@ module.exports = {
                     title: title,
                     description: description,
                     thumbnail: thumbnails[thumbnails.length - 1],
-                    author_name: name,
+                    author_name: author_name,
                     channel_url: channel_url
                 }
 
@@ -42,8 +43,7 @@ module.exports = {
     }
 }
 
-function play(channel, queue) {
-    console.log(queue.songs)
+async function play(channel, queue) {
     if (queue.songs.length >= 1) {
         const nextSong = queue.songs[0]
         const dispatcher = queue.connection.play(nextSong.stream, { type: "opus" }).on("finish", () => {
@@ -52,5 +52,8 @@ function play(channel, queue) {
         })
         dispatcher.setVolume(queue.volume)
         channel.send("Currently playing : " + nextSong.title + " (" + nextSong.url + ")")
+    }
+    else {
+        channel.send("Queue end reached.")
     }
 }
