@@ -35,8 +35,27 @@ module.exports = {
 
                     const search = args.join(" ")
                     const result = await yts(search)
+                    const videos = result.videos.slice(0, 10)
+                    let video
 
-                    const { author, title, description, url, thumbnail } = result.videos[0]
+                    const choicesMsg = await msg.channel.send("Here are the results matching your search:\n" + videos.map((video, i) => (i + 1) + " - " + video.title).join("\n") + "\nN - cancel")
+    
+                    const filter = cMsg => cMsg.author.id === msg.author.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
+                    try {
+                        let cMsg = await msg.channel.awaitMessages(filter, { max: 1, time: 30_000 })
+                        cMsg = cMsg.array()
+                        if (cMsg.length === 1) {
+                            if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
+                            else return msg.channel.send("Cancelled.")
+
+                            cMsg[0].delete().catch(() => {})
+                        }
+                    }
+                    catch {}
+
+                    choicesMsg.delete().catch(() => {})
+
+                    const { author, title, description, url, thumbnail } = video
 
                     readable = await ytdl(url)
 
