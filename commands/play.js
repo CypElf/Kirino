@@ -51,7 +51,7 @@ module.exports = {
                     }
                 }
                 catch {
-                    return msg.channel.send("Video not found.")
+                    return msg.channel.send("Sorry, I didn't find anything.") // with yt-search, it seems to never happen, but just in case
                 }
             }
 
@@ -60,7 +60,7 @@ module.exports = {
 
             if (serverQueue.songs.length === 1) play(msg.channel, serverQueue)
 
-            else msg.channel.send("Added to the queue.")
+            else msg.channel.send("Added " + song.title + " to the queue.")
         }
         else {
             msg.channel.send("I'm not in a voice channel.")

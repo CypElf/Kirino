@@ -18,7 +18,7 @@ module.exports = {
             if (!isNaN(newVolume) && newVolume > 0) {
 
                 if (newVolume > 2) {
-                    let confirmationMsg = await msg.channel.send(`A sound greater than 2 is highly not recommanded as the volume won't change much, but the sound will be saturated. Are you sure you want to change the sound for ${newVolume} ?`)
+                    let confirmationMsg = await msg.channel.send(`A sound greater than 2 is highly not recommanded as the volume won't change that much, but the sound will be saturated. Are you sure you want to change the sound for ${newVolume} ?`)
 
                     confirmationMsg.react('✅')
                     confirmationMsg.react('❌')
