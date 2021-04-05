@@ -57,7 +57,7 @@ module.exports = {
 
             if (serverQueue.songs.length === 1) play(msg.channel, serverQueue)
 
-            else msg.channel.send(`${__("added")} ${song.title} ${__("to_the_queue")} ${__("kirino_glad")}`)
+            else msg.channel.send(`${__("added")}${song.title} ${__("to_the_queue")} ${__("kirino_glad")}`)
         }
     }
 }
