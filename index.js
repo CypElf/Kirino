@@ -13,6 +13,7 @@ bot.db = new bsqlite3("database.db", { fileMustExist: true })
 bot.commandsCooldowns = new Discord.Collection()
 bot.xpCooldowns = new Discord.Collection()
 bot.apiCooldowns = new Map()
+bot.voicesQueues = new Discord.Collection()
 
 i18n.configure({
     locales: ['en', 'fr'],
@@ -185,7 +186,7 @@ function startCommandsApi(bot, obj) {
             const localeBak = getLocale()
             setLocale(lang === "fr" ? "fr" : "en")
 
-            const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"]])
+            const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"], ["music", "music"]])
             
             if (category !== "all" && !Array.from(categories.keys()).includes(category.toLowerCase())) {
                 res.writeHead(404) // HTTP status code 404 = Not Found
