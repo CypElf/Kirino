@@ -74,15 +74,17 @@ async function play(channel, queue) {
         const Discord = require("discord.js")
         const youtubeRed = "#DF1F18"
 
-        const description = nextSong.description.length > 150 ? nextSong.description.slice(0, 150) + "..." : nextSong.description
-
         const embed = new Discord.MessageEmbed()
             .setTitle(`${__("now_playing")} ${nextSong.title}`)
             .setURL(nextSong.url)
-            .setDescription(description)
             .setColor(youtubeRed)
             .setImage(nextSong.thumbnail)
             .setAuthor(nextSong.author_name)
+
+        if (nextSong.description) {
+            embed.setDescription(nextSong.description.length > 150 ? nextSong.description.slice(0, 150) + "..." : nextSong.description)
+        }
+
         channel.send(embed)
     }
     else {
