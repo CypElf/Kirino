@@ -4,18 +4,18 @@ module.exports = {
     args: false,
     category: "others",
 
-    async execute (bot, msg, args) {
+    async execute (bot, msg) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
         if (!msg.guild.me.voice.channel) {
-            msg.channel.send("I'm not in a voice channel!")
+            msg.channel.send(`${__("not_in_any_voice_channel")} ${__("kirino_pout")}`)
         }
         else if (queue.songs.length === 0) {
-            msg.channel.send("The queue is empty.")
+            msg.channel.send(`${__("queue_empty")} ${__("kirino_glad")}`)
         }
         else {
             const toChunks = require("../lib/string/to_chunks")
-            const text = "The songs in the queue are:\n- " + queue.songs.map(song => song.title).join("\n- ")
+            const text = `${__("songs_in_queue_are")}\n- ${queue.songs.map(song => song.title).join("\n- ")}`
 
             const textArray = toChunks(text, 2000)
             for (const chunk of textArray) {
@@ -24,4 +24,3 @@ module.exports = {
         }
     }
 }
-

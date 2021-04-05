@@ -4,15 +4,15 @@ module.exports = {
     args: false,
     category: "others",
 
-    async execute (bot, msg, args) {
+    async execute (bot, msg) {
         const guild = await bot.guilds.fetch(msg.guild.id)
         const botMember = await guild.members.fetch(bot.user.id)
         if (botMember.voice.channel) {
             botMember.voice.channel.leave()
-            msg.channel.send("I left the voice channel.")
+            msg.channel.send(`${__("voice_channel_left")} ${__("kirino_glad")}`)
         }
         else {
-            msg.channel.send("I'm already not in any voice channel.")
+            msg.channel.send(`${__("already_not_in_any_voice_channel")} ${__("kirino_pout")}`)
         }
     }
 }

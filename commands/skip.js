@@ -4,21 +4,19 @@ module.exports = {
     args: false,
     category: "others",
 
-    async execute (bot, msg, args) {
+    async execute (bot, msg) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
-        if (!msg.guild.me.voice.channel) {
-            msg.channel.send("I'm not in a voice channel!")
-        }
-        else if (!msg.member.voice.channel || msg.guild.me.voice.channel.id !== msg.member.voice.channel.id) {
-            msg.channel.send("You're not in my voice channel, so you're not allowed to skip songs!")
-        }
-        else if (queue.songs.length === 0) {
-            msg.channel.send("There's nothing to skip in the queue.")
-        }
-        else {
-            queue.connection.dispatcher.end()
-            msg.channel.send("Skipped.")
+        const musicAuth = require("../lib/music/music_control_auth")
+
+        if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
+            if (queue.songs.length === 0) {
+                msg.channel.send(`${__("nothing_to_skip")} ${__("kirino_pout")}`)
+            }
+            else {
+                queue.connection.dispatcher.end()
+                msg.channel.send(`${__("skipped")} ${__("kirino_glad")}`)
+            }
         }
     }
 }

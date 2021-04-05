@@ -7,18 +7,14 @@ module.exports = {
     async execute (bot, msg, args) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
-        if (!msg.guild.me.voice.channel) {
-            msg.channel.send("I'm not in a voice channel!")
-        }
-        else if (!msg.member.voice.channel || msg.guild.me.voice.channel.id !== msg.member.voice.channel.id) {
-            msg.channel.send("You're not in my voice channel, you're not allowed to change the volume!")
-        }
-        else {
+        const musicAuth = require("../lib/music/music_control_auth")
+
+        if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
             const newVolume = Number.parseFloat(args[0])
-            if (!isNaN(newVolume) && newVolume > 0) {
+            if (!isNaN(newVolume) && newVolume > 0 && newVolume < 10) {
 
                 if (newVolume > 2) {
-                    let confirmationMsg = await msg.channel.send(`A sound greater than 2 is highly not recommanded as the volume won't change that much, but the sound will be saturated. Are you sure you want to change the sound for ${newVolume} ?`)
+                    let confirmationMsg = await msg.channel.send(`${__("high_volume_not_recommanded")} ${newVolume} ?`)
 
                     confirmationMsg.react('✅')
                     confirmationMsg.react('❌')
@@ -29,18 +25,18 @@ module.exports = {
                     collector.on("collect", async reaction => {
                         if (reaction.emoji.name === '✅') {
                             changeVolume(queue, newVolume)
-                            msg.channel.send("Okay, volume changed anyway.")
+                            msg.channel.send(`${__("volume_changed_anyway")} ${newVolume}. ${__("kirino_pout")}`)
                         }
-                        else msg.channel.send("Operation cancelled.")
+                        else msg.channel.send(`${__("volume_change_cancelled")} ${__("kirino_glad")}`)
                     })
                 }
                 else {
                     changeVolume(queue, newVolume)
-                    msg.channel.send("Volume changed.")
+                    msg.channel.send(`${__("volume_changed")} ${newVolume}. ${__("kirino_glad")}`)
                 }
             }
             else {
-                msg.channel.send("Please specify a valid volume.")
+                msg.channel.send(`${__("bad_volume")} ${__("kirino_pff")}`)
             }
         }
     }
