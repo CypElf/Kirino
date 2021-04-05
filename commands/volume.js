@@ -2,7 +2,7 @@ module.exports = {
 	name: "volume",
     guildOnly: true,
     args: true,
-    category: "others",
+    category: "music",
 
     async execute (bot, msg, args) {
         const queue = bot.voicesQueues.get(msg.guild.id)

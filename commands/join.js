@@ -2,7 +2,7 @@ module.exports = {
 	name: "join",
     guildOnly: true,
     args: false,
-    category: "others",
+    category: "music",
     permissions: ["connect", "speak"],
 
     async execute (bot, msg) {

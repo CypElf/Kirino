@@ -4,7 +4,7 @@ module.exports = {
 	name: "play",
     guildOnly: true,
     args: true,
-    category: "others",
+    category: "music",
 
     async execute (bot, msg, args) {
         const musicAuth = require("../lib/music/music_control_auth")

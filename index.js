@@ -186,7 +186,7 @@ function startCommandsApi(bot, obj) {
             const localeBak = getLocale()
             setLocale(lang === "fr" ? "fr" : "en")
 
-            const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"]])
+            const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"], ["music", "music"]])
             
             if (category !== "all" && !Array.from(categories.keys()).includes(category.toLowerCase())) {
                 res.writeHead(404) // HTTP status code 404 = Not Found

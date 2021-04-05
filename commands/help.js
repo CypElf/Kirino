@@ -16,7 +16,7 @@ module.exports = {
 
 			const dataJoined = bot.commands.array()
 
-			const categories = [["admin", "administration"], ["utility", "utility"], ["xp", "xp"], ["programming", "it"], ["others", "others"]]
+			const categories = [["admin", "administration"], ["utility", "utility"], ["xp", "xp"], ["programming", "it"], ["others", "others"], ["music", "music"]]
 			for (const category of categories) {
 				let commands = `\`${dataJoined.filter(command => command.category === category[0]).map(command => command.name).join("`, `")}\``
 				
@@ -29,7 +29,7 @@ module.exports = {
 			return msg.channel.send(helpEmbed)
 		}
 
-		// ------------------------------------------------------------------- help on specitif command
+		// ------------------------------------------------------------------- help on specific command
 
 		const commandId = args[0].toLowerCase()
 		let command = bot.commands.get(commandId) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandId))

@@ -2,7 +2,7 @@ module.exports = {
 	name: "leave",
     guildOnly: true,
     args: false,
-    category: "others",
+    category: "music",
 
     async execute (bot, msg) {
         const guild = await bot.guilds.fetch(msg.guild.id)

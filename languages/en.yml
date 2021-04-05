@@ -63,6 +63,7 @@ administration: Administration
 it: IT
 utility: Utility
 others: Others
+music: Music
 required_permissions: "Required permissions"
 you_can_do: "You can do"
 to_get_infos_on_a_command: "to get information on a particular command."
