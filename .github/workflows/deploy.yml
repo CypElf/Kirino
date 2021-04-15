@@ -20,8 +20,8 @@ jobs:
             git reset --hard
             git pull "https://${{secrets.SSH_LOGIN}}:${{secrets.SSH_GITHUB_TOKEN}}@github.com/CypElf/Kirino.git" master
             pm2 restart kirino
-            cd ../kirino.xyz
+            cd ../Kirino.xyz
             git reset --hard
             git pull "https://${{secrets.SSH_LOGIN}}:${{secrets.SSH_GITHUB_TOKEN}}@github.com/CypElf/Kirino.xyz.git" master
             npm run build
-            pm2 restart next
+            pm2 restart xyz
