@@ -35,10 +35,14 @@ for (const file of eventsFiles) {
     eventSetter(bot)
 }
 
-const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"))
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`)
-	bot.commands.set(command.name, command)
+const categories = fs.readdirSync("./commands")
+for (const category of categories) {
+    const commandFiles = fs.readdirSync(`./commands/${category}/`).filter(file => file.endsWith(".js"))
+    for (const commandFile of commandFiles) {
+        const command = require(`./commands/${category}/${commandFile}`)
+        command.category = category
+        bot.commands.set(command.name, command)
+    } 
 }
 
 process.on('unhandledRejection', error => {
@@ -180,27 +184,28 @@ function startCommandsApi(bot, obj) {
     http.createServer(async (req, res) => {
         if (controlRequest(req, res, obj, 0)) {
             let { category, lang } = url.parse(req.url, true).query
+
+            category = category.toLowerCase()
         
             if (!category) category = "all"
             
             const localeBak = getLocale()
-            setLocale(lang === "fr" ? "fr" : "en")
+            setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
 
-            const categories = new Map([["administration", "admin"], ["utility", "utility"], ["xp", "xp"], ["it", "programming"], ["others", "others"], ["music", "music"]])
+            const categories = fs.readdirSync("./commands")
             
-            if (category !== "all" && !Array.from(categories.keys()).includes(category.toLowerCase())) {
+            if (category !== "all" && !categories.includes(category)) {
                 res.writeHead(404) // HTTP status code 404 = Not Found
                 res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
                 return res.end()
             }
 
-            const categoriesToGet = category === "all" ? categories.values() : [categories.get(category)]
+            const categoriesToGet = category === "all" ? categories : [category]
 
-            const allCommands = bot.commands.array()
             let commands = []
 
             for (const cat of categoriesToGet) {
-                const currentCommands = allCommands.filter(command => command.category === cat).map(command => {
+                const currentCommands = bot.commands.filter(command => command.category === cat).map(command => {
                     command.description = __(`description_${command.name}`)
                     if (`usage_${command.name}` !== __(`usage_${command.name}`)) command.usage = __(`usage_${command.name}`).split("\n").map(usage => usage.startsWith("nocommand ") ? usage.slice(10) : `${command.name} ${usage}`).join("\n")
                     return command

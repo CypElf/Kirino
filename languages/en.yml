@@ -57,7 +57,7 @@ usage_edit: "[message ID] [new message]"
 cannot_edit_this_message: "I can't edit this message!"
 precise_something_to_replace: "Please specify something to put in the message!"
 bad_message_id: "The message ID provided is incorrect!"
-description_help: "Lists available commands or information about a particular command. When an argument is written in square brackets `[]`, it is mandatory. However, if it is written between braces `{}`, it is optional. Some permissions may also be in braces `{}`, which means that they are only necessary in certain cases."
+description_help: "Lists available commands or informations about a particular command. When an argument is written in square brackets `[]`, it is mandatory. However, if it is written between braces `{}`, it is optional. Some permissions may also be in braces `{}`, which means that they are only necessary in certain cases."
 usage_help: "{command}"
 administration: Administration
 it: IT
@@ -66,7 +66,7 @@ others: Others
 music: Music
 required_permissions: "Required permissions"
 you_can_do: "You can do"
-to_get_infos_on_a_command: "to get information on a particular command."
+to_get_infos_on_a_command: "to get informations on a particular command."
 this_command_does_not_exist: "This command does not exist."
 description: Description
 description_continuation: "Description continuation"
