@@ -9,10 +9,14 @@ module.exports = {
         const musicAuth = require("../../lib/music/music_control_auth")
 
         if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
-            const newVolume = Number.parseFloat(args[0])
+            const volume = args[0]
+
+            const loud = volume.toLowerCase() === "loud" ? true : false
+
+            const newVolume = Number.parseFloat(volume)
             if (!isNaN(newVolume) && newVolume > 0 && newVolume < 10) {
 
-                if (newVolume > 2) {
+                if (newVolume > 2 && !loud) {
                     let confirmationMsg = await msg.channel.send(`${__("high_volume_not_recommanded")} ${newVolume} ?`)
 
                     confirmationMsg.react('✅')
@@ -30,6 +34,7 @@ module.exports = {
                     })
                 }
                 else {
+                    if (loud) newVolume = 50
                     changeVolume(queue, newVolume)
                     msg.channel.send(`${__("volume_changed")} ${newVolume}. ${__("kirino_glad")}`)
                 }
