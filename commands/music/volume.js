@@ -10,11 +10,10 @@ module.exports = {
 
         if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
             const volume = args[0]
-
-            const loud = volume.toLowerCase() === "loud" ? true : false
+            const loud = volume.toLowerCase() === "loud"
 
             const newVolume = Number.parseFloat(volume)
-            if (!isNaN(newVolume) && newVolume > 0 && newVolume < 10) {
+            if ((!isNaN(newVolume) && newVolume > 0 && newVolume < 10) || loud) {
 
                 if (newVolume > 2 && !loud) {
                     let confirmationMsg = await msg.channel.send(`${__("high_volume_not_recommanded")} ${newVolume} ?`)
@@ -33,10 +32,13 @@ module.exports = {
                         else msg.channel.send(`${__("volume_change_cancelled")} ${__("kirino_glad")}`)
                     })
                 }
-                else {
+                else if (queue.connection !== null) {
                     if (loud) newVolume = 50
                     changeVolume(queue, newVolume)
                     msg.channel.send(`${__("volume_changed")} ${newVolume}. ${__("kirino_glad")}`)
+                }
+                else {
+                    msg.channel.send(`${cannot_change_volume} ${__("kirino_pout")}`)
                 }
             }
             else {
