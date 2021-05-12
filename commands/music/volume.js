@@ -12,7 +12,7 @@ module.exports = {
             const volume = args[0]
             const loud = volume.toLowerCase() === "loud"
 
-            const newVolume = Number.parseFloat(volume)
+            let newVolume = Number.parseFloat(volume)
             if ((!isNaN(newVolume) && newVolume > 0 && newVolume < 10) || loud) {
 
                 if (newVolume > 2 && !loud) {
