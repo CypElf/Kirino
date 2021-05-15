@@ -58,6 +58,17 @@ module.exports = bot => {
         if (command.guildOnly && !msg.guild) {
             return msg.reply(`${__("command_not_available_in_dm")} ${__("kirino_pout")}`)
         }
+
+        // ------------------------------------------------------------- beta check
+
+        if (command.beta) {
+            const id = msg.guild ? msg.guild.id : msg.author.id
+            const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
+
+            if (betaRow === undefined) {
+                return msg.channel.send(`${__("command_in_beta")} \`${bot.prefix}beta enable\` ${__("kirino_glad")}`)
+            }
+        }
     
         // ------------------------------------------------------------- command cooldown check
     

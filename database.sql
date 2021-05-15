@@ -1,4 +1,9 @@
 BEGIN TRANSACTION;
+DROP TABLE IF EXISTS "beta";
+CREATE TABLE IF NOT EXISTS "beta" (
+	"id"	TEXT,
+	PRIMARY KEY("id")
+);
 DROP TABLE IF EXISTS "calls";
 CREATE TABLE IF NOT EXISTS "calls" (
 	"guild_id"	TEXT,
@@ -36,8 +41,8 @@ CREATE TABLE IF NOT EXISTS "xp_profiles" (
 );
 DROP TABLE IF EXISTS "xp_guilds";
 CREATE TABLE IF NOT EXISTS "xp_guilds" (
-	"guild_id"	TEXT,
-	"is_enabled"	INTEGER NOT NULL,
+	"guild_id"	TEXT NOT NULL,
+	"is_enabled"	INTEGER,
 	"level_up_message"	TEXT,
 	"level_up_channel_id"	TEXT,
 	"scale"	INTEGER,
@@ -58,18 +63,23 @@ CREATE TABLE IF NOT EXISTS "xp_roles" (
 DROP TABLE IF EXISTS "rules";
 CREATE TABLE IF NOT EXISTS "rules" (
 	"guild_id"	TEXT NOT NULL,
-	"rule"	TEXT
+	"rule"	TEXT NOT NULL
+);
+DROP TABLE IF EXISTS "prefixs";
+CREATE TABLE IF NOT EXISTS "prefixs" (
+	"id"	TEXT NOT NULL,
+	"prefix"	TEXT,
+	PRIMARY KEY("id")
+);
+DROP TABLE IF EXISTS "banwords";
+CREATE TABLE IF NOT EXISTS "banwords" (
+	"guild_id"	TEXT NOT NULL,
+	"word"	TEXT NOT NULL
 );
 DROP TABLE IF EXISTS "afk";
 CREATE TABLE IF NOT EXISTS "afk" (
 	"user_id"	TEXT NOT NULL,
 	"reason"	TEXT
-);
-DROP TABLE IF EXISTS "prefixs";
-CREATE TABLE IF NOT EXISTS "prefixs" (
-	"id"	TEXT,
-	"prefix"	TEXT,
-	PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "languages";
 CREATE TABLE IF NOT EXISTS "languages" (
