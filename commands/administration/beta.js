@@ -4,10 +4,6 @@ module.exports = {
     permissions: ["manage_guild"],
 
     async execute (bot, msg, args) {
-        if (msg.guild && !msg.member.hasPermission("MANAGE_SERVER")) {
-            return msg.channel.send(`${__("missing_permissions_to_enable_beta")} ${__("kirino_pout")}`)
-        }
-
         const id = msg.guild ? msg.guild.id : msg.author.id
         const isBetaEnabled = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id) !== undefined
 
@@ -21,6 +17,10 @@ module.exports = {
         }
 
         else {
+            if (msg.guild && !msg.member.hasPermission("MANAGE_SERVER")) {
+                return msg.channel.send(`${__("missing_permissions_to_enable_beta")} ${__("kirino_pout")}`)
+            }
+
             const choice = args[0].toLowerCase()
 
             if (choice !== "enable" && choice !== "disable") {
@@ -35,8 +35,24 @@ module.exports = {
                     msg.channel.send(`${__("beta_already_enabled")} ${__("kirino_glad")}`)
                 }
                 else {
-                    bot.db.prepare("INSERT INTO beta VALUES(?)").run(id)
-                    msg.channel.send(`${__("beta_enabled")} ${__("kirino_glad")}`)
+                    let confirmationMsg = await msg.channel.send(`${__("beta_confirmation")} ${__("kirino_what")}`)
+                    confirmationMsg.react('✅')
+                    confirmationMsg.react('❌')
+
+                    const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+                    const collector = confirmationMsg.createReactionCollector(filter, { max: 1, time: 30_000 })
+
+                    collector.on("collect", async reaction => {
+                        if (reaction.emoji.name === '✅') {
+                            bot.db.prepare("INSERT INTO beta VALUES(?)").run(id)
+                            msg.channel.send(`${__("beta_enabled")} ${__("kirino_glad")}`)
+                        }
+                        else {
+                            msg.channel.send(`${__("beta_enabled_cancelled")} ${__("kirino_pout")}`)
+                        }
+                    })
+
+                    
                 }
             }
             else {
