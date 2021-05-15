@@ -1,3 +1,5 @@
+const { getLocale, setLocale } = require("i18n")
+
 module.exports = {
 	name: "beta",
     guildOnly: false,
@@ -39,10 +41,13 @@ module.exports = {
                     confirmationMsg.react('✅')
                     confirmationMsg.react('❌')
 
+                    const localeBackup = getLocale()
+
                     const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
                     const collector = confirmationMsg.createReactionCollector(filter, { max: 1, time: 30_000 })
 
                     collector.on("collect", async reaction => {
+                        setLocale(localeBackup)
                         if (reaction.emoji.name === '✅') {
                             bot.db.prepare("INSERT INTO beta VALUES(?)").run(id)
                             msg.channel.send(`${__("beta_enabled")} ${__("kirino_glad")}`)
@@ -51,8 +56,6 @@ module.exports = {
                             msg.channel.send(`${__("beta_enabled_cancelled")} ${__("kirino_pout")}`)
                         }
                     })
-
-                    
                 }
             }
             else {
