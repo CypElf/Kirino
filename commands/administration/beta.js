@@ -1,5 +1,3 @@
-const { getLocale, setLocale } = require("i18n")
-
 module.exports = {
 	name: "beta",
     guildOnly: false,
