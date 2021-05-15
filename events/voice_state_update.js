@@ -2,9 +2,6 @@ module.exports = bot => {
     const timeOut = 0.2 // in minutes
 
     bot.on("voiceStateUpdate", async (oldState, newState) => {
-        console.log(oldState)
-        console.log(newState)
-        console.log(oldState.channelID === oldState.guild.me.voice.channelID && !newState.channel)
         if (oldState.channelID === oldState.guild.me.voice.channelID && !newState.channel) {
             if (oldState.channel != null && !(oldState.channel.members.size - 1)) {
                 setTimeout(() => {
