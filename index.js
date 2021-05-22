@@ -87,7 +87,7 @@ function controlRequest(req, res, obj, cooldown) {
 
 function startXpApi(bot, obj) {
     http.createServer(async (req, res) => {
-        console.log(`Receiving a request on the XP API from ${req.socket.remoteAddress} | ${formatDate(new Date())}`)
+        console.log(`Receiving a request on the XP API from ${req.socket.remoteAddress.replace(/^.*:/, '')} | ${formatDate(new Date())}`)
         if (controlRequest(req, res, obj, 500)) {
             let { id, limit, page } = url.parse(req.url, true).query // url.parse is deprecated but there are no alternative working on the internet...
             
@@ -184,7 +184,9 @@ function startXpApi(bot, obj) {
 
 function startCommandsApi(bot, obj) {
     http.createServer(async (req, res) => {
-        console.log(`Receiving a request on the command API from ${req.socket.remoteAddress} | ${formatDate(new Date())}`)
+        const isFromLocalhost = req.socket.remoteAddress.replace(/^.*:/, '') === "127.0.0.1"
+
+        if (!isFromLocalhost) console.log(`Receiving a request on the command API from ${req.socket.remoteAddress.replace(/^.*:/, '')} | ${formatDate(new Date())}`)
         if (controlRequest(req, res, obj, 0)) {
             let { category, lang } = url.parse(req.url, true).query
 
@@ -192,7 +194,7 @@ function startCommandsApi(bot, obj) {
 
             category = category.toLowerCase()
 
-            console.log(`Request accepted. Category = ${category}`)
+            if (!isFromLocalhost) console.log(`Request accepted. Category = ${category}`)
             
             const localeBak = getLocale()
             setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
