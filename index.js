@@ -87,7 +87,7 @@ function controlRequest(req, res, obj, cooldown) {
 
 function startXpApi(bot, obj) {
     http.createServer(async (req, res) => {
-        console.log(`Receiving a request on the XP API from ${req.socket.remoteAddress.replace(/^.*:/, '')} | ${formatDate(new Date())}`)
+        console.log(`Receiving a request on the XP API | ${formatDate(new Date())}`)
         if (controlRequest(req, res, obj, 500)) {
             let { id, limit, page } = url.parse(req.url, true).query // url.parse is deprecated but there are no alternative working on the internet...
             
@@ -184,9 +184,6 @@ function startXpApi(bot, obj) {
 
 function startCommandsApi(bot, obj) {
     http.createServer(async (req, res) => {
-        const isFromLocalhost = req.socket.remoteAddress.replace(/^.*:/, '') === "127.0.0.1"
-
-        if (!isFromLocalhost) console.log(`Receiving a request on the command API from ${req.socket.remoteAddress.replace(/^.*:/, '')} | ${formatDate(new Date())}`)
         if (controlRequest(req, res, obj, 0)) {
             let { category, lang } = url.parse(req.url, true).query
 
@@ -228,8 +225,6 @@ function startCommandsApi(bot, obj) {
             res.writeHead(200) // HTTP status code 200 = OK
             res.write(JSON.stringify({ "category": category, "commands": commands }))
             res.end()
-
-            if (!isFromLocalhost) console.log("Request response sent with success")
         }
     }).listen(62151)
 }
