@@ -1,6 +1,7 @@
 module.exports = bot => {
     bot.on("message", async msg => {
         const Discord = require("discord.js")
+        const formatDate = require("../lib/misc/format_date")
 
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
         let id
@@ -21,11 +22,6 @@ module.exports = bot => {
         if (separator == "\n" && args.length > 0) args = args.join("\n").split(" ")
 
         const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
-    
-        // maintenance
-        // if (!msg.content.startsWith(bot.prefix)) return
-        // if (!command) return
-        // return msg.channel.send(__("maintenance"))
     
         if (msg.guild) {
             // minimal needed permissions
@@ -94,10 +90,11 @@ module.exports = bot => {
     
         if (command.args && !args.length) {
             if (command.category === "ignore") return
-            return bot.commands.get("help").execute(bot, msg, [].concat(commandName))
+            return bot.commands.get("help").execute(bot, msg, [].concat(command.name))
         }
     
         try {
+            console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"}) | ${formatDate(new Date())}`)
             command.execute(bot, msg, args)
         }
         catch (err) {

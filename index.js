@@ -1,11 +1,15 @@
-const Discord = require("discord.js")
 const fs = require("fs")
+const http = require("http")
+const url = require("url")
+
+const Discord = require("discord.js")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const yaml = require("js-yaml")
 
 require("dotenv").config()
 
+const formatDate = require("./lib/misc/format_date")
 const bot = new Discord.Client({ ws: { intents: [Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }})
 
 bot.commands = new Discord.Collection()
@@ -63,7 +67,7 @@ function controlRequest(req, res, obj, cooldown) {
     }
     
     const now = Date.now()
-    const ip = req.connection.remoteAddress
+    const ip = req.socket.remoteAddress
 
     if (obj.cooldowns.has(ip)) {
         const expiration = obj.cooldowns.get(ip) + cooldown
@@ -82,15 +86,15 @@ function controlRequest(req, res, obj, cooldown) {
 }
 
 function startXpApi(bot, obj) {
-    const http = require("http")
-    const url = require("url")
-
     http.createServer(async (req, res) => {
-        if (controlRequest(req, res, obj, 1000)) {
-            let { id, limit, page } = url.parse(req.url, true).query
-        
+        console.log(`Receiving a request on the XP API from ${req.socket.remoteAddress} | ${formatDate(new Date())}`)
+        if (controlRequest(req, res, obj, 500)) {
+            let { id, limit, page } = url.parse(req.url, true).query // url.parse is deprecated but there are no alternative working on the internet...
+            
             if (!limit) limit = 20 // default values
             if (!page) page = 1
+
+            console.log(`Request accepted. ID = ${id}, limit = ${limit}, page = ${page}`)
         
             if (isNaN(limit) || limit <= 0 || limit > 100 || isNaN(page) || page <= 0) {
                 res.writeHead(400) // HTTP status code 400 = Bad Request
@@ -162,6 +166,7 @@ function startXpApi(bot, obj) {
                     
                     res.writeHead(200) // HTTP status code 200 = OK
                     res.write(JSON.stringify(data))
+                    console.log("Request response sent with success")
                 }
                 else {
                     res.writeHead(400) // HTTP status code 400 = Bad Request
@@ -178,16 +183,16 @@ function startXpApi(bot, obj) {
 }
 
 function startCommandsApi(bot, obj) {
-    const http = require("http")
-    const url = require("url")
-
     http.createServer(async (req, res) => {
+        console.log(`Receiving a request on the command API from ${req.socket.remoteAddress} | ${formatDate(new Date())}`)
         if (controlRequest(req, res, obj, 0)) {
             let { category, lang } = url.parse(req.url, true).query
 
-            category = category.toLowerCase()
-        
             if (!category) category = "all"
+
+            category = category.toLowerCase()
+
+            console.log(`Request accepted. Category = ${category}`)
             
             const localeBak = getLocale()
             setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
@@ -221,6 +226,8 @@ function startCommandsApi(bot, obj) {
             res.writeHead(200) // HTTP status code 200 = OK
             res.write(JSON.stringify({ "category": category, "commands": commands }))
             res.end()
+
+            console.log("Request response sent with success")
         }
     }).listen(62151)
 }
