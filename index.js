@@ -229,7 +229,7 @@ function startCommandsApi(bot, obj) {
             res.write(JSON.stringify({ "category": category, "commands": commands }))
             res.end()
 
-            console.log("Request response sent with success")
+            if (!isFromLocalhost) console.log("Request response sent with success")
         }
     }).listen(62151)
 }
