@@ -190,8 +190,6 @@ function startCommandsApi(bot, obj) {
             if (!category) category = "all"
 
             category = category.toLowerCase()
-
-            if (!isFromLocalhost) console.log(`Request accepted. Category = ${category}`)
             
             const localeBak = getLocale()
             setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
