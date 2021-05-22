@@ -77,7 +77,7 @@ function controlRequest(req, res, obj, cooldown) {
     }
 
     obj.cooldowns.set(ip, now)
-    setTimeout(() => obj.cooldowns.delete(ip), 1000)
+    setTimeout(() => obj.cooldowns.delete(ip), cooldown)
     return true
 }
 
