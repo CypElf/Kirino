@@ -1,6 +1,4 @@
 node_modules/
-.tmp/
 .vscode/
-TODO.txt
 database.db
 .env
