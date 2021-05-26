@@ -18,6 +18,7 @@ bot.commandsCooldowns = new Discord.Collection()
 bot.xpCooldowns = new Discord.Collection()
 bot.apiCooldowns = new Map()
 bot.voicesQueues = new Discord.Collection()
+bot.calls = new Discord.Collection()
 
 i18n.configure({
     locales: ['en', 'fr'],
@@ -30,8 +31,6 @@ i18n.configure({
 
 startXpApi(bot, { cooldowns: bot.apiCooldowns })
 startCommandsApi(bot, { cooldowns: bot.apiCooldowns })
-
-bot.db.prepare("UPDATE calls SET locked = ?").run(0) // unlock calls if the bot restarted while there were some calls in progress that couldn't release the lock
 
 const eventsFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"))
 for (const file of eventsFiles) {

@@ -1,18 +1,17 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "beta";
-CREATE TABLE IF NOT EXISTS "beta" (
-	"id"	TEXT,
-	PRIMARY KEY("id")
-);
 DROP TABLE IF EXISTS "calls";
 CREATE TABLE IF NOT EXISTS "calls" (
 	"guild_id"	TEXT,
 	"channel_id"	TEXT,
-	"locked"	INTEGER NOT NULL,
 	"dm"	INTEGER NOT NULL,
 	"current"	INTEGER NOT NULL,
 	"asfile"	INTEGER NOT NULL,
 	PRIMARY KEY("guild_id")
+);
+DROP TABLE IF EXISTS "beta";
+CREATE TABLE IF NOT EXISTS "beta" (
+	"id"	TEXT,
+	PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "joins_leaves";
 CREATE TABLE IF NOT EXISTS "joins_leaves" (
