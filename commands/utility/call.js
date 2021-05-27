@@ -96,8 +96,6 @@ module.exports = {
             const row = bot.db.prepare("SELECT channel_id, dm, current, asfile FROM calls WHERE guild_id = ?").get(msg.guild.id)
             const locked = bot.calls.get(msg.guild.id) ?? 0
 
-            console.log(locked)
-
             if (row !== undefined && (row.channel_id !== null || row.dm != 0 || row.current != 0)) {
                 if (locked >= 3) return msg.channel.send(`${__("records_still_going_on")} ${__("kirino_pout")}`)
 
