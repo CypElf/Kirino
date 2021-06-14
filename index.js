@@ -21,7 +21,7 @@ bot.voicesQueues = new Discord.Collection()
 bot.calls = new Discord.Collection()
 
 i18n.configure({
-    locales: ['en', 'fr'],
+    locales: ["en", "fr"],
     staticCatalog: {
         en: yaml.safeLoad(fs.readFileSync("./languages/en.yml", "utf-8")),
         fr: yaml.safeLoad(fs.readFileSync("./languages/fr.yml", "utf-8")),
@@ -48,8 +48,8 @@ for (const category of categories) {
     } 
 }
 
-process.on('unhandledRejection', error => {
-	console.error('Unhandled promise rejection:', error)
+process.on("unhandledRejection", error => {
+	console.error(`[${formatDate(new Date())}] Unhandled promise rejection:`, error)
 })
 
 bot.login(process.env.KIRINO_TOKEN)
