@@ -106,6 +106,9 @@ module.exports = {
                 .setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png")
                 .setColor("#555555")
         }
+        else {
+            return msg.channel.send(`${__("no_learn_entry")} ${__("kirino_pout")}`)
+        }
         
 		msg.channel.send(linksEmbed)
 	}

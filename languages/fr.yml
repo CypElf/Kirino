@@ -573,3 +573,4 @@ beta_confirmation: "Êtes vous sur de vouloir activer le mode beta ? Les command
 beta_enabled_cancelled: "L'activation du mode beta a été annulée."
 description_learn: "Permet de récupérer des liens utiles pour apprendre différents langages de programmation ou technologies. Les langages ou technologies disponibles sont le C, C++, C#, JavaScript, Java, PHP, HTML, CSS, Python, Rust, Git, discord.js et reverse."
 usage_learn: "[technologie]"
+no_learn_entry: "Désolée, je n'ai pas de liens à vous proposer pour cette technologie. Vérifiez qu'elle est bien proposée et que vous l'avez bien écrit."
