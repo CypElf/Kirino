@@ -9,7 +9,6 @@ const yaml = require("js-yaml")
 
 require("dotenv").config()
 
-const formatDate = require("./lib/misc/format_date")
 const bot = new Discord.Client({ ws: { intents: [Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }})
 
 bot.commands = new Discord.Collection()
@@ -49,7 +48,7 @@ for (const category of categories) {
 }
 
 process.on("unhandledRejection", error => {
-	console.error(`[${formatDate(new Date())}] Unhandled promise rejection:`, error)
+	console.error("Unhandled promise rejection:", error)
 })
 
 bot.login(process.env.KIRINO_TOKEN)
@@ -86,7 +85,7 @@ function controlRequest(req, res, obj, cooldown) {
 
 function startXpApi(bot, obj) {
     http.createServer(async (req, res) => {
-        console.log(`Receiving a request on the XP API | ${formatDate(new Date())}`)
+        console.log("Receiving a request on the XP API")
         if (controlRequest(req, res, obj, 500)) {
             let { id, limit, page } = url.parse(req.url, true).query // url.parse is deprecated but there are no alternative working on the internet...
             

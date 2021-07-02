@@ -1,7 +1,6 @@
 module.exports = bot => {
     bot.on("message", async msg => {
         const Discord = require("discord.js")
-        const formatDate = require("../lib/misc/format_date")
 
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
         let id
@@ -94,7 +93,7 @@ module.exports = bot => {
         }
     
         try {
-            console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"}) | ${formatDate(new Date())}`)
+            console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"})`)
             command.execute(bot, msg, args)
         }
         catch (err) {
