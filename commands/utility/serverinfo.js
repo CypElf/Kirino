@@ -55,10 +55,12 @@ module.exports = {
             emojisArray[i] += displayedEmojisCount.toString()
         }
 
+        const owner = await msg.guild.members.fetch(msg.guild.ownerID)
+
         let informations = new Discord.MessageEmbed()
-        .setAuthor(msg.guild.name, msg.guild.owner.user.displayAvatarURL())
+        .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
         .setColor("#000000")
-        .addField(__("server_owner"), msg.guild.owner.user.tag, true)
+        .addField(__("server_owner"), owner.user.tag, true)
         .addField(__("server_id"), msg.guild.id, true)
         .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
         .addField(__n("humans", humains), humains, true)
