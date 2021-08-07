@@ -83,8 +83,8 @@ module.exports = {
 
         if (!askedRule) return msg.channel.send(`${__("no_rules_defined_at_this_index")} ${__("kirino_pout")}`)
 
-        const Discord = require("discord.js")
-        const emb = new Discord.MessageEmbed()
+        const { MessageEmbed } = require("discord.js")
+        const emb = new MessageEmbed()
             .addField(__("rule_title") + (index + 1), askedRule)
             .setColor("#000000")
             

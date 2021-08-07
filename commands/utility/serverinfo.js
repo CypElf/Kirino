@@ -55,7 +55,7 @@ module.exports = {
             emojisArray[i] += displayedEmojisCount.toString()
         }
 
-        const owner = await msg.guild.members.fetch(msg.guild.ownerID)
+        const owner = await msg.guild.fetchOwner()
 
         const informations = new MessageEmbed()
             .setAuthor(msg.guild.name, owner.user.displayAvatarURL())

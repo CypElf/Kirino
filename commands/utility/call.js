@@ -120,7 +120,7 @@ module.exports = {
 
                     try {
                         const languageBak = getLocale()
-                        const collected = await recordMsg.awaitReactions(filter, { time: 1000 * 60 * duration })
+                        const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
 
                         for (const reaction of collected.array()) {
                             let presents = await reaction.users.fetch()

@@ -2,7 +2,7 @@ module.exports = bot => {
     const timeOut = 3 // in minutes
 
     bot.on("voiceStateUpdate", async (oldState, newState) => {
-        if (oldState.channelID === oldState.guild.me.voice.channelID && !newState.channel) {
+        if (oldState.channelId === oldState.guild.me.voice.channelId && !newState.channel) {
             if (oldState.channel != null && !(oldState.channel.members.size - 1)) {
                 console.log(`I'm alone in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, I'll leave in ${timeOut} minutes if nobody join`)
                 setTimeout(() => {
@@ -17,7 +17,7 @@ module.exports = bot => {
                 }, timeOut * 60 * 1000)
             }
         }
-        else if (oldState.id === bot.user.id && oldState.channelID !== null && newState.channelID === null) {
+        else if (oldState.id === bot.user.id && oldState.channelId !== null && newState.channelId === null) {
             bot.voicesQueues.delete(oldState.guild.id)
         }
     })

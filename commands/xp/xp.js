@@ -51,7 +51,7 @@ module.exports = {
                         validationMessage.react('✅')
                         validationMessage.react('❌')
         
-                        const collector = validationMessage.createReactionCollector(filter, { max: 1, time: 30_000 })
+                        const collector = validationMessage.createReactionCollector({ filter, max: 1, time: 30_000 })
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
@@ -89,7 +89,7 @@ module.exports = {
                         validationMessage.react('✅')
                         validationMessage.react('❌')
         
-                        const collector = validationMessage.createReactionCollector(filter, { max: 1, time: 30_000 })
+                        const collector = validationMessage.createReactionCollector({ filter, max: 1, time: 30_000 })
                 
                         collector.on("collect", (reaction) => {
                             if (reaction.emoji.name === '✅') {
@@ -164,7 +164,7 @@ module.exports = {
                     validationMessage.react('✅')
                     validationMessage.react('❌')
     
-                    const collector = validationMessage.createReactionCollector(filter, { max: 1, time: 30_000 })
+                    const collector = validationMessage.createReactionCollector({ filter, max: 1, time: 30_000 })
             
                     collector.on("collect", async (reaction) => {
                         if (reaction.emoji.name === '✅') {
