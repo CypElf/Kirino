@@ -17,9 +17,9 @@ module.exports = {
         const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
         creationDate = `${creationDay}/${creationMonth}/${creationYear} ${__("at")} ${creationHour}:${creationMinutes}:${cretionsSeconds}`
 
-        const membres = msg.guild.members
-        const bots = membres.cache.filter(membre => membre.user.bot).size
-        const humains = msg.guild.memberCount - bots
+        const members = await msg.guild.members.fetch()
+        const bots = members.filter(membre => membre.user.bot).size
+        const humans = msg.guild.memberCount - bots
         const roles = msg.guild.roles.cache.filter(role => role.name !== "@everyone")
         let displayedRoles = `<@&${roles.map(role => role.id).join(">, <@&")}>`
         let rolesCount = roles.size
@@ -57,16 +57,17 @@ module.exports = {
 
         const owner = await msg.guild.fetchOwner()
 
+        const premiumTier = msg.guild.premiumTier === "NONE" ? "0" : (msg.guild.premiumTier === "TIER_1" ? "1" : (msg.guild.premiumTier === "TIER_2" ? "2" : "3"))
+
         const informations = new MessageEmbed()
             .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
             .setColor("#000000")
             .addField(__("server_owner"), owner.user.tag, true)
             .addField(__("server_id"), msg.guild.id, true)
-            .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
-            .addField(__n("humans", humains), humains, true)
-            .addField(__n("bots", bots), bots, true)
-            .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
-            .addField(__("region"), msg.guild.region, true)
+            .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount.toString(), true)
+            .addField(__n("humans", humans), humans.toString(), true)
+            .addField(__n("bots", bots), bots.toString(), true)
+            .addField(__("boost_level"), __("level") + " " + premiumTier, true)
 
         if (emojisCount <= 100) {
             let first = true
