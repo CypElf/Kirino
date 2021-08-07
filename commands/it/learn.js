@@ -4,10 +4,10 @@ module.exports = {
 	args: true,
 
 	async execute (bot, msg, args) {
-        const Discord = require("discord.js")
+        const { MessageEmbed } = require("discord.js")
         const techno = args[0].toLowerCase()
 
-        const linksEmbed = new Discord.MessageEmbed()
+        const linksEmbed = new MessageEmbed()
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
         
         if (techno === "c") {
@@ -110,6 +110,6 @@ module.exports = {
             return msg.channel.send(`${__("no_learn_entry")} ${__("kirino_pout")}`)
         }
         
-		msg.channel.send(linksEmbed)
+		msg.channel.send({ embeds: [linksEmbed] })
 	}
 }

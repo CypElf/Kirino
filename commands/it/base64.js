@@ -4,6 +4,8 @@ module.exports = {
 	args: true,
 
 	async execute (bot, msg, args) {
+        const { MessageEmbed } = require("discord.js")
+
         if (args.length < 2) {
             return msg.channel.send(__("not_enough_args_for_base64"))
         }
@@ -14,9 +16,8 @@ module.exports = {
         if (mode !== "encode" && mode !== "decode") {
             return msg.channel.send(__("enter_valid_mode"))
         }
-
-        const Discord = require("discord.js")
-        let base64Embed = new Discord.MessageEmbed()
+        
+        const base64Embed = new MessageEmbed()
 
         if (mode === "encode") {
             if (input.length > 760) {
@@ -46,6 +47,6 @@ module.exports = {
         base64Embed.setColor("#08857A")
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/714381707842813984/base64.png")
-        msg.channel.send(base64Embed)
+        msg.channel.send({ embeds: [base64Embed] })
 	}
 }

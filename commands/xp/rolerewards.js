@@ -30,8 +30,8 @@ module.exports = {
             if (color && color.color) color = color.color
             else color = "#1FE7F0"
 
-            const Discord = require("discord.js")
-            const rolesEmbed = new Discord.MessageEmbed()
+            const { MessageEmbed } = require("discord.js")
+            const rolesEmbed = new MessageEmbed()
                 .setTitle(`**${__("roles_available")}**`)
                 .setThumbnail(msg.guild.iconURL({ dynamic: true }))
                 .setColor(color)
@@ -45,7 +45,7 @@ module.exports = {
                 rolesEmbed.addField(`${__("level")} ${level}`, "`" + rolesNames.join("`, `") + "`")
             }
 
-            msg.channel.send(rolesEmbed)
+            msg.channel.send({ embeds: [rolesEmbed] })
         }
         else if (arg === "remove") {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_permissions_to_remove_role"))

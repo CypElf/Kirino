@@ -24,14 +24,14 @@ module.exports = {
 
         const convertedToOutputBase = convertedToDecimal.toString(outputBase)
 
-        const Discord = require("discord.js")
-        let baseEmbed = new Discord.MessageEmbed()
+        const { MessageEmbed } = require("discord.js")
+        const baseEmbed = new MessageEmbed()
             .setTitle(__("numeric_base_conversion"))
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/720178440078229554/binary_flat.png")
             .setColor("#000000")
             .addField(`${__("original_number_in_base")} ${inputBase}`, `**${number}**`)
             .addField(`${__("converted_number_in_base")} ${outputBase}`, `**${convertedToOutputBase}**`)
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send(baseEmbed)
+		msg.channel.send({ embeds : [baseEmbed] })
 	}
 }

@@ -14,7 +14,7 @@ module.exports = {
         if (mode !== "encode" && mode !== "decode") return msg.channel.send(__("enter_valid_mode"))
 
         const Discord = require("discord.js")
-        let asciiEmbed = new Discord.MessageEmbed()
+        const asciiEmbed = new Discord.MessageEmbed()
             .setTitle("ASCII")
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563195768846/720189759560876052/ascii.png")
             .setColor("#555599")
@@ -45,6 +45,6 @@ module.exports = {
                 .addField(__("original_message"), output)
         }
 
-		msg.channel.send(asciiEmbed)
+		msg.channel.send({ embeds: [asciiEmbed] })
 	}
 }

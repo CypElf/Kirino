@@ -70,10 +70,10 @@ async function play(channel, queue) {
         })
         dispatcher.setVolume(queue.volume)
 
-        const Discord = require("discord.js")
+        const { MessageEmbed } = require("discord.js")
         const youtubeRed = "#DF1F18"
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle(`${__("now_playing")} ${nextSong.title}`)
             .setURL(nextSong.url)
             .setColor(youtubeRed)
@@ -84,7 +84,7 @@ async function play(channel, queue) {
             embed.setDescription(nextSong.description.length > 150 ? nextSong.description.slice(0, 150) + "..." : nextSong.description)
         }
 
-        channel.send(embed)
+        channel.send({ embeds: [embed] })
     }
     else {
         channel.send(`${__("queue_end_reached")} ${__("kirino_glad")}`)

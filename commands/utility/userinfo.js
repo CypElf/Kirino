@@ -17,7 +17,7 @@ module.exports = {
             if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }
 
-        const Discord = require('discord.js')
+        const { MessageEmbed, Permissions } = require('discord.js')
         
         let creationDate = member.user.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")
@@ -40,7 +40,7 @@ module.exports = {
 
         let perms = ""
 
-        for (let flag in Discord.Permissions.FLAGS) {
+        for (const flag in Permissions.FLAGS) {
             if (member.hasPermission(flag)) {
                 perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, "
             }
@@ -83,19 +83,19 @@ module.exports = {
         const ColorThief = require("colorthief")
         const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
 
-        let informations = new Discord.MessageEmbed()
-        .setAuthor(member.user.tag, member.user.displayAvatarURL())
-        .setColor(color)
-        .addField(__("id"), member.user.id, true)
-        .addField(__("game"), presence, true)
-        .addField(__("nickname"), nickname, true)
-        .addField(__("join_date"), joinedAt, true)
-        .addField(__("user_creation_date"), creationDate, true)
-        .addField(__("booster"), premiumSince)
-        .addField(__n("roles", nbRoles), roles, true)
-        .addField(__("permissions"), perms)
-        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send(informations)
+        const informations = new MessageEmbed()
+            .setAuthor(member.user.tag, member.user.displayAvatarURL())
+            .setColor(color)
+            .addField(__("id"), member.user.id, true)
+            .addField(__("game"), presence, true)
+            .addField(__("nickname"), nickname, true)
+            .addField(__("join_date"), joinedAt, true)
+            .addField(__("user_creation_date"), creationDate, true)
+            .addField(__("booster"), premiumSince)
+            .addField(__n("roles", nbRoles), roles, true)
+            .addField(__("permissions"), perms)
+            .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
+        msg.channel.send({ embeds: [informations] })
     }
 }

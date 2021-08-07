@@ -1,5 +1,5 @@
 module.exports = bot => {
-    bot.on("message", async msg => {
+    bot.on("messageCreate", async msg => {
         const Discord = require("discord.js")
 
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")

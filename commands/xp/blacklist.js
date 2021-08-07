@@ -62,8 +62,8 @@ module.exports = {
             let blacklistedChannels = msg.guild.channels.cache.array().filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
             let blacklistedRoles = msg.guild.roles.cache.array().filter(role => rolesRows.includes(role.id)).map(role => role.id)
 
-            const Discord = require("discord.js")
-            const blacklistEmbed = new Discord.MessageEmbed()
+            const { MessageEmbed } = require("discord.js")
+            const blacklistEmbed = new MessageEmbed()
                 .setTitle(__("blacklist"))
                 .setColor("#000000")
 
@@ -73,7 +73,7 @@ module.exports = {
                 if (blacklistedRoles.length > 0) blacklistEmbed.addField(__("blacklisted_roles"), `<@&${blacklistedRoles.join(">, <@&")}>`) 
             }
 
-            msg.channel.send(blacklistEmbed)
+            msg.channel.send({ embeds: [blacklistEmbed] })
         }
         else {
             if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_perm_to_add_channel"))

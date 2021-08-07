@@ -6,7 +6,7 @@ module.exports = {
     cooldown: 3,
     
     async execute(bot, msg) {
-        const Discord = require("discord.js")
+        const { MessageEmbed } = require("discord.js")
 
         let creationDate = msg.guild.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")
@@ -57,16 +57,16 @@ module.exports = {
 
         const owner = await msg.guild.members.fetch(msg.guild.ownerID)
 
-        let informations = new Discord.MessageEmbed()
-        .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
-        .setColor("#000000")
-        .addField(__("server_owner"), owner.user.tag, true)
-        .addField(__("server_id"), msg.guild.id, true)
-        .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
-        .addField(__n("humans", humains), humains, true)
-        .addField(__n("bots", bots), bots, true)
-        .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
-        .addField(__("region"), msg.guild.region, true)
+        const informations = new MessageEmbed()
+            .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
+            .setColor("#000000")
+            .addField(__("server_owner"), owner.user.tag, true)
+            .addField(__("server_id"), msg.guild.id, true)
+            .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
+            .addField(__n("humans", humains), humains, true)
+            .addField(__n("bots", bots), bots, true)
+            .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
+            .addField(__("region"), msg.guild.region, true)
 
         if (emojisCount <= 100) {
             let first = true
@@ -95,6 +95,6 @@ module.exports = {
         .addField(__("server_creation_date"), creationDate, true)
         .setThumbnail(msg.guild.iconURL({ dynamic: true }))
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send(informations)
+        msg.channel.send({ embeds: [informations] })
     }
 }

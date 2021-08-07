@@ -1,5 +1,3 @@
-const Discord = require('discord.js')
-
 module.exports = {
 	name: "roleinfo",
     guildOnly: true,
@@ -8,7 +6,7 @@ module.exports = {
     cooldown: 3,
     
     async execute(bot, msg, args) {
-
+        const { MessageEmbed } = require('discord.js')
         const getRole = require("../../lib/getters/get_role")
         let role = await getRole(msg, args)
         if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
@@ -35,7 +33,7 @@ module.exports = {
 
         perms = perms.substring(0, perms.length - 2)
 
-        let informations = new Discord.MessageEmbed()
+        let informations = new MessageEmbed()
         .setAuthor(__n("roles", 1) + " : " + role.name)
         .setColor(role.hexColor)
         .addField(__("id"), role.id, true)
@@ -48,6 +46,6 @@ module.exports = {
         .addField(__("role_creation_date"), creationDate, true)
         .addField(__("permissions"), perms !== "" ? perms : "`" + __("no_permissions") + "`")
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send(informations)
+        msg.channel.send({ embeds: [informations] })
     }
 }

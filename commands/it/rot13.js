@@ -10,14 +10,14 @@ module.exports = {
 
         let encrypted = plaintext.replace(/[a-zA-Z]/g,c => String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c-26))
 
-        const Discord = require("discord.js")
-        let baseEmbed = new Discord.MessageEmbed()
+        const { MessageEmbed } = require("discord.js")
+        const baseEmbed = new MessageEmbed()
             .setTitle("ROT13")
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563195768846/720184508514828318/rot13.png")
             .setColor("#555599")
             .addField(__("original_message"), plaintext)
             .addField(__("encoded_message"), encrypted)
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send(baseEmbed)
+		msg.channel.send({ embeds: [baseEmbed] })
 	}
 }

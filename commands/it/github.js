@@ -15,7 +15,7 @@ module.exports = {
         const data = await api_call.json()
 
         if (!data.message) {
-            const Discord = require("discord.js")
+            const { MessageEmbed } = require("discord.js")
             const ColorThief = require("colorthief")
             
             let createdAt = data.created_at
@@ -25,7 +25,7 @@ module.exports = {
 
             const color = await ColorThief.getColor(data.avatar_url)
 
-            const profileEmbed = new Discord.MessageEmbed()
+            const profileEmbed = new MessageEmbed()
                 .setAuthor(__("github_profile"), "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
                 .setColor(color)
                 .setThumbnail(data.avatar_url)
@@ -48,7 +48,7 @@ module.exports = {
             
             if (data.bio) profileEmbed.setDescription(data.bio)
 
-            msg.channel.send(profileEmbed)
+            msg.channel.send({ embeds: [profileEmbed] })
         }
 
         else {

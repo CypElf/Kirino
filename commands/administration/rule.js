@@ -89,7 +89,7 @@ module.exports = {
             .setColor("#000000")
             
         emb.setFooter(__("rules_from") + msg.guild.name, msg.guild.iconURL())
-        msg.channel.send(emb)
+        msg.channel.send({ embeds: [emb] })
 
         function getRules(verbose = true) {
             const rulesRequest = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?")

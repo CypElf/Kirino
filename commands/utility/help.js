@@ -4,13 +4,13 @@ module.exports = {
 
 	async execute (bot, msg, args) {
 		const prefix = bot.prefix
-		const Discord = require("discord.js")
+		const { MessageEmbed } = require("discord.js")
 		const fs = require("fs")
 
 		// ------------------------------------------------------------------- general help
 	
 		if (!args.length) {
-			let helpEmbed = new Discord.MessageEmbed()
+			let helpEmbed = new MessageEmbed()
 				.setColor('#DFC900')
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
@@ -26,7 +26,7 @@ module.exports = {
 				} 
 			}
 	
-			return msg.channel.send(helpEmbed)
+			return msg.channel.send({ embeds: [helpEmbed] })
 		}
 
 		// ------------------------------------------------------------------- help on specific command
@@ -37,7 +37,7 @@ module.exports = {
 
 		if (!command) return msg.channel.send(__("this_command_does_not_exist"))
 		
-		const helpEmbed = new Discord.MessageEmbed()
+		const helpEmbed = new MessageEmbed()
 			.setColor('#DFC900')
 			.setTitle(`**${__("command")} : ${command.name}**`)
 			.setFooter(__("help_footer"), "https://cdn.discordapp.com/attachments/714381484617891980/748487155214712842/d95a24865c58c14548e439defc097222.png")
@@ -64,6 +64,6 @@ module.exports = {
 		if (command.permissions) helpEmbed.addField(`**${__("required_permissions")}**`, `${command.permissions.join(", ")}`, true)
 		else helpEmbed.addField(`**${__("required_permissions")}**`, `${__("nothingF")}`, true)
 				
-		msg.channel.send(helpEmbed)
+		msg.channel.send({ embeds: [helpEmbed] })
 	}
 }

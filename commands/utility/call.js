@@ -159,10 +159,12 @@ module.exports = {
                             }
 
                             for (const chunk of txt) {
-                                let content = row.asfile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
+                                const isFile = row.asfile
+                                const content = isFile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
 
                                 try {
-                                    await channel.send(content)
+                                    if (isFile) await channel.send({ files: [content] })
+                                    else await channel.send(content)
                                 }
                                 catch {
                                     channel = msg.channel
@@ -171,7 +173,8 @@ module.exports = {
                                     else msg.channel.send(`${__("presence_channel_deleted_during_call")} ${__("kirino_what")}`)
                                     channel.send(__("so_i_will_send_it_here"))
 
-                                    await channel.send(content)
+                                    if (isFile) channel.send({ files: [content] })
+                                    else channel.send(content)
                                 }
                             }
 

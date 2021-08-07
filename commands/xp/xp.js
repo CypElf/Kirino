@@ -466,11 +466,11 @@ module.exports = {
                     const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "png" }))
                     ctx.drawImage(avatar, 40, 40, 200, 200)
     
-                    const Discord = require("discord.js")
-                    const card = new Discord.MessageAttachment(canvas.toBuffer(), "card.png")
+                    const { MessageAttachment } = require("discord.js")
+                    const card = new MessageAttachment(canvas.toBuffer(), "card.png")
     
                     msg.channel.stopTyping()
-                    msg.channel.send(card)
+                    msg.channel.send({files: [card] })
                 }
             }
             else msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)

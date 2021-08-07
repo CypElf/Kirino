@@ -10,7 +10,7 @@
 		"better-sqlite3": "^7.1.2",
 		"canvas": "^2.6.1",
 		"colorthief": "^2.3.2",
-		"discord.js": "^12.5.1",
+		"discord.js": "^13.0.1",
 		"dotenv": "^8.2.0",
 		"i18n": "^0.13.2",
 		"js-md5": "^0.7.3",

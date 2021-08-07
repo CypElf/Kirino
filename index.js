@@ -2,22 +2,22 @@ const fs = require("fs")
 const http = require("http")
 const url = require("url")
 
-const Discord = require("discord.js")
+const { Client, Intents, Collection } = require("discord.js")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
 const yaml = require("js-yaml")
 
 require("dotenv").config()
 
-const bot = new Discord.Client({ ws: { intents: [Discord.Intents.NON_PRIVILEGED, "GUILD_MEMBERS"] }})
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGE_TYPING] })
 
-bot.commands = new Discord.Collection()
+bot.commands = new Collection()
 bot.db = new bsqlite3("database.db", { fileMustExist: true })
-bot.commandsCooldowns = new Discord.Collection()
-bot.xpCooldowns = new Discord.Collection()
+bot.commandsCooldowns = new Collection()
+bot.xpCooldowns = new Collection()
 bot.apiCooldowns = new Map()
-bot.voicesQueues = new Discord.Collection()
-bot.calls = new Discord.Collection()
+bot.voicesQueues = new Collection()
+bot.calls = new Collection()
 
 i18n.configure({
     locales: ["en", "fr"],

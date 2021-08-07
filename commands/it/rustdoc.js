@@ -6,7 +6,7 @@ module.exports = {
     cooldown: 3,
 
     async execute (bot, msg, args) {
-        const Discord = require("discord.js")
+        const { MessageEmbed } = require("discord.js")
         const rustDocResearcher = require("../../lib/rustdoc/rustdoc_researcher")
 
         const keywords = args.join(" ")
@@ -33,7 +33,7 @@ module.exports = {
             content.push(categoryContent)
         }
 
-        let embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle(__("results"))
 			.setColor('#353535')
 			.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png")
@@ -44,6 +44,6 @@ module.exports = {
         if (content[2] !== "") embed.addField(__("in_return_types"), content[2])
         if (content[0] === "" && content[1] === "" && content[2] === "") embed.addField(__("no_result_title"), __("no_result"))
         
-        msg.channel.send(embed)
+        msg.channel.send({ embeds: [embed] })
     }
 }

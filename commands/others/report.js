@@ -31,7 +31,7 @@ module.exports = {
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
                     if (reportChannel) {
-                        const Discord = require("discord.js")
+                        const { MessageEmbed } = require("discord.js")
 
                         const senderLanguage = getLocale()
 
@@ -40,13 +40,13 @@ module.exports = {
                         if (!(languageRow === undefined)) setLocale(languageRow.language)
                         else setLocale("en")
     
-                        let reportEmbed = new Discord.MessageEmbed()
+                        const reportEmbed = new MessageEmbed()
                             .setTitle("**" + __("new_report") + "**")
                             .setThumbnail(originAvatar)
                             .setDescription("**" + __("report_origin") + "** " + origin + "\n**" + __("message") + " :** " + report)
                             .setColor("#CC0101")
                             .setFooter(__("report_from") + msg.author.tag, msg.author.displayAvatarURL())
-                        await reportChannel.send(reportEmbed)
+                        await reportChannel.send({ embeds: [reportEmbed] })
 
                         setLocale(senderLanguage)
                         msg.channel.send(`${__("report_sent")} ${__("kirino_glad")} !`)
