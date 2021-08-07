@@ -57,8 +57,6 @@ module.exports = {
 
         const owner = await msg.guild.members.fetch(msg.guild.ownerID)
 
-        const premiumTier = msg.guild.premiumTier === "NONE" ? "0" : (msg.guild.premiumTier === "TIER_1" ? "1" : (msg.guild.premiumTier === "TIER_2" ? "2" : "3"))
-
         const informations = new MessageEmbed()
             .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
             .setColor("#000000")
@@ -67,7 +65,7 @@ module.exports = {
             .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
             .addField(__n("humans", humans), humans, true)
             .addField(__n("bots", bots), bots, true)
-            .addField(__("boost_level"), __("level") + " " + premiumTier, true)
+            .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
 
         if (emojisCount <= 100) {
             let first = true
