@@ -55,7 +55,7 @@ module.exports = {
             emojisArray[i] += displayedEmojisCount.toString()
         }
 
-        const owner = await msg.guild.fetchOwner()
+        const owner = await msg.guild.members.fetch(msg.guild.ownerID)
 
         const premiumTier = msg.guild.premiumTier === "NONE" ? "0" : (msg.guild.premiumTier === "TIER_1" ? "1" : (msg.guild.premiumTier === "TIER_2" ? "2" : "3"))
 
