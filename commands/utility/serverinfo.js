@@ -6,7 +6,7 @@ module.exports = {
     cooldown: 3,
     
     async execute(bot, msg) {
-        const Discord = require("discord.js")
+        const { MessageEmbed } = require("discord.js")
 
         let creationDate = msg.guild.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")
@@ -17,18 +17,18 @@ module.exports = {
         const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
         creationDate = `${creationDay}/${creationMonth}/${creationYear} ${__("at")} ${creationHour}:${creationMinutes}:${cretionsSeconds}`
 
-        const membres = msg.guild.members
-        const bots = membres.cache.filter(membre => membre.user.bot).size
-        const humains = msg.guild.memberCount - bots
+        const members = await msg.guild.members.fetch()
+        const bots = members.filter(membre => membre.user.bot).size
+        const humans = msg.guild.memberCount - bots
         const roles = msg.guild.roles.cache.filter(role => role.name !== "@everyone")
         let displayedRoles = `<@&${roles.map(role => role.id).join(">, <@&")}>`
         let rolesCount = roles.size
         let displayedRolesCount = ` (${rolesCount} ${__n("roles", rolesCount).toLowerCase()})`
 
-        const salons = msg.guild.channels.cache
-        const nbSalonsTxt = salons.filter(salon => salon.type == "text").size
-        const nbSalonsVocaux = salons.filter(salon => salon.type == "voice").size
-        let emojis = msg.guild.emojis.cache.array()
+        const channels = msg.guild.channels.cache
+        const textChannelsCount = channels.filter(channel => channel.isText() && !channel.isThread()).size
+        const voiceChannelsCount = channels.filter(channel => channel.isVoice()).size
+        let emojis = [...msg.guild.emojis.cache.values()]
         const emojisCount = emojis.length
 
         let emojisArray = [""]
@@ -55,18 +55,19 @@ module.exports = {
             emojisArray[i] += displayedEmojisCount.toString()
         }
 
-        const owner = await msg.guild.members.fetch(msg.guild.ownerID)
+        const owner = await msg.guild.fetchOwner()
 
-        let informations = new Discord.MessageEmbed()
-        .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
-        .setColor("#000000")
-        .addField(__("server_owner"), owner.user.tag, true)
-        .addField(__("server_id"), msg.guild.id, true)
-        .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
-        .addField(__n("humans", humains), humains, true)
-        .addField(__n("bots", bots), bots, true)
-        .addField(__("boost_level"), __("level") + " " + msg.guild.premiumTier, true)
-        .addField(__("region"), msg.guild.region, true)
+        const premiumTier = msg.guild.premiumTier === "NONE" ? "0" : (msg.guild.premiumTier === "TIER_1" ? "1" : (msg.guild.premiumTier === "TIER_2" ? "2" : "3"))
+
+        const informations = new MessageEmbed()
+            .setAuthor(msg.guild.name, owner.user.displayAvatarURL())
+            .setColor("#000000")
+            .addField(__("server_owner"), owner.user.tag, true)
+            .addField(__("server_id"), msg.guild.id, true)
+            .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount.toString(), true)
+            .addField(__n("humans", humans), humans.toString(), true)
+            .addField(__n("bots", bots), bots.toString(), true)
+            .addField(__("boost_level"), __("level") + " " + premiumTier, true)
 
         if (emojisCount <= 100) {
             let first = true
@@ -91,10 +92,10 @@ module.exports = {
             informations.addField(__n("roles", rolesCount), `${__("too_much_roles")} (${rolesCount})`)
         }
         
-        informations.addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
+        informations.addField(__("channels"), textChannelsCount + " " + __n("text_channel", textChannelsCount) + ", " + voiceChannelsCount + " " + __n("vocal_channel", voiceChannelsCount), true)
         .addField(__("server_creation_date"), creationDate, true)
         .setThumbnail(msg.guild.iconURL({ dynamic: true }))
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send(informations)
+        msg.channel.send({ embeds: [informations] })
     }
 }
