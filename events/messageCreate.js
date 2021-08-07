@@ -129,7 +129,7 @@ function checkAfk(bot, msg) {
     if (selfAfkRow !== undefined) {
         const deletionRequest = bot.db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
-        msg.reply(__("deleted_from_afk")).then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
+        msg.reply(__("deleted_from_afk")).then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000)).catch(() => {})
     }
 }
 
