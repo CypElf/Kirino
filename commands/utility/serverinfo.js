@@ -25,10 +25,10 @@ module.exports = {
         let rolesCount = roles.size
         let displayedRolesCount = ` (${rolesCount} ${__n("roles", rolesCount).toLowerCase()})`
 
-        const salons = msg.guild.channels.cache
-        const nbSalonsTxt = salons.filter(salon => salon.type == "text").size
-        const nbSalonsVocaux = salons.filter(salon => salon.type == "voice").size
-        let emojis = msg.guild.emojis.cache.array()
+        const channels = msg.guild.channels.cache
+        const textChannelsCount = channels.filter(channel => ["GUILD_TEXT", "GUILD_NEWS"].includes(channel.type)).size
+        const voiceChannelsCount = channels.filter(channel => ["VOICE_CHANNEL", "GUILD_STAGE_VOICE"].includes(channel.type)).size
+        let emojis = [...msg.guild.emojis.cache.values()]
         const emojisCount = emojis.length
 
         let emojisArray = [""]
@@ -91,7 +91,7 @@ module.exports = {
             informations.addField(__n("roles", rolesCount), `${__("too_much_roles")} (${rolesCount})`)
         }
         
-        informations.addField(__("channels"), nbSalonsTxt + " " + __n("text_channel", nbSalonsTxt) + ", " + nbSalonsVocaux + " " + __n("vocal_channel", nbSalonsVocaux), true)
+        informations.addField(__("channels"), textChannelsCount + " " + __n("text_channel", textChannelsCount) + ", " + voiceChannelsCount + " " + __n("vocal_channel", voiceChannelsCount), true)
         .addField(__("server_creation_date"), creationDate, true)
         .setThumbnail(msg.guild.iconURL({ dynamic: true }))
         .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())

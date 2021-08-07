@@ -17,7 +17,7 @@ module.exports = {
         let kickMember = msg.mentions.members.first()
 
         if (kickMember === undefined) {
-            kickMember = msg.guild.members.cache.array().find(currentUser => currentUser.user.username.toLowerCase() === userToKick.toLowerCase())
+            kickMember = [...msg.guild.members.cache.values()].find(currentUser => currentUser.user.username.toLowerCase() === userToKick.toLowerCase())
             if (kickMember === undefined) {
                 try { 
                     kickMember = await msg.guild.members.fetch(userToKick)

@@ -59,8 +59,8 @@ module.exports = {
         else if (arg === "list") {
             const channelsRows = channelRequest.all(msg.guild.id).map(row => row.channel_id)
             const rolesRows = roleRequest.all(msg.guild.id).map(row => row.role_id)
-            let blacklistedChannels = msg.guild.channels.cache.array().filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
-            let blacklistedRoles = msg.guild.roles.cache.array().filter(role => rolesRows.includes(role.id)).map(role => role.id)
+            let blacklistedChannels = [...msg.guild.channels.cache.values()].filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
+            let blacklistedRoles = [...msg.guild.roles.cache.values()].filter(role => rolesRows.includes(role.id)).map(role => role.id)
 
             const { MessageEmbed } = require("discord.js")
             const blacklistEmbed = new MessageEmbed()
@@ -120,7 +120,7 @@ function removeDeletedBlacklistedChannels(db, guild) {
     const deletionChannelRequest = db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
 
     for (const row of channelsRows) {
-        if (guild.channels.cache.array().find(currentChannel => currentChannel.id === row.channel_id) === undefined) {
+        if ([...guild.channels.cache.values()].find(currentChannel => currentChannel.id === row.channel_id) === undefined) {
             deletionChannelRequest.run(guild.id, row.channel_id)
         }
     }

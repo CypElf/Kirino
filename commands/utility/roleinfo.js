@@ -22,8 +22,8 @@ module.exports = {
         const cretionsSeconds = String(creationDate.getSeconds()).padStart(2, "0")
         creationDate = `${creationDay}/${creationMonth}/${creationYear} ${__("at")} ${creationHour}:${creationMinutes}:${cretionsSeconds}`
         
-        const porteurs = role.members.array().length
-        const membresServeur = msg.guild.members.cache.array().length
+        const porteurs = [...role.members.values()].length
+        const membresServeur = [...msg.guild.members.cache.values()].length
         const percentage = (porteurs / membresServeur * 100).toPrecision(3)
         let permsArray = role.permissions.toArray()
         let perms = ""

@@ -142,7 +142,7 @@ module.exports = {
 
         let gotFromAttachment = false
         if (msg.attachments.size > 0) {
-            const attachment = msg.attachments.array()[0]
+            const attachment = [...msg.attachments.values()][0]
             if (attachment.size > 4000000) return msg.channel.send(`${__("file_too_big")} (> 4 Mo). ${__("kirino_pout")}`)
             const res = await fetch(attachment.url)
             if (res.ok) {

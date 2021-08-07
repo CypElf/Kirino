@@ -14,7 +14,7 @@ module.exports = {
 				.setColor('#DFC900')
 				.setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
 
-			const dataJoined = bot.commands.array()
+			const dataJoined = [...bot.commands.values()]
 
 			const categories = fs.readdirSync("./commands/").filter(category => category !== "ignore")
 			for (const category of categories) {

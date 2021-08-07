@@ -30,7 +30,7 @@ module.exports = {
         let banMember = msg.mentions.members.first()
 
         if (banMember === undefined) {
-            banMember = msg.guild.members.cache.array().find(currentUser => currentUser.user.username.toLowerCase() === userToBan.toLowerCase())
+            banMember = [...msg.guild.members.cache.values()].find(currentUser => currentUser.user.username.toLowerCase() === userToBan.toLowerCase())
             if (banMember === undefined) {
                 try { 
                     banMember = await msg.guild.members.fetch(userToBan)

@@ -154,7 +154,7 @@ async function handleXp(bot, msg, obj) {
 
         const blacklistedRolesRequest = bot.db.prepare("SELECT role_id FROM xp_blacklisted_roles WHERE guild_id = ?")
         let blacklistedRoles = blacklistedRolesRequest.all(msg.guild.id)
-        let memberRoles = msg.member.roles.cache.array().map(role => role.id)
+        let memberRoles = [...msg.member.roles.cache.values()].map(role => role.id)
         let hasBlacklistedRole = false
         
         for (const row of blacklistedRoles) {
@@ -256,8 +256,8 @@ async function handleXp(bot, msg, obj) {
 
                     for (const row of rolesRows) {
                         if (row.level === newLvl) {
-                            const role = msg.guild.roles.cache.array().find(currentRole => currentRole.id === row.role_id)
-                            if (msg.member.roles.cache.array().includes(role)) channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`).catch(() => {
+                            const role = [...msg.guild.roles.cache.values()].find(currentRole => currentRole.id === row.role_id)
+                            if ([...msg.member.roles.cache.values()].includes(role)) channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`).catch(() => {
                                 msg.channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`)
                             })
                             else {

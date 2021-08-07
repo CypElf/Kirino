@@ -41,7 +41,7 @@ module.exports = {
                     if (row.dm) msg.channel.send(`${__("presence_channel_is_set_to_dm")} ${__("kirino_glad")}`)
                     else if (row.current) msg.channel.send(`${__("presence_channel_is_set_to_current")} ${__("kirino_glad")}`)
                     else {
-                        const channels = msg.guild.channels.cache.array().filter(channel => channel.id === row.channel_id)
+                        const channels = [...msg.guild.channels.cache.values()].filter(channel => channel.id === row.channel_id)
                         if (channels.length > 0) msg.channel.send(`${__("presence_channel_is_set_to_channel")} <#${row.channel_id}>. ${__("kirino_glad")}`)
                         else {
                             bot.db.prepare("DELETE FROM calls WHERE guild_id = ?").run(msg.guild.id)
@@ -100,7 +100,7 @@ module.exports = {
                 if (locked >= 3) return msg.channel.send(`${__("records_still_going_on")} ${__("kirino_pout")}`)
 
                 let channel
-                const channels = msg.guild.channels.cache.array().filter(channel => channel.id === row.channel_id)
+                const channels = [...msg.guild.channels.cache.values()].filter(channel => channel.id === row.channel_id)
 
                 if (channels.length > 0 || row.dm || row.current) {
                     bot.calls.set(msg.guild.id, locked + 1)
@@ -122,9 +122,9 @@ module.exports = {
                         const languageBak = getLocale()
                         const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
 
-                        for (const reaction of collected.array()) {
+                        for (const reaction of [...collected.values()]) {
                             let presents = await reaction.users.fetch()
-                            presents = presents.array().filter(user => !user.bot)
+                            presents = [...presents.values()].filter(user => !user.bot)
 
                             let members = []
                             for (const user of presents) {

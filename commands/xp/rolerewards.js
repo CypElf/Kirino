@@ -39,7 +39,7 @@ module.exports = {
 
             for (const level of [...new Set(rolesRows.map(row => row.level))]) {
                 const rolesNames = rolesRows.map(row => {
-                    if (row.level == level) return msg.guild.roles.cache.array().find(currentRole => currentRole.id === row.role_id).name
+                    if (row.level == level) return [...msg.guild.roles.cache.values()].find(currentRole => currentRole.id === row.role_id).name
                     else return undefined
                 }).filter(role => role !== undefined)
                 rolesEmbed.addField(`${__("level")} ${level}`, "`" + rolesNames.join("`, `") + "`")
