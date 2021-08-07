@@ -64,9 +64,9 @@ module.exports = {
             .setColor("#000000")
             .addField(__("server_owner"), owner.user.tag, true)
             .addField(__("server_id"), msg.guild.id, true)
-            .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount.toString(), true)
-            .addField(__n("humans", humans), humans.toString(), true)
-            .addField(__n("bots", bots), bots.toString(), true)
+            .addField(__n("members", msg.guild.memberCount), msg.guild.memberCount, true)
+            .addField(__n("humans", humans), humans, true)
+            .addField(__n("bots", bots), bots, true)
             .addField(__("boost_level"), __("level") + " " + premiumTier, true)
 
         if (emojisCount <= 100) {
@@ -93,9 +93,9 @@ module.exports = {
         }
         
         informations.addField(__("channels"), textChannelsCount + " " + __n("text_channel", textChannelsCount) + ", " + voiceChannelsCount + " " + __n("vocal_channel", voiceChannelsCount), true)
-        .addField(__("server_creation_date"), creationDate, true)
-        .setThumbnail(msg.guild.iconURL({ dynamic: true }))
-        .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send({ embeds: [informations] })
+            .addField(__("server_creation_date"), creationDate, true)
+            .setThumbnail(msg.guild.iconURL({ dynamic: true }))
+            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
+        msg.channel.send(informations)
     }
 }
