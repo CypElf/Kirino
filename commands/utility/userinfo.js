@@ -62,10 +62,8 @@ module.exports = {
         if (nickname === undefined || nickname === null) {
             nickname = __("nothing")
         }
-        let presence = member.presence.activities.map(activity => activity.name).join(", ")
-        if (!presence) {
-            presence = __("nothing")
-        }
+        let presence = member.presence ? member.presence.activities.map(activity => activity.name).join(", ") : __("nothing")
+
         let premiumSince = member.premiumSince
         if (premiumSince) {
             const premiumSinceMonth = String(premiumSince.getMonth() + 1).padStart(2, "0")

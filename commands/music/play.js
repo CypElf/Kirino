@@ -30,7 +30,7 @@ module.exports = {
     
                         const filter = cMsg => cMsg.author.id === msg.author.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
                         try {
-                            let cMsg = await msg.channel.awaitMessages(filter, { max: 1, time: 30_000 })
+                            let cMsg = await msg.channel.awaitMessages({ filter, max: 1, time: 30_000 })
                             cMsg = [...cMsg.values()]
                             if (cMsg.length === 1) {
                                 if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]

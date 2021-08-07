@@ -40,7 +40,7 @@ module.exports = {
         .addField(__("color"), role.hexColor.toUpperCase(), true)
         .addField(__("mentionnable"), role.mentionable ? __("yes") : __("no"), true)
         .addField(__("separated_category"), role.hoist ? __("yes") : __("no"), true)
-        .addField(__("position"), role.position, true)
+        .addField(__("position"), role.position.toString(), true)
         .addField(__("external_handler"), role.managed ? __("yes") : __("no"), true)
         .addField(__("users_with_this_role"), porteurs + " (" + percentage + "%)", true)
         .addField(__("role_creation_date"), creationDate, true)
