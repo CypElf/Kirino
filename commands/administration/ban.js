@@ -6,18 +6,18 @@ module.exports = {
     permissions: ["ban members"],
 
     async execute (bot, msg, [userToBan, ...reason]) {
-        if (!msg.member.hasPermission("BAN_MEMBERS")) {
+        if (!msg.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
             return msg.channel.send(`${__("you_are_missing_permissions_to_ban_members")} ${__("kirino_pff")}`)
         }
     
-        if (!msg.guild.me.hasPermission("BAN_MEMBERS")) {
+        if (!msg.guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
             return msg.channel.send(`${__("i_am_missing_permissions_to_ban_members")} ${__("kirino_pout")}`)
         }
 
-        function ban(banMember, guildMemberOrUser=true) { // true = GuildMember, false = User
+        function ban(banMember) {
             msg.guild.members.ban(banMember, { reason: reason.join(" ") + " (" + __("banned_by") + msg.author.tag + ")" })
                 .then(member => {
-                    if (guildMemberOrUser) {
+                    if (member.user.username) {
                         msg.channel.send(`${member.user.username + __("has_been_banned")} <:hammer:568068459485855752>`)
                     }
                     else {
@@ -38,7 +38,7 @@ module.exports = {
                 catch (err) {
                     try {
                         banMember = await bot.users.fetch(userToBan)
-                        return ban(banMember, false)
+                        return ban(banMember)
                     }
                     catch (err) {
                         return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)

@@ -11,7 +11,7 @@ module.exports = {
         // ------------------------------------------------------------------- add
 
         if (request === "add") {
-            if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(`${__("not_enough_permissions_to_add_rule")} ${__("kirino_pff")}`)
+            if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return msg.channel.send(`${__("not_enough_permissions_to_add_rule")} ${__("kirino_pff")}`)
             const newRule = args.slice(1).join(" ")
             if (!newRule) return msg.channel.send(`${__("please_enter_a_rule_to_add")} ${__("kirino_pout")}`)
             if (newRule.length > 1000) return msg.channel.send(`${__("rule_too_long")} ${__("kirino_pout")}`)
@@ -27,7 +27,7 @@ module.exports = {
         // ------------------------------------------------------------------- remove
 
         else if (request === "remove") {
-            if (!msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(`${__("not_enough_permissions_to_add_rule")} ${__("kirino_pff")}`)
+            if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return msg.channel.send(`${__("not_enough_permissions_to_add_rule")} ${__("kirino_pff")}`)
             if (!args[1]) return msg.channel.send(`${__("please_enter_a_rule_do_delete")} ${__("kirino_pout")}`)
 
             const index = parseInt(args.slice(1)[0]) - 1

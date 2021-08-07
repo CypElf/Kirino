@@ -17,7 +17,7 @@ module.exports = {
         const request = args[0]
 
         if (request === "enable" || request === "disable") {
-            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_enable_or_disable")} ${__("kirino_pff")}`)
+            if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("not_allowed_to_enable_or_disable")} ${__("kirino_pff")}`)
             const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (request === "enable") {
@@ -40,8 +40,8 @@ module.exports = {
                 }
 
                 if (request === "reset") {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_reset_xp")} ${__("kirino_pff")}`)
-                    if (!msg.guild.me.hasPermission("ADD_REACTIONS")) return msg.channel.send(`${__("cannot_react_to_messages")} ${__("kirino_pout")}`)
+                    if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("not_allowed_to_reset_xp")} ${__("kirino_pff")}`)
+                    if (!msg.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return msg.channel.send(`${__("cannot_react_to_messages")} ${__("kirino_pout")}`)
         
                     args.shift()
         
@@ -106,7 +106,7 @@ module.exports = {
                 }
 
                 else if (request === "message" || request === "msg") {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_lvl_up_msg")} ${__("kirino_pff")}`)
+                    if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("not_allowed_to_change_lvl_up_msg")} ${__("kirino_pff")}`)
                     args.shift()
                     let newMsg = args.join(" ")
 
@@ -118,7 +118,7 @@ module.exports = {
                 }
 
                 else if (request === "channel") {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`)
+                    if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`)
 
                     if (args.slice(1)[0] === undefined) {
                         const getChannelRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?")
@@ -157,7 +157,7 @@ module.exports = {
                 }
 
                 else if (request === "import")  {
-                    if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("not_allowed_to_import")} ${__("kirino_pff")}`)
+                    if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("not_allowed_to_import")} ${__("kirino_pff")}`)
 
                     validationMessage = await msg.channel.send(__("xp_import_verification"))
     
@@ -265,7 +265,7 @@ module.exports = {
                 }
         
                 else {
-                    if (!msg.guild.me.hasPermission("ATTACH_FILES")) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
+                    if (!msg.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
                     let member
         
                     if (args.length === 0) {

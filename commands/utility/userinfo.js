@@ -41,7 +41,7 @@ module.exports = {
         let perms = ""
 
         for (const flag in Permissions.FLAGS) {
-            if (member.hasPermission(flag)) {
+            if (member.permissions.has(flag)) {
                 perms += "`" + flag.toLowerCase().replace(/_/g, " ") + "`, "
             }
         }

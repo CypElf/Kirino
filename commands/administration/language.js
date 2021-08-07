@@ -9,7 +9,7 @@ module.exports = {
 	async execute (bot, msg, args) {
 
         if (msg.guild) {
-            if (!msg.member.hasPermission("MANAGE_GUILD")) {
+            if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
                 return msg.channel.send(`${__("not_enough_permission_to_change_language")} ${__("kirino_pout")}`)
             }
         }

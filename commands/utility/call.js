@@ -10,7 +10,7 @@ module.exports = {
         const formatDate = require("../../lib/misc/format_date")
         const mode = args[0].toLowerCase()
 
-        if (!msg.member.hasPermission("MANAGE_CHANNELS") && !msg.member.hasPermission("MANAGE_GUILD") && !msg.member.hasPermission("MANAGE_MESSAGES") && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
+        if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !msg.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
 
         if (mode === "asfile") {
             const asfileRequest = bot.db.prepare("INSERT INTO calls VALUES(?,?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET asfile = excluded.asfile")

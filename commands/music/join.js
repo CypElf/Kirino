@@ -6,8 +6,8 @@ module.exports = {
 
     async execute (bot, msg) {
         if (msg.member.voice.channel) {
-            if (msg.guild.me.hasPermission("CONNECT")) {
-                if (msg.guild.me.hasPermission("SPEAK")) {
+            if (msg.guild.me.permissions.has(Permissions.FLAGS.CONNECT)) {
+                if (msg.guild.me.permissions.has(Permissions.FLAGS.SPEAK)) {
 
                     const connection = await msg.member.voice.channel.join()
                     msg.channel.send(`${__("voice_channel_joined")} ${__("kirino_glad")}`)

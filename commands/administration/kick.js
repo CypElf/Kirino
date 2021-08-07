@@ -6,11 +6,11 @@ module.exports = {
     permissions: ["kick members"],
 
     async execute (bot, msg, [userToKick, ...reason]) {
-        if (!msg.member.hasPermission("KICK_MEMBERS")) {
+        if (!msg.member.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
             return msg.channel.send(`${__("you_are_missing_permissions_to_kick_members")} ${__("kirino_pff")}`)
         }
     
-        if (!msg.guild.me.hasPermission("KICK_MEMBERS")) {
+        if (!msg.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
             return msg.channel.send(`${__("i_am_missing_permissions_to_kick_members")} ${__("kirino_pout")}`)
         }
 

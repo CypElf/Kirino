@@ -5,7 +5,7 @@ module.exports = {
     permissions: ["administrator"],
     
     async execute(bot, msg, args) {
-		if (msg.author.id !== process.env.OWNER_ID && !msg.member.hasPermission("ADMINISTRATOR")) {
+		if (msg.author.id !== process.env.OWNER_ID && !msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
             return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
                 .then(msg => msg.delete({ timeout: 5000 })).catch(() => {})
         }

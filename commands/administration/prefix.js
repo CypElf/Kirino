@@ -6,7 +6,7 @@ module.exports = {
     permissions: ["manage guild"],
 	
 	async execute(bot, msg, args) {
-        if (msg.guild && !msg.member.hasPermission("MANAGE_GUILD")) return msg.channel.send(__("missing_permissions_to_execute_this_command"))
+        if (msg.guild && !msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return msg.channel.send(__("missing_permissions_to_execute_this_command"))
 
         if (args.length > 1) return msg.channel.send(__("no_spaces_in_prefixs"))
         const newPrefix = args[0]

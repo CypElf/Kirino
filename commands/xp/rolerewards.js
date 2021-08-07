@@ -48,7 +48,7 @@ module.exports = {
             msg.channel.send({ embeds: [rolesEmbed] })
         }
         else if (arg === "remove") {
-            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_permissions_to_remove_role"))
+            if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(__("missing_permissions_to_remove_role"))
             const roleArg = args[1]
             if (!roleArg) return msg.channel.send(__("precise_role_to_remove"))
             
@@ -66,7 +66,7 @@ module.exports = {
             msg.channel.send(__("role_removed_from_database"))
         }
         else {
-            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_permissions_to_add_role"))
+            if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(__("missing_permissions_to_add_role"))
             const level = parseInt(args.pop())
             let role = await getRole(msg, args)
             if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)

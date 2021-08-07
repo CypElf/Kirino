@@ -17,7 +17,7 @@ module.exports = {
         }
 
         else {
-            if (msg.guild && !msg.member.hasPermission("MANAGE_SERVER")) {
+            if (msg.guild && !msg.member.permissions.has(Permissions.FLAGS.MANAGE_SERVER)) {
                 return msg.channel.send(`${__("missing_permissions_to_enable_beta")} ${__("kirino_pout")}`)
             }
 

@@ -6,7 +6,7 @@ module.exports = {
 	permissions: ["manage messages"],
 	
 	async execute(bot, msg, args) {
-		if (!msg.member.hasPermission("MANAGE_MESSAGES")) {
+		if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
 			return msg.channel.send(`${__("you_cannot_delete_messages")} ${__("kirino_pff")}`)
 		}
 

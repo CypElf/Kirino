@@ -22,7 +22,7 @@ module.exports = {
         removeDeletedBlacklistedChannels(bot.db, msg.guild)
 
         if (arg === "remove") {
-            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(`${__("missing_permissions_to_remove_channel")} ${__("kirino_pff")}`)
+            if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("missing_permissions_to_remove_channel")} ${__("kirino_pff")}`)
             const channelArg = args[1]
             if (!channelArg) return msg.channel.send(`${__("precise_channel_to_remove")} ${__("kirino_pout")}`)
             
@@ -76,7 +76,7 @@ module.exports = {
             msg.channel.send({ embeds: [blacklistEmbed] })
         }
         else {
-            if (!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send(__("missing_perm_to_add_channel"))
+            if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(__("missing_perm_to_add_channel"))
 
             let channel = await getChannel(msg, args)
 

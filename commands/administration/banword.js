@@ -6,7 +6,7 @@ module.exports = {
     permissions: ["manage messages"],
 
     async execute (bot, msg, [mode, ...words]) {
-        if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(`${__("missing_permissions_to_execute_this_command")} ${__("kirino_pout")}`)
+        if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(`${__("missing_permissions_to_execute_this_command")} ${__("kirino_pout")}`)
 
         const guild = msg.guild.id
 
