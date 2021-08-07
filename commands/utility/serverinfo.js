@@ -26,8 +26,8 @@ module.exports = {
         let displayedRolesCount = ` (${rolesCount} ${__n("roles", rolesCount).toLowerCase()})`
 
         const channels = msg.guild.channels.cache
-        const textChannelsCount = channels.filter(channel => ["GUILD_TEXT", "GUILD_NEWS"].includes(channel.type)).size
-        const voiceChannelsCount = channels.filter(channel => ["VOICE_CHANNEL", "GUILD_STAGE_VOICE"].includes(channel.type)).size
+        const textChannelsCount = channels.filter(channel => channel.isText() && !channel.isThread()).size
+        const voiceChannelsCount = channels.filter(channel => channel.isVoice()).size
         let emojis = [...msg.guild.emojis.cache.values()]
         const emojisCount = emojis.length
 

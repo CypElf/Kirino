@@ -4,6 +4,7 @@ module.exports = {
     permissions: ["manage_guild"],
 
     async execute (bot, msg, args) {
+        const { Permissions } = require("discord.js")
         const id = msg.guild ? msg.guild.id : msg.author.id
         const isBetaEnabled = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id) !== undefined
 

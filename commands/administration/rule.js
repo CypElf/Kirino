@@ -6,6 +6,7 @@ module.exports = {
     permissions: ["{manage guild}"],
     
     async execute(bot, msg, args) {
+        const { Permissions } = require("discord.js")
         const request = args[0]
 
         // ------------------------------------------------------------------- add

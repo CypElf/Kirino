@@ -5,6 +5,7 @@ module.exports = {
     permissions: ["connect", "speak"],
 
     async execute (bot, msg) {
+        const { Permissions } = require("discord.js")
         if (msg.member.voice.channel) {
             if (msg.guild.me.permissions.has(Permissions.FLAGS.CONNECT)) {
                 if (msg.guild.me.permissions.has(Permissions.FLAGS.SPEAK)) {

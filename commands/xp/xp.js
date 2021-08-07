@@ -8,6 +8,7 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
+        const { Permissions } = require("discord.js")
         const getMember = require("../../lib/getters/get_member")
 
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
@@ -278,7 +279,7 @@ module.exports = {
                         else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pff")}`)
                     }
 
-                    msg.channel.startTyping()
+                    msg.channel.sendTyping()
 
                     const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
                     let xpRow = xpRequest.get(msg.guild.id, member.id)
@@ -469,7 +470,6 @@ module.exports = {
                     const { MessageAttachment } = require("discord.js")
                     const card = new MessageAttachment(canvas.toBuffer(), "card.png")
     
-                    msg.channel.stopTyping()
                     msg.channel.send({files: [card] })
                 }
             }

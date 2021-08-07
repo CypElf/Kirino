@@ -1,6 +1,6 @@
 module.exports = bot => {
     bot.on("messageCreate", async msg => {
-        const Discord = require("discord.js")
+        const { Collection, Permissions } = require("discord.js")
 
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
         let id
@@ -68,7 +68,7 @@ module.exports = bot => {
         // ------------------------------------------------------------- command cooldown check
     
         if (!bot.commandsCooldowns.has(command.name)) {
-            bot.commandsCooldowns.set(command.name, new Discord.Collection())
+            bot.commandsCooldowns.set(command.name, new Collection())
         }
         
         const now = Date.now()
@@ -135,7 +135,7 @@ function checkAfk(bot, msg) {
 
 async function handleXp(bot, msg, obj) {
     if (msg.guild) {
-        const Discord = require("discord.js")
+        const { Collection } = require("discord.js")
 
         const xpMetadataRequest = bot.db.prepare("SELECT is_enabled, level_up_message FROM xp_guilds WHERE guild_id = ?")
         const xpMetadata = xpMetadataRequest.get(msg.guild.id)
@@ -162,7 +162,7 @@ async function handleXp(bot, msg, obj) {
         }
 
         if (!obj.cooldowns.has(msg.guild.id)) {
-            obj.cooldowns.set(msg.guild.id, new Discord.Collection())
+            obj.cooldowns.set(msg.guild.id, new Collection())
         }
         let isReady = true
 

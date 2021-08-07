@@ -6,7 +6,7 @@ module.exports = {
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 	
 	async execute(bot, msg, args) {
-        const { MessageAttachment } = require("discord.js")
+        const { MessageAttachment, Permissions } = require("discord.js")
         const formatDate = require("../../lib/misc/format_date")
         const mode = args[0].toLowerCase()
 

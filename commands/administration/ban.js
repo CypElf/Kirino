@@ -6,6 +6,7 @@ module.exports = {
     permissions: ["ban members"],
 
     async execute (bot, msg, [userToBan, ...reason]) {
+        const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
             return msg.channel.send(`${__("you_are_missing_permissions_to_ban_members")} ${__("kirino_pff")}`)
         }

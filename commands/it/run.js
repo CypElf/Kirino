@@ -162,7 +162,7 @@ module.exports = {
        
         const tio = new Tio(language, code, inputs.join("\n"), flags, [] ,cmdArgs)
 
-        msg.channel.startTyping()
+        msg.channel.sendTyping()
 
         let data = await tio.send()
         data = data.split("\n").filter(line => !line.startsWith("Real time: ") && !line.startsWith("User time: ") && !line.startsWith("Sys. time: ") && !line.startsWith("CPU share: ")).join("\n")
@@ -170,9 +170,7 @@ module.exports = {
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
             const paste = require("../../lib/misc/paste")
             const url = await paste(data)
-            
-            msg.channel.stopTyping()
-            
+                        
             if (url === null) msg.channel.send(`I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${__("kirino_what")}`)
             else msg.channel.send(`Output was too big, I pasted it here: ${url} ${__("kirino_glad")}`)
         }
@@ -180,7 +178,6 @@ module.exports = {
             while (data.includes("```")) data = data.replace("```", "\u200B`\u200B`\u200B`\u200B") // prevent markdown code block end
             data = "```\n" + data + "\n```"
 
-            msg.channel.stopTyping()
             msg.channel.send(data)
         }
 	}

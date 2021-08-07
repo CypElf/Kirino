@@ -5,6 +5,7 @@ module.exports = {
     permissions: ["manage_guild"],
 
     async execute (bot, msg, args) {
+        const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
 
         if (args[0] === "reset") {

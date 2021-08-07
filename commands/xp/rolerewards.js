@@ -6,6 +6,8 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute (bot, msg, args) {
+        const { MessageEmbed, Permissions } = require("discord.js")
+        
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
@@ -30,7 +32,6 @@ module.exports = {
             if (color && color.color) color = color.color
             else color = "#1FE7F0"
 
-            const { MessageEmbed } = require("discord.js")
             const rolesEmbed = new MessageEmbed()
                 .setTitle(`**${__("roles_available")}**`)
                 .setThumbnail(msg.guild.iconURL({ dynamic: true }))

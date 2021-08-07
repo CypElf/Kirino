@@ -5,6 +5,7 @@ module.exports = {
     cooldown: 5,
 	
 	async execute(bot, msg, args) {
+        const { Permissions } = require("discord.js")
         let origin
         let originAvatar
         if (msg.guild) {
