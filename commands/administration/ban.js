@@ -27,24 +27,11 @@ module.exports = {
                 })
         }
 
-        let banMember = msg.mentions.members.first()
+        const getMember = require("../../lib/getters/get_member")
+        let banMember = getMember(msg, args)
 
         if (banMember === undefined) {
-            banMember = msg.guild.members.cache.array().find(currentUser => currentUser.user.username.toLowerCase() === userToBan.toLowerCase())
-            if (banMember === undefined) {
-                try { 
-                    banMember = await msg.guild.members.fetch(userToBan)
-                }
-                catch (err) {
-                    try {
-                        banMember = await bot.users.fetch(userToBan)
-                        return ban(banMember, false)
-                    }
-                    catch (err) {
-                        return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
-                    }
-                }
-            }
+            return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }
 
         if (!banMember.bannable) {

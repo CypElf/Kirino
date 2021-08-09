@@ -14,18 +14,11 @@ module.exports = {
             return msg.channel.send(`${__("i_am_missing_permissions_to_kick_members")} ${__("kirino_pout")}`)
         }
 
-        let kickMember = msg.mentions.members.first()
+        const getMember = require("../../lib/getters/get_member")
+        let kickMember = getMember(msg, args)
 
         if (kickMember === undefined) {
-            kickMember = msg.guild.members.cache.array().find(currentUser => currentUser.user.username.toLowerCase() === userToKick.toLowerCase())
-            if (kickMember === undefined) {
-                try { 
-                    kickMember = await msg.guild.members.fetch(userToKick)
-                }
-                catch (err) {
-                    return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
-                }
-            }
+            return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }
 
         if (!kickMember.kickable) {
