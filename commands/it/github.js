@@ -39,9 +39,9 @@ module.exports = {
             if (data.location) profileEmbed.addField(__("location"), data.location, true)
             if (data.email) profileEmbed.addField(__("email"), data.email)
 
-            profileEmbed.addField(__("id"), data.id, true)
+            profileEmbed.addField(__("id"), data.id.toString(), true)
                 .addField(__("public_repos"), `[${data.public_repos}](https://github.com/${data.login}?tab=repositories)`, true)
-                .addField(__("public_gists"), data.public_gists, true)
+                .addField(__("public_gists"), data.public_gists.toString(), true)
                 .addField(__("followers"), `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
                 .addField(__("following"), `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
                 .addField(__("account_creation_date"), `${creationDate} ${__("at")} ${creationTime}`, true)

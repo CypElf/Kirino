@@ -14,7 +14,7 @@ module.exports = {
         msg.channel.send(text)
             .then(() => {
                 if (msg.guild) {
-                    setTimeout(() => msg.delete().catch(() => {}), 5000)
+                    setTimeout(() => msg.delete().catch(() => {}), 50)
                 }
             })
     }
