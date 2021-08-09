@@ -28,7 +28,7 @@ module.exports = {
         }
 
         const getMember = require("../../lib/getters/get_member")
-        let banMember = getMember(msg, args)
+        let banMember = getMember(msg, [userToBan, ...reason])
 
         if (banMember === undefined) {
             return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
