@@ -15,7 +15,7 @@ module.exports = {
         }
 
         const getMember = require("../../lib/getters/get_member")
-        let kickMember = getMember(msg, [userToKick, ...reason])
+        const kickMember = await getMember(msg, [userToKick, ...reason])
 
         if (kickMember === undefined) {
             return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
