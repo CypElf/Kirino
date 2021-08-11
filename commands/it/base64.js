@@ -1,9 +1,9 @@
 module.exports = {
-	name: "base64",
+    name: "base64",
     guildOnly: false,
-	args: true,
+    args: true,
 
-	async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { MessageEmbed } = require("discord.js")
 
         if (args.length < 2) {
@@ -16,7 +16,7 @@ module.exports = {
         if (mode !== "encode" && mode !== "decode") {
             return msg.channel.send(__("enter_valid_mode"))
         }
-        
+
         const base64Embed = new MessageEmbed()
 
         if (mode === "encode") {
@@ -26,7 +26,7 @@ module.exports = {
 
             const buffer = new Buffer.from(input)
             const convertedInput = buffer.toString("base64")
-            
+
             base64Embed.setTitle(__("base64_encoding"))
                 .addField(__("original_message"), `${input}`)
                 .addField(__("encoded_message"), `${convertedInput}`)
@@ -38,7 +38,7 @@ module.exports = {
             }
             const buffer = new Buffer.from(input, "base64")
             const convertedInput = buffer.toString("utf8")
-            
+
             base64Embed.setTitle(__("base64_decoding"))
                 .addField(__("encoded_message"), input)
                 .addField(__("original_message"), convertedInput)
@@ -48,5 +48,5 @@ module.exports = {
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/714381707842813984/base64.png")
         msg.channel.send({ embeds: [base64Embed] })
-	}
+    }
 }

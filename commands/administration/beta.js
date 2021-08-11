@@ -1,9 +1,9 @@
 module.exports = {
-	name: "beta",
+    name: "beta",
     guildOnly: false,
     permissions: ["manage_guild"],
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         const id = msg.guild ? msg.guild.id : msg.author.id
         const isBetaEnabled = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id) !== undefined
@@ -27,27 +27,24 @@ module.exports = {
             if (choice !== "enable" && choice !== "disable") {
                 return msg.channel.send(`${__("invalid_beta_mode")} ${__("kirino_pout")}`)
             }
-    
-            const id = msg.guild ? msg.guild.id : msg.author.id
-            const isBetaEnabled = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id) !== undefined
-    
+
             if (choice === "enable") {
                 if (isBetaEnabled) {
                     msg.channel.send(`${__("beta_already_enabled")} ${__("kirino_glad")}`)
                 }
                 else {
-                    let confirmationMsg = await msg.channel.send(`${__("beta_confirmation")} ${__("kirino_what")}`)
-                    confirmationMsg.react('✅')
-                    confirmationMsg.react('❌')
+                    const confirmationMsg = await msg.channel.send(`${__("beta_confirmation")} ${__("kirino_what")}`)
+                    confirmationMsg.react("✅")
+                    confirmationMsg.react("❌")
 
                     const localeBackup = getLocale()
 
-                    const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+                    const filter = (reaction, user) => reaction.emoji.name === "✅" && user.id === msg.author.id || reaction.emoji.name === "❌" && user.id === msg.author.id
                     const collector = confirmationMsg.createReactionCollector({ filter, max: 1, time: 30_000 })
 
                     collector.on("collect", async reaction => {
                         setLocale(localeBackup)
-                        if (reaction.emoji.name === '✅') {
+                        if (reaction.emoji.name === "✅") {
                             bot.db.prepare("INSERT INTO beta VALUES(?)").run(id)
                             msg.channel.send(`${__("beta_enabled")} ${__("kirino_glad")}`)
                         }
@@ -57,15 +54,13 @@ module.exports = {
                     })
                 }
             }
-            else {
-                if (!isBetaEnabled) {
-                    msg.channel.send(`${__("beta_already_disabled")} ${__("kirino_glad")}`)
-                }
-                else {
-                    bot.db.prepare("DELETE FROM beta WHERE id = ?").run(id)
-                    msg.channel.send(`${__("beta_disabled")} ${__("kirino_glad")}`)
-                }
+            else if (!isBetaEnabled) {
+                msg.channel.send(`${__("beta_already_disabled")} ${__("kirino_glad")}`)
             }
-        }        
+            else {
+                bot.db.prepare("DELETE FROM beta WHERE id = ?").run(id)
+                msg.channel.send(`${__("beta_disabled")} ${__("kirino_glad")}`)
+            }
+        }
     }
 }

@@ -1,15 +1,15 @@
 module.exports = {
-	name: "learn",
+    name: "learn",
     guildOnly: false,
-	args: true,
+    args: true,
 
-	async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { MessageEmbed } = require("discord.js")
         const techno = args[0].toLowerCase()
 
         const linksEmbed = new MessageEmbed()
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        
+
         if (techno === "c") {
             linksEmbed
                 .setTitle(__("learn_c"))
@@ -43,7 +43,7 @@ module.exports = {
         }
         else if (techno === "git") {
             linksEmbed
-                .setTitle(__("learn_git"))   
+                .setTitle(__("learn_git"))
                 .addField(__("english"), `[${__("official_book")}](https://git-scm.com/book/en/v2)\n[Atlassian guide](https://www.atlassian.com/git)`)
                 .addField(__("french"), `[${__("official_book")}](https://git-scm.com/book/fr/v2) (${__("english_version_translation")})\n[${__("video_formation")}](https://youtu.be/CEb_JM_hsFw)`)
                 .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/778355939833151488/5847f981cef1014c0b5e48be.png")
@@ -75,7 +75,7 @@ module.exports = {
         }
         else if (techno === "php") {
             linksEmbed
-                .setTitle(__("learn_php"))   
+                .setTitle(__("learn_php"))
                 .addField(__("english"), `[PHP the right way](https://phptherightway.com/)\n[${__("php_security_checklist")}](https://www.sqreen.com/checklists/php-security-checklist)\n[${__("documentation")}](https://www.php.net/docs.php)`)
                 .addField(__("french"), `[PHP the right way](https://eilgin.github.io/php-the-right-way/) (${__("english_version_translation")})\n[${__("video_formation")}](https://www.youtube.com/playlist?list=PLrSOXFDHBtfFuZttC17M-jNpKnzUL5Adc)`)
                 .setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/PHP-logo.svg/1024px-PHP-logo.svg.png")
@@ -109,7 +109,7 @@ module.exports = {
         else {
             return msg.channel.send(`${__("no_learn_entry")} ${__("kirino_pout")}`)
         }
-        
-		msg.channel.send({ embeds: [linksEmbed] })
-	}
+
+        msg.channel.send({ embeds: [linksEmbed] })
+    }
 }

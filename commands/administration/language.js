@@ -1,12 +1,12 @@
 module.exports = {
-	name: "language",
+    name: "language",
     guildOnly: false,
     args: true,
     aliases: ["lang"],
     cooldown: 5,
     permissions: ["manage guild"],
 
-	async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         if (msg.guild) {
             if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
@@ -34,5 +34,5 @@ module.exports = {
         else {
             msg.channel.send(`${__("dm_language_changed") + language}\` ${__("kirino_glad")} !`)
         }
-	}
+    }
 }

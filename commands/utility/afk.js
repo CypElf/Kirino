@@ -1,12 +1,12 @@
 module.exports = {
-	name: "afk",
+    name: "afk",
     guildOnly: true,
     args: false,
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         let reason
         if (args) {
-            reason = args.join(' ')
+            reason = args.join(" ")
         }
 
         if (reason && reason.length > 1800) {

@@ -1,11 +1,11 @@
 module.exports = {
-	name: "blacklist",
+    name: "blacklist",
     guildOnly: true,
     args: true,
     aliases: ["bl"],
     permissions: ["{administrator}"],
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
@@ -26,7 +26,7 @@ module.exports = {
             if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(`${__("missing_permissions_to_remove_channel")} ${__("kirino_pff")}`)
             const channelArg = args[1]
             if (!channelArg) return msg.channel.send(`${__("precise_channel_to_remove")} ${__("kirino_pout")}`)
-            
+
             const channel = await getChannel(msg, args.slice(1))
 
             if (channel !== undefined) {
@@ -60,8 +60,8 @@ module.exports = {
         else if (arg === "list") {
             const channelsRows = channelRequest.all(msg.guild.id).map(row => row.channel_id)
             const rolesRows = roleRequest.all(msg.guild.id).map(row => row.role_id)
-            let blacklistedChannels = [...msg.guild.channels.cache.values()].filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
-            let blacklistedRoles = [...msg.guild.roles.cache.values()].filter(role => rolesRows.includes(role.id)).map(role => role.id)
+            const blacklistedChannels = [...msg.guild.channels.cache.values()].filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
+            const blacklistedRoles = [...msg.guild.roles.cache.values()].filter(role => rolesRows.includes(role.id)).map(role => role.id)
 
             const { MessageEmbed } = require("discord.js")
             const blacklistEmbed = new MessageEmbed()
@@ -71,7 +71,7 @@ module.exports = {
             if (blacklistedChannels.length === 0 && blacklistedRoles.length === 0) blacklistEmbed.setDescription(__("no_blacklisted_channels_or_roles"))
             else {
                 if (blacklistedChannels.length > 0) blacklistEmbed.addField(__("blacklisted_channels"), `<#${blacklistedChannels.join(">, <#")}>`)
-                if (blacklistedRoles.length > 0) blacklistEmbed.addField(__("blacklisted_roles"), `<@&${blacklistedRoles.join(">, <@&")}>`) 
+                if (blacklistedRoles.length > 0) blacklistEmbed.addField(__("blacklisted_roles"), `<@&${blacklistedRoles.join(">, <@&")}>`)
             }
 
             msg.channel.send({ embeds: [blacklistEmbed] })
@@ -79,18 +79,18 @@ module.exports = {
         else {
             if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(__("missing_perm_to_add_channel"))
 
-            let channel = await getChannel(msg, args)
+            const channel = await getChannel(msg, args)
 
             if (channel !== undefined) {
                 const channelsRows = channelRequest.all(msg.guild.id)
 
                 if (channelsRows.map(row => row.channel_id).filter(channel_id => channel_id === channel.id).length > 0) return msg.channel.send(__("channel_already_present"))
-    
+
                 if (channelsRows.length === 10) return msg.channel.send(`${__("max_channels_count_reached")} ${__("kirino_pout")}`)
-    
+
                 const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_channels VALUES(?,?)")
                 addChannelRequest.run(msg.guild.id, channel.id)
-    
+
                 return msg.channel.send(`${__("the_channel")} <#${channel.id}> ${__("has_been_added_to_channels_list")} ${__("kirino_glad")}`)
             }
 
@@ -100,12 +100,12 @@ module.exports = {
                 const rolesRows = roleRequest.all(msg.guild.id)
 
                 if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return msg.channel.send(__("bl_role_already_present"))
-    
+
                 if (rolesRows.length === 10) return msg.channel.send(`${__("max_bl_roles_count_reached")} ${__("kirino_pout")}`)
-    
+
                 const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_roles VALUES(?,?)")
                 addChannelRequest.run(msg.guild.id, role.id)
-    
+
                 return msg.channel.send(`${__("the_role")} ${role.name} ${__("has_been_added_to_roles_list")} ${__("kirino_glad")}`)
             }
 
@@ -116,7 +116,7 @@ module.exports = {
 
 function removeDeletedBlacklistedChannels(db, guild) {
     const channelsRequest = db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
-    let channelsRows = channelsRequest.all(guild.id)
+    const channelsRows = channelsRequest.all(guild.id)
 
     const deletionChannelRequest = db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
 

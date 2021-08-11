@@ -1,9 +1,9 @@
 module.exports = {
-	name: "leave",
+    name: "leave",
     guildOnly: true,
     args: false,
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         const guild = await bot.guilds.fetch(msg.guild.id)
         const botMember = await guild.members.fetch(bot.user.id)
         if (botMember.voice.channel) {

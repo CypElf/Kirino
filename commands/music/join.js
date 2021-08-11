@@ -1,10 +1,10 @@
 module.exports = {
-	name: "join",
+    name: "join",
     guildOnly: true,
     args: false,
     permissions: ["connect", "speak"],
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         const { Permissions } = require("discord.js")
         if (msg.member.voice.channel) {
             if (msg.guild.me.permissions.has(Permissions.FLAGS.CONNECT)) {
@@ -12,7 +12,7 @@ module.exports = {
 
                     const connection = await msg.member.voice.channel.join()
                     msg.channel.send(`${__("voice_channel_joined")} ${__("kirino_glad")}`)
-    
+
                     bot.voicesQueues.set(msg.guild.id, {
                         connection: connection,
                         songs: [],

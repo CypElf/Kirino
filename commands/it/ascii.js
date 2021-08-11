@@ -1,9 +1,9 @@
 module.exports = {
-	name: "ascii",
+    name: "ascii",
     guildOnly: false,
-	args: true,
+    args: true,
 
-	async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         if (args.length < 2) return msg.channel.send(__("two_args_needed"))
 
         const mode = args[0]
@@ -45,6 +45,6 @@ module.exports = {
                 .addField(__("original_message"), output)
         }
 
-		msg.channel.send({ embeds: [asciiEmbed] })
-	}
+        msg.channel.send({ embeds: [asciiEmbed] })
+    }
 }

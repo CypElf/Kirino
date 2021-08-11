@@ -1,13 +1,13 @@
 module.exports = {
-	name: "rolerewards",
+    name: "rolerewards",
     guildOnly: true,
     args: true,
     aliases: ["rr"],
     permissions: ["{administrator}"],
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { MessageEmbed, Permissions } = require("discord.js")
-        
+
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
@@ -52,7 +52,7 @@ module.exports = {
             if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(__("missing_permissions_to_remove_role"))
             const roleArg = args[1]
             if (!roleArg) return msg.channel.send(__("precise_role_to_remove"))
-            
+
             const role = await getRole(msg, args.slice(1))
             if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
 
@@ -69,7 +69,7 @@ module.exports = {
         else {
             if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return msg.channel.send(__("missing_permissions_to_add_role"))
             const level = parseInt(args.pop())
-            let role = await getRole(msg, args)
+            const role = await getRole(msg, args)
             if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
             if (role.managed) return msg.channel.send(__("role_externally_managed"))
             if (isNaN(level) || level <= 0 || level > 100) return msg.channel.send(__("bad_level"))

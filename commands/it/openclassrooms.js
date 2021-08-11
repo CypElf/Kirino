@@ -1,17 +1,17 @@
 module.exports = {
-	name: "openclassrooms",
+    name: "openclassrooms",
     guildOnly: false,
-	args: false,
+    args: false,
     aliases: ["oc"],
 
-	async execute (bot, msg) {
+    async execute(bot, msg) {
         const { MessageEmbed } = require("discord.js")
         const linksEmbed = new MessageEmbed()
             .setTitle(__("careful_with_openclassrooms"))
             .setDescription(__("openclassrooms_explanation"))
-			.setThumbnail("https://upload.wikimedia.org/wikipedia/fr/0/0d/Logo_OpenClassrooms.png")
+            .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/0/0d/Logo_OpenClassrooms.png")
             .setColor("#AA44FF")
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send({ embeds: [linksEmbed] })
-	}
+        msg.channel.send({ embeds: [linksEmbed] })
+    }
 }

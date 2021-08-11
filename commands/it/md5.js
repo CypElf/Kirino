@@ -1,9 +1,9 @@
 module.exports = {
-	name: "md5",
+    name: "md5",
     guildOnly: false,
-	args: true,
+    args: true,
 
-	async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const md5 = require("js-md5")
 
         const plaintext = args.join(" ").toLowerCase()
@@ -20,6 +20,6 @@ module.exports = {
             .addField(__("original_message"), plaintext)
             .addField(__("hash"), encrypted.hex().toUpperCase())
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send({ embeds: [baseEmbed] })
-	}
+        msg.channel.send({ embeds: [baseEmbed] })
+    }
 }

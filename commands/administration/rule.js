@@ -1,10 +1,10 @@
 module.exports = {
-	name: "rule",
+    name: "rule",
     guildOnly: true,
     args: true,
     aliases: ["r"],
     permissions: ["{manage guild}"],
-    
+
     async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         const request = args[0]
@@ -17,7 +17,7 @@ module.exports = {
             if (!newRule) return msg.channel.send(`${__("please_enter_a_rule_to_add")} ${__("kirino_pout")}`)
             if (newRule.length > 1000) return msg.channel.send(`${__("rule_too_long")} ${__("kirino_pout")}`)
 
-            let r = getRules(false).length
+            const r = getRules(false).length
             if (r >= 30) return msg.channel.send(`${__("max_rules_number_reached")} ${__("kirino_pout")}`)
             const newRuleRequest = bot.db.prepare("INSERT INTO rules(guild_id,rule) VALUES(?,?)")
             newRuleRequest.run(msg.guild.id, newRule)
@@ -66,7 +66,7 @@ module.exports = {
         // ------------------------------------------------------------------- count
 
         else if (request === "count") {
-            let rulesCount = getRules(false).length
+            const rulesCount = getRules(false).length
             return msg.channel.send(`${__n("there_is_currently", rulesCount)} ${rulesCount} ${__n("rules_on_this_server", rulesCount)}`)
         }
 
@@ -75,7 +75,7 @@ module.exports = {
         const index = parseInt(request) - 1
 
         if (!index && index !== 0) return msg.channel.send(`${__("please_enter_a_valid_rule_number")} ${__("kirino_pff")}`)
-        
+
         let rules = getRules()
         if (rules.length === 0) return
 
@@ -88,18 +88,18 @@ module.exports = {
         const emb = new MessageEmbed()
             .addField(__("rule_title") + (index + 1), askedRule)
             .setColor("#000000")
-            
+
         emb.setFooter(__("rules_from") + msg.guild.name, msg.guild.iconURL())
         msg.channel.send({ embeds: [emb] })
 
         function getRules(verbose = true) {
             const rulesRequest = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?")
             const rulesRow = rulesRequest.all(msg.guild.id)
-    
+
             if (rulesRow.length === 0 && verbose) {
                 msg.channel.send(__("no_rules_defined_on_this_server"))
             }
-    
+
             return rulesRow
         }
     }

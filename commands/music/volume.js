@@ -1,9 +1,9 @@
 module.exports = {
-	name: "volume",
+    name: "volume",
     guildOnly: true,
     args: true,
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
         const musicAuth = require("../../lib/music/music_control_auth")
@@ -16,16 +16,16 @@ module.exports = {
             if ((!isNaN(newVolume) && newVolume > 0 && newVolume < 10) || loud) {
 
                 if (newVolume > 2 && !loud) {
-                    let confirmationMsg = await msg.channel.send(`${__("high_volume_not_recommanded")} ${newVolume} ?`)
+                    const confirmationMsg = await msg.channel.send(`${__("high_volume_not_recommanded")} ${newVolume} ?`)
 
-                    confirmationMsg.react('✅')
-                    confirmationMsg.react('❌')
-    
-                    const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+                    confirmationMsg.react("✅")
+                    confirmationMsg.react("❌")
+
+                    const filter = (reaction, user) => reaction.emoji.name === "✅" && user.id === msg.author.id || reaction.emoji.name === "❌" && user.id === msg.author.id
                     const collector = confirmationMsg.createReactionCollector({ filter, max: 1, time: 30_000 })
-    
+
                     collector.on("collect", async reaction => {
-                        if (reaction.emoji.name === '✅') {
+                        if (reaction.emoji.name === "✅") {
                             changeVolume(queue, newVolume)
                             msg.channel.send(`${__("volume_changed_anyway")} ${newVolume}. ${__("kirino_pout")}`)
                         }

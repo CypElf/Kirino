@@ -1,18 +1,18 @@
 const ytdl = require("ytdl-core-discord")
 
 module.exports = {
-	name: "play",
+    name: "play",
     guildOnly: true,
     args: true,
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const musicAuth = require("../../lib/music/music_control_auth")
 
         if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
             const url = args[0]
 
             let song
-            
+
             try {
                 song = await getSongFromURL(url)
             }
@@ -26,22 +26,20 @@ module.exports = {
                     let video = videos[0]
 
                     if (video.title.toLowerCase() !== search.toLowerCase()) {
-                        const choicesMsg = await msg.channel.send(`${__("youtube_results")} ${__("kirino_glad")}\n${videos.map((video, i) => (i + 1) + " - " + video.title).join("\n")}\nN - ${__("nothing")}`)
-    
+                        const choicesMsg = await msg.channel.send(`${__("youtube_results")} ${__("kirino_glad")}\n${videos.map((v, i) => (i + 1) + " - " + v.title).join("\n")}\nN - ${__("nothing")}`)
+
                         const filter = cMsg => cMsg.author.id === msg.author.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
-                        try {
-                            let cMsg = await msg.channel.awaitMessages({ filter, max: 1, time: 30_000 })
-                            cMsg = [...cMsg.values()]
-                            if (cMsg.length === 1) {
-                                if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
-                                else return msg.channel.send(`${__("play_cancelled")} ${__("kirino_pout")}`)
 
-                                cMsg[0].delete().catch(() => {})
-                            }
+                        let cMsg = await msg.channel.awaitMessages({ filter, max: 1, time: 30_000 })
+                        cMsg = [...cMsg.values()]
+                        if (cMsg.length === 1) {
+                            if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
+                            else return msg.channel.send(`${__("play_cancelled")} ${__("kirino_pout")}`)
+
+                            cMsg[0].delete().catch()
                         }
-                        catch {}
 
-                        choicesMsg.delete().catch(() => {})
+                        choicesMsg.delete().catch()
                     }
 
                     song = await getSongFromURL(video.url)
@@ -95,7 +93,7 @@ async function getSongFromURL(url) {
     const readable = await ytdl(url)
     const videoInfo = await ytdl.getInfo(url)
 
-    const { author, title, description, video_url, thumbnails } = videoInfo.videoDetails                    
+    const { author, title, description, video_url, thumbnails } = videoInfo.videoDetails
 
     return {
         stream: readable,

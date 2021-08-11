@@ -1,10 +1,10 @@
 module.exports = {
-	name: "userinfo",
+    name: "userinfo",
     guildOnly: true,
     args: false,
     aliases: ["ui"],
     cooldown: 3,
-    
+
     async execute(bot, msg, args) {
         let member
 
@@ -13,12 +13,12 @@ module.exports = {
             const getMember = require("../../lib/getters/get_member")
 
             member = await getMember(msg, args)
-            
+
             if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
         }
 
-        const { MessageEmbed, Permissions } = require('discord.js')
-        
+        const { MessageEmbed, Permissions } = require("discord.js")
+
         let creationDate = member.user.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")
         const creationDay = String(creationDate.getDate()).padStart(2, "0")
@@ -46,9 +46,9 @@ module.exports = {
             }
         }
         perms = perms.substring(0, perms.length - 2)
-        
+
         const arrayTotalRoles = member.roles.cache
-        let arrayRoles = []
+        const arrayRoles = []
         let nbRoles = 0
         arrayTotalRoles.forEach((role) => {
             if (role.name !== "@everyone") {
@@ -56,13 +56,13 @@ module.exports = {
                 nbRoles++
             }
         })
-        let roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")"
+        const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")"
 
         let nickname = member.nickname
         if (nickname === undefined || nickname === null) {
             nickname = __("nothing")
         }
-        let presence = member.presence ? member.presence.activities.map(activity => activity.name).join(", ") : __("nothing")
+        const presence = member.presence ? member.presence.activities.map(activity => activity.name).join(", ") : __("nothing")
 
         let premiumSince = member.premiumSince
         if (premiumSince) {

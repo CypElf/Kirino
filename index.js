@@ -23,9 +23,9 @@ i18n.configure({
     locales: ["en", "fr"],
     staticCatalog: {
         en: yaml.safeLoad(fs.readFileSync("./languages/en.yml", "utf-8")),
-        fr: yaml.safeLoad(fs.readFileSync("./languages/fr.yml", "utf-8")),
+        fr: yaml.safeLoad(fs.readFileSync("./languages/fr.yml", "utf-8"))
     },
-    register: global,
+    register: global
 })
 
 startXpApi(bot, { cooldowns: bot.apiCooldowns })
@@ -44,11 +44,11 @@ for (const category of categories) {
         const command = require(`./commands/${category}/${commandFile}`)
         command.category = category
         bot.commands.set(command.name, command)
-    } 
+    }
 }
 
 process.on("unhandledRejection", error => {
-	console.error("Unhandled promise rejection:", error)
+    console.error("Unhandled promise rejection:", error)
 })
 
 bot.login(process.env.KIRINO_TOKEN)
@@ -63,13 +63,13 @@ function controlRequest(req, res, obj, cooldown) {
         res.end()
         return false
     }
-    
+
     const now = Date.now()
     const ip = req.socket.remoteAddress
 
     if (obj.cooldowns.has(ip)) {
         const expiration = obj.cooldowns.get(ip) + cooldown
-    
+
         if (now < expiration) {
             res.writeHead(429) // HTTP status code 429 = Too Many Requests
             res.write(JSON.stringify({ "errors": ["Too many requests. Please stop sending requests that fast."] }))
@@ -83,28 +83,28 @@ function controlRequest(req, res, obj, cooldown) {
     return true
 }
 
-function startXpApi(bot, obj) {
+function startXpApi(obj) {
     http.createServer(async (req, res) => {
         console.log("Receiving a request on the XP API")
         if (controlRequest(req, res, obj, 500)) {
             let { id, limit, page } = url.parse(req.url, true).query // url.parse is deprecated but there are no alternative working on the internet...
-            
+
             if (!limit) limit = 20 // default values
             if (!page) page = 1
 
             console.log(`Request accepted. ID = ${id}, limit = ${limit}, page = ${page}`)
-        
+
             if (isNaN(limit) || limit <= 0 || limit > 100 || isNaN(page) || page <= 0) {
                 res.writeHead(400) // HTTP status code 400 = Bad Request
-                
-                let errors = []
+
+                const errors = []
                 if (isNaN(limit) || limit <= 0 || limit > 100) {
                     errors.push("Invalid limit, the limit must be between 1 and 100.")
                 }
                 if (isNaN(page) || page <= 0) {
                     errors.push("Invalid page, the page must be greater or equal to 1.")
                 }
-        
+
                 res.write(JSON.stringify({ "errors": errors }))
                 return res.end()
             }
@@ -122,7 +122,7 @@ function startXpApi(bot, obj) {
 
                 const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
                 const serverRows = serverRequest.all(id)
-        
+
                 if (serverRows.length > 0) {
                     const page_start = (page - 1) * limit
                     const page_end = page * limit - 1
@@ -133,7 +133,7 @@ function startXpApi(bot, obj) {
                         return res.end()
                     }
 
-                    let data = {
+                    const data = {
                         "guild_metadata": {
                             "id": guild.id,
                             "name": guild.name,
@@ -146,22 +146,20 @@ function startXpApi(bot, obj) {
                     const askedRows = serverRows.slice(page_start, page_end + 1)
 
                     for (const [i, row] of askedRows.entries()) {
-                        try {
-                            const user = await bot.users.fetch(row.user_id)
+                        const user = await bot.users.fetch(row.user_id)
 
-                            data.players.push({
-                                "id": user.id,
-                                "tag": user.tag,
-                                "avatar": user.displayAvatarURL({ dynamic: true, size: 128 }),
-                                "xp": row.xp,
-                                "total_xp": row.total_xp,
-                                "level": row.level,
-                                "color": row.color,
-                                "rank": page_start + i + 1
-                            })
-                        } catch {}
+                        data.players.push({
+                            "id": user.id,
+                            "tag": user.tag,
+                            "avatar": user.displayAvatarURL({ dynamic: true, size: 128 }),
+                            "xp": row.xp,
+                            "total_xp": row.total_xp,
+                            "level": row.level,
+                            "color": row.color,
+                            "rank": page_start + i + 1
+                        })
                     }
-                    
+
                     res.writeHead(200) // HTTP status code 200 = OK
                     res.write(JSON.stringify(data))
                     console.log("Request response sent with success")
@@ -180,20 +178,19 @@ function startXpApi(bot, obj) {
     }).listen(62150)
 }
 
-function startCommandsApi(bot, obj) {
+function startCommandsApi(obj) {
     http.createServer(async (req, res) => {
         if (controlRequest(req, res, obj, 0)) {
-            let { category, lang } = url.parse(req.url, true).query
+            let { category } = url.parse(req.url, true).query
+            const { lang } = url.parse(req.url, true).query
 
             if (!category) category = "all"
 
             category = category.toLowerCase()
-            
+
             const localeBak = getLocale()
             setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
 
-            const categories = fs.readdirSync("./commands")
-            
             if (category !== "all" && !categories.includes(category)) {
                 res.writeHead(404) // HTTP status code 404 = Not Found
                 res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
@@ -210,14 +207,14 @@ function startCommandsApi(bot, obj) {
                     if (`usage_${command.name}` !== __(`usage_${command.name}`)) command.usage = __(`usage_${command.name}`).split("\n").map(usage => usage.startsWith("nocommand ") ? usage.slice(10) : `${command.name} ${usage}`).join("\n")
                     return command
                 })
-    
+
                 if (currentCommands) {
                     commands = commands.concat(currentCommands)
                 }
             }
 
             setLocale(localeBak)
-            
+
             res.writeHead(200) // HTTP status code 200 = OK
             res.write(JSON.stringify({ "category": category, "commands": commands }))
             res.end()

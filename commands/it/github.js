@@ -1,10 +1,10 @@
 module.exports = {
-	name: "github",
+    name: "github",
     guildOnly: false,
-	args: true,
+    args: true,
     cooldown: 3,
-	
-	async execute(bot, msg, args) {
+
+    async execute(bot, msg, args) {
         if (args.length > 1) {
             return msg.channel.send(`${__("too_much_args_for_github")} ${__("kirino_pout")}`)
         }
@@ -17,8 +17,8 @@ module.exports = {
         if (!data.message) {
             const { MessageEmbed } = require("discord.js")
             const ColorThief = require("colorthief")
-            
-            let createdAt = data.created_at
+
+            const createdAt = data.created_at
             // github give us date as `YYYY-MM-DDTHH:MM:SSZ` with T and Z as letters
             const creationDate = createdAt.split("T")[0].split("-").reverse().join("/")
             const creationTime = createdAt.split("T")[1].split("Z")[0]
@@ -45,7 +45,7 @@ module.exports = {
                 .addField(__("followers"), `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
                 .addField(__("following"), `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
                 .addField(__("account_creation_date"), `${creationDate} ${__("at")} ${creationTime}`, true)
-            
+
             if (data.bio) profileEmbed.setDescription(data.bio)
 
             msg.channel.send({ embeds: [profileEmbed] })
@@ -54,5 +54,5 @@ module.exports = {
         else {
             msg.channel.send(`${__("user_not_found")} ${__("kirino_what")}`)
         }
-	}
+    }
 }

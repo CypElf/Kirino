@@ -1,10 +1,10 @@
 module.exports = {
-	name: "report",
+    name: "report",
     guildOnly: false,
     args: true,
     cooldown: 5,
-	
-	async execute(bot, msg, args) {
+
+    async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         let origin
         let originAvatar
@@ -18,16 +18,16 @@ module.exports = {
             originAvatar = msg.author.displayAvatarURL()
         }
         const report = args.join(" ")
-        let confirmationMsg = await msg.channel.send(__("report_confirmation") + "\n```" + report + "``` " + __("thirty_seconds_before_auto_cancelling"))
+        const confirmationMsg = await msg.channel.send(__("report_confirmation") + "\n```" + report + "``` " + __("thirty_seconds_before_auto_cancelling"))
 
-        confirmationMsg.react('✅')
-        confirmationMsg.react('❌')
+        confirmationMsg.react("✅")
+        confirmationMsg.react("❌")
 
-        const filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === msg.author.id || reaction.emoji.name === '❌' && user.id === msg.author.id
+        const filter = (reaction, user) => reaction.emoji.name === "✅" && user.id === msg.author.id || reaction.emoji.name === "❌" && user.id === msg.author.id
         const collector = confirmationMsg.createReactionCollector({ filter, max: 1, time: 30_000 })
 
         collector.on("collect", async reaction => {
-            if (reaction.emoji.name === '✅') {
+            if (reaction.emoji.name === "✅") {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.REPORT_SERVER_ID)
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
@@ -40,7 +40,7 @@ module.exports = {
                         const languageRow = languagesRequest.get(process.env.REPORT_SERVER_ID)
                         if (!(languageRow === undefined)) setLocale(languageRow.language)
                         else setLocale("en")
-    
+
                         const reportEmbed = new MessageEmbed()
                             .setTitle("**" + __("new_report") + "**")
                             .setThumbnail(originAvatar)
@@ -58,5 +58,5 @@ module.exports = {
             }
             else msg.channel.send(__("report_cancelled"))
         })
-	}
+    }
 }

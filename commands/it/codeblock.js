@@ -1,10 +1,10 @@
 module.exports = {
-	name: "codeblock",
+    name: "codeblock",
     guildOnly: false,
-	args: false,
+    args: false,
     aliases: ["code"],
 
-	async execute (bot, msg) {
+    async execute(bot, msg) {
         const { MessageEmbed } = require("discord.js")
         const linksEmbed = new MessageEmbed()
             .setTitle(__("send_code"))
@@ -13,6 +13,6 @@ module.exports = {
             .setImage("https://cdn.discordapp.com/attachments/698105563485044748/712577943666294814/unknown.png")
             .setColor("#000000")
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send({ embeds: [linksEmbed] })
-	}
+        msg.channel.send({ embeds: [linksEmbed] })
+    }
 }

@@ -1,11 +1,11 @@
 module.exports = {
-	name: "call",
+    name: "call",
     guildOnly: true,
-	args: true,
+    args: true,
     aliases: ["presence"],
     permissions: ["manage_channels", "manage_guild or manage_messages"],
-	
-	async execute(bot, msg, args) {
+
+    async execute(bot, msg, args) {
         const { MessageAttachment, Permissions } = require("discord.js")
         const formatDate = require("../../lib/misc/format_date")
         const mode = args[0].toLowerCase()
@@ -37,16 +37,14 @@ module.exports = {
             if (args[1] === undefined) { // no argument, the user wants to see what channel is set
                 const row = bot.db.prepare("SELECT channel_id, dm, current FROM calls WHERE guild_id = ?").get(msg.guild.id)
                 if (row === undefined) msg.channel.send(`${__("presence_channel_not_set")} ${__("kirino_what")}`)
+                else if (row.dm) msg.channel.send(`${__("presence_channel_is_set_to_dm")} ${__("kirino_glad")}`)
+                else if (row.current) msg.channel.send(`${__("presence_channel_is_set_to_current")} ${__("kirino_glad")}`)
                 else {
-                    if (row.dm) msg.channel.send(`${__("presence_channel_is_set_to_dm")} ${__("kirino_glad")}`)
-                    else if (row.current) msg.channel.send(`${__("presence_channel_is_set_to_current")} ${__("kirino_glad")}`)
+                    const channels = [...msg.guild.channels.cache.values()].filter(channel => channel.id === row.channel_id)
+                    if (channels.length > 0) msg.channel.send(`${__("presence_channel_is_set_to_channel")} <#${row.channel_id}>. ${__("kirino_glad")}`)
                     else {
-                        const channels = [...msg.guild.channels.cache.values()].filter(channel => channel.id === row.channel_id)
-                        if (channels.length > 0) msg.channel.send(`${__("presence_channel_is_set_to_channel")} <#${row.channel_id}>. ${__("kirino_glad")}`)
-                        else {
-                            bot.db.prepare("DELETE FROM calls WHERE guild_id = ?").run(msg.guild.id)
-                            msg.channel.send(`${__("presence_channel_outdated")} ${__("kirino_pout")}`)
-                        }
+                        bot.db.prepare("DELETE FROM calls WHERE guild_id = ?").run(msg.guild.id)
+                        msg.channel.send(`${__("presence_channel_outdated")} ${__("kirino_pout")}`)
                     }
                 }
             }
@@ -80,11 +78,11 @@ module.exports = {
                         if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
                         channel_id = channel.id
                     }
-    
+
                     presenceRequest.run(msg.guild.id, channel_id, 0, 0, asfile)
                     msg.channel.send(`${__("presence_channel_set")} <#${channel_id}>. ${__("kirino_glad")}`)
                 }
-            }            
+            }
         }
 
         else {
@@ -100,7 +98,7 @@ module.exports = {
                 if (locked >= 3) return msg.channel.send(`${__("records_still_going_on")} ${__("kirino_pout")}`)
 
                 let channel
-                const channels = [...msg.guild.channels.cache.values()].filter(channel => channel.id === row.channel_id)
+                const channels = [...msg.guild.channels.cache.values()].filter(ch => ch.id === row.channel_id)
 
                 if (channels.length > 0 || row.dm || row.current) {
                     bot.calls.set(msg.guild.id, locked + 1)
@@ -112,87 +110,84 @@ module.exports = {
                     else if (row.current) channel = msg.channel
                     else channel = channels[0]
 
-                    msg.delete().catch(() => {})
+                    msg.delete().catch()
                     const recordMsg = await msg.channel.send(`**${__("record_started")}** ${__("kirino_glad")}\n${__("you_have")} ${duration} ${__("min_to_raise_the_hand")} 🙋.`)
                     recordMsg.react("🙋")
 
-                    const filter = reaction => reaction.emoji.name === '🙋'
+                    const filter = reaction => reaction.emoji.name === "🙋"
 
-                    try {
-                        const languageBak = getLocale()
-                        const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
+                    const languageBak = getLocale()
+                    const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
 
-                        for (const reaction of [...collected.values()]) {
-                            let presents = await reaction.users.fetch()
-                            presents = [...presents.values()].filter(user => !user.bot)
+                    for (const reaction of [...collected.values()]) {
+                        let presents = await reaction.users.fetch()
+                        presents = [...presents.values()].filter(user => !user.bot)
 
-                            let members = []
-                            for (const user of presents) {
-                                const member = await msg.guild.members.fetch(user)
-                                if (member !== null) members.push(member)
-                            }
-
-                            members = members.map(member => {
-                                let txt = `- ${member.user.username}`
-                                if (member.nickname) txt += ` (${member.nickname})`
-                                return txt
-                            })
-
-                            const setLanguage = require("../../lib/language/set_language")
-                            setLanguage(bot.db, msg)
-
-                            msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
-
-                            let txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${formatDate(new Date())})` : ""} :\n`]
-                            if (members.length === 0) txt[0] += __("nobody")
-
-                            if (row.asfile) txt[0] += members.join("\n")
-                            else {
-                                let i = 0
-                                for (const record of members) {
-                                    if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
-                                    else {
-                                        i++
-                                        txt.push("")
-                                    }
-                                }
-                            }
-
-                            for (const chunk of txt) {
-                                const isFile = row.asfile
-                                const content = isFile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
-
-                                try {
-                                    if (isFile) await channel.send({ files: [content] })
-                                    else await channel.send(content)
-                                }
-                                catch {
-                                    channel = msg.channel
-
-                                    if (row.dm) msg.channel.send(`${__("presence_dm_disabled")} ${__("kirino_what")}`)
-                                    else msg.channel.send(`${__("presence_channel_deleted_during_call")} ${__("kirino_what")}`)
-                                    channel.send(__("so_i_will_send_it_here"))
-
-                                    if (isFile) channel.send({ files: [content] })
-                                    else channel.send(content)
-                                }
-                            }
-
-                            setLocale(languageBak)
-                            bot.calls.set(msg.guild.id, bot.calls.get(msg.guild.id) - 1)
+                        let members = []
+                        for (const user of presents) {
+                            const member = await msg.guild.members.fetch(user)
+                            if (member !== null) members.push(member)
                         }
+
+                        members = members.map(member => {
+                            let txt = `- ${member.user.username}`
+                            if (member.nickname) txt += ` (${member.nickname})`
+                            return txt
+                        })
+
+                        const setLanguage = require("../../lib/language/set_language")
+                        setLanguage(bot.db, msg)
+
+                        msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
+
+                        const txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${formatDate(new Date())})` : ""} :\n`]
+                        if (members.length === 0) txt[0] += __("nobody")
+
+                        if (row.asfile) txt[0] += members.join("\n")
+                        else {
+                            let i = 0
+                            for (const record of members) {
+                                if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
+                                else {
+                                    i++
+                                    txt.push("")
+                                }
+                            }
+                        }
+
+                        for (const chunk of txt) {
+                            const isFile = row.asfile
+                            const content = isFile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
+
+                            try {
+                                if (isFile) await channel.send({ files: [content] })
+                                else await channel.send(content)
+                            }
+                            catch {
+                                channel = msg.channel
+
+                                if (row.dm) msg.channel.send(`${__("presence_dm_disabled")} ${__("kirino_what")}`)
+                                else msg.channel.send(`${__("presence_channel_deleted_during_call")} ${__("kirino_what")}`)
+                                channel.send(__("so_i_will_send_it_here"))
+
+                                if (isFile) channel.send({ files: [content] })
+                                else channel.send(content)
+                            }
+                        }
+
+                        setLocale(languageBak)
+                        bot.calls.set(msg.guild.id, bot.calls.get(msg.guild.id) - 1)
                     }
-                    catch {}
                 }
                 else {
                     msg.channel.send(`${__("presence_channel_not_found")} ${__("kirino_what")}`)
                     bot.db.prepare("DELETE FROM calls WHERE guild_id = ?").run(msg.guild.id)
                 }
-                
+
             }
             else msg.channel.send(`${__("no_presence_channel_set")} ${__("kirino_pout")}`)
         }
-	}
+    }
 }
 
 function deleteRowIfEmpty(db, guild_id) {

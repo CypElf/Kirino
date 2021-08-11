@@ -4,7 +4,7 @@ module.exports = {
     args: false,
     aliases: ["sp", "serveravatar", "sa"],
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         msg.channel.send(msg.guild.iconURL({
             dynamic: true,
             size: 4096

@@ -1,16 +1,16 @@
 module.exports = {
-	name: "ban",
+    name: "ban",
     guildOnly: true,
     args: true,
     cooldown: 3,
     permissions: ["ban members"],
 
-    async execute (bot, msg, [userToBan, ...reason]) {
+    async execute(bot, msg, [userToBan, ...reason]) {
         const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
             return msg.channel.send(`${__("you_are_missing_permissions_to_ban_members")} ${__("kirino_pff")}`)
         }
-    
+
         if (!msg.guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
             return msg.channel.send(`${__("i_am_missing_permissions_to_ban_members")} ${__("kirino_pout")}`)
         }
@@ -24,7 +24,7 @@ module.exports = {
                     else {
                         msg.channel.send(`${member.username + __("has_been_banned")} <:hammer:568068459485855752>`)
                     }
-                    msg.delete().catch(() => {})
+                    msg.delete().catch()
                 })
         }
 
@@ -33,7 +33,7 @@ module.exports = {
         if (banMember === undefined) {
             banMember = [...msg.guild.members.cache.values()].find(currentUser => currentUser.user.username.toLowerCase() === userToBan.toLowerCase())
             if (banMember === undefined) {
-                try { 
+                try {
                     banMember = await msg.guild.members.fetch(userToBan)
                 }
                 catch (err) {
@@ -51,7 +51,7 @@ module.exports = {
         if (!banMember.bannable) {
             return msg.channel.send(`${__("unable_to_ban_higher_than_me")} ${__("kirino_pout")}`)
         }
-    
+
         if (banMember.id === msg.member.id) {
             return msg.channel.send(`${__("cannot_ban_yourself")} ${__("kirino_pff")}`)
         }

@@ -1,10 +1,10 @@
 module.exports = {
-	name: "base",
+    name: "base",
     guildOnly: false,
-	args: true,
+    args: true,
     aliases: ["radix"],
 
-	async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         if (args.length < 3) {
             return msg.channel.send(__("not_much_arguments"))
         }
@@ -32,6 +32,6 @@ module.exports = {
             .addField(`${__("original_number_in_base")} ${inputBase}`, `**${number}**`)
             .addField(`${__("converted_number_in_base")} ${outputBase}`, `**${convertedToOutputBase}**`)
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-		msg.channel.send({ embeds : [baseEmbed] })
-	}
+        msg.channel.send({ embeds : [baseEmbed] })
+    }
 }

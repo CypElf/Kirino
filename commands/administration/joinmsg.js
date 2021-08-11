@@ -1,10 +1,10 @@
 module.exports = {
-	name: "joinmsg",
+    name: "joinmsg",
     guildOnly: true,
     args: true,
     permissions: ["manage_guild"],
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
 
@@ -26,15 +26,15 @@ module.exports = {
 
             const getChannel = require("../../lib/getters/get_channel")
             const channel = await getChannel(msg, args.slice(0, 1))
-    
+
             if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
-            
+
             args.shift()
             const joinMsg = args.join(" ")
-    
+
             const joinRequest = bot.db.prepare("INSERT INTO joins_leaves(guild_id, joins_channel_id, join_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET joins_channel_id=excluded.joins_channel_id, join_message=excluded.join_message")
             joinRequest.run(msg.guild.id, channel.id, joinMsg)
-    
+
             msg.channel.send(`${__("join_message_set")} <#${channel.id}>. ${__("kirino_glad")}`)
         }
     }

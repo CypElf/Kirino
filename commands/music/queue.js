@@ -1,9 +1,9 @@
 module.exports = {
-	name: "queue",
+    name: "queue",
     guildOnly: true,
     args: false,
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
         if (!msg.guild.me.voice.channel) {

@@ -1,9 +1,9 @@
 module.exports = {
-	name: "pause",
+    name: "pause",
     guildOnly: true,
     args: false,
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
         const musicAuth = require("../../lib/music/music_control_auth")

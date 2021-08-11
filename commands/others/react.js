@@ -1,14 +1,14 @@
 module.exports = {
-	name: "react",
+    name: "react",
     guildOnly: false,
     args: true,
     permissions: ["administrator"],
-    
+
     async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
-		if (msg.author.id !== process.env.OWNER_ID && !msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        if (msg.author.id !== process.env.OWNER_ID && !msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
             return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
-                .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000)).catch(() => {})
+                .then(errorMsg => setTimeout(() => errorMsg.delete().catch(), 5000)).catch()
         }
 
         if (msg.guild) {
@@ -23,26 +23,26 @@ module.exports = {
         const emoji = args[1]
 
         msg.channel.messages.fetch(ID)
-			.then(msg2 => {
+            .then(msg2 => {
                 msg2.react(emoji)
                     .then(() => {
-                        msg.delete().catch(() => {})
+                        msg.delete().catch()
                     })
                     .catch(() => {
                         let customEmoji = emoji.match(/<:(.*?):[0-9]*>/gm)
-                        if (customEmoji) customEmoji = customEmoji.map(emoji => emoji.split(":")[2].split(">")[0])[0]
+                        if (customEmoji) customEmoji = customEmoji.map(fullEmoji => fullEmoji.split(":")[2].split(">")[0])[0]
                         else customEmoji = "nop"
                         msg2.react(customEmoji)
                             .then(() => {
-                                msg.delete().catch(() => {})
+                                msg.delete().catch()
                             })
                             .catch(() => {
                                 return msg.channel.send(__("access_to_emoji_denied") + " " + __("kirino_pout"))
                             })
                     })
-			})
-			.catch(err => {
-				return msg.channel.send(__("bad_message_id") + " " + __("kirino_pout"))
-			})
+            })
+            .catch(() => {
+                return msg.channel.send(__("bad_message_id") + " " + __("kirino_pout"))
+            })
     }
 }

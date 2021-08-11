@@ -5,6 +5,9 @@
 	"main": "index.js",
 	"author": "CypElf",
 	"license": "GPL-3.0-or-later",
+	"scripts": {
+		"lint": "eslint *.js && eslint commands/**/*.js && eslint events/*.js"
+	},
 	"dependencies": {
 		"@discordjs/opus": "^0.5.0",
 		"@discordjs/voice": "^0.5.6",

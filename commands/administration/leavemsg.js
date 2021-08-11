@@ -1,10 +1,10 @@
 module.exports = {
-	name: "leavemsg",
+    name: "leavemsg",
     guildOnly: true,
     args: true,
     permissions: ["manage_guild"],
 
-    async execute (bot, msg, args) {
+    async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return msg.channel.send(`${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`)
 
@@ -28,12 +28,12 @@ module.exports = {
             const channel = await getChannel(msg, args.slice(0, 1))
 
             if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
-            
+
             args.shift()
             const leaveMsg = args.join(" ")
 
             const leaveRequest = bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id=excluded.leaves_channel_id, leave_message=excluded.leave_message")
-            leaveRequest.run(msg.guild.id,channel.id, leaveMsg)
+            leaveRequest.run(msg.guild.id, channel.id, leaveMsg)
 
             msg.channel.send(`${__("leave_message_set")} <#${channel.id}>. ${__("kirino_glad")}`)
         }
