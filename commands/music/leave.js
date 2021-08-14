@@ -4,14 +4,22 @@ module.exports = {
     args: false,
 
     async execute(bot, msg) {
+        const { getVoiceConnection } = require("@discordjs/voice")
+
         const guild = await bot.guilds.fetch(msg.guild.id)
-        const botMember = await guild.members.fetch(bot.user.id)
-        if (botMember.voice.channel) {
+        if (guild.me.voice.channel) {
             const musicAuth = require("../../lib/music/music_control_auth")
 
-            if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
-                botMember.voice.channel.leave()
+            if (musicAuth(msg.member, guild.me)) {
+                const connection = getVoiceConnection(guild.id)
+                bot.voicesQueues.get(guild.id).player.stop()
+                connection.destroy()
+                bot.voicesQueues.delete(guild.id)
+
                 msg.channel.send(`${__("voice_channel_left")} ${__("kirino_glad")}`)
+            }
+            else {
+                msg.channel.send(`${__("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${__("kirino_pout")}`)
             }
         }
         else {

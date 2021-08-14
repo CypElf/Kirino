@@ -6,9 +6,16 @@ module.exports = {
     args: true,
 
     async execute(bot, msg, args) {
-        const musicAuth = require("../../lib/music/music_control_auth")
+        if (msg.member.voice.channel) {
+            if (!msg.guild.me.voice.channel) {
+                require("./join").execute(bot, msg)
+            }
+            else {
+                const musicAuth = require("../../lib/music/music_control_auth")
 
-        if (musicAuth(msg.channel, msg.member, msg.guild.me)) {
+                if (!musicAuth(msg.member, msg.guild.me)) return msg.channel.send(`${__("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${__("kirino_pout")}`)
+            }
+
             const url = args[0]
 
             let song
@@ -45,7 +52,7 @@ module.exports = {
                     song = await getSongFromURL(video.url)
                 }
                 catch {
-                    return msg.channel.send(`${__("nothing_matching_found")} ${__("kirino_what")}`) // with yt-search it seems to never happen, but just in case
+                    return msg.channel.send(`${__("search_error")} ${__("kirino_what")}`)
                 }
             }
 
@@ -53,8 +60,10 @@ module.exports = {
             serverQueue.songs.push(song)
 
             if (serverQueue.songs.length === 1) play(msg.channel, serverQueue)
-
             else msg.channel.send(`${__("added")}${song.title} ${__("to_the_queue")} ${__("kirino_glad")}`)
+        }
+        else {
+            msg.channel.send(`${__("you_are_not_in_any_voice_channel")} ${__("kirino_pff")}`)
         }
     }
 }
@@ -62,11 +71,8 @@ module.exports = {
 async function play(channel, queue) {
     if (queue.songs.length >= 1) {
         const nextSong = queue.songs[0]
-        const dispatcher = queue.connection.play(nextSong.stream, { type: "opus" }).on("finish", () => {
-            queue.songs.shift()
-            play(channel, queue)
-        })
-        dispatcher.setVolume(queue.volume)
+
+        queue.player.play(nextSong.stream)
 
         const { MessageEmbed } = require("discord.js")
         const youtubeRed = "#DF1F18"
@@ -84,22 +90,20 @@ async function play(channel, queue) {
 
         channel.send({ embeds: [embed] })
     }
-    else {
-        channel.send(`${__("queue_end_reached")} ${__("kirino_glad")}`)
-    }
 }
 
 async function getSongFromURL(url) {
-    const readable = await ytdl(url)
-    const videoInfo = await ytdl.getInfo(url)
+    const { createAudioResource } = require("@discordjs/voice")
+    const videoInfo = await ytdl.getBasicInfo(url)
+    const stream = await ytdl(url, { highWaterMark: 1 << 25 }) // highWatermark of 32 MB, required for the moment to prevent the weird aborted error
 
-    const { author, title, description, video_url, thumbnails } = videoInfo.videoDetails
+    const { author, title, description, thumbnails } = videoInfo.videoDetails
 
     return {
-        stream: readable,
-        url : video_url,
-        title: title,
-        description: description,
+        stream: createAudioResource(stream),
+        url,
+        title,
+        description,
         thumbnail: thumbnails[thumbnails.length - 1].url,
         author_name: author.name,
         channel_url: author.channel_url
