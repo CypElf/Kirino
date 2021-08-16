@@ -19,15 +19,15 @@ module.exports = {
                             selfMute: false,
                             adapterCreator: msg.guild.voiceAdapterCreator
                         })
-    
+
                         const player = createAudioPlayer()
                         connection.subscribe(player)
-    
+
                         bot.voicesQueues.set(msg.guild.id, {
                             player,
                             songs: []
                         })
-    
+
                         player.on(AudioPlayerStatus.Idle, () => {
                             const currentQueue = bot.voicesQueues.get(msg.guild.id)
                             currentQueue.songs.shift()

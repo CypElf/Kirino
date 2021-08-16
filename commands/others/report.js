@@ -28,7 +28,7 @@ module.exports = {
 
         collector.on("collect", async reaction => {
             if (reaction.emoji.name === "✅") {
-                const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.REPORT_SERVER_ID)
+                const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.DEBUG_SERVER_ID)
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
                     if (reportChannel) {
@@ -37,7 +37,7 @@ module.exports = {
                         const senderLanguage = getLocale()
 
                         const languagesRequest = bot.db.prepare("SELECT * FROM languages WHERE id = ?")
-                        const languageRow = languagesRequest.get(process.env.REPORT_SERVER_ID)
+                        const languageRow = languagesRequest.get(process.env.DEBUG_SERVER_ID)
                         if (!(languageRow === undefined)) setLocale(languageRow.language)
                         else setLocale("en")
 

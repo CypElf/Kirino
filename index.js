@@ -12,6 +12,7 @@ require("dotenv").config()
 const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGE_TYPING] })
 
 bot.commands = new Collection()
+bot.slashCommands = new Collection()
 bot.db = new bsqlite3("database.db", { fileMustExist: true })
 bot.commandsCooldowns = new Collection()
 bot.xpCooldowns = new Collection()
@@ -38,12 +39,20 @@ for (const file of eventsFiles) {
 }
 
 const categories = fs.readdirSync("./commands")
+
 for (const category of categories) {
     const commandFiles = fs.readdirSync(`./commands/${category}/`).filter(file => file.endsWith(".js"))
     for (const commandFile of commandFiles) {
         const command = require(`./commands/${category}/${commandFile}`)
         command.category = category
         bot.commands.set(command.name, command)
+    }
+
+    const slashCommandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))
+    for (const commandFile of slashCommandFiles) {
+        const command = require(`./slashCommands/${category}/${commandFile}`)
+        command.category = category
+        bot.slashCommands.set(command.name, command)
     }
 }
 

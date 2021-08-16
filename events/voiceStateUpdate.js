@@ -11,7 +11,7 @@ module.exports = bot => {
                     const othersUsersCountAfterWait = oldState.channel.members.size - 1
                     if (othersUsersCountAfterWait === 0) {
                         console.log(`Still alone in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, it's time to leave`)
-                        disconnect(bot, oldState.guild.id)
+                        disconnect(oldState.guild.id)
                     }
                     else {
                         console.log(`Not alone anymore in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, so I won't leave now (${othersUsersCountAfterWait} user(s) are present)`)
@@ -20,11 +20,11 @@ module.exports = bot => {
             }
         }
         else if (oldState.id === bot.user.id && oldState.channelId !== null && newState.channelId === null) {
-            disconnect(bot, oldState.guild.id)
+            disconnect(oldState.guild.id)
         }
     })
 
-    function disconnect(bot, guild_id) {
+    function disconnect(guild_id) {
         const { getVoiceConnection } = require("@discordjs/voice")
         const connection = getVoiceConnection(guild_id)
 
