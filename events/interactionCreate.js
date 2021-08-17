@@ -7,7 +7,7 @@ module.exports = bot => {
             if (!prefix) prefix = ";"
             else prefix = prefix.prefix
             bot.prefix = prefix
-            
+
             const { commandName } = interaction
             const command = bot.slashCommands.get(commandName)
 

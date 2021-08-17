@@ -32,7 +32,7 @@ module.exports = bot => {
         }
 
         const setLanguage = require("../lib/language/set_language")
-        setLanguage(bot.db, msg)
+        setLanguage(bot.db, msg.guild ? msg.guild.id : msg.author.id)
 
         checkAfk(bot, msg)
         const checkBanwords = require("../lib/banwords/check_banwords")

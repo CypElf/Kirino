@@ -8,7 +8,7 @@ module.exports = {
     async execute(bot, msg, args) {
         const { Permissions } = require("discord.js")
         const isEnabled = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(msg.guild.id)?.is_enabled
-        
+
         if (isEnabled) {
             if (!msg.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
             let member

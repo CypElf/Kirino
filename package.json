@@ -6,7 +6,7 @@
     "author": "CypElf",
     "license": "GPL-3.0-or-later",
     "scripts": {
-        "lint": "eslint *.js && eslint commands/**/*.js && eslint events/*.js",
+        "lint": "eslint *.js && eslint commands/**/*.js && eslint slashCommands/**/*.js && eslint events/*.js",
         "register": "node registerSlashCommands.js"
     },
     "dependencies": {
