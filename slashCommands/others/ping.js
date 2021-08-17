@@ -4,9 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription(__("description_ping")),
-    name: "ping",
     guildOnly: false,
-    args: false,
     cooldown: 1,
 
     async execute(bot, interaction) {

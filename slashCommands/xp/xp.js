@@ -1,46 +1,38 @@
+const { SlashCommandBuilder } = require("@discordjs/builders")
 const Canvas = require("canvas")
 
 module.exports = {
-    name: "xp",
-    guildOnly: true,
-    args: false,
-    cooldown: 3,
-    async execute(bot, msg, args) {
+    data: new SlashCommandBuilder()
+        .setName("xp")
+        .setDescription("Display the XP card of a user")
+        .addUserOption(option => option.setName("user").setDescription("The user you want to see the XP card. Default is yourself")),
+    guildOnly: false,
+    cooldown: 1,
+
+    async execute(bot, interaction) {
         const { Permissions } = require("discord.js")
-        const isEnabled = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(msg.guild.id)?.is_enabled
-        
-        if (isEnabled) {
-            if (!msg.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return msg.channel.send(`${__("need_send_files")} ${__("kirino_pout")}`)
-            let member
+        const updateBackground = require("../../lib/misc/update_background")
 
-            if (args.length === 0) {
-                member = msg.member
-            }
+        if (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id)?.is_enabled) {
+            if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${__("need_send_files")} ${__("kirino_pout")}`, ephemeral: true })
 
-            else {
-                member = await getMember(msg, args)
-                if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
-                else if (member.user.bot) return msg.channel.send(`${__("bots_not_allowed")} ${__("kirino_pff")}`)
-            }
+            const user = interaction.options.getUser("user") ?? interaction.user
+            if (user.bot) return interaction.reply({ content: `${__("bots_not_allowed")} ${__("kirino_pff")}`, ephemeral: true })
 
-            msg.channel.sendTyping()
+            await interaction.deferReply()
 
-            const xpRequest = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-            let xpRow = xpRequest.get(msg.guild.id, member.id)
-
+            let xpRow = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)
             if (xpRow === undefined) xpRow = { "xp": 0, "total_xp": 0, "level": 0 }
 
-            const level = xpRow.level
-            let xp = xpRow.xp
-            let color = xpRow.color
+            const { level } = xpRow
+            let { xp, color } = xpRow
 
             if (!color) color = "#1FE7F0"
 
             let nextLvlXp = 5 * (level * level) + 50 * level + 100
             const percent = (xp / nextLvlXp * 100).toFixed(1)
 
-            const serverRankingRequest = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
-            const serverRankingRows = serverRankingRequest.all(msg.guild.id).map(row => row.user_id).filter(async user_id => {
+            const serverRankingRows = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC").all(interaction.guild.id).map(row => row.user_id).filter(async user_id => {
                 try {
                     await bot.users.fetch(user_id)
                     return true
@@ -50,15 +42,13 @@ module.exports = {
                 }
             })
 
-            let rank = serverRankingRows.indexOf(member.id) + 1
+            let rank = serverRankingRows.indexOf(user.id) + 1
             if (rank === 0) rank = serverRankingRows.length + 1
 
             const canvas = Canvas.createCanvas(934, 282)
             const ctx = canvas.getContext("2d")
 
-            const backgroundUrlRequest = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-            let backgroundUrl = backgroundUrlRequest.get(msg.guild.id, member.id)
-            if (backgroundUrl !== undefined) backgroundUrl = backgroundUrl.background
+            let backgroundUrl = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)?.background
 
             if (backgroundUrl !== null && backgroundUrl !== undefined) {
                 try {
@@ -66,7 +56,7 @@ module.exports = {
                     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
                 }
                 catch {
-                    updateBackground(bot.db, msg, null)
+                    updateBackground(bot.db, null, interaction.user.id, interaction.guild.id)
 
                     ctx.fillStyle = "black"
                     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -82,7 +72,7 @@ module.exports = {
 
             ctx.lineWidth = 0.5
 
-            const totalName = member.user.tag.split("#")
+            const totalName = user.tag.split("#")
             const tag = totalName.pop()
             let username = totalName.join("#")
 
@@ -208,14 +198,28 @@ module.exports = {
             ctx.closePath()
             ctx.clip()
 
-            const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "png" }))
+            const avatar = await Canvas.loadImage(user.displayAvatarURL({ format: "png" }))
             ctx.drawImage(avatar, 40, 40, 200, 200)
 
             const { MessageAttachment } = require("discord.js")
             const card = new MessageAttachment(canvas.toBuffer(), "card.png")
 
-            msg.channel.send({ files: [card] })
+            interaction.editReply({ files: [card] })
+
         }
-        else msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
+        else interaction.reply({ content: `${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`, ephemeral: true })
     }
+}
+
+Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, width, height, rounded) {
+    const halfRadians = (2 * Math.PI) / 2
+    const quarterRadians = (2 * Math.PI) / 4
+    this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
+    this.lineTo(x, y + height - rounded)
+    this.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)
+    this.lineTo(x + width - rounded, y + height)
+    this.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)
+    this.lineTo(x + width, y + rounded)
+    this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)
+    this.lineTo(x + rounded, y)
 }

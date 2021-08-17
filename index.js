@@ -52,6 +52,7 @@ for (const category of categories) {
     for (const commandFile of slashCommandFiles) {
         const command = require(`./slashCommands/${category}/${commandFile}`)
         command.category = category
+        command.name = command.data.toJSON().name
         bot.slashCommands.set(command.name, command)
     }
 }
