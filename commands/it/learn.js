@@ -1,10 +1,11 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "learn",
     guildOnly: false,
     args: true,
 
     async execute(bot, msg, args) {
-        const { MessageEmbed } = require("discord.js")
         const techno = args[0].toLowerCase()
 
         const linksEmbed = new MessageEmbed()

@@ -1,3 +1,7 @@
+const { MessageEmbed, Permissions } = require("discord.js")
+const getChannel = require("../../lib/getters/get_channel")
+const getRole = require("../../lib/getters/get_role")
+
 module.exports = {
     name: "blacklist",
     guildOnly: true,
@@ -6,7 +10,6 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
@@ -14,8 +17,6 @@ module.exports = {
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
         const arg = args[0]
-        const getChannel = require("../../lib/getters/get_channel")
-        const getRole = require("../../lib/getters/get_role")
 
         const channelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
         const roleRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_roles WHERE guild_id = ?")
@@ -63,7 +64,6 @@ module.exports = {
             const blacklistedChannels = [...msg.guild.channels.cache.values()].filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
             const blacklistedRoles = [...msg.guild.roles.cache.values()].filter(role => rolesRows.includes(role.id)).map(role => role.id)
 
-            const { MessageEmbed } = require("discord.js")
             const blacklistEmbed = new MessageEmbed()
                 .setTitle(__("blacklist"))
                 .setColor("#000000")

@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "serverinfo",
     guildOnly: true,
@@ -6,7 +8,6 @@ module.exports = {
     cooldown: 3,
 
     async execute(bot, msg) {
-        const { MessageEmbed } = require("discord.js")
 
         let creationDate = msg.guild.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")

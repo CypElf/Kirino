@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "donation",
     guildOnly: false,
@@ -5,7 +7,6 @@ module.exports = {
     aliases: ["don"],
 
     async execute(bot, msg) {
-        const { MessageEmbed } = require("discord.js")
         const donationEmbed = new MessageEmbed()
             .addField(__("make_donation_title"), __("make_donation") + "(https://www.paypal.me/cypelf).")
             .setColor("#DFC900")

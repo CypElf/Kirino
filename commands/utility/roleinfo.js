@@ -1,4 +1,6 @@
 const { time } = require("@discordjs/builders")
+const { MessageEmbed } = require("discord.js")
+const getRole = require("../../lib/getters/get_role")
 
 module.exports = {
     name: "roleinfo",
@@ -8,8 +10,6 @@ module.exports = {
     cooldown: 3,
 
     async execute(bot, msg, args) {
-        const { MessageEmbed } = require("discord.js")
-        const getRole = require("../../lib/getters/get_role")
         const role = await getRole(msg, args)
         if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
 

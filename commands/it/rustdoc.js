@@ -1,3 +1,6 @@
+const { MessageEmbed } = require("discord.js")
+const rustDocResearcher = require("../../lib/rustdoc/rustdoc_researcher")
+
 module.exports = {
     name: "rustdoc",
     guildOnly: false,
@@ -6,13 +9,9 @@ module.exports = {
     cooldown: 3,
 
     async execute(bot, msg, args) {
-        const { MessageEmbed } = require("discord.js")
-        const rustDocResearcher = require("../../lib/rustdoc/rustdoc_researcher")
 
         const keywords = args.join(" ")
         const results = rustDocResearcher(keywords)
-
-        const replaceAll = require("../../lib/string/replace_all")
 
         const content = []
 
@@ -24,7 +23,7 @@ module.exports = {
                 let buffer = "- ["
                 if (result.path !== "") buffer += result.path + "::"
                 buffer += `**${result.name}**](${result.href})`
-                if (result.desc !== "") buffer += " : " + replaceAll(replaceAll(result.desc, "<code>", "`"), "</code>", "`")
+                if (result.desc !== "") buffer += " : " + result.desc.replaceAll("<code>", "`").replaceAll("</code>", "`")
                 buffer += "\n"
 
                 if (categoryContent.length + buffer.length <= 1024) categoryContent += buffer

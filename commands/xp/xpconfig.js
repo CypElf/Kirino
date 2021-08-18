@@ -1,4 +1,8 @@
+const { Permissions } = require("discord.js")
 const Canvas = require("canvas")
+const fetch = require("node-fetch")
+const getMember = require("../../lib/getters/get_member")
+const getChannel = require("../../lib/getters/get_channel")
 
 module.exports = {
     name: "xpconfig",
@@ -7,8 +11,6 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
-        const getMember = require("../../lib/getters/get_member")
 
         const isEnabled = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(msg.guild.id)?.is_enabled
         const request = args[0]
@@ -122,7 +124,6 @@ module.exports = {
 
                     if (channel === null) msg.channel.send(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
                     else {
-                        const getChannel = require("../../lib/getters/get_channel")
                         channel = await getChannel(msg, [channel])
                         if (channel === undefined) {
                             const resetChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
@@ -137,7 +138,6 @@ module.exports = {
                 else {
                     const changeChannelRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id")
 
-                    const getChannel = require("../../lib/getters/get_channel")
                     let channel = await getChannel(msg, args.slice(1))
 
                     if (args.slice(1)[0] === "reset") channel = null
@@ -168,7 +168,6 @@ module.exports = {
 
                         const players = []
                         let pagePlayers = []
-                        const fetch = require("node-fetch")
 
                         let i = 0
                         do {

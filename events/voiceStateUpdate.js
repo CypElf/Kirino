@@ -1,3 +1,5 @@
+const { getVoiceConnection } = require("@discordjs/voice")
+
 module.exports = bot => {
     const timeOut = 3 // in minutes
 
@@ -25,7 +27,6 @@ module.exports = bot => {
     })
 
     function disconnect(guild_id) {
-        const { getVoiceConnection } = require("@discordjs/voice")
         const connection = getVoiceConnection(guild_id)
 
         if (connection) {

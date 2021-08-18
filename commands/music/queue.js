@@ -1,3 +1,5 @@
+const toChunks = require("../../lib/string/to_chunks")
+
 module.exports = {
     name: "queue",
     guildOnly: true,
@@ -13,7 +15,6 @@ module.exports = {
             msg.channel.send(`${__("queue_empty")} ${__("kirino_glad")}`)
         }
         else {
-            const toChunks = require("../../lib/string/to_chunks")
             const text = `${__("songs_in_queue_are")}\n- ${queue.songs.map(song => song.title).join("\n- ")}`
 
             const textArray = toChunks(text, 2000)

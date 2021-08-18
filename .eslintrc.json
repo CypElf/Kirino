@@ -3,7 +3,10 @@
         "node": true,
         "es2021": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:node/recommended"
+    ],
     "parserOptions": {
         "ecmaVersion": "latest"
     },
@@ -16,7 +19,7 @@
         "comma-dangle": "error",
         "comma-spacing": "error",
         "comma-style": "error",
-        "no-undef": ["off"],
+        "no-undef": "off",
         "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
         "yoda": "error",
         "no-var": "error",
@@ -41,6 +44,9 @@
         "space-in-parens": "error",
         "space-infix-ops": "error",
         "space-unary-ops": "error",
-        "spaced-comment": "error"
+        "spaced-comment": "error",
+        "node/exports-style": ["error", "module.exports"],
+        "node/global-require": "error",
+        "node/no-deprecated-api": "off"
     }
 }

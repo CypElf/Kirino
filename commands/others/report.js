@@ -1,3 +1,5 @@
+const { MessageEmbed, Permissions } = require("discord.js")
+
 module.exports = {
     name: "report",
     guildOnly: false,
@@ -5,7 +7,6 @@ module.exports = {
     cooldown: 5,
 
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
         let origin
         let originAvatar
         if (msg.guild) {
@@ -32,7 +33,6 @@ module.exports = {
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
                     if (reportChannel) {
-                        const { MessageEmbed } = require("discord.js")
 
                         const senderLanguage = getLocale()
 

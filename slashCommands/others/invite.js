@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,7 +8,6 @@ module.exports = {
     guildOnly: false,
 
     async execute(bot, interaction) {
-        const { MessageEmbed } = require("discord.js")
         const invite = new MessageEmbed()
             .addField(__("invite_bot") + " **" + bot.user.username + "** " + __("on_a_server"), __("the_link_to_invite_me_is_available") + " **" + __("here") + `(${process.env.INVITE_LINK})**`)
             .setColor("#DFC900")

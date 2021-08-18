@@ -1,6 +1,7 @@
+const fs = require("fs")
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { MessageEmbed } = require("discord.js")
-const fs = require("fs")
+const toChunks = require("../../lib/string/to_chunks")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -45,7 +46,6 @@ module.exports = {
 
             if (__(`description_${command.name}`) !== `description_${command.name}`) {
 
-                const toChunks = require("../../lib/string/to_chunks")
                 const descriptions = toChunks(__(`description_${command.name}`))
 
                 for (const descriptionPart of descriptions) {

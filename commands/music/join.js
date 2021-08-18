@@ -1,3 +1,6 @@
+const { joinVoiceChannel, createAudioPlayer, AudioPlayerStatus } = require("@discordjs/voice")
+const { Permissions } = require("discord.js")
+
 module.exports = {
     name: "join",
     guildOnly: true,
@@ -5,8 +8,6 @@ module.exports = {
     permissions: ["connect", "speak"],
 
     async execute(bot, msg) {
-        const { Permissions } = require("discord.js")
-        const { joinVoiceChannel, createAudioPlayer, AudioPlayerStatus } = require("@discordjs/voice")
 
         if (!msg.guild.me.voice.channel) {
             if (msg.member.voice.channel) {

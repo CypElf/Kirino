@@ -1,3 +1,7 @@
+const { deflateSync } = require("zlib")
+const fetch = require("node-fetch")
+const paste = require("../../lib/misc/paste")
+
 module.exports = {
     name: "run",
     guildOnly: false,
@@ -5,10 +9,6 @@ module.exports = {
     aliases: ["execute", "exe"],
 
     async execute(bot, msg, args) {
-
-        const fetch = require("node-fetch")
-        const { deflateSync } = require("zlib")
-
         const defaults = new Map(Object.entries({
             asm: "assembly-nasm",
             ada: "ada-gnat",
@@ -168,7 +168,6 @@ module.exports = {
         data = data.split("\n").filter(line => !line.startsWith("Real time: ") && !line.startsWith("User time: ") && !line.startsWith("Sys. time: ") && !line.startsWith("CPU share: ")).join("\n")
 
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
-            const paste = require("../../lib/misc/paste")
             const url = await paste(data)
 
             if (url === null) msg.channel.send(`I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${__("kirino_what")}`)

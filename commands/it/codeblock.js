@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "codeblock",
     guildOnly: false,
@@ -5,7 +7,6 @@ module.exports = {
     aliases: ["code"],
 
     async execute(bot, msg) {
-        const { MessageEmbed } = require("discord.js")
         const linksEmbed = new MessageEmbed()
             .setTitle(__("send_code"))
             .setDescription(__("explanation_code"))

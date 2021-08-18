@@ -1,6 +1,10 @@
+const { Collection, Permissions } = require("discord.js")
+const setLanguage = require("../lib/language/set_language")
+const checkBanwords = require("../lib/banwords/check_banwords")
+const removeDeletedRolesRewards = require("../lib/rolerewards/remove_deleted_roles_rewards")
+
 module.exports = bot => {
     bot.on("messageCreate", async msg => {
-        const { Collection, Permissions } = require("discord.js")
 
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
         const id = msg.guild ? msg.guild.id : msg.author.id
@@ -31,11 +35,9 @@ module.exports = bot => {
             }
         }
 
-        const setLanguage = require("../lib/language/set_language")
         setLanguage(bot.db, msg.guild ? msg.guild.id : msg.author.id)
 
         checkAfk(bot, msg)
-        const checkBanwords = require("../lib/banwords/check_banwords")
         checkBanwords(bot, msg)
 
         await handleXp(bot, msg, { cooldowns: bot.xpCooldowns })
@@ -133,7 +135,6 @@ function checkAfk(bot, msg) {
 
 async function handleXp(bot, msg, obj) {
     if (msg.guild) {
-        const { Collection } = require("discord.js")
 
         const xpMetadataRequest = bot.db.prepare("SELECT is_enabled, level_up_message FROM xp_guilds WHERE guild_id = ?")
         const xpMetadata = xpMetadataRequest.get(msg.guild.id)
@@ -216,35 +217,20 @@ async function handleXp(bot, msg, obj) {
                         .replace("{server}", msg.guild.name)
 
 
-                    const channelRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?")
-                    let channel = channelRequest.get(msg.guild.id).level_up_channel_id
+                    let channel = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(msg.guild.id).level_up_channel_id ?? msg.channel.id
 
-
-                    if (channel !== null) {
-                        const getChannel = require("../lib/getters/get_channel")
-                        channel = await getChannel(msg, [channel])
-
-                        if (channel === undefined) {
-                            resetLevelUpChannel(bot.db, msg.guild.id)
-                            channel = msg.channel
-                        }
+                    try {
+                        channel = await msg.guild.channels.fetch(channel)
                     }
-
-                    else channel = msg.channel
-
-                    channel.send(levelUpMsg).catch(() => {
+                    catch {
                         resetLevelUpChannel(bot.db, msg.guild.id)
-                        msg.channel.send(levelUpMsg)
-                    })
-
-                    if (newLvl === 100) {
-                        channel.send(__("lvl_100_congrats")).catch(() => {
-                            resetLevelUpChannel(bot.db, msg.guild.id)
-                            msg.channel.send(__("lvl_100_congrats"))
-                        })
+                        channel = msg.channel
                     }
 
-                    const removeDeletedRolesRewards = require("../lib/rolerewards/remove_deleted_roles_rewards")
+                    await channel.send(levelUpMsg)
+
+                    if (newLvl === 100) channel.send(__("lvl_100_congrats"))
+
                     await removeDeletedRolesRewards(bot.db, msg.guild)
 
                     const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")

@@ -12,6 +12,7 @@ module.exports = {
 
             delete require.cache[require.resolve(`./${command.name}.js`)]
             try {
+                // eslint-disable-next-line node/global-require
                 const newCommand = require(`./${command.name}.js`)
                 msg.client.commands.set(newCommand.name, newCommand)
                 msg.channel.send(`${__("the_command")} \`${command.name}\` ${__("was_reloaded")}`)

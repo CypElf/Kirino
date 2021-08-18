@@ -34,6 +34,7 @@ startCommandsApi(bot, { cooldowns: bot.apiCooldowns })
 
 const eventsFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"))
 for (const file of eventsFiles) {
+    // eslint-disable-next-line node/global-require
     const eventSetter = require(`./events/${file}`)
     eventSetter(bot)
 }
@@ -43,6 +44,7 @@ const categories = fs.readdirSync("./commands")
 for (const category of categories) {
     const commandFiles = fs.readdirSync(`./commands/${category}/`).filter(file => file.endsWith(".js"))
     for (const commandFile of commandFiles) {
+        // eslint-disable-next-line node/global-require
         const command = require(`./commands/${category}/${commandFile}`)
         command.category = category
         bot.commands.set(command.name, command)
@@ -50,6 +52,7 @@ for (const category of categories) {
 
     const slashCommandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))
     for (const commandFile of slashCommandFiles) {
+        // eslint-disable-next-line node/global-require
         const command = require(`./slashCommands/${category}/${commandFile}`)
         command.category = category
         command.name = command.data.toJSON().name

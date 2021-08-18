@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "base",
     guildOnly: false,
@@ -24,7 +26,6 @@ module.exports = {
 
         const convertedToOutputBase = convertedToDecimal.toString(outputBase)
 
-        const { MessageEmbed } = require("discord.js")
         const baseEmbed = new MessageEmbed()
             .setTitle(__("numeric_base_conversion"))
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/720178440078229554/binary_flat.png")

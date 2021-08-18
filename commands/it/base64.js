@@ -1,10 +1,11 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "base64",
     guildOnly: false,
     args: true,
 
     async execute(bot, msg, args) {
-        const { MessageEmbed } = require("discord.js")
 
         if (args.length < 2) {
             return msg.channel.send(__("not_enough_args_for_base64"))

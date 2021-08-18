@@ -1,3 +1,5 @@
+const { Permissions } = require("discord.js")
+
 module.exports = {
     name: "kick",
     guildOnly: true,
@@ -6,7 +8,6 @@ module.exports = {
     permissions: ["kick members"],
 
     async execute(bot, msg, [userToKick, ...reason]) {
-        const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
             return msg.channel.send(`${__("you_are_missing_permissions_to_kick_members")} ${__("kirino_pff")}`)
         }

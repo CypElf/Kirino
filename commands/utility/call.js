@@ -1,3 +1,8 @@
+const { MessageAttachment, Permissions } = require("discord.js")
+const formatDate = require("../../lib/misc/format_date")
+const getChannel = require("../../lib/getters/get_channel")
+const setLanguage = require("../../lib/language/set_language")
+
 module.exports = {
     name: "call",
     guildOnly: true,
@@ -6,8 +11,6 @@ module.exports = {
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 
     async execute(bot, msg, args) {
-        const { MessageAttachment, Permissions } = require("discord.js")
-        const formatDate = require("../../lib/misc/format_date")
         const mode = args[0].toLowerCase()
 
         if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !msg.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) && (mode !== "channel" || args[1] !== undefined)) return msg.channel.send(`${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`)
@@ -70,7 +73,6 @@ module.exports = {
                     let channel_id
                     if (mode_arg === "here") channel_id = msg.channel.id
                     else {
-                        const getChannel = require("../../lib/getters/get_channel")
                         const channel = await getChannel(msg, args.slice(1))
                         if (channel === undefined) return msg.channel.send(`${__("bad_channel")} ${__("kirino_pout")}`)
                         channel_id = channel.id
@@ -133,7 +135,6 @@ module.exports = {
                         return txt
                     })
 
-                    const setLanguage = require("../../lib/language/set_language")
                     setLanguage(bot.db, msg.guild ? msg.guild.id : msg.author.id)
 
                     msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)

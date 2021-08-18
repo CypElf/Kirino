@@ -1,3 +1,5 @@
+const { Permissions, MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "rule",
     guildOnly: true,
@@ -6,7 +8,6 @@ module.exports = {
     permissions: ["{manage guild}"],
 
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
         const request = args[0]
 
         // ------------------------------------------------------------------- add
@@ -84,7 +85,6 @@ module.exports = {
 
         if (!askedRule) return msg.channel.send(`${__("no_rules_defined_at_this_index")} ${__("kirino_pout")}`)
 
-        const { MessageEmbed } = require("discord.js")
         const emb = new MessageEmbed()
             .addField(__("rule_title") + (index + 1), askedRule)
             .setColor("#000000")

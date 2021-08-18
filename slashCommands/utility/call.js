@@ -1,4 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { MessageAttachment, Permissions } = require("discord.js")
+const formatDate = require("../../lib/misc/format_date")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,8 +13,6 @@ module.exports = {
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 
     async execute(bot, interaction) {
-        const { MessageAttachment, Permissions } = require("discord.js")
-        const formatDate = require("../../lib/misc/format_date")
 
         if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) && (mode !== "channel" || args[1] !== undefined)) return interaction.reply({ content: `${__("not_enough_permissions_to_use_presence")} ${__("kirino_pff")}`, ephemeral: true })
 

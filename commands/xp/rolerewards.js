@@ -1,3 +1,7 @@
+const { MessageEmbed, Permissions } = require("discord.js")
+const getRole = require("../../lib/getters/get_role")
+const removeDeletedRolesRewards = require("../../lib/rolerewards/remove_deleted_roles_rewards")
+
 module.exports = {
     name: "rolerewards",
     guildOnly: true,
@@ -6,7 +10,6 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute(bot, msg, args) {
-        const { MessageEmbed, Permissions } = require("discord.js")
 
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(msg.guild.id)
@@ -15,11 +18,9 @@ module.exports = {
         if (!isEnabled) return msg.channel.send(`${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
 
         const arg = args[0]
-        const getRole = require("../../lib/getters/get_role")
 
         const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
 
-        const removeDeletedRolesRewards = require("../../lib/rolerewards/remove_deleted_roles_rewards")
         await removeDeletedRolesRewards(bot.db, msg.guild)
 
         if (arg === "list") {

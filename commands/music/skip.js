@@ -1,3 +1,5 @@
+const musicAuth = require("../../lib/music/music_control_auth")
+
 module.exports = {
     name: "skip",
     guildOnly: true,
@@ -5,8 +7,6 @@ module.exports = {
 
     async execute(bot, msg) {
         const queue = bot.voicesQueues.get(msg.guild.id)
-
-        const musicAuth = require("../../lib/music/music_control_auth")
 
         if (musicAuth(msg.member, msg.guild.me)) {
             if (queue.songs.length === 0) {

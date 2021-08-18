@@ -1,3 +1,4 @@
+const { MessageAttachment, Permissions } = require("discord.js")
 const Canvas = require("canvas")
 
 module.exports = {
@@ -6,7 +7,6 @@ module.exports = {
     args: false,
     cooldown: 3,
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
         const isEnabled = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(msg.guild.id)?.is_enabled
 
         if (isEnabled) {
@@ -211,7 +211,6 @@ module.exports = {
             const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "png" }))
             ctx.drawImage(avatar, 40, 40, 200, 200)
 
-            const { MessageAttachment } = require("discord.js")
             const card = new MessageAttachment(canvas.toBuffer(), "card.png")
 
             msg.channel.send({ files: [card] })

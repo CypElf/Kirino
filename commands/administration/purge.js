@@ -1,3 +1,5 @@
+const { Permissions } = require("discord.js")
+
 module.exports = {
     name: "purge",
     guildOnly: true,
@@ -6,7 +8,6 @@ module.exports = {
     permissions: ["manage messages"],
 
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
         if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
             return msg.channel.send(`${__("you_cannot_delete_messages")} ${__("kirino_pff")}`)
         }

@@ -1,3 +1,7 @@
+const { MessageEmbed } = require("discord.js")
+const ColorThief = require("colorthief")
+const fetch = require("node-fetch")
+
 module.exports = {
     name: "github",
     guildOnly: false,
@@ -8,15 +12,12 @@ module.exports = {
         if (args.length > 1) {
             return msg.channel.send(`${__("too_much_args_for_github")} ${__("kirino_pout")}`)
         }
-        const fetch = require("node-fetch")
 
         const userToFetch = args[0]
         const api_call = await fetch(`https://api.github.com/users/${userToFetch}`)
         const data = await api_call.json()
 
         if (!data.message) {
-            const { MessageEmbed } = require("discord.js")
-            const ColorThief = require("colorthief")
 
             const createdAt = data.created_at
             // github give us date as `YYYY-MM-DDTHH:MM:SSZ` with T and Z as letters

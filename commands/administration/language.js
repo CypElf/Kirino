@@ -1,3 +1,5 @@
+const { Permissions } = require("discord.js")
+
 module.exports = {
     name: "language",
     guildOnly: false,
@@ -7,7 +9,6 @@ module.exports = {
     permissions: ["manage guild"],
 
     async execute(bot, msg, args) {
-        const { Permissions } = require("discord.js")
         if (msg.guild) {
             if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
                 return msg.channel.send(`${__("not_enough_permission_to_change_language")} ${__("kirino_pout")}`)

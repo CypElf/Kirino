@@ -1,4 +1,8 @@
+const { createAudioResource } = require("@discordjs/voice")
+const { MessageEmbed } = require("discord.js")
 const ytdl = require("ytdl-core-discord")
+const yts = require("yt-search")
+const musicAuth = require("../../lib/music/music_control_auth")
 
 module.exports = {
     name: "play",
@@ -8,12 +12,12 @@ module.exports = {
     async execute(bot, msg, args) {
         if (msg.member.voice.channel) {
             if (!msg.guild.me.voice.channel) {
+                // eslint-disable-next-line node/global-require
                 require("./join").execute(bot, msg)
             }
-            else {
-                const musicAuth = require("../../lib/music/music_control_auth")
 
-                if (!musicAuth(msg.member, msg.guild.me)) return msg.channel.send(`${__("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${__("kirino_pout")}`)
+            if (!musicAuth(msg.member, msg.guild.me)) {
+                return msg.channel.send(`${__("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${__("kirino_pout")}`)
             }
 
             const url = args[0]
@@ -25,7 +29,6 @@ module.exports = {
             }
             catch {
                 try {
-                    const yts = require("yt-search")
 
                     const search = args.join(" ")
                     const result = await yts(search)
@@ -74,7 +77,6 @@ async function play(channel, queue) {
 
         queue.player.play(nextSong.stream)
 
-        const { MessageEmbed } = require("discord.js")
         const youtubeRed = "#DF1F18"
 
         const embed = new MessageEmbed()
@@ -93,7 +95,6 @@ async function play(channel, queue) {
 }
 
 async function getSongFromURL(url) {
-    const { createAudioResource } = require("@discordjs/voice")
     const videoInfo = await ytdl.getBasicInfo(url)
     const stream = await ytdl(url, { highWaterMark: 1 << 25 }) // highWatermark of 32 MB, required for the moment to prevent the weird aborted error
 

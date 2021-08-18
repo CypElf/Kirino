@@ -1,5 +1,7 @@
 const { MessageEmbed } = require("discord.js")
 const { time, roleMention } = require("@discordjs/builders")
+const ColorThief = require("colorthief")
+const getMember = require("../../lib/getters/get_member")
 
 module.exports = {
     name: "userinfo",
@@ -13,7 +15,6 @@ module.exports = {
 
         if (args.length === 0) member = msg.member
         else {
-            const getMember = require("../../lib/getters/get_member")
 
             member = await getMember(msg, args)
 
@@ -52,7 +53,6 @@ module.exports = {
             premiumSince = __("no_capitalized")
         }
 
-        const ColorThief = require("colorthief")
         const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
 
         const informations = new MessageEmbed()

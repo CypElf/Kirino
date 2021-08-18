@@ -27,6 +27,7 @@ for (const category of categories) {
     const commandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))
 
     for (const commandFile of commandFiles) {
+        // eslint-disable-next-line node/global-require
         const command = require(`./slashCommands/${category}/${commandFile}`)
         commands.push(command.data.toJSON())
     }

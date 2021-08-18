@@ -1,39 +1,21 @@
+const { MessageEmbed, Permissions } = require("discord.js")
 const { SlashCommandBuilder } = require("@discordjs/builders")
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("blacklist")
         .setDescription(__("description_blacklist"))
-        .addSubcommandGroup(option => option.setName("channel")
-            .setDescription("Add or remove a channel from the blacklist")
-            .addSubcommand(option => option.setName("add")
-                .setDescription("Blacklist a channel")
-                .addChannelOption(option => option.setName("channel")
-                    .setDescription("The channel to blacklist")
-                    .setRequired(true)))
-            .addSubcommand(option => option.setName("remove")
-                .setDescription("Remove a channel from the blacklist")
-                .addChannelOption(option => option.setName("channel")
-                    .setDescription("The channel to remove from the blacklist")
-                    .setRequired(true))))
-        .addSubcommandGroup(option => option.setName("role")
-            .setDescription("Add or remove a role from the blacklist")
-            .addSubcommand(option => option.setName("add")
-                .setDescription("Blacklist a role")
-                .addRoleOption(option => option.setName("role")
-                    .setDescription("The role to blacklist")
-                    .setRequired(true)))
-            .addSubcommand(option => option.setName("remove")
-                .setDescription("Remove a role from the blacklist")
-                .addRoleOption(option => option.setName("role")
-                    .setDescription("The role to remove from the blacklist")
-                    .setRequired(true))))
-        .addSubcommand(option => option.setName("list").setDescription("Display the blacklisted roles and channels")),
+        .addSubcommand(option => option.setName("list").setDescription("Display the blacklisted roles and channels"))
+        .addSubcommandGroup(option => option.setName("channel").setDescription("Add or remove a channel from the blacklist")
+            .addSubcommand(option => option.setName("add").setDescription("Blacklist a channel").addChannelOption(option => option.setName("channel").setDescription("The channel to blacklist").setRequired(true)))
+            .addSubcommand(option => option.setName("remove").setDescription("Remove a channel from the blacklist").addChannelOption(option => option.setName("channel").setDescription("The channel to remove from the blacklist").setRequired(true))))
+        .addSubcommandGroup(option => option.setName("role").setDescription("Add or remove a role from the blacklist")
+            .addSubcommand(option => option.setName("add").setDescription("Blacklist a role").addRoleOption(option => option.setName("role").setDescription("The role to blacklist").setRequired(true)))
+            .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the blacklist").addRoleOption(option => option.setName("role").setDescription("The role to remove from the blacklist").setRequired(true)))),
     guildOnly: true,
     permissions: ["{administrator}"],
 
     async execute(bot, interaction) {
-        const { Permissions } = require("discord.js")
         const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
         let isEnabled = xpActivationRequest.get(interaction.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
@@ -84,7 +66,6 @@ module.exports = {
             const blacklistedChannels = [...interaction.guild.channels.cache.values()].filter(ch => channelsRows.includes(ch.id)).map(ch => ch.id)
             const blacklistedRoles = [...interaction.guild.roles.cache.values()].filter(r => rolesRows.includes(r.id)).map(r => r.id)
 
-            const { MessageEmbed } = require("discord.js")
             const blacklistEmbed = new MessageEmbed()
                 .setTitle(__("blacklist"))
                 .setColor("#000000")

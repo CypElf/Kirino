@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, time } = require("@discordjs/builders")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,7 +9,6 @@ module.exports = {
     cooldown: 3,
 
     async execute(bot, interaction) {
-        const { MessageEmbed } = require("discord.js")
 
         const members = await interaction.guild.members.fetch()
         const bots = members.filter(membre => membre.user.bot).size

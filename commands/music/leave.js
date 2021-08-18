@@ -1,15 +1,15 @@
+const { getVoiceConnection } = require("@discordjs/voice")
+const musicAuth = require("../../lib/music/music_control_auth")
+
 module.exports = {
     name: "leave",
     guildOnly: true,
     args: false,
 
     async execute(bot, msg) {
-        const { getVoiceConnection } = require("@discordjs/voice")
 
         const guild = await bot.guilds.fetch(msg.guild.id)
         if (guild.me.voice.channel) {
-            const musicAuth = require("../../lib/music/music_control_auth")
-
             if (musicAuth(msg.member, guild.me)) {
                 const connection = getVoiceConnection(guild.id)
                 bot.voicesQueues.get(guild.id).player.stop()

@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
     name: "openclassrooms",
     guildOnly: false,
@@ -5,7 +7,6 @@ module.exports = {
     aliases: ["oc"],
 
     async execute(bot, msg) {
-        const { MessageEmbed } = require("discord.js")
         const linksEmbed = new MessageEmbed()
             .setTitle(__("careful_with_openclassrooms"))
             .setDescription(__("openclassrooms_explanation"))

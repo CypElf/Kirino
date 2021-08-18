@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { MessageAttachment, Permissions } = require("discord.js")
 const Canvas = require("canvas")
+const updateBackground = require("../../lib/misc/update_background")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,8 +12,6 @@ module.exports = {
     cooldown: 1,
 
     async execute(bot, interaction) {
-        const { Permissions } = require("discord.js")
-        const updateBackground = require("../../lib/misc/update_background")
 
         if (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id)?.is_enabled) {
             if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${__("need_send_files")} ${__("kirino_pout")}`, ephemeral: true })
@@ -201,7 +201,6 @@ module.exports = {
             const avatar = await Canvas.loadImage(user.displayAvatarURL({ format: "png" }))
             ctx.drawImage(avatar, 40, 40, 200, 200)
 
-            const { MessageAttachment } = require("discord.js")
             const card = new MessageAttachment(canvas.toBuffer(), "card.png")
 
             interaction.editReply({ files: [card] })

@@ -1,11 +1,13 @@
+const fs = require("fs")
+const { MessageEmbed } = require("discord.js")
+const toChunks = require("../../lib/string/to_chunks")
+
 module.exports = {
     name: "help",
     guildOnly: false,
 
     async execute(bot, msg, args) {
         const prefix = bot.prefix
-        const { MessageEmbed } = require("discord.js")
-        const fs = require("fs")
 
         // ------------------------------------------------------------------- general help
 
@@ -44,7 +46,6 @@ module.exports = {
 
         if (__(`description_${command.name}`) !== `description_${command.name}`) {
 
-            const toChunks = require("../../lib/string/to_chunks")
             const descriptions = toChunks(__(`description_${command.name}`))
 
             for (const descriptionPart of descriptions) {

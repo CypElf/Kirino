@@ -1,5 +1,8 @@
-const Canvas = require("canvas")
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { Permissions } = require("discord.js")
+const Canvas = require("canvas")
+const fetch = require("node-fetch")
+const updateBackground = require("../../lib/misc/update_background")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,7 +28,6 @@ module.exports = {
     permissions: ["{administrator}"],
 
     async execute(bot, interaction) {
-        const { Permissions } = require("discord.js")
 
         const isEnabled = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id)?.is_enabled
 
@@ -174,7 +176,6 @@ module.exports = {
 
                         const players = []
                         let pagePlayers = []
-                        const fetch = require("node-fetch")
 
                         let i = 0
                         do {
@@ -236,7 +237,6 @@ module.exports = {
             }
 
             else if (subcommandGroup === "background") {
-                const updateBackground = require("../../lib/misc/update_background")
 
                 if (subcommand === "reset") {
                     updateBackground(bot.db, null, interaction.user.id, interaction.guild.id)
