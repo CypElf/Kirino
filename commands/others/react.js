@@ -31,7 +31,6 @@ module.exports = {
                     .catch(() => {
                         let customEmoji = emoji.match(/<:(.*?):[0-9]*>/gm)
                         if (customEmoji) customEmoji = customEmoji.map(fullEmoji => fullEmoji.split(":")[2].split(">")[0])[0]
-                        else customEmoji = "nop"
                         msg2.react(customEmoji)
                             .then(() => {
                                 msg.delete().catch()

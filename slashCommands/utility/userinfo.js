@@ -1,24 +1,18 @@
 const { MessageEmbed } = require("discord.js")
-const { time, roleMention } = require("@discordjs/builders")
+const { SlashCommandBuilder, time, roleMention } = require("@discordjs/builders")
+const ColorThief = require("colorthief")
 
 module.exports = {
-    name: "userinfo",
+    data: new SlashCommandBuilder()
+        .setName("userinfo")
+        .setDescription(__("description_userinfo"))
+        .addUserOption(option => option.setName("user").setDescription("The user you want informations about")),
     guildOnly: true,
-    args: false,
-    aliases: ["ui"],
     cooldown: 3,
 
-    async execute(bot, msg, args) {
-        let member
-
-        if (args.length === 0) member = msg.member
-        else {
-            const getMember = require("../../lib/getters/get_member")
-
-            member = await getMember(msg, args)
-
-            if (member === undefined) return msg.channel.send(`${__("please_correctly_write_or_mention_a_member")} ${__("kirino_pout")}`)
-        }
+    async execute(bot, interaction) {
+        const user = interaction.options.getUser("user") ?? interaction.user
+        const member = await interaction.guild.members.fetch(user.id)        
 
         const perms = "`" + member.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
@@ -31,7 +25,7 @@ module.exports = {
                 nbRoles++
             }
         })
-        const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __n("roles", nbRoles).toLowerCase() + ")"
+        const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __("roles").toLowerCase() + ")"
 
         let nickname = member.nickname
         if (nickname === undefined || nickname === null) {
@@ -52,21 +46,21 @@ module.exports = {
             premiumSince = __("no_capitalized")
         }
 
-        const ColorThief = require("colorthief")
         const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
 
         const informations = new MessageEmbed()
             .setAuthor(member.user.tag, member.user.displayAvatarURL())
             .setColor(color)
-            .addField(__("id"), member.user.id, true)
+            .addField(__("id"), member.id, true)
             .addField(__("nickname"), nickname, true)
             .addField(__("join_date"), `${time(member.joinedAt)} (${time(member.joinedAt, "R")})`)
             .addField(__("user_creation_date"), `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})`)
             .addField(__("booster"), premiumSince, true)
-            .addField(__n("roles", nbRoles), roles, true)
+            .addField(__("roles"), roles, true)
             .addField(__("permissions"), perms)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send({ embeds: [informations] })
+            .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+        
+        interaction.reply({ embeds: [informations] })
     }
 }

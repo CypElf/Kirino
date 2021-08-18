@@ -1,22 +1,21 @@
-const { time } = require("@discordjs/builders")
+const { SlashCommandBuilder, time } = require("@discordjs/builders")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
-    name: "roleinfo",
+    data: new SlashCommandBuilder()
+        .setName("roleinfo")
+        .setDescription(__("description_roleinfo"))
+        .addRoleOption(option => option.setName("role").setDescription("The role you want informations about").setRequired(true)),
     guildOnly: true,
-    args: true,
-    aliases: ["ri"],
     cooldown: 3,
 
-    async execute(bot, msg, args) {
-        const { MessageEmbed } = require("discord.js")
-        const getRole = require("../../lib/getters/get_role")
-        const role = await getRole(msg, args)
-        if (!role) return msg.channel.send(`${__("bad_role")} ${__("kirino_pout")}`)
-
+    async execute(bot, interaction) {
+        const role = interaction.options.getRole("role")
+        
         const perms = "`" + role.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
         const informations = new MessageEmbed()
-            .setAuthor(__n("roles", 1) + " : " + role.name)
+            .setAuthor(__("roles", 1) + " : " + role.name)
             .setColor(role.hexColor)
             .addField(__("id"), role.id, true)
             .addField(__("color"), role.hexColor.toUpperCase(), true)
@@ -26,8 +25,8 @@ module.exports = {
             .addField(__("external_handler"), role.managed ? __("yes") : __("no"), true)
             .addField(__("role_creation_date"), `${time(role.createdAt)} (${time(role.createdAt, "R")})`)
             .addField(__("permissions"), perms !== "``" ? perms : "`" + __("no_permissions") + "`")
-            .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
+            .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
         
-        msg.channel.send({ embeds: [informations] })
+        interaction.reply({ embeds: [informations] })
     }
 }
