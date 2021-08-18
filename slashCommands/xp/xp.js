@@ -48,7 +48,7 @@ module.exports = {
             const canvas = Canvas.createCanvas(934, 282)
             const ctx = canvas.getContext("2d")
 
-            let backgroundUrl = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)?.background
+            const backgroundUrl = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)?.background
 
             if (backgroundUrl !== null && backgroundUrl !== undefined) {
                 try {

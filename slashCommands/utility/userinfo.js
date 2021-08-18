@@ -12,7 +12,7 @@ module.exports = {
 
     async execute(bot, interaction) {
         const user = interaction.options.getUser("user") ?? interaction.user
-        const member = await interaction.guild.members.fetch(user.id)        
+        const member = await interaction.guild.members.fetch(user.id)
 
         const perms = "`" + member.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
@@ -60,7 +60,7 @@ module.exports = {
             .addField(__("permissions"), perms)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
             .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
-        
+
         interaction.reply({ embeds: [informations] })
     }
 }

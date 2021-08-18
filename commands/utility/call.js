@@ -37,7 +37,7 @@ module.exports = {
             if (args[1] === undefined) { // no argument, the user wants to see what channel is set
                 const row = bot.db.prepare("SELECT channel_id, dm FROM calls WHERE guild_id = ?").get(msg.guild.id) ?? { channel_id: null, dm: 0, asfile: 0 }
                 const current = row.channel_id === null && row.dm === 0
-                
+
                 if (row.dm) msg.channel.send(`${__("presence_channel_is_set_to_dm")} ${__("kirino_glad")}`)
                 else if (current) msg.channel.send(`${__("presence_channel_is_set_to_current")} ${__("kirino_glad")}`)
                 else {

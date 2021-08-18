@@ -15,15 +15,15 @@ module.exports = {
         .addSubcommandGroup(option => option.setName("reset").setDescription("Allow you to reset the level of a member or the whole server").addSubcommand(option => option.setName("user").setDescription("Reset the level of a member in the server").addUserOption(option => option.setName("user").setDescription("The user you want to reset the level. If not specified, default is yourself"))).addSubcommand(option => option.setName("all").setDescription("Reset all the levels in the server")))
 
         .addSubcommandGroup(option => option.setName("message").setDescription("Allow you to change or reset to the default the level up message").addSubcommand(option => option.setName("set").setDescription("Change the level up message").addStringOption(option => option.setName("message").setDescription("The new level up message").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Reset the level up message to the default")))
-        
+
         .addSubcommand(option => option.setName("enable").setDescription("Enable the XP system"))
         .addSubcommand(option => option.setName("disable").setDescription("Disable the XP system"))
         .addSubcommand(option => option.setName("import").setDescription("Import the level from MEE6's XP system")),
-        
+
     guildOnly: true,
     cooldown: 3,
     permissions: ["{administrator}"],
-    
+
     async execute(bot, interaction) {
         const { Permissions } = require("discord.js")
 
@@ -149,7 +149,7 @@ module.exports = {
                     const channel = subcommand === "reset" ? null : interaction.options.getChannel("channel")
 
                     if (subcommand === "set" && !channel.isText()) return interaction.reply({ content: `${__("not_a_text_channel")} ${__("kirino_pout")}`, ephemeral: true })
-                    
+
                     bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, channel ? channel.id : null)
 
                     if (channel !== null) interaction.reply(`${__("the_channel")} <#${channel.id}> ${__("has_been_set_as_level_up_channel")} ${__("kirino_glad")}`)

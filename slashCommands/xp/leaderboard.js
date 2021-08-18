@@ -5,8 +5,7 @@ module.exports = {
         .setName("leaderboard")
         .setDescription(__("description_leaderboard"))
         .addIntegerOption(option => option.setName("page").setDescription("The page of the leaderboard you want to open"))
-        .addIntegerOption(option => option.setName("limit").setDescription("The number of players to list in the page"))
-    ,
+        .addIntegerOption(option => option.setName("limit").setDescription("The number of players to list in the page")),
     guildOnly: true,
 
     async execute(bot, interaction) {

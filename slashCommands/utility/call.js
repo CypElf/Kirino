@@ -54,7 +54,7 @@ module.exports = {
                 if (subcommand === "set") {
                     const channel = interaction.options.getChannel("channel")
                     if (!channel.isText()) return interaction.reply({ content: `${__("not_a_text_channel")} ${__("kirino_pout")}`, ephemeral: true })
-                    
+
                     presenceRequest.run(interaction.guild.id, channel.id, 0, asfile)
                     interaction.reply(`${__("presence_channel_set")} <#${channel.id}>. ${__("kirino_glad")}`)
                 }
@@ -112,9 +112,9 @@ module.exports = {
                     catch {
                         return bot.calls.set(interaction.guild.id, bot.calls.get(interaction.guild.id) - 1) // happens if the call message is deleted before its end, causing the bot to be unable to get the users who reacted, so we just cancel the call
                     }
-                    
+
                     presents = [...presents.values()].filter(user => !user.bot)
-                
+
                     let members = []
                     for (const user of presents) {
                         const member = await interaction.guild.members.fetch(user)
@@ -154,10 +154,8 @@ module.exports = {
                                 if (isFile) await interaction.followUp({ files: [content] })
                                 else await interaction.followUp(content)
                             }
-                            else {
-                                if (isFile) await channel.send({ files: [content] })
-                                else await channel.send(content)
-                            }
+                            else if (isFile) await channel.send({ files: [content] })
+                            else await channel.send(content)
                         }
                         catch {
                             let errorMsg = ""
@@ -172,7 +170,7 @@ module.exports = {
                             if (isFile) interaction.followUp({ files: [content] })
                             else interaction.followUp(content)
                         }
-                    }                    
+                    }
                 }
 
                 bot.calls.set(interaction.guild.id, bot.calls.get(interaction.guild.id) - 1)

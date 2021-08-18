@@ -50,7 +50,7 @@ module.exports = {
                             .setDescription("**" + __("report_origin") + "** " + origin + "\n**" + __("message") + " :** " + report)
                             .setColor("#CC0101")
                             .setFooter(__("report_from") + interaction.user.tag, interaction.user.displayAvatarURL())
-                        
+
                         await reportChannel.send({ embeds: [reportEmbed] })
 
                         setLocale(senderLanguage)

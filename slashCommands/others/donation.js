@@ -13,7 +13,7 @@ module.exports = {
             .setColor("#DFC900")
             .setThumbnail("https://cdn.discordapp.com/attachments/689424377770541071/699210423290953838/Logo.jpg")
             .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
-        
+
         interaction.reply({ embeds: [donationEmbed] })
     }
 }

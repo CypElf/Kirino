@@ -27,7 +27,7 @@ module.exports = {
             .addField(__("role_creation_date"), `${time(role.createdAt)} (${time(role.createdAt, "R")})`)
             .addField(__("permissions"), perms !== "``" ? perms : "`" + __("no_permissions") + "`")
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        
+
         msg.channel.send({ embeds: [informations] })
     }
 }

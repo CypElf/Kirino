@@ -11,7 +11,7 @@ module.exports = {
 
     async execute(bot, interaction) {
         const role = interaction.options.getRole("role")
-        
+
         const perms = "`" + role.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
         const informations = new MessageEmbed()
@@ -26,7 +26,7 @@ module.exports = {
             .addField(__("role_creation_date"), `${time(role.createdAt)} (${time(role.createdAt, "R")})`)
             .addField(__("permissions"), perms !== "``" ? perms : "`" + __("no_permissions") + "`")
             .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
-        
+
         interaction.reply({ embeds: [informations] })
     }
 }

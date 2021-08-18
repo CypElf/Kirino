@@ -23,7 +23,7 @@ module.exports = {
             if (!msg.editable) {
                 return interaction.reply({ content: `${__("cannot_edit_this_message")} ${__("kirino_pff")}`, ephemeral: true })
             }
-    
+
             msg.edit(new_message)
             interaction.reply({ content: `${__("message_edited")} ${__("kirino_glad")}`, ephemeral: true })
         }

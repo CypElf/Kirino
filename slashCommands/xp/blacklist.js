@@ -81,8 +81,8 @@ module.exports = {
         else if (interaction.options.getSubcommand() === "list") {
             const channelsRows = channelRequest.all(interaction.guild.id).map(row => row.channel_id)
             const rolesRows = roleRequest.all(interaction.guild.id).map(row => row.role_id)
-            const blacklistedChannels = [...interaction.guild.channels.cache.values()].filter(channel => channelsRows.includes(channel.id)).map(channel => channel.id)
-            const blacklistedRoles = [...interaction.guild.roles.cache.values()].filter(role => rolesRows.includes(role.id)).map(role => role.id)
+            const blacklistedChannels = [...interaction.guild.channels.cache.values()].filter(ch => channelsRows.includes(ch.id)).map(ch => ch.id)
+            const blacklistedRoles = [...interaction.guild.roles.cache.values()].filter(r => rolesRows.includes(r.id)).map(r => r.id)
 
             const { MessageEmbed } = require("discord.js")
             const blacklistEmbed = new MessageEmbed()

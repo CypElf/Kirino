@@ -21,7 +21,7 @@
         "yoda": "error",
         "no-var": "error",
         "no-trailing-spaces": "error",
-        "no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
+        "no-shadow": ["error", { "allow": ["err", "resolve", "reject", "option"] }],
         "no-lonely-if": "error",
         "object-curly-spacing": ["error", "always"],
         "no-multi-spaces": "error",

@@ -88,7 +88,7 @@ module.exports = {
             .addField(__("server_creation_date"), `${time(interaction.guild.createdAt)} (${time(interaction.guild.createdAt, "R")})`)
             .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
             .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
-        
+
         interaction.reply({ embeds: [informations] })
     }
 }
