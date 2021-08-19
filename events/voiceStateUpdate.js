@@ -30,7 +30,7 @@ module.exports = bot => {
         const connection = getVoiceConnection(guild_id)
 
         if (connection) {
-            bot.voicesQueues.get(guild.id).player.stop()
+            bot.voicesQueues.get(guild_id).player.stop()
             connection.destroy()
             bot.voicesQueues.delete(guild_id)
         }
