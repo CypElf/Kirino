@@ -1,0 +1,21 @@
+const { SlashCommandBuilder } = require("@discordjs/builders")
+const { MessageEmbed } = require("discord.js")
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName("codeblock")
+        .setDescription(__("description_codeblock")),
+    guildOnly: false,
+
+    async execute(bot, interaction) {
+        const linksEmbed = new MessageEmbed()
+            .setTitle(__("send_code"))
+            .setDescription(__("explanation_code"))
+            .setThumbnail("https://cdn.discordapp.com/attachments/698105563485044748/712574232147656704/712320080884793537.png")
+            .setImage("https://cdn.discordapp.com/attachments/698105563485044748/712577943666294814/unknown.png")
+            .setColor("#000000")
+            .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+
+        interaction.reply({ embeds: [linksEmbed] })
+    }
+}

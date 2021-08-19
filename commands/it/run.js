@@ -101,8 +101,7 @@ module.exports = {
 
                 let text = buff.toString("utf8")
                 const token = text.slice(0, 16)
-
-                while (text.includes(token)) text = text.replace(token, "") // replaceAll is only available in Node.js 15.0 and later, and the current LTS version is below this
+                text = text.replaceAll(token, "")
 
                 return text
             }

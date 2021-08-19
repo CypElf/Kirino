@@ -40,6 +40,7 @@ for (const file of eventsFiles) {
 }
 
 const categories = fs.readdirSync("./commands")
+const slashCategories = fs.readdirSync("./slashCommands")
 
 for (const category of categories) {
     const commandFiles = fs.readdirSync(`./commands/${category}/`).filter(file => file.endsWith(".js"))
@@ -49,7 +50,9 @@ for (const category of categories) {
         command.category = category
         bot.commands.set(command.name, command)
     }
+}
 
+for (const category of slashCategories) {
     const slashCommandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))
     for (const commandFile of slashCommandFiles) {
         // eslint-disable-next-line node/global-require

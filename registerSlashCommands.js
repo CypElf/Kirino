@@ -16,7 +16,7 @@ i18n.configure({
 })
 
 const commands = []
-const categories = fs.readdirSync("./commands")
+const categories = fs.readdirSync("./slashCommands")
 
 const clientId = process.env.CLIENT_ID
 const guildId = process.env.DEBUG_SERVER_ID
