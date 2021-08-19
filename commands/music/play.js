@@ -13,7 +13,7 @@ module.exports = {
         if (msg.member.voice.channel) {
             if (!msg.guild.me.voice.channel) {
                 // eslint-disable-next-line node/global-require
-                require("./join").execute(bot, msg)
+                await require("./join").execute(bot, msg)
             }
 
             if (!musicAuth(msg.member, msg.guild.me)) {
