@@ -17,7 +17,8 @@ module.exports = {
         }
 
         function ban(banMember) {
-            msg.guild.members.ban(banMember, { reason: reason.join(" ") + " (" + __("banned_by") + msg.author.tag + ")" })
+            reason = reason.length > 0 ? reason.join(" ") : __("no_ban_reason")
+            msg.guild.members.ban(banMember, { reason: reason + " (" + __("banned_by") + " " + msg.author.tag + ")" })
                 .then(member => {
                     if (member.user.username) {
                         msg.channel.send(`${member.user.username + __("has_been_banned")} <:hammer:568068459485855752>`)

@@ -42,7 +42,8 @@ module.exports = {
             return msg.channel.send(`${__("you_cannot_kick_this_member")} ${__("kirino_pff")}`)
         }
 
-        kickMember.kick({ reason: `${reason.join(" ")} (${__("kicked_by")}${msg.author.tag})` })
+        reason = reason.length > 0 ? reason.join(" ") : __("no_kick_reason")
+        kickMember.kick({ reason: `${reason.join(" ")} (${__("kicked_by")} ${msg.author.tag})` })
             .then(member => {
                 msg.channel.send(`${member.user.username + __("has_been_kicked")} <:boot:568041855523094549>`)
 
