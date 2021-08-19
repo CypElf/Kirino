@@ -5,7 +5,7 @@ module.exports = {
     guildOnly: false,
     args: true,
     aliases: ["lang"],
-    cooldown: 5,
+    cooldown: 3,
     permissions: ["manage guild"],
 
     async execute(bot, msg, args) {
