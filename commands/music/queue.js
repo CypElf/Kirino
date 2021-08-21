@@ -1,4 +1,4 @@
-const toChunks = require("../../lib/string/to_chunks")
+const { Util } = require("discord.js")
 
 module.exports = {
     name: "queue",
@@ -17,8 +17,7 @@ module.exports = {
         else {
             const text = `${__("songs_in_queue_are")}\n- ${queue.songs.map(song => song.title).join("\n- ")}`
 
-            const textArray = toChunks(text, 2000)
-            for (const chunk of textArray) {
+            for (const chunk of Util.splitMessage(text)) {
                 msg.channel.send(chunk)
             }
         }

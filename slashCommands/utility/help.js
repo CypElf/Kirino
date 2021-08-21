@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
+const { MessageEmbed, Util } = require("discord.js")
 const fs = require("fs")
 const t = require("i18next").t.bind(require("i18next"))
-const toChunks = require("../../lib/string/to_chunks")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -47,7 +46,7 @@ module.exports = {
 
             if (t(`description_${command.name}`) !== `description_${command.name}`) {
 
-                const descriptions = toChunks(t(`description_${command.name}`))
+                const descriptions = Util.splitMessage(t(`description_${command.name}`), { maxLength: 1024 })
 
                 for (const descriptionPart of descriptions) {
                     if (descriptionPart === descriptions[0]) helpEmbed.addField(`**${t("description")}**`, descriptionPart)

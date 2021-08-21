@@ -1,6 +1,6 @@
 const fs = require("fs")
 const { MessageEmbed } = require("discord.js")
-const toChunks = require("../../lib/string/to_chunks")
+const { Util } = require("discord.js")
 
 module.exports = {
     name: "help",
@@ -46,7 +46,7 @@ module.exports = {
 
         if (__(`description_${command.name}`) !== `description_${command.name}`) {
 
-            const descriptions = toChunks(__(`description_${command.name}`))
+            const descriptions = Util.splitMessage(__(`description_${command.name}`), { maxLength: 1024 })
 
             for (const descriptionPart of descriptions) {
                 if (descriptionPart === descriptions[0]) helpEmbed.addField(`**${__("description")}**`, descriptionPart)

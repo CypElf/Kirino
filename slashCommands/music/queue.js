@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { Util } = require("discord.js")
 const t = require("i18next").t.bind(require("i18next"))
-const toChunks = require("../../lib/string/to_chunks")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,11 +19,11 @@ module.exports = {
         }
         else {
             const text = `${t("songs_in_queue_are")}\n- ${queue.songs.map(song => song.title).join("\n- ")}`
-            const textArray = toChunks(text, 2000)
+            const textArray = Util.splitMessage(text)
 
             interaction.reply(textArray[0])
             for (const chunk of textArray.slice(1)) {
-                interaction.channel.send(chunk)
+                interaction.followUp(chunk)
             }
         }
     }
