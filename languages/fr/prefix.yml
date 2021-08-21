@@ -1,0 +1,4 @@
+missing_permissions_to_execute_this_command: "Vous n'avez pas les permissions suffisantes pour utiliser cette commande !"
+no_spaces_in_prefixs: "Les préfixes ne doivent pas avoir d'espace"
+three_chars_max: "Les préfixes sont limités à 3 caractères maximum."
+new_prefix_is_now: "Le préfixe est maintenant"

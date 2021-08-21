@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { Permissions } = require("discord.js")
+const i18next = require("i18next")
+const t = i18next.t.bind(i18next)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,7 +17,7 @@ module.exports = {
 
         if (isInGuild) {
             if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
-                return interaction.reply({ content: `${__("not_enough_permission_to_change_language")} ${__("kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: `${t("not_enough_permission_to_change_language")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
         }
 
@@ -24,13 +26,14 @@ module.exports = {
         const id = isInGuild ? interaction.guild.id : interaction.user.id
         bot.db.prepare("INSERT INTO languages(id, language) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET language = excluded.language").run(id, language)
 
-        setLocale(language)
+        await i18next.changeLanguage(language)
+        setLocale(language) // TODO : remove this when legacy commands compatibility will be dropped
 
         if (isInGuild) {
-            interaction.reply(`${__("server_language_changed") + language}\` ${__("kirino_glad")} !`)
+            interaction.reply(`${t("server_language_changed") + language}\` ${t("common:kirino_glad")} !`)
         }
         else {
-            interaction.reply(`${__("dm_language_changed") + language}\` ${__("kirino_glad")} !`)
+            interaction.reply(`${t("dm_language_changed") + language}\` ${t("common:kirino_glad")} !`)
         }
     }
 }

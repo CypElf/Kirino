@@ -1,6 +1,6 @@
 const { Permissions } = require("discord.js")
 const resetJoin = require("../../lib/joins_leaves/reset_join")
-const handleMemberAdd = require("../../lib/joins_leaves/handle_member_add")
+const formatJoinLeaveMessage = require("../../lib/joins_leaves/format_join_leave_message")
 const getChannel = require("../../lib/getters/get_channel")
 
 module.exports = {
@@ -20,7 +20,22 @@ module.exports = {
         }
 
         else if (args[0] === "test") {
-            if (!handleMemberAdd(bot.db, msg.member, msg.channel.id)) msg.channel.send(`${__("no_join_message_set")} ${__("kirino_glad")}`)
+            const joinRow = bot.db.prepare("SELECT joins_channel_id, join_message FROM joins_leaves WHERE guild_id = ?").get(msg.guild.id)
+
+            if (joinRow) {
+                const { joins_channel_id, join_message } = joinRow
+                try {
+                    await msg.guild.channels.fetch(joins_channel_id) // assert that the channel where the join message should be sent still exists
+                    msg.channel.send(formatJoinLeaveMessage(join_message, msg.member))
+                }
+                catch {
+                    resetJoin(bot.db, msg.guild.id)
+                    msg.channel.send(`${__("no_join_message_set")} ${__("kirino_glad")}`)
+                }
+            }
+            else {
+                msg.channel.send(`${__("no_join_message_set")} ${__("kirino_glad")}`)
+            }
         }
 
         else {

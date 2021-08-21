@@ -1,10 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { Permissions } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("react")
-        .setDescription(__("description_react"))
+        .setDescription("Make me react to a message")
         .addStringOption(option => option.setName("message_id").setDescription("The ID of the message you want me to react to").setRequired(true))
         .addStringOption(option => option.setName("emoji").setDescription("The emoji you want to me react with").setRequired(true)),
     guildOnly: false,
@@ -12,11 +13,11 @@ module.exports = {
 
     async execute(bot, interaction) {
         if (interaction.user.id !== process.env.OWNER_ID && !interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-            return interaction.reply({ content: `${__("not_allowed_to_use_this_command")} ${__("kirino_pff")}`, ephemeral: true })
+            return interaction.reply({ content: `${t("not_allowed_to_use_this_command")} ${t("common:kirino_pff")}`, ephemeral: true })
         }
 
         if (interaction.guild && !interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-            return interaction.reply({ content: `${__("cannot_react_to_messages")} ${__("kirino_pout")}`, ephemeral: true })
+            return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
         }
 
         const message_id = interaction.options.getString("message_id")
@@ -24,7 +25,7 @@ module.exports = {
 
         const msg = await interaction.channel.messages.fetch(message_id)
             .catch(() => {
-                return interaction.reply({ content: __("bad_message_id") + " " + __("kirino_pout"), ephemeral: true })
+                return interaction.reply({ content: t("bad_message_id") + " " + t("common:kirino_pout"), ephemeral: true })
             })
 
         try {
@@ -38,10 +39,10 @@ module.exports = {
                 await msg.react(customEmoji)
             }
             catch {
-                return interaction.reply({ content: __("access_to_emoji_denied") + " " + __("kirino_pout"), ephemeral: true })
+                return interaction.reply({ content: t("access_to_emoji_denied") + " " + t("common:kirino_pout"), ephemeral: true })
             }
         }
 
-        interaction.reply(`${__("reaction_added")} ${__("kirino_glad")}`)
+        interaction.reply(`${t("reaction_added")} ${t("common:kirino_glad")}`)
     }
 }

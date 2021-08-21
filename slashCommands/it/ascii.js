@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { MessageEmbed } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,19 +20,19 @@ module.exports = {
             .setTitle("ASCII")
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563195768846/720189759560876052/ascii.png")
             .setColor("#555599")
-            .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
 
         if (subcommand === "encode") {
-            if (text.length > 340) return interaction.reply({ content: __("less_or_equal_to_340"), ephemeral: true })
+            if (text.length > 340) return interaction.reply({ content: t("less_or_equal_to_340"), ephemeral: true })
             for (let i = 0; i < text.length; i++) {
                 output += text.charCodeAt(i)
             }
-            asciiEmbed.addField(__("original_message"), text)
-                .addField(__("encoded_message"), output)
+            asciiEmbed.addField(t("original_message"), text)
+                .addField(t("encoded_message"), output)
         }
 
         else if (subcommand === "decode") {
-            if (text.length > 1024) return interaction.reply({ content: __("less_or_equal_to_1024"), ephemeral: true })
+            if (text.length > 1024) return interaction.reply({ content: t("less_or_equal_to_1024"), ephemeral: true })
             let num = 0
             for (let i = 0; i < text.length; i++) {
                 num = num * 10 + text.charCodeAt(i) - 48 // 48 = '0'
@@ -41,9 +42,9 @@ module.exports = {
                 }
             }
 
-            if (!(/\S/.test(output))) output = __("char_not_printable")
-            asciiEmbed.addField(__("encoded_message"), text)
-                .addField(__("original_message"), output)
+            if (!(/\S/.test(output))) output = t("char_not_printable")
+            asciiEmbed.addField(t("encoded_message"), text)
+                .addField(t("original_message"), output)
         }
 
         interaction.reply({ embeds: [asciiEmbed] })

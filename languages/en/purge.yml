@@ -1,0 +1,4 @@
+you_cannot_delete_messages: "You cannot delete messages!"
+please_insert_positive_integer: "The number of messages to delete cannot be lower or equal to 0!"
+purge_success: "The messages were successfully deleted."
+purge_does_not_work_beyond_14_days: "You cannot purge messages older than two weeks."

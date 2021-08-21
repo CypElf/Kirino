@@ -1,10 +1,11 @@
+const { Client, Intents, Collection } = require("discord.js")
 const fs = require("fs")
 const http = require("http")
 const url = require("url")
-
-const { Client, Intents, Collection } = require("discord.js")
 const bsqlite3 = require("better-sqlite3")
 const i18n = require("i18n")
+const i18next = require("i18next")
+const Backend = require("i18next-fs-backend")
 const yaml = require("js-yaml")
 
 require("dotenv").config()
@@ -20,17 +21,31 @@ bot.apiCooldowns = new Map()
 bot.voicesQueues = new Collection()
 bot.calls = new Collection()
 
-i18n.configure({
+i18n.configure({ // TODO : when legacy commands support will be dropped, remove this
     locales: ["en", "fr"],
     staticCatalog: {
-        en: yaml.safeLoad(fs.readFileSync("./languages/en.yml", "utf-8")),
-        fr: yaml.safeLoad(fs.readFileSync("./languages/fr.yml", "utf-8"))
+        en: yaml.safeLoad(fs.readFileSync("./legacy_languages/en.yml", "utf-8")),
+        fr: yaml.safeLoad(fs.readFileSync("./legacy_languages/fr.yml", "utf-8"))
     },
     register: global
 })
 
+i18next.use(Backend).init({
+    lng: "en",
+    fallbackLng: "en",
+    supportedLngs: ["en", "fr"],
+    ns: ["common", "interactionCreate", "messageCreate"],
+    defaultNS: "common",
+    debug: true,
+    preload: fs.readdirSync("./languages/"),
+    backend: {
+        loadPath: "languages/{{lng}}/{{ns}}.yml",
+        addPath: "languages/{{lng}}/{{ns}}.missing.yml"
+    }
+})
+
 startXpApi(bot, { cooldowns: bot.apiCooldowns })
-startCommandsApi(bot, { cooldowns: bot.apiCooldowns })
+// startCommandsApi(bot, { cooldowns: bot.apiCooldowns }) // TODO : uncomment
 
 const eventsFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"))
 for (const file of eventsFiles) {
@@ -194,46 +209,47 @@ function startXpApi(obj) {
     }).listen(62150)
 }
 
-function startCommandsApi(obj) {
-    http.createServer(async (req, res) => {
-        if (controlRequest(req, res, obj, 0)) {
-            let { category } = url.parse(req.url, true).query
-            const { lang } = url.parse(req.url, true).query
+// TODO : adapt it to the new i18n system and slash commands
+// function startCommandsApi(obj) {
+//     http.createServer(async (req, res) => {
+//         if (controlRequest(req, res, obj, 0)) {
+//             let { category } = url.parse(req.url, true).query
+//             const { lang } = url.parse(req.url, true).query
 
-            if (!category) category = "all"
+//             if (!category) category = "all"
 
-            category = category.toLowerCase()
+//             category = category.toLowerCase()
 
-            const localeBak = getLocale()
-            setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
+//             const localeBak = getLocale()
+//             setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
 
-            if (category !== "all" && !categories.includes(category)) {
-                res.writeHead(404) // HTTP status code 404 = Not Found
-                res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
-                return res.end()
-            }
+//             if (category !== "all" && !categories.includes(category)) {
+//                 res.writeHead(404) // HTTP status code 404 = Not Found
+//                 res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
+//                 return res.end()
+//             }
 
-            const categoriesToGet = category === "all" ? categories : [category]
+//             const categoriesToGet = category === "all" ? categories : [category]
 
-            let commands = []
+//             let commands = []
 
-            for (const cat of categoriesToGet) {
-                const currentCommands = bot.commands.filter(command => command.category === cat).map(command => {
-                    command.description = __(`description_${command.name}`)
-                    if (`usage_${command.name}` !== __(`usage_${command.name}`)) command.usage = __(`usage_${command.name}`).split("\n").map(usage => usage.startsWith("nocommand ") ? usage.slice(10) : `${command.name} ${usage}`).join("\n")
-                    return command
-                })
+//             for (const cat of categoriesToGet) {
+//                 const currentCommands = bot.commands.filter(command => command.category === cat).map(command => {
+//                     command.description = __(`description_${command.name}`)
+//                     if (`usage_${command.name}` !== __(`usage_${command.name}`)) command.usage = __(`usage_${command.name}`).split("\n").map(usage => usage.startsWith("nocommand ") ? usage.slice(10) : `${command.name} ${usage}`).join("\n")
+//                     return command
+//                 })
 
-                if (currentCommands) {
-                    commands = commands.concat(currentCommands)
-                }
-            }
+//                 if (currentCommands) {
+//                     commands = commands.concat(currentCommands)
+//                 }
+//             }
 
-            setLocale(localeBak)
+//             setLocale(localeBak)
 
-            res.writeHead(200) // HTTP status code 200 = OK
-            res.write(JSON.stringify({ "category": category, "commands": commands }))
-            res.end()
-        }
-    }).listen(62151)
-}
+//             res.writeHead(200) // HTTP status code 200 = OK
+//             res.write(JSON.stringify({ "category": category, "commands": commands }))
+//             res.end()
+//         }
+//     }).listen(62151)
+// }

@@ -1,0 +1,4 @@
+less_or_equal_to_1024: "The message must be less than or equal to 1024 characters."
+original_message: "Original message"
+encoded_message: "Encoded message"
+request_from: "Request from "

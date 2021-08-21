@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("avatar")
-        .setDescription(__("description_profilepicture"))
+        .setDescription("Display the avatar of a user")
         .addUserOption(option => option.setName("user").setDescription("The user you want to get the avatar")),
     guildOnly: false,
 

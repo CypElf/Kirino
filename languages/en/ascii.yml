@@ -1,0 +1,6 @@
+request_from: "Request from "
+less_or_equal_to_340: "The message must be less than or equal to 340 characters."
+original_message: "Original message"
+encoded_message: "Encoded message"
+less_or_equal_to_1024: "The message must be less than or equal to 1024 characters."
+char_not_printable: "The corresponding character in the ASCII table cannot be displayed."

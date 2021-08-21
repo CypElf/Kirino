@@ -1,10 +1,12 @@
 const { Collection, Permissions } = require("discord.js")
-const setLanguage = require("../lib/language/set_language")
+const i18next = require("i18next")
+const t = i18next.t.bind(i18next)
 const checkBanwords = require("../lib/banwords/check_banwords")
 const removeDeletedRolesRewards = require("../lib/rolerewards/remove_deleted_roles_rewards")
 
 module.exports = bot => {
     bot.on("messageCreate", async msg => {
+        i18next.setDefaultNamespace("messageCreate")
 
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
         const id = msg.guild ? msg.guild.id : msg.author.id
@@ -25,17 +27,19 @@ module.exports = bot => {
 
         const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
+        const lang = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(msg.guild ? msg.guild.id : msg.author.id)?.language ?? "en"
+        await i18next.changeLanguage(lang)
+        setLocale(lang) // TODO : once the legacy commands support will be dropped, remove this line
+
         if (msg.guild) {
             // minimal needed permissions
             if (!msg.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
             if (msg.content.startsWith(bot.prefix) && command) {
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(__("need_handle_messages_perm"))
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS)) return msg.channel.send(__("need_embed_links"))
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY)) return msg.channel.send(__("need_read_message_history"))
+                if (!msg.guild.me.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(t("need_handle_messages_perm"))
+                if (!msg.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS)) return msg.channel.send(t("need_embed_links"))
+                if (!msg.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY)) return msg.channel.send(t("need_read_message_history"))
             }
         }
-
-        setLanguage(bot.db, msg.guild ? msg.guild.id : msg.author.id)
 
         checkAfk(bot, msg)
         checkBanwords(bot, msg)
@@ -44,7 +48,7 @@ module.exports = bot => {
 
         // ------------------------------------------------------------- prefix reminder
 
-        if (msg.mentions.users.has(bot.user.id) && msg.content === `<@!${bot.user.id}>`) return msg.channel.send(`${__("bot_mention")} \`${bot.prefix}\`.`)
+        if (msg.mentions.users.has(bot.user.id) && msg.content === `<@!${bot.user.id}>`) return msg.channel.send(`${t("bot_mention")} \`${bot.prefix}\`.`)
 
         // ------------------------------------------------------------- command validity check
 
@@ -52,7 +56,7 @@ module.exports = bot => {
         if (!command) return
 
         if (command.guildOnly && !msg.guild) {
-            return msg.reply(`${__("command_not_available_in_dm")} ${__("kirino_pout")}`)
+            return msg.reply(`${t("command_not_available_in_dm")} ${t("kirino_pout")}`)
         }
 
         // ------------------------------------------------------------- beta check
@@ -61,7 +65,7 @@ module.exports = bot => {
             const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
 
             if (betaRow === undefined) {
-                return msg.channel.send(`${__("command_in_beta")} \`${bot.prefix}beta enable\` ${__("kirino_glad")}`)
+                return msg.channel.send(`${t("command_in_beta")} \`${bot.prefix}beta enable\` ${t("kirino_glad")}`)
             }
         }
 
@@ -80,7 +84,7 @@ module.exports = bot => {
 
             if (now < expiration) {
                 const timeLeft = (expiration - now) / 1000
-                return msg.channel.send(`${__("please_wait")} ${timeLeft.toFixed(1)} ${__("more_sec_before_reusing_command")} \`${command.name}\`.`)
+                return msg.channel.send(`${t("please_wait")} ${timeLeft.toFixed(1)} ${t("more_sec_before_reusing_command")} \`${command.name}\`.`)
             }
         }
 
@@ -92,12 +96,16 @@ module.exports = bot => {
             return bot.commands.get("help").execute(bot, msg, [].concat(command.name))
         }
 
+        await i18next.loadNamespaces(commandName)
+        i18next.setDefaultNamespace(commandName)
+
         try {
             console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"})`)
-            command.execute(bot, msg, args)
+            await command.execute(bot, msg, args)
         }
         catch (err) {
-            console.error(err)
+            console.error(err.stack)
+            msg.channel.send(`${t("messageCreate:command_runtime_error")} ${t("common:kirino_what")}`)
         }
     })
 }
@@ -115,10 +123,10 @@ function checkAfk(bot, msg) {
         if (mentionnedAfkRow !== undefined) {
             if (mentionnedAfkRow.id != msg.author.id) {
                 if (mentionnedAfkRow.reason) {
-                    msg.channel.send(`**${mention.username}**` + __("afk_with_reason") + mentionnedAfkRow.reason)
+                    msg.channel.send(`**${mention.username}**` + t("afk_with_reason") + mentionnedAfkRow.reason)
                 }
                 else {
-                    msg.channel.send(`**${mention.username}**` + __("afk_without_reason"))
+                    msg.channel.send(`**${mention.username}**` + t("afk_without_reason"))
                 }
             }
         }
@@ -129,7 +137,7 @@ function checkAfk(bot, msg) {
     if (selfAfkRow !== undefined) {
         const deletionRequest = bot.db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
-        msg.reply(__("deleted_from_afk")).then(afkMsg => setTimeout(() => afkMsg.delete().catch(), 5000)).catch()
+        msg.reply(t("deleted_from_afk")).then(afkMsg => setTimeout(() => afkMsg.delete().catch(), 5000)).catch()
     }
 }
 
@@ -208,7 +216,7 @@ async function handleXp(bot, msg, obj) {
                     newLvl += 1
                     newXp = newXp - nextLevelXp
 
-                    if (levelUpMsg === null) levelUpMsg = __("default_lvl_up_msg")
+                    if (levelUpMsg === null) levelUpMsg = t("default_lvl_up_msg")
                     levelUpMsg = levelUpMsg
                         .replace("{user}", `<@${msg.author.id}>`)
                         .replace("{username}", msg.author.username)
@@ -229,7 +237,7 @@ async function handleXp(bot, msg, obj) {
 
                     await channel.send(levelUpMsg)
 
-                    if (newLvl === 100) channel.send(__("lvl_100_congrats"))
+                    if (newLvl === 100) channel.send(t("lvl_100_congrats"))
 
                     await removeDeletedRolesRewards(bot.db, msg.guild)
 
@@ -240,21 +248,21 @@ async function handleXp(bot, msg, obj) {
                         if (row.level === newLvl) {
                             const role = [...msg.guild.roles.cache.values()].find(currentRole => currentRole.id === row.role_id)
                             if ([...msg.member.roles.cache.values()].includes(role)) {
-                                channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`).catch(() => {
-                                    msg.channel.send(`${__("you_already_have_the_role")} ${role.name}, ${__("so_i_did_not_gave_it_to_you")}`)
+                                channel.send(`${t("you_already_have_the_role")} ${role.name}, ${t("so_i_did_not_gave_it_to_you")}`).catch(() => {
+                                    msg.channel.send(`${t("you_already_have_the_role")} ${role.name}, ${t("so_i_did_not_gave_it_to_you")}`)
                                 })
                             }
                             else {
                                 try {
                                     await msg.member.roles.add(role)
 
-                                    channel.send(`${__("i_gave_you_the_role")} ${role.name}.`).catch(() => {
-                                        msg.channel.send(`${__("i_gave_you_the_role")} ${role.name}.`)
+                                    channel.send(`${t("i_gave_you_the_role")} ${role.name}.`).catch(() => {
+                                        msg.channel.send(`${t("i_gave_you_the_role")} ${role.name}.`)
                                     })
                                 }
                                 catch {
-                                    channel.send(`${__("i_should_have_given_you")} ${role.name}, ${__("could_not_add_you_role")}`).catch(() => {
-                                        msg.channel.send(`${__("i_should_have_given_you")} ${role.name}, ${__("could_not_add_you_role")}`)
+                                    channel.send(`${t("i_should_have_given_you")} ${role.name}, ${t("could_not_add_you_role")}`).catch(() => {
+                                        msg.channel.send(`${t("i_should_have_given_you")} ${role.name}, ${t("could_not_add_you_role")}`)
                                     })
                                 }
                             }

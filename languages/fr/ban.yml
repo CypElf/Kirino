@@ -1,0 +1,8 @@
+you_are_missing_permissions_to_ban_members: "Vous n'avez pas les permissions suffisantes pour bannir un membre."
+i_am_missing_permissions_to_ban_members: "Je n'ai pas les permissions nécessaires pour bannir des membres."
+no_ban_reason: "Pas de raison de ban spécifiée"
+unable_to_ban_higher_than_me: "Je ne peux pas bannir cet utilisateur, il a un rang égal ou supérieur au mien."
+cannot_ban_yourself: "Tu ne peux pas te bannir toi même !"
+you_cannot_ban_this_member: "Vous ne pouvez pas bannir ce membre."
+banned_by: "banni par"
+has_been_banned: " a été banni du serveur !"

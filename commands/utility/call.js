@@ -1,7 +1,6 @@
 const { MessageAttachment, Permissions } = require("discord.js")
 const formatDate = require("../../lib/misc/format_date")
 const getChannel = require("../../lib/getters/get_channel")
-const setLanguage = require("../../lib/language/set_language")
 
 module.exports = {
     name: "call",
@@ -135,7 +134,7 @@ module.exports = {
                         return txt
                     })
 
-                    setLanguage(bot.db, msg.guild ? msg.guild.id : msg.author.id)
+                    setLocale(bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(msg.guild.id)?.language ?? "en")
 
                     msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
 

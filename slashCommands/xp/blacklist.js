@@ -1,10 +1,11 @@
-const { MessageEmbed, Permissions } = require("discord.js")
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { MessageEmbed, Permissions } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("blacklist")
-        .setDescription(__("description_blacklist"))
+        .setDescription("Allow you to blacklist a role or channel from the XP system")
         .addSubcommand(option => option.setName("list").setDescription("Display the blacklisted roles and channels"))
         .addSubcommandGroup(option => option.setName("channel").setDescription("Add or remove a channel from the blacklist")
             .addSubcommand(option => option.setName("add").setDescription("Blacklist a channel").addChannelOption(option => option.setName("channel").setDescription("The channel to blacklist").setRequired(true)))
@@ -20,7 +21,7 @@ module.exports = {
         let isEnabled = xpActivationRequest.get(interaction.guild.id)
         if (isEnabled) isEnabled = isEnabled.is_enabled
 
-        if (!isEnabled) return interaction.reply({ content: `${__("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`, ephemeral: true })
+        if (!isEnabled) return interaction.reply({ content: `${t("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`, ephemeral: true })
 
         const channelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ?")
         const roleRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_roles WHERE guild_id = ?")
@@ -32,32 +33,32 @@ module.exports = {
 
         if (interaction.options.getSubcommand() === "remove") {
 
-            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${__("missing_permissions_to_remove_channel")} ${__("kirino_pff")}`, ephemeral: true })
+            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("missing_permissions_to_remove_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
 
             if (interaction.options.getSubcommandGroup() === "channel") {
-                if (!channel.isText()) return interaction.reply({ content: `${__("not_a_text_channel")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const spChannelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
                 const channelRow = spChannelRequest.get(interaction.guild.id, channel.id)
 
-                if (!channelRow) return interaction.reply({ content: `${__("channel_not_in_db")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!channelRow) return interaction.reply({ content: `${t("channel_not_in_db")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
                 deletionChannelRequest.run(interaction.guild.id, channel.id)
 
-                interaction.reply(`${__("the_channel")} <#${channel.id}> ${__("has_been_removed_from_channels_list")} ${__("kirino_glad")}`)
+                interaction.reply(`${t("the_channel")} <#${channel.id}> ${t("has_been_removed_from_channels_list")} ${t("common:kirino_glad")}`)
             }
 
             else {
                 const spRoleRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_roles WHERE guild_id = ? AND role_id = ?")
                 const roleRow = spRoleRequest.get(interaction.guild.id, role.id)
 
-                if (!roleRow) return interaction.reply({ content: `${__("role_not_in_db")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!roleRow) return interaction.reply({ content: `${t("role_not_in_db")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const deletionChannelRequest = bot.db.prepare("DELETE FROM xp_blacklisted_roles WHERE guild_id = ? AND role_id = ?")
                 deletionChannelRequest.run(interaction.guild.id, role.id)
 
-                interaction.reply(`${__("the_role")} ${role.name} ${__("has_been_removed_from_roles_list")} ${__("kirino_glad")}`)
+                interaction.reply(`${t("the_role")} ${role.name} ${t("has_been_removed_from_roles_list")} ${t("common:kirino_glad")}`)
             }
         }
         else if (interaction.options.getSubcommand() === "list") {
@@ -67,46 +68,46 @@ module.exports = {
             const blacklistedRoles = [...interaction.guild.roles.cache.values()].filter(r => rolesRows.includes(r.id)).map(r => r.id)
 
             const blacklistEmbed = new MessageEmbed()
-                .setTitle(__("blacklist"))
+                .setTitle(t("blacklist"))
                 .setColor("#000000")
 
-            if (blacklistedChannels.length === 0 && blacklistedRoles.length === 0) blacklistEmbed.setDescription(__("no_blacklisted_channels_or_roles"))
+            if (blacklistedChannels.length === 0 && blacklistedRoles.length === 0) blacklistEmbed.setDescription(t("no_blacklisted_channels_or_roles"))
             else {
-                if (blacklistedChannels.length > 0) blacklistEmbed.addField(__("blacklisted_channels"), `<#${blacklistedChannels.join(">, <#")}>`)
-                if (blacklistedRoles.length > 0) blacklistEmbed.addField(__("blacklisted_roles"), `<@&${blacklistedRoles.join(">, <@&")}>`)
+                if (blacklistedChannels.length > 0) blacklistEmbed.addField(t("blacklisted_channels"), `<#${blacklistedChannels.join(">, <#")}>`)
+                if (blacklistedRoles.length > 0) blacklistEmbed.addField(t("blacklisted_roles"), `<@&${blacklistedRoles.join(">, <@&")}>`)
             }
 
             interaction.reply({ embeds: [blacklistEmbed] })
         }
         else {
-            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: __("missing_perm_to_add_channel"), ephemeral: true })
+            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: t("missing_perm_to_add_channel"), ephemeral: true })
 
             if (interaction.options.getSubcommandGroup() === "channel") {
-                if (!channel.isText()) return interaction.reply({ content: `${__("not_a_text_channel")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const channelsRows = channelRequest.all(interaction.guild.id)
 
-                if (channelsRows.map(row => row.channel_id).filter(channel_id => channel_id === channel.id).length > 0) return interaction.reply({ content: __("channel_already_present"), ephemeral: true })
+                if (channelsRows.map(row => row.channel_id).filter(channel_id => channel_id === channel.id).length > 0) return interaction.reply({ content: t("channel_already_present"), ephemeral: true })
 
-                if (channelsRows.length >= 10) return interaction.reply({ content: `${__("max_channels_count_reached")} ${__("kirino_pout")}`, ephemeral: true })
+                if (channelsRows.length >= 10) return interaction.reply({ content: `${t("max_channels_count_reached")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_channels VALUES(?,?)")
                 addChannelRequest.run(interaction.guild.id, channel.id)
 
-                return interaction.reply(`${__("the_channel")} <#${channel.id}> ${__("has_been_added_to_channels_list")} ${__("kirino_glad")}`)
+                return interaction.reply(`${t("the_channel")} <#${channel.id}> ${t("has_been_added_to_channels_list")} ${t("common:kirino_glad")}`)
             }
 
             else {
                 const rolesRows = roleRequest.all(interaction.guild.id)
 
-                if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return interaction.reply({ content: __("bl_role_already_present"), ephemeral: true })
+                if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return interaction.reply({ content: t("bl_role_already_present"), ephemeral: true })
 
-                if (rolesRows.length >= 10) return interaction.reply({ content: `${__("max_bl_roles_count_reached")} ${__("kirino_pout")}`, ephemeral: true })
+                if (rolesRows.length >= 10) return interaction.reply({ content: `${t("max_bl_roles_count_reached")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_roles VALUES(?,?)")
                 addChannelRequest.run(interaction.guild.id, role.id)
 
-                return interaction.reply(`${__("the_role")} ${role.name} ${__("has_been_added_to_roles_list")} ${__("kirino_glad")}`)
+                return interaction.reply(`${t("the_role")} ${role.name} ${t("has_been_added_to_roles_list")} ${t("common:kirino_glad")}`)
             }
         }
     }

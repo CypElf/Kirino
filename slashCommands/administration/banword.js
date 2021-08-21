@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { Permissions } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +13,7 @@ module.exports = {
     permissions: ["manage messages"],
 
     async execute(bot, interaction) {
-        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${__("missing_permissions_to_execute_this_command")} ${__("kirino_pout")}`, ephemeral: true })
+        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("missing_permissions_to_execute_this_command")} ${t("common:kirino_pout")}`, ephemeral: true })
 
         const parseEmoji = mot => {
             if (mot.match(/<:(.*?):[0-9]*>/gm)) { // modification de la représentation des émojis
@@ -30,20 +31,20 @@ module.exports = {
             const banwordsCount = bannedWords.length > 0 ? bannedWords.length : 0
 
             if (banwordsCount + 1 > 40) {
-                return interaction.reply({ content: `${__("banwords_count_limited")} ${__("kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: `${t("banwords_count_limited")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
 
-            if (word.length > 25) return interaction.reply({ content: __("word_beyond_25_chars") + " " + __("kirino_pout"), ephemeral: true })
+            if (word.length > 25) return interaction.reply({ content: t("word_beyond_25_chars") + " " + t("common:kirino_pout"), ephemeral: true })
 
             bot.db.prepare("INSERT INTO banwords(guild_id, word) VALUES(?,?)").run(interaction.guild.id, word)
 
-            interaction.reply(`${__("the_word")} \`${word}\` ${__("has_been_added_to_banwords")}`)
+            interaction.reply(`${t("word_added_to_banwords", { word })} ${t("common:kirino_glad")}`)
         }
 
         else if (subcommand === "list") {
             const wordsList = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild.id).map(row => row.word)
 
-            interaction.reply((wordsList.length > 0 ? `${__("here_is_banword_list")} :\n\`${wordsList.join("`, `")}\`` : __("no_banwords_for_now") + " " + __("kirino_glad")))
+            interaction.reply((wordsList.length > 0 ? `${t("here_is_banword_list")} :\n\`${wordsList.join("`, `")}\`` : t("no_banwords_for_now") + " " + t("common:kirino_glad")))
         }
 
         else if (subcommand === "remove") {
@@ -52,10 +53,10 @@ module.exports = {
             const banwords = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild.id).map(row => row.word)
             if (banwords.includes(word)) {
                 bot.db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?").run(interaction.guild.id, word)
-                interaction.reply(`${__("word_removed_from_banword")} ${__("kirino_glad")}`)
+                interaction.reply(`${t("word_removed_from_banword", { word })} ${t("common:kirino_glad")}`)
             }
             else {
-                interaction.reply({ content: `${__("word_not_found_in_banwords")} ${__("kirino_glad")}`, ephemeral: true })
+                interaction.reply({ content: `${t("word_not_found_in_banwords")} ${t("common:kirino_glad")}`, ephemeral: true })
             }
         }
     }

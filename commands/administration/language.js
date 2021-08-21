@@ -1,4 +1,5 @@
 const { Permissions } = require("discord.js")
+const i18next = require("i18next")
 
 module.exports = {
     name: "language",
@@ -27,6 +28,7 @@ module.exports = {
         const insertLanguageRequest = bot.db.prepare("INSERT INTO languages(id,language) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET language=excluded.language")
         insertLanguageRequest.run(id, language)
 
+        await i18next.changeLanguage(language)
         setLocale(language)
 
         if (msg.guild) {

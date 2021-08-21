@@ -1,0 +1,5 @@
+send_code: "Send code on discord"
+explanation_code: "To send code on discord, use 3 symbols with a backquote **`** (ALT GR + 7) to open a code block and then 3 more to close it. Finally, to activate the syntax highlighting appropriate to the programming language used, write the name of this programming language after the 3 opening **`** symbols.
+
+Example:"
+request_from: "Request from "

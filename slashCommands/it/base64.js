@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { MessageEmbed } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,31 +18,31 @@ module.exports = {
 
         if (subcommand === "encode") {
             if (text.length > 760) {
-                return interaction.reply({ content: __("message_too_long_for_encoding"), ephemeral: true })
+                return interaction.reply({ content: t("message_too_long_for_encoding"), ephemeral: true })
             }
 
             const buffer = new Buffer.from(text)
             const convertedInput = buffer.toString("base64")
 
-            base64Embed.setTitle(__("base64_encoding"))
-                .addField(__("original_message"), `${text}`)
-                .addField(__("encoded_message"), `${convertedInput}`)
+            base64Embed.setTitle(t("base64_encoding"))
+                .addField(t("original_message"), `${text}`)
+                .addField(t("encoded_message"), `${convertedInput}`)
         }
 
         else if (subcommand === "decode") {
             if (text.length > 1024) {
-                return interaction.reply({ content: __("message_too_long_for_decoding"), ephemeral: true })
+                return interaction.reply({ content: t("message_too_long_for_decoding"), ephemeral: true })
             }
             const buffer = new Buffer.from(text, "base64")
             const convertedInput = buffer.toString("utf8")
 
-            base64Embed.setTitle(__("base64_decoding"))
-                .addField(__("encoded_message"), text)
-                .addField(__("original_message"), convertedInput)
+            base64Embed.setTitle(t("base64_decoding"))
+                .addField(t("encoded_message"), text)
+                .addField(t("original_message"), convertedInput)
         }
 
         base64Embed.setColor("#08857A")
-            .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/714381707842813984/base64.png")
 
         interaction.reply({ embeds: [base64Embed] })

@@ -1,11 +1,12 @@
-const { MessageEmbed } = require("discord.js")
 const { SlashCommandBuilder, time, roleMention } = require("@discordjs/builders")
+const { MessageEmbed } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 const ColorThief = require("colorthief")
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("userinfo")
-        .setDescription(__("description_userinfo"))
+        .setDescription("Give you informations about a user")
         .addUserOption(option => option.setName("user").setDescription("The user you want informations about")),
     guildOnly: true,
     cooldown: 3,
@@ -25,11 +26,11 @@ module.exports = {
                 nbRoles++
             }
         })
-        const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + __("roles").toLowerCase() + ")"
+        const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + t("role", { count: nbRoles }).toLowerCase() + ")"
 
         let nickname = member.nickname
         if (nickname === undefined || nickname === null) {
-            nickname = __("nothing")
+            nickname = t("nothing")
         }
 
         let premiumSince = member.premiumSince
@@ -40,10 +41,10 @@ module.exports = {
             const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0")
             const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0")
             const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0")
-            premiumSince = __("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} ${__("at")} ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
+            premiumSince = t("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} ${t("at")} ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
         }
         else {
-            premiumSince = __("no_capitalized")
+            premiumSince = t("no_capitalized")
         }
 
         const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
@@ -51,15 +52,15 @@ module.exports = {
         const informations = new MessageEmbed()
             .setAuthor(member.user.tag, member.user.displayAvatarURL())
             .setColor(color)
-            .addField(__("id"), member.id, true)
-            .addField(__("nickname"), nickname, true)
-            .addField(__("join_date"), `${time(member.joinedAt)} (${time(member.joinedAt, "R")})`)
-            .addField(__("user_creation_date"), `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})`)
-            .addField(__("booster"), premiumSince, true)
-            .addField(__("roles"), roles, true)
-            .addField(__("permissions"), perms)
+            .addField(t("id"), member.id, true)
+            .addField(t("nickname"), nickname, true)
+            .addField(t("join_date"), `${time(member.joinedAt)} (${time(member.joinedAt, "R")})`)
+            .addField(t("user_creation_date"), `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})`)
+            .addField(t("booster"), premiumSince, true)
+            .addField(t("role", { count: nbRoles }), roles, true)
+            .addField(t("permissions"), perms)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .setFooter(__("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
 
         interaction.reply({ embeds: [informations] })
     }

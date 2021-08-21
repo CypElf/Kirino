@@ -1,0 +1,10 @@
+careful_with_openclassrooms: "Faites attention avec Openclassrooms"
+openclassrooms_explanation: "Il est globalement déconseillé de suivre les cours gratuits disponibles sur le site Openclassrooms.
+
+Tous les cours ne sont pas à jeter : par exemple, les cours `Reprenez le contrôle à l'aide de Linux` ainsi que `Apprenez le fonctionnement des réseaux TCP/IP` sont encore bons et peuvent être suivis aujourd'hui.
+
+Le réel problème réside dans les cours de **programmation**. Certains sont plus touchés que d'autres, mais les plus touchés, par exemple les cours de **C** ainsi que de **C++**, ont affreusement mal vieilli. Ils donnent de mauvaises habitudes, font utiliser des choses parfois dépréciées et ne devant plus être utilisées, des nouvelles fonctionnalités servant de remplacantes ayant été ajoutées.
+Je ne vais pas détailler les problèmes de chaque cours obsolète ici, ce serait trop long.
+
+Retenez simplement qu'il faut **se méfier** des cours sur la programmation disponibles sur ce site. Si possible, demandez l'avis de gens qui sont renseignés sur le cours que vous comptez suivre, afin d'être sur que ce n'est pas une mauvaise idée. Les forums d'Openclassrooms ou Zeste de Savoir sont ouverts, de nombreux serveurs discord sur l'informatique existent, vous devriez trouver des réponses à vos questions."
+request_from: "Requête de "

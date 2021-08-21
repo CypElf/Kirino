@@ -1,0 +1,7 @@
+about_me: |-
+  Hi there, I am {{bot_name}}, a bot developed with discord.js.
+  I am from the anime *Ore no imōto ga konna ni kawaii wake ga nai*, also known as *Oreimo*, of which I am one of the two main characters.
+  If you find a bug or have an idea of improvement / something to add, do not hesitate to send it to my developer using the command `report`.
+  Finally, if you need help for anything, you can directly access my support server: https://discord.gg/NNAGZCz
+  You will also find there the changelogs of my new versions, to be kept informed of news and changes concerning me.
+  Thank you so much for adding me to your server and using me!

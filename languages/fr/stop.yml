@@ -1,0 +1,3 @@
+nothing_to_stop: "Il n'y a rien à stopper dans la file d'attente."
+stopped: "Toutes les musiques en attente ont bien été stoppées."
+not_allowed_to_control_music_because_not_in_my_voice_channel: "Vous n'êtes pas dans le même vocal que moi, alors vous n'êtes pas autorisé à faire ceci."

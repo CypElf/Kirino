@@ -1,0 +1,3 @@
+afk_reason_too_long: "The reason for your AFK is too long! Please enter a reason of length less than or equal to 1800 characters."
+added_to_afk_with_reason: "You've been set AFK for the following reason"
+added_to_afk_without_reason: "You've been set AFK."

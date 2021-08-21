@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("serveravatar")
-        .setDescription(__("description_serverpicture")),
+        .setDescription("Display the image used for the server avatar"),
     guildOnly: true,
 
     async execute(bot, interaction) {

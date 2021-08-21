@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders")
 const { createAudioResource } = require("@discordjs/voice")
 const { MessageEmbed } = require("discord.js")
 const util = require("util")
+const t = require("i18next").t.bind(require("i18next"))
 const ytdl = require("ytdl-core-discord")
 const yts = require("yt-search")
 const musicAuth = require("../../lib/music/music_control_auth")
@@ -9,7 +10,7 @@ const musicAuth = require("../../lib/music/music_control_auth")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
-        .setDescription(__("description_play"))
+        .setDescription("Play a song in a voice channel from any YouTube video")
         .addStringOption(option => option.setName("song").setDescription("A YouTube link or a title to search for on YouTube").setRequired(true)),
     guildOnly: true,
 
@@ -26,7 +27,7 @@ module.exports = {
             await util.promisify(setTimeout)(200)
 
             if (!musicAuth(interaction.member, interaction.guild.me)) {
-                return interaction.reply({ content: `${__("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${__("kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: `${t("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
 
             const raw = interaction.options.getString("song")
@@ -46,7 +47,7 @@ module.exports = {
                     let video = videos[0]
 
                     if (video.title.toLowerCase() !== raw.toLowerCase()) {
-                        await interaction.reply(`${__("youtube_results")} ${__("kirino_glad")}\n${videos.map((v, i) => (i + 1) + " - " + v.title).join("\n")}\nN - ${__("nothing")}`)
+                        await interaction.reply(`${t("youtube_results")} ${t("common:kirino_glad")}\n${videos.map((v, i) => (i + 1) + " - " + v.title).join("\n")}\nN - ${t("nothing")}`)
 
                         const filter = cMsg => interaction.user.id === interaction.user.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
 
@@ -54,7 +55,7 @@ module.exports = {
                         cMsg = [...cMsg.values()]
                         if (cMsg.length === 1) {
                             if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
-                            else return interaction.followUp(`${__("play_cancelled")} ${__("kirino_pout")}`)
+                            else return interaction.followUp(`${t("play_cancelled")} ${t("common:kirino_pout")}`)
 
                             cMsg[0].delete().catch()
                         }
@@ -63,21 +64,21 @@ module.exports = {
                     song = await getSongFromURL(video.url)
                 }
                 catch {
-                    return interaction.reply({ content: `${__("search_error")} ${__("kirino_what")}`, ephemeral: true })
+                    return interaction.reply({ content: `${t("search_error")} ${t("common:kirino_what")}`, ephemeral: true })
                 }
             }
 
             const serverQueue = bot.voicesQueues.get(interaction.guild.id)
             serverQueue.songs.push(song)
 
-            const confirmation = `${__("added")}${song.title} ${__("to_the_queue")} ${__("kirino_glad")}`
+            const confirmation = `${t("added")}${song.title} ${t("to_the_queue")} ${t("common:kirino_glad")}`
             if (wasDirectLink) interaction.reply(confirmation)
             else interaction.editReply(confirmation)
 
             if (serverQueue.songs.length === 1) play(interaction.channel, serverQueue)
         }
         else {
-            interaction.reply({ content: `${__("you_are_not_in_any_voice_channel")} ${__("kirino_pff")}`, ephemeral: true })
+            interaction.reply({ content: `${t("you_are_not_in_any_voice_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
         }
     }
 }
@@ -91,7 +92,7 @@ async function play(channel, queue) {
         const youtubeRed = "#DF1F18"
 
         const embed = new MessageEmbed()
-            .setTitle(`${__("now_playing")} ${nextSong.title}`)
+            .setTitle(`${t("now_playing")} ${nextSong.title}`)
             .setURL(nextSong.url)
             .setColor(youtubeRed)
             .setImage(nextSong.thumbnail)

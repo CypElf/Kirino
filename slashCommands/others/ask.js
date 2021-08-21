@@ -1,17 +1,19 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const i18next = require("i18next")
+const t = i18next.t.bind(i18next)
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("ask")
-        .setDescription(__("description_ask"))
+        .setDescription("Answer your question")
         .addStringOption(option => option.setName("question").setDescription("The question you want to ask").setRequired(true)),
     guildOnly: false,
     cooldown: 1,
 
     async execute(bot, interaction) {
-        const possibleAnswers = [__("Yes."), __("No."), __("maybe"), __("surely"), __("probably"), __("surely_not"), __("not_at_all"), __("i_do_not_think"), __("you_should_take_a_break"), __("do_not_want_to_answer"), __("clearly_not"), __("they_whisper_yes"), __("they_whisper_no"), __("idk")]
+        const possibleAnswers = [t("Yes."), t("No."), t("maybe"), t("surely"), t("probably"), t("surely_not"), t("not_at_all"), t("i_do_not_think"), t("you_should_take_a_break"), t("do_not_want_to_answer"), t("clearly_not"), t("they_whisper_yes"), t("they_whisper_no"), t("idk")]
 
-        if (getLocale() === "fr") possibleAnswers.push(__("ptdr_t_ki"))
+        if (i18next.language === "fr") possibleAnswers.push(t("ptdr_t_ki"))
 
         const choice = Math.floor(Math.random() * (possibleAnswers.length))
         interaction.reply(`Question : ${interaction.options.getString("question")}\nAnswer : ${possibleAnswers[choice].toLowerCase()}`)

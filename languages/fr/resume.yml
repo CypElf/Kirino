@@ -1,0 +1,4 @@
+nothing_playing: "Il n'y a actuellement aucune musique en train d'être jouée."
+already_playing: "La musique est déjà en train d'être jouée."
+successfully_resumed: "La lecture de la musique a bien été reprise."
+not_allowed_to_control_music_because_not_in_my_voice_channel: "Vous n'êtes pas dans le même vocal que moi, alors vous n'êtes pas autorisé à faire ceci."

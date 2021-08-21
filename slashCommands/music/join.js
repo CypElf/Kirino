@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { joinVoiceChannel, createAudioPlayer, AudioPlayerStatus } = require("@discordjs/voice")
 const { Permissions } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("join")
-        .setDescription(__("description_join")),
+        .setDescription("Make me join your current voice channel"),
     guildOnly: true,
     permissions: ["connect", "speak"],
 
@@ -35,26 +36,26 @@ module.exports = {
                             currentQueue.songs.shift()
                             if (currentQueue.songs.length > 0) play(interaction.channel, currentQueue)
                             else {
-                                interaction.channel.send(`${__("queue_end_reached")} ${__("kirino_glad")}`)
+                                interaction.channel.send(`${t("queue_end_reached")} ${t("common:kirino_glad")}`)
                             }
                         })
 
-                        if (!silent) interaction.reply(`${__("voice_channel_joined")} ${__("kirino_glad")}`)
+                        if (!silent) interaction.reply(`${t("voice_channel_joined")} ${t("common:kirino_glad")}`)
                     }
                     else if (!silent) {
-                        interaction.reply({ content: `${__("missing_perm_connect")} ${__("kirino_pout")}`, ephemeral: true })
+                        interaction.reply({ content: `${t("missing_perm_connect")} ${t("common:kirino_pout")}`, ephemeral: true })
                     }
                 }
                 else if (!silent) {
-                    interaction.reply({ content: `${__("missing_perm_speak")} ${__("kirino_pout")}`, ephemeral: true })
+                    interaction.reply({ content: `${t("missing_perm_speak")} ${t("common:kirino_pout")}`, ephemeral: true })
                 }
             }
             else if (!silent) {
-                interaction.reply({ content: `${__("you_are_not_in_any_voice_channel")} ${__("kirino_pff")}`, ephemeral: true })
+                interaction.reply({ content: `${t("you_are_not_in_any_voice_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
             }
         }
         else if (!silent) {
-            interaction.reply({ content: `${__("already_in_a_voice_channel")} ${__("kirino_pout")}`, ephemeral: true })
+            interaction.reply({ content: `${t("already_in_a_voice_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
         }
     }
 }

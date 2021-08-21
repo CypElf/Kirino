@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const t = require("i18next").t.bind(require("i18next"))
 const { deflateSync } = require("zlib")
 const fetch = require("node-fetch")
 const paste = require("../../lib/misc/paste")
@@ -6,7 +7,7 @@ const paste = require("../../lib/misc/paste")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("run")
-        .setDescription("Execute a program in any given programming language and print its output")
+        .setDescription("Execute a program in any given programming language and display its output")
         .addStringOption(option => option.setName("language").setDescription("The language your code is written in").setRequired(true))
         .addStringOption(option => option.setName("code").setDescription("The code you want to execute").setRequired(true))
         .addStringOption(option => option.setName("input").setDescription("The input you want to send to the program's standard input"))
@@ -76,8 +77,8 @@ module.exports = {
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
             const url = await paste(data)
 
-            if (url === null) interaction.editReply({ content: `I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${__("kirino_what")}`, ephemeral: true })
-            else interaction.editReply(`Output was too big, I pasted it here: ${url} ${__("kirino_glad")}`)
+            if (url === null) interaction.editReply({ content: `I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${t("common:kirino_what")}`, ephemeral: true })
+            else interaction.editReply(`Output was too big, I pasted it here: ${url} ${t("common:kirino_glad")}`)
         }
         else {
             while (data.includes("```")) data = data.replace("```", "\u200B`\u200B`\u200B`\u200B") // prevent markdown code block end

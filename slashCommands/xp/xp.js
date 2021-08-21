@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { MessageAttachment, Permissions } = require("discord.js")
+const t = require("i18next").t.bind(require("i18next"))
 const Canvas = require("canvas")
 const fetch = require("node-fetch")
 const updateBackground = require("../../lib/misc/update_background")
@@ -7,7 +8,7 @@ const updateBackground = require("../../lib/misc/update_background")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("xp")
-        .setDescription("Allow to config the XP system and customize some of its elements")
+        .setDescription("Allow to consult you XP card, config the XP system or customize some of its elements")
         .addSubcommandGroup(option => option.setName("color").setDescription("Allow you to change or reset the color of your XP card").addSubcommand(option => option.setName("set").setDescription("Allow you to change the color of your XP card").addStringOption(option => option.setName("color").setDescription("The hexadecimal color code of the color you want").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Reset the color of your XP card to the default")))
         .addSubcommandGroup(option => option.setName("background").setDescription("Allow you to change or remove the custom background of your XP card").addSubcommand(option => option.setName("set").setDescription("Allow you to change the custom background of your XP card").addStringOption(option => option.setName("link").setDescription("A link to the image to set as the new custom background").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Remove the custom background from your XP card")))
         .addSubcommandGroup(option => option.setName("channel").setDescription("Allow you to change or remove the fixed channel for level up messages").addSubcommand(option => option.setName("get").setDescription("Allow you to know in what channel are currently sent the level up messages")).addSubcommand(option => option.setName("set").setDescription("Allow you to change the fixed channel for level up messages").addChannelOption(option => option.setName("channel").setDescription("The new channel for the level up messages").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Remove the fixed channel for level up messages and restore the default behavior")))
@@ -29,19 +30,19 @@ module.exports = {
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
 
         if (subcommand === "enable" || subcommand === "disable") {
-            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${__("not_allowed_to_enable_or_disable")} ${__("kirino_pff")}`, ephemeral: true })
+            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_enable_or_disable")} ${t("common:kirino_pff")}`, ephemeral: true })
             const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (subcommand === "enable") {
-                if (isEnabled) return interaction.reply({ content: `${__("xp_already_enabled")} ${__("kirino_pout")}`, ephemeral: true })
+                if (isEnabled) return interaction.reply({ content: `${t("xp_already_enabled")} ${t("common:kirino_pout")}`, ephemeral: true })
                 enableRequest.run(interaction.guild.id, 1)
-                interaction.reply(`${__("xp_enabled")} ${__("kirino_glad")}`)
+                interaction.reply(`${t("xp_enabled")} ${t("common:kirino_glad")}`)
             }
 
             else {
-                if (!isEnabled) return interaction.reply({ content: `${__("xp_already_disabled")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!isEnabled) return interaction.reply({ content: `${t("xp_already_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
                 enableRequest.run(interaction.guild.id, 0)
-                interaction.reply(`${__("xp_disabled")} ${__("kirino_glad")}`)
+                interaction.reply(`${t("xp_disabled")} ${t("common:kirino_glad")}`)
             }
         }
 
@@ -51,11 +52,11 @@ module.exports = {
             }
 
             if (subcommandGroup === "reset") {
-                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${__("not_allowed_to_reset_xp")} ${__("kirino_pff")}`, ephemeral: true })
-                if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${__("cannot_react_to_messages")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_reset_xp")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 if (subcommand === "all") {
-                    await interaction.reply(__("server_xp_reset_validation"))
+                    await interaction.reply(t("server_xp_reset_validation"))
                     const validationMessage = await interaction.fetchReply()
 
                     validationMessage.react("✅")
@@ -72,24 +73,24 @@ module.exports = {
                                 bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ? AND color IS NULL AND background IS NULL").run(profile.guild_id)
                             }
 
-                            interaction.followUp(`${__("server_xp_successfully_reset")} ${__("kirino_glad")}`)
+                            interaction.followUp(`${t("server_xp_successfully_reset")} ${t("common:kirino_glad")}`)
                         }
                         else {
-                            interaction.followUp(__("server_xp_canceled"))
+                            interaction.followUp(t("server_xp_canceled"))
                         }
                     })
                 }
                 else {
                     const user = interaction.options.getUser("user") ?? interaction.user
 
-                    if (user.bot) return interaction.reply({ content: `${__("bots_not_allowed")} ${__("kirino_pout")}`, ephemeral: true })
+                    if (user.bot) return interaction.reply({ content: `${t("bots_not_allowed")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                     const isInXpTable = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)
 
-                    if (!isInXpTable) return interaction.reply({ content: __("member_zero_xp"), ephemeral: true })
+                    if (!isInXpTable) return interaction.reply({ content: t("member_zero_xp"), ephemeral: true })
 
-                    if (user.id === interaction.user.id) await interaction.reply(__("your_xp_reset_validation"))
-                    else await interaction.reply(`${__("are_you_sure_you_want_to_reset")} ${user.username}${__("'s_xp")}`)
+                    if (user.id === interaction.user.id) await interaction.reply(t("your_xp_reset_validation"))
+                    else await interaction.reply(`${t("are_you_sure_you_want_to_reset")} ${user.username}${t("'s_xp")}`)
 
                     const validationMessage = await interaction.fetchReply()
 
@@ -102,61 +103,61 @@ module.exports = {
                         if (reaction.emoji.name === "✅") {
                             bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level").run(interaction.guild.id, user.id, 0, 0, 0)
 
-                            if (user.id === interaction.user.id) interaction.followUp(`${__("your_xp_successfully_reset")} ${__("kirino_glad")}`)
-                            else interaction.followUp(`${__("xp_reset_of")}${user.username}${__("successfully_reset")} ${__("kirino_glad")}`)
+                            if (user.id === interaction.user.id) interaction.followUp(`${t("your_xp_successfully_reset")} ${t("common:kirino_glad")}`)
+                            else interaction.followUp(`${t("xp_reset_of")}${user.username}${t("successfully_reset")} ${t("common:kirino_glad")}`)
                         }
                         else {
-                            interaction.followUp(`${__("xp_reset_of")}${user.username}${__("cancelled")}`)
+                            interaction.followUp(`${t("xp_reset_of")}${user.username}${t("cancelled")}`)
                         }
                     })
                 }
             }
 
             else if (subcommandGroup === "message") {
-                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${__("not_allowed_to_change_lvl_up_msg")} ${__("kirino_pff")}`, ephemeral: true })
+                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_lvl_up_msg")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                 const newMsg = subcommand === "reset" ? null : interaction.options.getString("message")
                 bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message").run(interaction.guild.id, 1, newMsg)
 
-                if (subcommand === "reset") interaction.reply(`${__("lvl_up_msg_reset")} ${__("kirino_glad")}`)
-                else interaction.reply(`${__("lvl_up_msg_updated")} ${__("kirino_glad")}`)
+                if (subcommand === "reset") interaction.reply(`${t("lvl_up_msg_reset")} ${t("common:kirino_glad")}`)
+                else interaction.reply(`${t("lvl_up_msg_updated")} ${t("common:kirino_glad")}`)
             }
 
             else if (subcommandGroup === "channel") {
                 if (subcommand === "get") {
                     let channel = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id).level_up_channel_id
 
-                    if (channel === null) interaction.reply(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
+                    if (channel === null) interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
                     else {
                         channel = await interaction.guild.channels.fetch(channel)
                         if (channel === undefined) {
                             bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, null)
 
-                            interaction.reply(`${__("no_level_up_channel")} ${__("kirino_glad")}`)
+                            interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
                         }
                         else {
-                            interaction.reply(`${__("level_up_channel_is")} <#${channel.id}>. ${__("kirino_glad")}`)
+                            interaction.reply(`${t("level_up_channel_is")} <#${channel.id}>. ${t("common:kirino_glad")}`)
                         }
                     }
                 }
                 else {
-                    if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${__("not_allowed_to_change_channel")} ${__("kirino_pff")}`, ephemeral: true })
+                    if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                     const channel = subcommand === "reset" ? null : interaction.options.getChannel("channel")
 
-                    if (subcommand === "set" && !channel.isText()) return interaction.reply({ content: `${__("not_a_text_channel")} ${__("kirino_pout")}`, ephemeral: true })
+                    if (subcommand === "set" && !channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                     bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, channel ? channel.id : null)
 
-                    if (channel !== null) interaction.reply(`${__("the_channel")} <#${channel.id}> ${__("has_been_set_as_level_up_channel")} ${__("kirino_glad")}`)
-                    else interaction.reply(`${__("level_up_channel_reset")} ${__("kirino_glad")}`)
+                    if (channel !== null) interaction.reply(`${t("the_channel")} <#${channel.id}> ${t("has_been_set_as_level_up_channel")} ${t("common:kirino_glad")}`)
+                    else interaction.reply(`${t("level_up_channel_reset")} ${t("common:kirino_glad")}`)
                 }
             }
 
             else if (subcommand === "import") {
-                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${__("not_allowed_to_import")} ${__("kirino_pff")}`, ephemeral: true })
+                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_import")} ${t("common:kirino_pff")}`, ephemeral: true })
 
-                await interaction.reply(__("xp_import_verification"))
+                await interaction.reply(t("xp_import_verification"))
                 const validationMessage = await interaction.fetchReply()
 
                 validationMessage.react("✅")
@@ -166,7 +167,7 @@ module.exports = {
 
                 collector.on("collect", async (reaction) => {
                     if (reaction.emoji.name === "✅") {
-                        const importMessage = await interaction.followUp(__("starting_import"))
+                        const importMessage = await interaction.followUp(t("starting_import"))
 
                         const players = []
                         let pagePlayers = []
@@ -176,7 +177,7 @@ module.exports = {
                             const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${interaction.guild.id}?limit=1000&page=${i}`)
                             const data = await res.json()
 
-                            if (!res.ok) return importMessage.edit(__("guild_not_found_on_mee6_api"))
+                            if (!res.ok) return importMessage.edit(t("guild_not_found_on_mee6_api"))
 
                             pagePlayers = data.players
                             players.push(...pagePlayers)
@@ -184,7 +185,7 @@ module.exports = {
                             i++
                         } while (pagePlayers.length > 0)
 
-                        if (players.length === 0) return importMessage.edit(__("zero_xp_found_on_mee6_api"))
+                        if (players.length === 0) return importMessage.edit(t("zero_xp_found_on_mee6_api"))
 
                         const oldPlayersRow = bot.db.prepare("SELECT user_id, color, background FROM xp_profiles WHERE guild_id = ?").all(interaction.guild.id)
                         bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?").run(interaction.guild.id)
@@ -201,10 +202,10 @@ module.exports = {
 
                             bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?,?)").run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, color, background)
                         }
-                        importMessage.edit(`${__("mee6_levels_successfully_imported")} ${__("kirino_glad")}`)
+                        importMessage.edit(`${t("mee6_levels_successfully_imported")} ${t("common:kirino_glad")}`)
                     }
                     else {
-                        interaction.followUp(__("import_cancelled"))
+                        interaction.followUp(t("import_cancelled"))
                     }
                 })
             }
@@ -216,24 +217,24 @@ module.exports = {
 
                 if (subcommand === "reset") {
                     updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
-                    interaction.reply(`${__("color_reset")} ${__("kirino_glad")}`)
+                    interaction.reply(`${t("color_reset")} ${t("common:kirino_glad")}`)
                 }
                 else {
                     let color = interaction.options.getString("color")
                     if (!color.startsWith("#")) color = `#${color}`
 
                     const colorRegex = /^#[0-9A-F]{6}$/i
-                    if (!colorRegex.test(color)) return interaction.reply({ content: `${__("invalid_color")} ${__("kirino_pout")}`, ephemeral: true })
+                    if (!colorRegex.test(color)) return interaction.reply({ content: `${t("invalid_color")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                     updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
-                    interaction.reply(`${__("color_updated")} ${__("kirino_glad")}`)
+                    interaction.reply(`${t("color_updated")} ${t("common:kirino_glad")}`)
                 }
             }
 
             else if (subcommandGroup === "background") {
                 if (subcommand === "reset") {
                     updateBackground(bot.db, null, interaction.user.id, interaction.guild.id)
-                    return interaction.reply(`${__("background_reset")} ${__("kirino_glad")}`)
+                    return interaction.reply(`${t("background_reset")} ${t("common:kirino_glad")}`)
                 }
 
                 const link = interaction.options.getString("link")
@@ -242,19 +243,19 @@ module.exports = {
                     await Canvas.loadImage(link)
                 }
                 catch {
-                    return interaction.reply({ content: `${__("bad_image")} ${__("kirino_pout")}`, ephemeral: true })
+                    return interaction.reply({ content: `${t("bad_image")} ${t("common:kirino_pout")}`, ephemeral: true })
                 }
 
                 updateBackground(bot.db, link, interaction.user.id, interaction.guild.id)
 
-                interaction.reply(`${__("background_set")} ${__("kirino_glad")}`)
+                interaction.reply(`${t("background_set")} ${t("common:kirino_glad")}`)
             }
 
             else if (subcommand === "get") {
-                if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${__("need_send_files")} ${__("kirino_pout")}`, ephemeral: true })
+                if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${t("need_send_files")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const user = interaction.options.getUser("user") ?? interaction.user
-                if (user.bot) return interaction.reply({ content: `${__("bots_not_allowed")} ${__("kirino_pff")}`, ephemeral: true })
+                if (user.bot) return interaction.reply({ content: `${t("bots_not_allowed")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                 await interaction.deferReply()
 
@@ -367,7 +368,7 @@ module.exports = {
                 ctx.strokeText(level, offsetLevel, 85)
 
                 ctx.font = "25px ubuntu" // level prefix
-                const levelPrefix = __("level").toUpperCase()
+                const levelPrefix = t("level").toUpperCase()
                 const levelPrefixMeasure = ctx.measureText(levelPrefix)
                 const offsetLevelPrefix = offsetLevel - levelPrefixMeasure.width - spaceMeasure.width * 2
                 ctx.fillText(levelPrefix, offsetLevelPrefix, 85)
@@ -381,7 +382,7 @@ module.exports = {
                 ctx.strokeText(`#${rank}`, offsetRank, 85)
 
                 ctx.font = "25px ubuntu" // rank prefix
-                const rankPrefix = __("rank").toUpperCase()
+                const rankPrefix = t("rank").toUpperCase()
                 const rankPrefixMeasure = ctx.measureText(rankPrefix)
                 const offsetRankPrefix = offsetRank - rankPrefixMeasure.width - spaceMeasure.width * 2
                 ctx.fillText(rankPrefix, offsetRankPrefix, 85)
@@ -426,8 +427,8 @@ module.exports = {
                 else {
                     ctx.fillStyle = color // max reached
                     ctx.font = "70px ubuntu"
-                    ctx.fillText(__("max_reached"), 320, 255)
-                    ctx.strokeText(__("max_reached"), 320, 255)
+                    ctx.fillText(t("max_reached"), 320, 255)
+                    ctx.strokeText(t("max_reached"), 320, 255)
                 }
 
                 ctx.beginPath() // user avatar circle filter
@@ -443,6 +444,6 @@ module.exports = {
                 interaction.editReply({ files: [card] })
             }
         }
-        else interaction.reply({ content: `${__("currently_disabled_enable_with")} \`xpconfig enable\`.`, ephemeral: true })
+        else interaction.reply({ content: `${t("currently_disabled_enable_with")} \`xpconfig enable\`.`, ephemeral: true })
     }
 }
