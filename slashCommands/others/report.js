@@ -35,14 +35,14 @@ module.exports = {
         const filter = (reaction, user) => reaction.emoji.name === "✅" && user.id === interaction.user.id || reaction.emoji.name === "❌" && user.id === interaction.user.id
         const collector = confirmationMsg.createReactionCollector({ filter, max: 1, time: 30_000 })
 
+        const senderLanguage = i18next.language
+
         collector.on("collect", async reaction => {
             if (reaction.emoji.name === "✅") {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.DEBUG_SERVER_ID)
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
                     if (reportChannel) {
-                        const senderLanguage = i18next.language
-
                         const debugServerLanguage = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(process.env.DEBUG_SERVER_ID)?.language ?? "en"
                         await i18next.changeLanguage(debugServerLanguage)
 

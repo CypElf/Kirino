@@ -6,8 +6,6 @@ const removeDeletedRolesRewards = require("../lib/rolerewards/remove_deleted_rol
 
 module.exports = bot => {
     bot.on("messageCreate", async msg => {
-        i18next.setDefaultNamespace("messageCreate")
-
         const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
         const id = msg.guild ? msg.guild.id : msg.author.id
 
@@ -35,9 +33,9 @@ module.exports = bot => {
             // minimal needed permissions
             if (!msg.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
             if (msg.content.startsWith(bot.prefix) && command) {
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(t("need_handle_messages_perm"))
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS)) return msg.channel.send(t("need_embed_links"))
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY)) return msg.channel.send(t("need_read_message_history"))
+                if (!msg.guild.me.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(t("messageCreate:need_handle_messages_perm"))
+                if (!msg.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS)) return msg.channel.send(t("messageCreate:need_embed_links"))
+                if (!msg.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY)) return msg.channel.send(t("messageCreate:need_read_message_history"))
             }
         }
 
@@ -48,7 +46,7 @@ module.exports = bot => {
 
         // ------------------------------------------------------------- prefix reminder
 
-        if (msg.mentions.users.has(bot.user.id) && msg.content === `<@!${bot.user.id}>`) return msg.channel.send(`${t("bot_mention")} \`${bot.prefix}\`.`)
+        if (msg.mentions.users.has(bot.user.id) && msg.content === `<@!${bot.user.id}>`) return msg.channel.send(`${t("messageCreate:bot_mention")} \`${bot.prefix}\`.`)
 
         // ------------------------------------------------------------- command validity check
 
@@ -56,7 +54,7 @@ module.exports = bot => {
         if (!command) return
 
         if (command.guildOnly && !msg.guild) {
-            return msg.reply(`${t("command_not_available_in_dm")} ${t("kirino_pout")}`)
+            return msg.reply(`${t("messageCreate:command_not_available_in_dm")} ${t("common:kirino_pout")}`)
         }
 
         // ------------------------------------------------------------- beta check
@@ -65,7 +63,7 @@ module.exports = bot => {
             const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
 
             if (betaRow === undefined) {
-                return msg.channel.send(`${t("command_in_beta")} \`${bot.prefix}beta enable\` ${t("kirino_glad")}`)
+                return msg.channel.send(`${t("messageCreate:command_in_beta")} \`${bot.prefix}beta enable\` ${t("common:kirino_glad")}`)
             }
         }
 
@@ -84,7 +82,7 @@ module.exports = bot => {
 
             if (now < expiration) {
                 const timeLeft = (expiration - now) / 1000
-                return msg.channel.send(`${t("please_wait")} ${timeLeft.toFixed(1)} ${t("more_sec_before_reusing_command")} \`${command.name}\`.`)
+                return msg.channel.send(`${t("messageCreate:please_wait")} ${timeLeft.toFixed(1)} ${t("messageCreate:more_sec_before_reusing_command")} \`${command.name}\`.`)
             }
         }
 
@@ -123,10 +121,10 @@ function checkAfk(bot, msg) {
         if (mentionnedAfkRow !== undefined) {
             if (mentionnedAfkRow.id != msg.author.id) {
                 if (mentionnedAfkRow.reason) {
-                    msg.channel.send(`**${mention.username}**` + t("afk_with_reason") + mentionnedAfkRow.reason)
+                    msg.channel.send(`**${mention.username}**` + t("messageCreate:afk_with_reason") + mentionnedAfkRow.reason)
                 }
                 else {
-                    msg.channel.send(`**${mention.username}**` + t("afk_without_reason"))
+                    msg.channel.send(`**${mention.username}**` + t("messageCreate:afk_without_reason"))
                 }
             }
         }
@@ -137,7 +135,7 @@ function checkAfk(bot, msg) {
     if (selfAfkRow !== undefined) {
         const deletionRequest = bot.db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
-        msg.reply(t("deleted_from_afk")).then(afkMsg => setTimeout(() => afkMsg.delete().catch(), 5000)).catch()
+        msg.reply(t("messageCreate:deleted_from_afk")).then(afkMsg => setTimeout(() => afkMsg.delete().catch(), 5000)).catch()
     }
 }
 
@@ -216,7 +214,7 @@ async function handleXp(bot, msg, obj) {
                     newLvl += 1
                     newXp = newXp - nextLevelXp
 
-                    if (levelUpMsg === null) levelUpMsg = t("default_lvl_up_msg")
+                    if (levelUpMsg === null) levelUpMsg = t("messageCreate:default_lvl_up_msg")
                     levelUpMsg = levelUpMsg
                         .replace("{user}", `<@${msg.author.id}>`)
                         .replace("{username}", msg.author.username)
@@ -237,7 +235,7 @@ async function handleXp(bot, msg, obj) {
 
                     await channel.send(levelUpMsg)
 
-                    if (newLvl === 100) channel.send(t("lvl_100_congrats"))
+                    if (newLvl === 100) channel.send(t("messageCreate:lvl_100_congrats"))
 
                     await removeDeletedRolesRewards(bot.db, msg.guild)
 
@@ -248,21 +246,21 @@ async function handleXp(bot, msg, obj) {
                         if (row.level === newLvl) {
                             const role = [...msg.guild.roles.cache.values()].find(currentRole => currentRole.id === row.role_id)
                             if ([...msg.member.roles.cache.values()].includes(role)) {
-                                channel.send(`${t("you_already_have_the_role")} ${role.name}, ${t("so_i_did_not_gave_it_to_you")}`).catch(() => {
-                                    msg.channel.send(`${t("you_already_have_the_role")} ${role.name}, ${t("so_i_did_not_gave_it_to_you")}`)
+                                channel.send(`${t("messageCreate:you_already_have_the_role")} ${role.name}, ${t("messageCreate:so_i_did_not_gave_it_to_you")}`).catch(() => {
+                                    msg.channel.send(`${t("messageCreate:you_already_have_the_role")} ${role.name}, ${t("messageCreate:so_i_did_not_gave_it_to_you")}`)
                                 })
                             }
                             else {
                                 try {
                                     await msg.member.roles.add(role)
 
-                                    channel.send(`${t("i_gave_you_the_role")} ${role.name}.`).catch(() => {
-                                        msg.channel.send(`${t("i_gave_you_the_role")} ${role.name}.`)
+                                    channel.send(`${t("messageCreate:i_gave_you_the_role")} ${role.name}.`).catch(() => {
+                                        msg.channel.send(`${t("messageCreate:i_gave_you_the_role")} ${role.name}.`)
                                     })
                                 }
                                 catch {
-                                    channel.send(`${t("i_should_have_given_you")} ${role.name}, ${t("could_not_add_you_role")}`).catch(() => {
-                                        msg.channel.send(`${t("i_should_have_given_you")} ${role.name}, ${t("could_not_add_you_role")}`)
+                                    channel.send(`${t("messageCreate:i_should_have_given_you")} ${role.name}, ${t("messageCreate:could_not_add_you_role")}`).catch(() => {
+                                        msg.channel.send(`${t("messageCreate:i_should_have_given_you")} ${role.name}, ${t("messageCreate:could_not_add_you_role")}`)
                                     })
                                 }
                             }
