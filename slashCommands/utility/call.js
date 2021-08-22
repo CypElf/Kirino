@@ -11,7 +11,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("call")
         .setDescription("Start a call or configure the calls settings")
-        .addSubcommand(option => option.setName("start").setDescription("Start a new call").addStringOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true))) // TODO : replace addIntegerOption by addNumberOption once available
+        .addSubcommand(option => option.setName("start").setDescription("Start a new call").addIntegerOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true))) // TODO : replace addIntegerOption by addNumberOption once available
         .addSubcommandGroup(option => option.setName("channel").setDescription("Manage the channel in which the call result will be sent").addSubcommand(option => option.setName("get").setDescription("Display the currently set channel in which the calls results will be sent")).addSubcommand(option => option.setName("set").setDescription("Change the channel in which the calls results will be sent").addChannelOption(option => option.setName("channel").setDescription("The new channel in which to send the calls results").setRequired(true))).addSubcommand(option => option.setName("dm").setDescription("Set the channel in which the calls results will be to the user's DM")).addSubcommand(option => option.setName("reset").setDescription("Restore the default behavior where the results are sent in the same channel as the call itself")))
         .addSubcommand(option => option.setName("asfile").setDescription("Enable or disable if the calls results are sent as plain text or as a text file in an attachment").addBooleanOption(option => option.setName("as_file").setDescription("Whether to send the file as plain text or as a text file in an attachment").setRequired(true))),
     guildOnly: true,
@@ -76,7 +76,7 @@ module.exports = {
         }
 
         else if (subcommand === "start") {
-            const duration = Math.round((parseFloat(interaction.options.getString("duration")) + Number.EPSILON) * 100) / 100 // TODO : change getInteger to getNumber
+            const duration = Math.round((parseFloat(interaction.options.getInteger("duration")) + Number.EPSILON) * 100) / 100 // TODO : change getInteger to getNumber
             if (duration <= 0 || duration >= 15) return interaction.reply({ content: `${t("duration_out_of_range")} ${t("common:kirino_pout")}`, ephemeral: true })
 
             const row = bot.db.prepare("SELECT channel_id, dm, asfile FROM calls WHERE guild_id = ?").get(interaction.guild.id) ?? { channel_id: null, dm: 0, asfile: 0 }
