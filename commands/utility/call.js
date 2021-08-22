@@ -1,6 +1,9 @@
 const { MessageAttachment, Permissions } = require("discord.js")
-const formatDate = require("../../lib/misc/format_date")
+const dayjs = require("dayjs")
+const utc = require("dayjs/plugin/utc")
 const getChannel = require("../../lib/getters/get_channel")
+
+dayjs.extend(utc)
 
 module.exports = {
     name: "call",
@@ -138,7 +141,7 @@ module.exports = {
 
                     msg.channel.send(`**${__("record_ended")}** ${__("kirino_glad")}`)
 
-                    const txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${formatDate(new Date())})` : ""} :\n`]
+                    const txt = [`${row.asfile ? "" : "**"}${__("record_from")} ${msg.author.username}${__("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${dayjs.utc().format("HH:mm:ss DD/MM/YYYY")}) UTC` : ""} :\n`]
                     if (members.length === 0) txt[0] += __("nobody")
 
                     if (row.asfile) txt[0] += members.join("\n")

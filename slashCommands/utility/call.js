@@ -1,14 +1,17 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { MessageAttachment, Permissions } = require("discord.js")
+const dayjs = require("dayjs")
+const utc = require("dayjs/plugin/utc")
 const i18next = require("i18next")
 const t = i18next.t.bind(i18next)
-const formatDate = require("../../lib/misc/format_date")
+
+dayjs.extend(utc)
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("call")
         .setDescription("Start a call or configure the calls settings")
-        .addSubcommand(option => option.setName("start").setDescription("Start a new call").addIntegerOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true))) // TODO : replace addIntegerOption by addNumberOption once available
+        .addSubcommand(option => option.setName("start").setDescription("Start a new call").addStringOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true))) // TODO : replace addIntegerOption by addNumberOption once available
         .addSubcommandGroup(option => option.setName("channel").setDescription("Manage the channel in which the call result will be sent").addSubcommand(option => option.setName("get").setDescription("Display the currently set channel in which the calls results will be sent")).addSubcommand(option => option.setName("set").setDescription("Change the channel in which the calls results will be sent").addChannelOption(option => option.setName("channel").setDescription("The new channel in which to send the calls results").setRequired(true))).addSubcommand(option => option.setName("dm").setDescription("Set the channel in which the calls results will be to the user's DM")).addSubcommand(option => option.setName("reset").setDescription("Restore the default behavior where the results are sent in the same channel as the call itself")))
         .addSubcommand(option => option.setName("asfile").setDescription("Enable or disable if the calls results are sent as plain text or as a text file in an attachment").addBooleanOption(option => option.setName("as_file").setDescription("Whether to send the file as plain text or as a text file in an attachment").setRequired(true))),
     guildOnly: true,
@@ -73,10 +76,10 @@ module.exports = {
         }
 
         else if (subcommand === "start") {
-            const duration = Math.round((parseFloat(interaction.options.getInteger("duration")) + Number.EPSILON) * 100) / 100 // TODO : change getInteger to getNumber
+            const duration = Math.round((parseFloat(interaction.options.getString("duration")) + Number.EPSILON) * 100) / 100 // TODO : change getInteger to getNumber
             if (duration <= 0 || duration >= 15) return interaction.reply({ content: `${t("duration_out_of_range")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            const row = bot.db.prepare("SELECT channel_id, dm FROM calls WHERE guild_id = ?").get(interaction.guild.id) ?? { channel_id: null, dm: 0, asfile: 0 }
+            const row = bot.db.prepare("SELECT channel_id, dm, asfile FROM calls WHERE guild_id = ?").get(interaction.guild.id) ?? { channel_id: null, dm: 0, asfile: 0 }
             const current = row.channel_id === null && row.dm === 0
 
             const lock = bot.calls.get(interaction.guild.id) ?? 0
@@ -84,7 +87,7 @@ module.exports = {
             if (lock >= 3) return interaction.reply({ content: `${t("records_still_going_on")} ${t("common:kirino_pout")}`, ephemeral: true })
 
             let channel
-            const channels = [...await interaction.guild.channels.fetch()].filter(ch => ch.id === row.channel_id)
+            const channels = [...(await interaction.guild.channels.fetch()).values()].filter(ch => ch.id === row.channel_id)
 
             if (channels.length > 0 || row.dm || current) {
                 bot.calls.set(interaction.guild.id, lock + 1)
@@ -106,7 +109,7 @@ module.exports = {
                 const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
 
                 await i18next.changeLanguage(languageBak)
-                i18next.setDefaultNamespace("call")
+                i18next.setDefaultNamespace("call") // in case another command changed the namespace while waiting for the reactions
 
                 for (const reaction of [...collected.values()]) {
                     let presents
@@ -132,9 +135,12 @@ module.exports = {
                         return txt
                     })
 
-                    interaction.followUp(`**${t("record_ended")}** ${t("common:kirino_glad")}`)
+                    const msg = await interaction.fetchReply()
+                    msg.reactions.removeAll()
 
-                    const txt = [`${row.asfile ? "" : "**"}${t("record_from")} ${interaction.user.username}${t("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${formatDate(new Date())})` : ""} :\n`]
+                    interaction.editReply(`**${t("record_ended")}** ${t("common:kirino_glad")}`)
+
+                    const txt = [`${row.asfile ? "" : "**"}${t("record_from")} ${interaction.user.username}${t("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${dayjs.utc().format("HH:mm:ss DD/MM/YYYY")} UTC)` : ""} :\n`]
                     if (members.length === 0) txt[0] += t("nobody")
 
                     if (row.asfile) txt[0] += members.join("\n")
@@ -154,11 +160,7 @@ module.exports = {
                         const content = isFile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
 
                         try {
-                            if (current) {
-                                if (isFile) await interaction.followUp({ files: [content] })
-                                else await interaction.followUp(content)
-                            }
-                            else if (isFile) await channel.send({ files: [content] })
+                            if (isFile) await channel.send({ files: [content] })
                             else await channel.send(content)
                         }
                         catch {
@@ -169,10 +171,10 @@ module.exports = {
                                 bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id) // if the channel has been deleted during the call, it cannot be valid anymore in the future
                                 deleteRowIfEmpty(bot.db, interaction.guild.id)
                             }
-                            interaction.followUp(`${errorMsg}\n${t("so_i_will_send_it_here")}`)
+                            interaction.channel.send(`${errorMsg}\n${t("so_i_will_send_it_here")}`)
 
-                            if (isFile) interaction.followUp({ files: [content] })
-                            else interaction.followUp(content)
+                            if (isFile) interaction.channel.send({ files: [content] })
+                            else interaction.channel.send(content)
                         }
                     }
                 }
