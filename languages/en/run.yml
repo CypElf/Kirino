@@ -1,0 +1,5 @@
+send_your_code: "Please send the code you want to execute now as plain text or in an attached file."
+cancelled: "You didn't send your code after a minute, so the command has been cancelled."
+paste_error: "I'm sorry, your code output is too big and my attempts to create pastes with your output all failed."
+pasted_here: "Output was too big, I pasted it here:"
+file_too_big: "The code you submitted is too big, you can't submit a file larger than {{max_size}} Mo."

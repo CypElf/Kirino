@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const t = require("i18next").t.bind(require("i18next"))
+const i18next = require("i18next")
+const t = i18next.t.bind(i18next)
 const { deflateSync } = require("zlib")
 const fetch = require("node-fetch")
 const paste = require("../../lib/misc/paste")
@@ -7,16 +8,29 @@ const paste = require("../../lib/misc/paste")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("run")
-        .setDescription("Execute a program in any given programming language and display its output")
+        .setDescription("Execute your code in any given programming language and give you the output")
         .addStringOption(option => option.setName("language").setDescription("The language your code is written in").setRequired(true))
-        .addStringOption(option => option.setName("code").setDescription("The code you want to execute").setRequired(true))
         .addStringOption(option => option.setName("input").setDescription("The input you want to send to the program's standard input"))
         .addStringOption(option => option.setName("args").setDescription("The command line arguments you want to send to the program"))
         .addStringOption(option => option.setName("flags").setDescription("The flags you want to submit to the C compiler if used")),
     guildOnly: false,
 
     async execute(bot, interaction) {
-        interaction.deferReply()
+        interaction.reply(`${t("send_your_code")} ${t("common:kirino_glad")}`)
+        const replyMsg = await interaction.fetchReply()
+        let codeMsg
+
+        const filter = msg => msg.author.id === interaction.user.id
+        try {
+            const collected = await interaction.channel.awaitMessages({ filter, max: 1, time: 60_000, errors: ["time"] })
+            codeMsg = [...collected.values()][0]
+        }
+        catch {
+            replyMsg.delete()
+            return interaction.followUp({ content: `${t("cancelled")} ${t("common:kirino_pout")}`, ephemeral: true })
+        }
+
+        i18next.setDefaultNamespace("run") // in case while we were awaiting for messages another command changed the namespace
 
         const defaults = new Map(Object.entries({
             asm: "assembly-nasm",
@@ -63,8 +77,33 @@ module.exports = {
             vb: "vb-core"
         }))
 
-        const language = defaults.get(interaction.options.getString("language")) ?? interaction.options.getString("language")
-        const code = interaction.options.getString("code")
+        let code
+        let gotFromAttachment = false
+
+        if (codeMsg.attachments.size > 0) {
+            const max_size = 1 // Mo
+
+            const attachment = [...codeMsg.attachments.values()][0]
+            if (attachment.size > max_size * 1_000_000) {
+                codeMsg.delete()
+                return interaction.editReply(`${t("file_too_big", { max_size })} ${__("kirino_pout")}`)
+            }
+            const res = await fetch(attachment.url)
+            if (res.ok) {
+                code = await res.text()
+                gotFromAttachment = true
+            }
+        }
+
+        if (!gotFromAttachment) {
+            code = codeMsg.content
+
+            if (code.split("\n").length > 1 && code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
+            else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
+            if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
+        }
+
+        const language = defaults.get(interaction.options.getString("language").toLowerCase()) ?? interaction.options.getString("language").toLowerCase()
         const input = interaction.options.getString("input") ?? ""
         const args = interaction.options.getString("args")?.split(" ") ?? []
         const flags = interaction.options.getString("flags")?.split(" ") ?? []
@@ -77,14 +116,18 @@ module.exports = {
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
             const url = await paste(data)
 
-            if (url === null) interaction.editReply({ content: `I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${t("common:kirino_what")}`, ephemeral: true })
-            else interaction.editReply(`Output was too big, I pasted it here: ${url} ${t("common:kirino_glad")}`)
+            if (url === null) {
+                replyMsg.delete()
+                codeMsg.delete()
+                interaction.followUp({ content: `${t("paste_error")} ${t("common:kirino_what")}`, ephemeral: true })
+            }
+            else codeMsg.reply({ content: `${t("pasted_here")} ${url} ${t("common:kirino_glad")}`, allowedMentions: { repliedUser: false } })
         }
         else {
-            while (data.includes("```")) data = data.replace("```", "\u200B`\u200B`\u200B`\u200B") // prevent markdown code block end
-            data = "```\n" + data + "\n```"
+            // prevent markdown code block within the output by adding zero width spaces between the backticks
+            data = "```\n" + data.replaceAll("```", "\u200B`\u200B`\u200B`\u200B") + "\n```"
 
-            interaction.editReply(data)
+            codeMsg.reply({ content: data, allowedMentions: { repliedUser: false } })
         }
     }
 }

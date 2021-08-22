@@ -108,7 +108,7 @@ module.exports = {
         }
 
         let language = args[0].split("\n")[0]
-        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer its
+        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer it
         if (defaults.has(language)) language = defaults.get(language)
 
         args = args.join(" ")
@@ -151,7 +151,7 @@ module.exports = {
         }
 
         if (!gotFromAttachment) {
-            if (code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
+            if (code.split("\n").length > 1 && code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
             else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
             if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
         }
@@ -169,8 +169,8 @@ module.exports = {
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
             const url = await paste(data)
 
-            if (url === null) msg.channel.send(`I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${__("kirino_what")}`)
-            else msg.channel.send(`Output was too big, I pasted it here: ${url} ${__("kirino_glad")}`)
+            if (url === null) msg.channel.send(`${__("paste_error")} ${__("kirino_what")}`)
+            else msg.channel.send(`${__("pasted_here")} ${url} ${__("kirino_glad")}`)
         }
         else {
             while (data.includes("```")) data = data.replace("```", "\u200B`\u200B`\u200B`\u200B") // prevent markdown code block end
