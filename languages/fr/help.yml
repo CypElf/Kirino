@@ -1,16 +1,18 @@
-you_can_do: "Vous pouvez faire"
-usage_help: "{commande}"
-to_get_infos_on_a_command: "pour avoir des informations sur une commande en particulier."
-this_command_does_not_exist: "Cette commande n'existe pas."
-command: "Commande"
-help_footer: "[argument] = obligatoire | {argument} = optionnel | permission = toujours nécessaire | {permission} = nécessaire dans certains cas"
-description: "Description"
-description_continuation: "Suite de la description"
-available_in_dm: "Disponible en messages privés"
-no: "non"
-yes: "oui"
-aliases: "Aliases"
-usage: "Utilisation"
-cooldown: "Cooldown"
-required_permissions: "Permissions requises"
-nothingF: "rien"
+help: "Aide"
+q_and_a: "FAQ"
+q_and_a_content: |-
+  **"Comment utiliser la commande [insérer nom de commande] ?"**
+  
+  Consultez sa description et la description de ses paramètres dans les commandes slash, tout y est expliqué.
+  
+  **"J'ai trouvé un bug ou rencontré un problème !"**
+  
+  Si une erreur est survenue, elle est habituellement immédiatement logguée et corrigée après un petit délai. Pour quoi que ce soit d'autre, n'hésitez pas à utiliser la commande `report` pour m'informer du problème.
+  
+  **"Je veux être informé des changements que Kirino reçoit"**
+  
+  Rejoignez simplement le [serveur de support](https://discord.gg/NNAGZCz) et lisez le salon <#742723228983885887>. Vous pouvez aussi le suivre pour consulter ses messages dans un autre serveur.
+  
+  **"J'ai besoin de discuter avec vous de quelque chose lié au bot, un report n'est pas adapté."**
+  
+  Rejoignez le [serveur de support](https://discord.gg/NNAGZCz) et vous devriez pouvoir me MP, mais préférez faire un report à la place si c'est adapté à la situation, c'est plus simple pour moi à gérer.

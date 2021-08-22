@@ -45,7 +45,6 @@ i18next.use(Backend).init({
 })
 
 startXpApi(bot, { cooldowns: bot.apiCooldowns })
-// startCommandsApi(bot, { cooldowns: bot.apiCooldowns }) // TODO : uncomment
 
 const eventsFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"))
 for (const file of eventsFiles) {
@@ -208,48 +207,3 @@ function startXpApi(obj) {
         }
     }).listen(62150)
 }
-
-// TODO : adapt it to the new i18n system and slash commands
-// function startCommandsApi(obj) {
-//     http.createServer(async (req, res) => {
-//         if (controlRequest(req, res, obj, 0)) {
-//             let { category } = url.parse(req.url, true).query
-//             const { lang } = url.parse(req.url, true).query
-
-//             if (!category) category = "all"
-
-//             category = category.toLowerCase()
-
-//             const localeBak = getLocale()
-//             setLocale(lang !== undefined && lang.toLowerCase() === "fr" ? "fr" : "en")
-
-//             if (category !== "all" && !categories.includes(category)) {
-//                 res.writeHead(404) // HTTP status code 404 = Not Found
-//                 res.write(JSON.stringify({ "errors": ["The specified category does not exist."] }))
-//                 return res.end()
-//             }
-
-//             const categoriesToGet = category === "all" ? categories : [category]
-
-//             let commands = []
-
-//             for (const cat of categoriesToGet) {
-//                 const currentCommands = bot.commands.filter(command => command.category === cat).map(command => {
-//                     command.description = __(`description_${command.name}`)
-//                     if (`usage_${command.name}` !== __(`usage_${command.name}`)) command.usage = __(`usage_${command.name}`).split("\n").map(usage => usage.startsWith("nocommand ") ? usage.slice(10) : `${command.name} ${usage}`).join("\n")
-//                     return command
-//                 })
-
-//                 if (currentCommands) {
-//                     commands = commands.concat(currentCommands)
-//                 }
-//             }
-
-//             setLocale(localeBak)
-
-//             res.writeHead(200) // HTTP status code 200 = OK
-//             res.write(JSON.stringify({ "category": category, "commands": commands }))
-//             res.end()
-//         }
-//     }).listen(62151)
-// }

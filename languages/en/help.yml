@@ -1,16 +1,18 @@
-you_can_do: "You can do"
-usage_help: "{command}"
-to_get_infos_on_a_command: "to get informations on a particular command."
-this_command_does_not_exist: "This command does not exist."
-command: "Command"
-help_footer: "[argument] = required | {argument} = optional | permission = always needed | {permission} = needed in some cases"
-description: "Description"
-description_continuation: "Description continuation"
-available_in_dm: "Available in direct messages"
-no: "no"
-yes: "yes"
-aliases: "Aliases"
-usage: "Usage"
-cooldown: "Cooldown"
-required_permissions: "Required permissions"
-nothingF: "none"
+help: "Help"
+q_and_a: "Q & A"
+q_and_a_content: |-
+  **"How to use the command [insert command name]?"**
+  
+  Check its description and parameters descriptions in the slash commands, everything is explained here.
+  
+  **"I found a bug or encountered a problem!"**
+  
+  If an error happened, it usually gets instantly logged then fixed shortly after that. For anything else, don't hesitate to use the `report` command to submit the issue to me.
+  
+  **"I want to be informed of the changes Kirino receives."**
+  
+  Just join the [support server](https://discord.gg/NNAGZCz) and read the <#742723228983885887> channel. You can also follow it to consult the messages in another server.
+  
+  **"I need to discuss with you about something related to this bot, so a report isn't adapted."**
+  
+  Join the [support server](https://discord.gg/NNAGZCz) and you should be able to DM me, but consider making a report instead if it applies to the situation, as it's easier for me to track.
