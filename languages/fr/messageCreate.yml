@@ -15,6 +15,5 @@ you_already_have_the_role: "Tu as déjà le rôle"
 so_i_did_not_gave_it_to_you: "donc je ne te l'ai pas ajouté."
 i_gave_you_the_role: "Je t'ai donné le rôle"
 i_should_have_given_you: "Normalement, j'aurais du te donner le rôle"
-could_not_add_you_role: "mais je n'ai pas pu...
-Soit je n'ai pas la permission d'ajouter des rôles, soit le rôle en question est au dessus de mon plus haut rôle. Veuillez demander à un modérateur ou administrateur de votre serveur de vérifier ces deux choses afin de résoudre le problème."
+could_not_add_you_role: "mais je n'ai pas pu...\nSoit je n'ai pas la permission d'ajouter des rôles, soit le rôle en question est au dessus de mon plus haut rôle. Veuillez demander à un modérateur ou administrateur de votre serveur de vérifier ces deux choses afin de résoudre le problème."
 command_runtime_error: "Je suis désolée, mais une erreur est survenue pendant l'exécution de votre commande."

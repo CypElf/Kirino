@@ -15,6 +15,5 @@ you_already_have_the_role: "You already have the role"
 so_i_did_not_gave_it_to_you: "so I didn't gave it to you."
 i_gave_you_the_role: "I gave you the role"
 i_should_have_given_you: "Normally, I would've given you the role"
-could_not_add_you_role: "but I couldn't...
-Either I don't have permission to add roles, or the role in question is above my highest role. Please ask a moderator or administrator of your server to check both of these things to resolve the issue."
+could_not_add_you_role: "but I couldn't...\nEither I don't have permission to add roles, or the role in question is above my highest role. Please ask a moderator or administrator of your server to check both of these things to resolve the issue."
 command_runtime_error: "I'm sorry, but an error happened while executing your command."

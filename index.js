@@ -31,7 +31,6 @@ i18n.configure({ // TODO : when legacy commands support will be dropped, remove 
 })
 
 i18next.use(Backend).init({
-    debug: true,
     lng: "en",
     fallbackLng: "en",
     supportedLngs: ["en", "fr"],

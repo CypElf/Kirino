@@ -38,6 +38,8 @@ module.exports = {
         const senderLanguage = i18next.language
 
         collector.on("collect", async reaction => {
+            await i18next.changeLanguage(senderLanguage) // in case another command is done and the language / namespace changed while the collector was waiting
+            i18next.setDefaultNamespace("report")
             if (reaction.emoji.name === "✅") {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.DEBUG_SERVER_ID)
                 if (kirinoDebug) {

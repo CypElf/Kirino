@@ -51,6 +51,7 @@ module.exports = {
 
                 collector.on("collect", async reaction => {
                     await i18next.changeLanguage(localeBackup)
+                    i18next.setDefaultNamespace("beta")
                     if (reaction.emoji.name === "✅") {
                         bot.db.prepare("INSERT INTO beta VALUES(?)").run(id)
                         confirmationMsg.reactions.removeAll()

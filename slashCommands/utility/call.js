@@ -104,7 +104,9 @@ module.exports = {
 
                 const languageBak = i18next.language
                 const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
+
                 await i18next.changeLanguage(languageBak)
+                i18next.setDefaultNamespace("call")
 
                 for (const reaction of [...collected.values()]) {
                     let presents
