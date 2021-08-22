@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageAttachment, Permissions } = require("discord.js")
+const { MessageAttachment, Permissions, Util } = require("discord.js")
 const dayjs = require("dayjs")
 const utc = require("dayjs/plugin/utc")
 const i18next = require("i18next")
@@ -99,11 +99,13 @@ module.exports = {
                 else if (current) channel = interaction.channel
                 else channel = channels[0]
 
-                await interaction.reply(`**${t("record_started")}** ${t("common:kirino_glad")}\n${t("you_have")} ${duration} ${t("min_to_raise_the_hand")} 🙋.`)
-                const recordMsg = await interaction.fetchReply()
-                recordMsg.react("🙋")
+                const callEmoji = "🙋"
 
-                const filter = reaction => reaction.emoji.name === "🙋"
+                await interaction.reply(`**${t("record_started")}** ${t("common:kirino_glad")}\n${t("you_have_x_min_to_react", { count: duration })} ${callEmoji}.`)
+                const recordMsg = await interaction.fetchReply()
+                recordMsg.react(callEmoji)
+
+                const filter = reaction => reaction.emoji.name === callEmoji
 
                 const languageBak = i18next.language
                 const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
@@ -135,32 +137,26 @@ module.exports = {
                         return txt
                     })
 
+                    members = Array(500).fill("- JSPPPPPPPPPP")
+
                     const msg = await interaction.fetchReply()
                     msg.reactions.removeAll()
 
                     interaction.editReply(`**${t("record_ended")}** ${t("common:kirino_glad")}`)
 
-                    const txt = [`${row.asfile ? "" : "**"}${t("record_from")} ${interaction.user.username}${t("s_call")}${row.asfile ? "" : "**"} ${row.asfile ? `(${dayjs.utc().format("HH:mm:ss DD/MM/YYYY")} UTC)` : ""} :\n`]
-                    if (members.length === 0) txt[0] += t("nobody")
-
-                    if (row.asfile) txt[0] += members.join("\n")
+                    let result = `${row.asfile ? "" : "**"}${t("record_from_call", { username: interaction.user.username })}${row.asfile ? "" : "**"} ${row.asfile ? `(${dayjs.utc().format("HH:mm:ss DD/MM/YYYY")} UTC)` : ""} :\n`
+                    if (members.length === 0) result += t("nobody")
                     else {
-                        let i = 0
-                        for (const record of members) {
-                            if (txt[i].length + record.length <= 2000) txt[i] += record + "\n"
-                            else {
-                                i++
-                                txt.push("")
-                            }
-                        }
+                        result += members.join("\n")
                     }
 
-                    for (const chunk of txt) {
-                        const isFile = row.asfile
-                        const content = isFile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
+                    result = row.asfile ? [result] : Util.splitMessage(result)
+
+                    for (const chunk of result) {
+                        const content = row.asfile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
 
                         try {
-                            if (isFile) await channel.send({ files: [content] })
+                            if (row.asfile) await channel.send({ files: [content] })
                             else await channel.send(content)
                         }
                         catch {
@@ -173,7 +169,7 @@ module.exports = {
                             }
                             interaction.channel.send(`${errorMsg}\n${t("so_i_will_send_it_here")}`)
 
-                            if (isFile) interaction.channel.send({ files: [content] })
+                            if (row.asfile) interaction.channel.send({ files: [content] })
                             else interaction.channel.send(content)
                         }
                     }
