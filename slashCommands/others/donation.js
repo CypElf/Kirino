@@ -13,7 +13,7 @@ module.exports = {
             .addField(t("make_donation_title"), t("make_donation") + "(https://www.paypal.me/cypelf).")
             .setColor("#DFC900")
             .setThumbnail("https://cdn.discordapp.com/attachments/689424377770541071/699210423290953838/Logo.jpg")
-            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
 
         interaction.reply({ embeds: [donationEmbed] })
     }

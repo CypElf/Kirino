@@ -1,4 +1,3 @@
-request_from: "Requête de "
 less_or_equal_to_340: "Le message doit être inférieur ou égal à 340 caractères."
 original_message: "Message d'origine"
 encoded_message: "Message encodé"

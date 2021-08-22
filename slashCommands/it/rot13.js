@@ -21,7 +21,7 @@ module.exports = {
             .setColor("#555599")
             .addField(t("original_message"), plaintext)
             .addField(t("encoded_message"), encrypted)
-            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
 
         interaction.reply({ embeds: [baseEmbed] })
     }

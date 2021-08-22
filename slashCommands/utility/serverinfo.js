@@ -87,7 +87,7 @@ module.exports = {
         informations.addField(t("channels"), textChannelsCount + " " + t("text_channel", { count: textChannelsCount }) + ", " + voiceChannelsCount + " " + t("vocal_channel", { count: voiceChannelsCount }), true)
             .addField(t("server_creation_date"), `${time(interaction.guild.createdAt)} (${time(interaction.guild.createdAt, "R")})`)
             .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
-            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
 
         interaction.reply({ embeds: [informations] })
     }

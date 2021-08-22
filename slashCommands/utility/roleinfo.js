@@ -26,7 +26,7 @@ module.exports = {
             .addField(t("external_handler"), role.managed ? t("yes") : t("no"), true)
             .addField(t("role_creation_date"), `${time(role.createdAt)} (${time(role.createdAt, "R")})`)
             .addField(t("permissions"), perms !== "``" ? perms : "`" + t("no_permissions") + "`")
-            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
 
         interaction.reply({ embeds: [informations] })
     }

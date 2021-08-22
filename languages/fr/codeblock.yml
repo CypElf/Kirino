@@ -1,5 +1,5 @@
 send_code: "Envoyer du code sur discord"
-explanation_code: "Pour envoyer du code sur discord, utilisez 3 symboles accent grave **`** (ALT GR + 7) pour ouvrir un bloc de code puis 3 autres pour le fermer. Enfin, pour activer la coloration syntaxique adéquate au langage de programmation utilisé, écrivez le nom de ce langage de programmation collé aux 3 **`** ouvrants.
+explanation_code: |-
+  Pour envoyer du code sur discord, utilisez 3 symboles accent grave **`** (ALT GR + 7) pour ouvrir un bloc de code puis 3 autres pour le fermer. Enfin, pour activer la coloration syntaxique adéquate au langage de programmation utilisé, écrivez le nom de ce langage de programmation collé aux 3 **`** ouvrants.
 
-Exemple :"
-request_from: "Requête de "
+  Exemple :

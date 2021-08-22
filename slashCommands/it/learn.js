@@ -28,7 +28,7 @@ module.exports = {
         const techno = interaction.options.getString("techno")
 
         const linksEmbed = new MessageEmbed()
-            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
 
         if (techno === "C") {
             linksEmbed

@@ -2,4 +2,3 @@ less_or_equal_to_1024: "Le message doit être inférieur ou égal à 1024 caract
 md5_hashing: "Hashage MD5"
 original_message: "Message d'origine"
 hash: "Hash"
-request_from: "Requête de "

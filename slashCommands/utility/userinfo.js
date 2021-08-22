@@ -60,7 +60,7 @@ module.exports = {
             .addField(t("role", { count: nbRoles }), roles, true)
             .addField(t("permissions"), perms)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
 
         interaction.reply({ embeds: [informations] })
     }

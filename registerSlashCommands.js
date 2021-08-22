@@ -3,17 +3,6 @@ require("dotenv").config()
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
-const i18n = require("i18n")
-const yaml = require("js-yaml")
-
-i18n.configure({
-    locales: ["en", "fr"],
-    staticCatalog: {
-        en: yaml.safeLoad(fs.readFileSync("./languages/en.yml", "utf-8")),
-        fr: yaml.safeLoad(fs.readFileSync("./languages/fr.yml", "utf-8"))
-    },
-    register: global
-})
 
 const commands = []
 const categories = fs.readdirSync("./slashCommands")
