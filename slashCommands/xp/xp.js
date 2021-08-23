@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageAttachment, Permissions } = require("discord.js")
+const { MessageAttachment, Permissions, MessageButton, MessageActionRow } = require("discord.js")
 const t = require("i18next").t.bind(require("i18next"))
 const Canvas = require("canvas")
 const fetch = require("node-fetch")
@@ -47,25 +47,35 @@ module.exports = {
         }
 
         else if (isEnabled) {
-            const filter = (reaction, user) => {
-                return reaction.emoji.name === "✅" && user.id === interaction.user.id || reaction.emoji.name === "❌" && user.id === interaction.user.id
+            const filter = i => {
+                i.deferUpdate()
+                return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
             }
+
+            const actionRow = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                        .setCustomId("confirmed")
+                        .setLabel(t("confirm"))
+                        .setStyle("DANGER"),
+                    new MessageButton()
+                        .setCustomId("cancelled")
+                        .setLabel(t("cancel"))
+                        .setStyle("SECONDARY")
+                )
 
             if (subcommandGroup === "reset") {
                 if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_reset_xp")} ${t("common:kirino_pff")}`, ephemeral: true })
                 if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 if (subcommand === "all") {
-                    await interaction.reply(t("server_xp_reset_validation"))
+                    await interaction.reply({ content: `${t("server_xp_reset_validation")} ${t("common:kirino_what")}`, components: [actionRow] })
                     const validationMessage = await interaction.fetchReply()
 
-                    validationMessage.react("✅")
-                    validationMessage.react("❌")
+                    const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
-                    const collector = validationMessage.createReactionCollector({ filter, max: 1, time: 30_000 })
-
-                    collector.on("collect", (reaction) => {
-                        if (reaction.emoji.name === "✅") {
+                    collector.on("collect", i => {
+                        if (i.customId === "confirmed") {
                             const profiles = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ?").all(interaction.guild.id)
 
                             for (const profile of profiles) {
@@ -73,10 +83,10 @@ module.exports = {
                                 bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ? AND color IS NULL AND background IS NULL").run(profile.guild_id)
                             }
 
-                            interaction.followUp(`${t("server_xp_successfully_reset")} ${t("common:kirino_glad")}`)
+                            interaction.editReply({ content: `${t("server_xp_successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
                         }
                         else {
-                            interaction.followUp(t("server_xp_canceled"))
+                            interaction.editReply({ content: `${t("server_xp_cancelled")} ${t("common:kirino_pout")}`, components: [] })
                         }
                     })
                 }
@@ -89,25 +99,21 @@ module.exports = {
 
                     if (!isInXpTable) return interaction.reply({ content: t("member_zero_xp"), ephemeral: true })
 
-                    if (user.id === interaction.user.id) await interaction.reply(t("your_xp_reset_validation"))
-                    else await interaction.reply(`${t("are_you_sure_you_want_to_reset")} ${user.username}${t("'s_xp")}`)
+                    if (user.id === interaction.user.id) await interaction.reply({ content: `${t("your_xp_reset_validation")} ${t("common:kirino_what")}`, components: [actionRow] })
+                    else await interaction.reply({ content: `${t("are_you_sure_you_want_to_reset", { username: user.username })} ${t("common:kirino_what")}`, components: [actionRow] })
 
                     const validationMessage = await interaction.fetchReply()
+                    const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
-                    validationMessage.react("✅")
-                    validationMessage.react("❌")
+                    collector.on("collect", i => {
+                        if (i.customId === "confirmed") {
+                            bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp = excluded.xp, total_xp = excluded.total_xp, level = excluded.level").run(interaction.guild.id, user.id, 0, 0, 0)
 
-                    const collector = validationMessage.createReactionCollector({ filter, max: 1, time: 30_000 })
-
-                    collector.on("collect", (reaction) => {
-                        if (reaction.emoji.name === "✅") {
-                            bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level").run(interaction.guild.id, user.id, 0, 0, 0)
-
-                            if (user.id === interaction.user.id) interaction.followUp(`${t("your_xp_successfully_reset")} ${t("common:kirino_glad")}`)
-                            else interaction.followUp(`${t("xp_reset_of")}${user.username}${t("successfully_reset")} ${t("common:kirino_glad")}`)
+                            if (user.id === interaction.user.id) interaction.editReply({ content: `${t("your_xp_successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
+                            else interaction.editReply({ content: `${t("xp_reset_of")}${user.username}${t("successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
                         }
                         else {
-                            interaction.followUp(`${t("xp_reset_of")}${user.username}${t("cancelled")}`)
+                            interaction.editReply({ content: `${t("xp_reset_of")}${user.username}${t("cancelled")}`, components: [] })
                         }
                     })
                 }
@@ -157,35 +163,32 @@ module.exports = {
             else if (subcommand === "import") {
                 if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_import")} ${t("common:kirino_pff")}`, ephemeral: true })
 
-                await interaction.reply(t("xp_import_verification"))
+                await interaction.reply({ content: `${t("xp_import_verification")} ${t("common:kirino_what")}`, components: [actionRow] })
                 const validationMessage = await interaction.fetchReply()
 
-                validationMessage.react("✅")
-                validationMessage.react("❌")
+                const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
-                const collector = validationMessage.createReactionCollector({ filter, max: 1, time: 30_000 })
-
-                collector.on("collect", async (reaction) => {
-                    if (reaction.emoji.name === "✅") {
-                        const importMessage = await interaction.followUp(t("starting_import"))
+                collector.on("collect", async i => {
+                    if (i.customId === "confirmed") {
+                        await interaction.editReply({ content: t("starting_import"), components: [] })
 
                         const players = []
                         let pagePlayers = []
 
-                        let i = 0
+                        let index = 0
                         do {
-                            const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${interaction.guild.id}?limit=1000&page=${i}`)
+                            const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${interaction.guild.id}?limit=1000&page=${index}`)
                             const data = await res.json()
 
-                            if (!res.ok) return importMessage.edit(t("guild_not_found_on_mee6_api"))
+                            if (!res.ok) return interaction.editReply(t("guild_not_found_on_mee6_api"))
 
                             pagePlayers = data.players
                             players.push(...pagePlayers)
 
-                            i++
+                            index++
                         } while (pagePlayers.length > 0)
 
-                        if (players.length === 0) return importMessage.edit(t("zero_xp_found_on_mee6_api"))
+                        if (players.length === 0) return interaction.editReply(t("zero_xp_found_on_mee6_api"))
 
                         const oldPlayersRow = bot.db.prepare("SELECT user_id, color, background FROM xp_profiles WHERE guild_id = ?").all(interaction.guild.id)
                         bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?").run(interaction.guild.id)
@@ -202,10 +205,10 @@ module.exports = {
 
                             bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?,?)").run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, color, background)
                         }
-                        importMessage.edit(`${t("mee6_levels_successfully_imported")} ${t("common:kirino_glad")}`)
+                        interaction.editReply(`${t("mee6_levels_successfully_imported")} ${t("common:kirino_glad")}`)
                     }
                     else {
-                        interaction.followUp(t("import_cancelled"))
+                        interaction.editReply({ content: `${t("import_cancelled")} ${t("common:kirino_glad")}`, components: [] })
                     }
                 })
             }

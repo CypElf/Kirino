@@ -55,7 +55,10 @@ module.exports = {
                 const confirmationMsg = await interaction.fetchReply()
 
                 const localeBackup = i18next.language
-                const filter = i => i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
+                const filter = i => {
+                    i.deferUpdate()
+                    return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
+                }
 
                 const collector = confirmationMsg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
