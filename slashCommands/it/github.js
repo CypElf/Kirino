@@ -1,6 +1,7 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder, time } = require("@discordjs/builders")
 const { MessageEmbed } = require("discord.js")
 const t = require("i18next").t.bind(require("i18next"))
+const dayjs = require("dayjs")
 const ColorThief = require("colorthief")
 const fetch = require("node-fetch")
 
@@ -18,19 +19,17 @@ module.exports = {
         const data = await apiCall.json()
 
         if (!data.message) {
-            const createdAt = data.created_at
-            // github give us date as `YYYY-MM-DDTHH:MM:SSZ` with T and Z as letters
-            const creationDate = createdAt.split("T")[0].split("-").reverse().join("/")
-            const creationTime = createdAt.split("T")[1].split("Z")[0]
+            const creation = time(dayjs(data.created_at).unix())
+            const creationRelative = time(dayjs(data.created_at).unix(), "R")
 
             const color = await ColorThief.getColor(data.avatar_url)
 
             const profileEmbed = new MessageEmbed()
-                .setAuthor(t("github_profile"), "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+                .setAuthor(t("github_profile"), "https://cdn.discordapp.com/attachments/714381484617891980/879280737780662272/github.png")
                 .setColor(color)
                 .setThumbnail(data.avatar_url)
                 .setURL(data.html_url)
-                .setFooter(`${t("request_from")}${interaction.user.username}`, interaction.user.displayAvatarURL())
+                .setFooter(`${t("common:request_from")}${interaction.user.username}`, interaction.user.displayAvatarURL())
 
             if (data.name) profileEmbed.setTitle(`**${data.name}** (${data.login})`)
             else profileEmbed.setTitle(`**${data.login}**`)
@@ -44,7 +43,7 @@ module.exports = {
                 .addField(t("public_gists"), data.public_gists.toString(), true)
                 .addField(t("followers"), `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
                 .addField(t("following"), `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
-                .addField(t("account_creation_date"), `${creationDate} ${t("at")} ${creationTime}`, true)
+                .addField(t("account_creation_date"), `${creation} (${creationRelative})`, true)
 
             if (data.bio) profileEmbed.setDescription(data.bio)
 
