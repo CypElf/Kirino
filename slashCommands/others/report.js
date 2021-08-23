@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed, Permissions } = require("discord.js")
+const { MessageEmbed, Permissions, MessageButton, MessageActionRow } = require("discord.js")
 const i18next = require("i18next")
 const t = i18next.t.bind(i18next)
 
@@ -26,21 +26,35 @@ module.exports = {
             originAvatar = interaction.user.displayAvatarURL()
         }
 
-        await interaction.reply(t("report_confirmation") + "\n```" + report + "``` " + t("thirty_seconds_before_auto_cancelling"))
+        const filter = i => {
+            i.deferUpdate()
+            return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
+        }
+
+        const actionRow = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId("confirmed")
+                    .setLabel(t("confirm"))
+                    .setStyle("SUCCESS"),
+                new MessageButton()
+                    .setCustomId("cancelled")
+                    .setLabel(t("cancel"))
+                    .setStyle("SECONDARY")
+            )
+
+        await interaction.reply({ content: t("report_confirmation") + "\n```" + report + "```", components: [actionRow] })
         const confirmationMsg = await interaction.fetchReply()
 
-        confirmationMsg.react("✅")
-        confirmationMsg.react("❌")
-
-        const filter = (reaction, user) => reaction.emoji.name === "✅" && user.id === interaction.user.id || reaction.emoji.name === "❌" && user.id === interaction.user.id
-        const collector = confirmationMsg.createReactionCollector({ filter, max: 1, time: 30_000 })
+        const collector = confirmationMsg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
         const senderLanguage = i18next.language
 
-        collector.on("collect", async reaction => {
+        collector.on("collect", async i => {
             await i18next.changeLanguage(senderLanguage) // in case another command is done and the language / namespace changed while the collector was waiting
             i18next.setDefaultNamespace("report")
-            if (reaction.emoji.name === "✅") {
+
+            if (i.customId === "confirmed") {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.DEBUG_SERVER_ID)
                 if (kirinoDebug) {
                     const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
@@ -55,16 +69,17 @@ module.exports = {
                             .setColor("#CC0101")
                             .setFooter(t("report_from") + interaction.user.tag, interaction.user.displayAvatarURL())
 
-                        await reportChannel.send({ embeds: [reportEmbed] })
+                        const msg = await reportChannel.send({ embeds: [reportEmbed] })
+                        msg.react("💬")
 
                         await i18next.changeLanguage(senderLanguage)
-                        interaction.followUp(`${t("report_sent")} ${t("common:kirino_glad")} !`)
+                        interaction.editReply({ content: `${t("report_sent")} ${t("common:kirino_glad")} !`, components: [] })
                     }
-                    else interaction.followUp(`${t("report_channel_unavailable")} ${t("common:kirino_what")} ${t("contact_dev")}`)
+                    else interaction.editReply({ content: `${t("report_channel_unavailable")} ${t("common:kirino_what")} ${t("contact_dev")}`, components: [] })
                 }
-                else interaction.followUp(`${t("report_server_unavailable")} ${t("common:kirino_what")} ${t("contact_dev")}`)
+                else interaction.editReply({ content: `${t("report_server_unavailable")} ${t("common:kirino_what")} ${t("contact_dev")}`, components: [] })
             }
-            else interaction.followUp(t("report_cancelled"))
+            else interaction.editReply({ content: t("report_cancelled"), components: [] })
         })
     }
 }

@@ -1,6 +1,5 @@
 cannot_react_to_messages: "You can't use this command if I don't have permission to add reactions."
 report_confirmation: "Do you confirm you want to send this report?"
-thirty_seconds_before_auto_cancelling: "You have 30 seconds to confirm, or this report will be automatically cancelled."
 new_report: "New report!"
 report_origin: "Report origin :"
 message: "Message"
@@ -10,3 +9,5 @@ report_channel_unavailable: "The server channel where I'm supposed to send your 
 contact_dev: "Please contact my developer as soon as possible to fix this problem!"
 report_server_unavailable: "The server I'm supposed to send your report on is nowhere..."
 report_cancelled: "The report has been cancelled."
+confirm: "Send"
+cancel: "Cancel"

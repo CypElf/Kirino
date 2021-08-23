@@ -1,6 +1,5 @@
 cannot_react_to_messages: "Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions."
 report_confirmation: "Confirmez vous vouloir envoyer ce report ?"
-thirty_seconds_before_auto_cancelling: "Vous avez 30 secondes pour confirmer, ou ce report sera automatiquement annulé."
 new_report: "Nouveau report !"
 report_origin: "Origine du report :"
 message: "Message"
@@ -10,3 +9,5 @@ report_channel_unavailable: "Le salon du serveur sur lequel je suis censée envo
 contact_dev: "Veuillez contacter mon développeur au plus vite afin vite corriger ce problème !"
 report_server_unavailable: "Le serveur sur lequel je suis censée envoyer votre report est introuvable..."
 report_cancelled: "Le report a bien été annulé."
+confirm: "Envoyer"
+cancel: "Annuler"

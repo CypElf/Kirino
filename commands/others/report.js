@@ -47,7 +47,8 @@ module.exports = {
                             .setDescription("**" + __("report_origin") + "** " + origin + "\n**" + __("message") + " :** " + report)
                             .setColor("#CC0101")
                             .setFooter(__("report_from") + msg.author.tag, msg.author.displayAvatarURL())
-                        await reportChannel.send({ embeds: [reportEmbed] })
+                        const reportMsg = await reportChannel.send({ embeds: [reportEmbed] })
+                        reportMsg.react("💬")
 
                         setLocale(senderLanguage)
                         msg.channel.send(`${__("report_sent")} ${__("kirino_glad")} !`)
