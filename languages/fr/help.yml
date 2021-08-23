@@ -1,0 +1,24 @@
+help: "Aide"
+q_and_a: "FAQ"
+q_and_a_content: |-
+  **"Comment utiliser la commande [insérer nom de commande] ?"**
+  
+  Consultez sa description et la description de ses paramètres dans les commandes slash, tout y est expliqué.
+  
+  **"J'ai trouvé un bug ou rencontré un problème !"**
+  
+  N'hésitez pas à utiliser la commande `report` pour m'informer du problème et il sera traité au plus vite.
+  
+  **"Je veux être informé des changements que Kirino reçoit"**
+  
+  Rejoignez simplement le [serveur de support](https://discord.gg/NNAGZCz) et consultez le salon <#742723228983885887>.
+  
+  **"J'ai besoin de discuter avec vous à propos de Kirino, un report n'est pas très adapté."**
+  
+  Rejoignez le [serveur de support](https://discord.gg/NNAGZCz) et vous devriez pouvoir me MP, mais préférez faire un report à la place si c'est adapté à la situation.
+
+  **"Comment soutenir Kirino ?"**
+
+  Vous pouvez [me faire un don](https://www.paypal.me/cypelf) ou simplement [ajouter Kirino]({{- invite_link}}) à vos serveurs et l'utiliser.
+beta_commands: "Commandes en beta"
+no_beta_command: "Il n'y a actuellement aucune commande en beta."

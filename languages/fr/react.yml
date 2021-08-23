@@ -1,0 +1,5 @@
+not_allowed_to_use_this_command: "Vous n'êtes pas autorisés à utiliser cette commande !"
+cannot_react_to_messages: "Vous ne pouvez pas utiliser cette commande si je n'ai pas la permission de mettre des réactions."
+bad_message_id: "L'ID du message fourni est incorrect !"
+access_to_emoji_denied: "L'émoji saisi est incorrect ou je n'y ai pas accès !"
+reaction_added: "J'ai ajouté la réaction avec succès !"

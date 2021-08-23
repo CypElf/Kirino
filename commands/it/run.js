@@ -1,57 +1,57 @@
+const { deflateSync } = require("zlib")
+const fetch = require("node-fetch")
+const paste = require("../../lib/misc/paste")
+
 module.exports = {
-	name: "run",
+    name: "run",
     guildOnly: false,
-	args: true,
+    args: true,
     aliases: ["execute", "exe"],
 
-    async execute (bot, msg, args) {
-
-        const fetch = require("node-fetch")
-        const { deflateSync } = require("zlib")
-
+    async execute(bot, msg, args) {
         const defaults = new Map(Object.entries({
             asm: "assembly-nasm",
-            ada: 'ada-gnat',
-            apl: 'apl-dyalog-classic',
-            assembly: 'assembly-gcc',
-            b: 'ybc',
-            sh: 'bash',
-            c: 'c-gcc',
-            cobol: 'cobol-gnu',
-            cpp: 'cpp-gcc',
-            "c++": 'cpp-gcc',
-            cs: 'cs-core',
-            csharp: 'cs-core',
-            "c#": 'cs-core',
-            erlang: 'erlang-escript',
-            euphoria: 'euphoria4',
-            fasm: 'assembly-fasm',
-            fs: 'fs-core',
-            "f#": 'fs-core',
-            fsharp: 'fs-core',
-            java: 'java-jdk',
-            javascript: 'javascript-node',
-            js: 'javascript-node',
+            ada: "ada-gnat",
+            apl: "apl-dyalog-classic",
+            assembly: "assembly-gcc",
+            b: "ybc",
+            sh: "bash",
+            c: "c-gcc",
+            cobol: "cobol-gnu",
+            cpp: "cpp-gcc",
+            "c++": "cpp-gcc",
+            cs: "cs-core",
+            csharp: "cs-core",
+            "c#": "cs-core",
+            erlang: "erlang-escript",
+            euphoria: "euphoria4",
+            fasm: "assembly-fasm",
+            fs: "fs-core",
+            "f#": "fs-core",
+            fsharp: "fs-core",
+            java: "java-jdk",
+            javascript: "javascript-node",
+            js: "javascript-node",
             node: "javascript-node",
-            julia: 'julia1x',
-            k: 'kona',
-            "kobeři-c": 'koberi-c',
-            nasm: 'assembly-nasm',
-            nimrod: 'nim',
-            "objective-c": 'objective-c-gcc',
-            pascal: 'pascal-fpc',
-            perl: 'perl6',
-            pilot: 'pilot-rpilot',
-            postscript: 'postscript-xpost',
-            py: 'python3',
-            python: 'python3',
-            'q#': 'qs',
-            qs: 'qs-core',
-            rs: 'rust',
-            snobol: 'snobol4',
-            sql: 'sqlite',
-            u6: 'mu6',
-            vb: 'vb-core',
+            julia: "julia1x",
+            k: "kona",
+            "kobeři-c": "koberi-c",
+            nasm: "assembly-nasm",
+            nimrod: "nim",
+            "objective-c": "objective-c-gcc",
+            pascal: "pascal-fpc",
+            perl: "perl6",
+            pilot: "pilot-rpilot",
+            postscript: "postscript-xpost",
+            py: "python3",
+            python: "python3",
+            "q#": "qs",
+            qs: "qs-core",
+            rs: "rust",
+            snobol: "snobol4",
+            sql: "sqlite",
+            u6: "mu6",
+            vb: "vb-core"
         }))
 
         const to_bytes = (str) => Buffer.from(str, "utf8")
@@ -69,10 +69,10 @@ module.exports = {
             else {
                 return to_bytes(`F${name}\x00${to_bytes(obj).length}\x00${obj}\x00`)
             }
-        } 
+        }
 
         class Tio {
-            constructor(language, code, input = "", compilerFlags = [], commandLineOptions = [], args = []) {
+            constructor(language, code, input = "", compilerFlags = [], commandLineOptions = [], cli_args = []) {
                 this.api = "https://tio.run/cgi-bin/run/api/"
 
                 const strings = {
@@ -81,11 +81,11 @@ module.exports = {
                     ".input.tio": input,
                     "TIO_CFLAGS": compilerFlags,
                     "TIO_OPTIONS": commandLineOptions,
-                    args
+                    args: cli_args
                 }
 
                 const bytes = Buffer.concat(zip(Object.keys(strings), Object.values(strings)).map(toTioString).concat([to_bytes("R")]))
-                
+
                 this.request = deflateSync(bytes)
                 this.request = this.request.slice(2, this.request.length - 4)
             }
@@ -101,15 +101,14 @@ module.exports = {
 
                 let text = buff.toString("utf8")
                 const token = text.slice(0, 16)
-
-                while (text.includes(token)) text = text.replace(token, "") // replaceAll is only available in Node.js 15.0 and later, and the current LTS version is below this
+                text = text.replaceAll(token, "")
 
                 return text
             }
         }
 
         let language = args[0].split("\n")[0]
-        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer its 
+        if (language.startsWith("```")) language = language.slice(3) // if no language is provided explicitely and a language is added to a markdown code block, infer it
         if (defaults.has(language)) language = defaults.get(language)
 
         args = args.join(" ")
@@ -126,9 +125,9 @@ module.exports = {
                 return false
             }
             else if (line.slice(0, 5) === "args " && line.length > 5) {
-                let args = line.slice(5)
-                if (args.startsWith("`") && args.endsWith("`")) args = args.slice(1, args.length - 1)
-                args.split(" ").map(arg => cmdArgs.push(arg))
+                let parsed_args = line.slice(5)
+                if (parsed_args.startsWith("`") && parsed_args.endsWith("`")) parsed_args = parsed_args.slice(1, parsed_args.length - 1)
+                parsed_args.split(" ").map(arg => cmdArgs.push(arg))
                 return false
             }
             else if (line.slice(0, 6) === "flags " && line.length > 6) {
@@ -142,7 +141,7 @@ module.exports = {
 
         let gotFromAttachment = false
         if (msg.attachments.size > 0) {
-            const attachment = msg.attachments.array()[0]
+            const attachment = [...msg.attachments.values()][0]
             if (attachment.size > 4000000) return msg.channel.send(`${__("file_too_big")} (> 4 Mo). ${__("kirino_pout")}`)
             const res = await fetch(attachment.url)
             if (res.ok) {
@@ -152,36 +151,32 @@ module.exports = {
         }
 
         if (!gotFromAttachment) {
-            if (code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
+            if (code.split("\n").length > 1 && code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
             else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
             if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
         }
 
         if (language === "") return msg.channel.send(__(`${__("language_empty")} ${__("kirino_pff")}`))
         if (code === "") return msg.channel.send(__(`${__("code_empty")} ${__("kirino_pff")}`))
-       
-        const tio = new Tio(language, code, inputs.join("\n"), flags, [] ,cmdArgs)
 
-        msg.channel.startTyping()
+        const tio = new Tio(language, code, inputs.join("\n"), flags, [], cmdArgs)
+
+        msg.channel.sendTyping()
 
         let data = await tio.send()
         data = data.split("\n").filter(line => !line.startsWith("Real time: ") && !line.startsWith("User time: ") && !line.startsWith("Sys. time: ") && !line.startsWith("CPU share: ")).join("\n")
 
         if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
-            const paste = require("../../lib/misc/paste")
             const url = await paste(data)
-            
-            msg.channel.stopTyping()
-            
-            if (url === null) msg.channel.send(`I'm sorry, your code output is too big and my attempts to create pastes with your output all failed. ${__("kirino_what")}`)
-            else msg.channel.send(`Output was too big, I pasted it here: ${url} ${__("kirino_glad")}`)
+
+            if (url === null) msg.channel.send(`${__("paste_error")} ${__("kirino_what")}`)
+            else msg.channel.send(`${__("pasted_here")} ${url} ${__("kirino_glad")}`)
         }
         else {
             while (data.includes("```")) data = data.replace("```", "\u200B`\u200B`\u200B`\u200B") // prevent markdown code block end
             data = "```\n" + data + "\n```"
 
-            msg.channel.stopTyping()
             msg.channel.send(data)
         }
-	}
+    }
 }

@@ -1,0 +1,6 @@
+not_allowed_to_use_this_command: "Vous n'êtes pas autorisés à utiliser cette commande !"
+already_no_join_message: "Il n'y a déjà pas de message de join de configuré."
+join_message_reset: "Le message de join a bien été retiré."
+no_join_message_set: "Il n'y a actuellement pas de message de join de configuré."
+not_a_text_channel: "Le salon spécifié doit être un salon textuel !"
+join_message_set: "Le message de join a bien été défini et sera envoyé dans"

@@ -1,12 +1,12 @@
 module.exports = {
-	name: "random",
+    name: "random",
     guildOnly: false,
-	args: true,
-	aliases: ["rand", "rng"],
+    args: true,
+    aliases: ["rand", "rng"],
     cooldown: 1,
-	
-	async execute(bot, msg, args) {
-		if (args.length < 2) msg.channel.send(`${__("missing_maximum")} ${__("kirino_pout")}`)
+
+    async execute(bot, msg, args) {
+        if (args.length < 2) msg.channel.send(`${__("missing_maximum")} ${__("kirino_pout")}`)
         else {
             const min = Number.parseInt(args[0])
             const max = Number.parseInt(args[1])
@@ -16,5 +16,5 @@ module.exports = {
 
             else msg.channel.send(`${__("random_number")} ${Math.floor(Math.random() * (max - min + 1) + min)}. ${__("kirino_glad")}`)
         }
-	}
+    }
 }

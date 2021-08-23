@@ -1,0 +1,7 @@
+not_allowed_to_use_this_command: "You are not allowed to use this command!"
+already_no_leave_message: "There is already no leave message configured."
+leave_message_reset: "The leave message has been successfully removed."
+leave_test_sent: "Leave test message sent!"
+no_leave_message_set: "There is currently no leave message configured."
+not_a_text_channel: "The specified channel must be a text channel!"
+leave_message_set: "The leave message has been successfully defined and will be sent in"

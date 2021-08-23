@@ -1,12 +1,14 @@
+const { Permissions } = require("discord.js")
+
 module.exports = {
-	name: "banword",
+    name: "banword",
     guildOnly: true,
     args: true,
     aliases: ["bw"],
     permissions: ["manage messages"],
 
-    async execute (bot, msg, [mode, ...words]) {
-        if (!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send(`${__("missing_permissions_to_execute_this_command")} ${__("kirino_pout")}`)
+    async execute(bot, msg, [mode, ...words]) {
+        if (!msg.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(`${__("missing_permissions_to_execute_this_command")} ${__("kirino_pout")}`)
 
         const guild = msg.guild.id
 
@@ -19,7 +21,7 @@ module.exports = {
 
         if (mode === "add") {
             if (words.length < 1) return msg.channel.send(__("please_insert_banwords_to_add"))
-                
+
             const banwordsRequest = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwordsRows = banwordsRequest.all(guild)
             let banwordsCount
@@ -68,13 +70,13 @@ module.exports = {
                 list = __("no_banwords_for_now")
             }
 
-            msg.channel.send(list) 
+            msg.channel.send(list)
         }
 
         else if (mode === "remove") {
             if (words.length < 1) return msg.channel.send(__("precise_banwords_to_remove"))
-            let removed = []
-            let notRemoved = []
+            const removed = []
+            const notRemoved = []
             const removeBanwordsRequest = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
             let banwords = removeBanwordsRequest.all(guild)
 
@@ -89,7 +91,7 @@ module.exports = {
                     else {
                         notRemoved.push(word)
                     }
-                    
+
                     const deleteCommand = bot.db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?")
                     deleteCommand.run(guild, parseEmoji(word))
                 })

@@ -1,0 +1,6 @@
+queue_end_reached: "The queue end is reached."
+voice_channel_joined: "Voice channel joined."
+missing_perm_connect: "I'm missing the permission to connect to a voice channel."
+missing_perm_speak: "I'm missing the permission to speak in a voice channel."
+you_are_not_in_any_voice_channel: "You're not in a voice channel!"
+already_in_a_voice_channel: "I am already in a voice channel."

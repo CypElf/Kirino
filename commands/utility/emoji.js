@@ -1,11 +1,11 @@
 module.exports = {
-	name: "emoji",
+    name: "emoji",
     guildOnly: true,
     args: true,
     aliases: ["emote"],
 
-    async execute (bot, msg, args) {
-        let emojis = []
+    async execute(bot, msg, args) {
+        const emojis = []
         for (const arg of args) {
             let extension = "png"
             let emoji = arg.match(/<:(.*?):[0-9]*>/gm)
@@ -15,7 +15,7 @@ module.exports = {
             }
             if (emoji) emojis.push([emoji.toString().split(":")[2].split(">").slice(0, -1).join(">"), extension])
         }
-        
+
         if (emojis.length === 0) return msg.channel.send(__("specify_custom_emojis"))
         if (emojis.length > 5) return msg.channel.send(__("five_emojis_max"))
         for (const [emojiID, extension] of emojis) {

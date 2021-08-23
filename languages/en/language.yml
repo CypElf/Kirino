@@ -1,0 +1,3 @@
+not_enough_permission_to_change_language: "You don't have the necessary permissions to change my language for this server!"
+server_language_changed: "The server language has been correctly set to `"
+dm_language_changed: "The language of your direct messages has been correctly set to `"

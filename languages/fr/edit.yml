@@ -1,0 +1,4 @@
+not_allowed_to_use_this_command: "Vous n'êtes pas autorisés à utiliser cette commande !"
+cannot_edit_this_message: "Je ne peux pas modifier ce message !"
+message_edited: "Le message a bien été modifié."
+bad_message_id: "L'ID du message fourni est incorrect !"

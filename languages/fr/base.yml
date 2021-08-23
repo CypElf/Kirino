@@ -1,0 +1,5 @@
+base_out_of_range: "Veuillez saisir des bases numérique comprises entre 2 et 36."
+bad_number: "Erreur, veuillez saisir un nombre à convertir valide."
+numeric_base_conversion: "Conversion de base numérique"
+original_number_in_base: "Nombre d'origine en base"
+converted_number_in_base: "Nombre converti en base"

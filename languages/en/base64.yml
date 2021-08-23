@@ -1,0 +1,6 @@
+message_too_long_for_encoding: "Message too long, please enter 760 characters or less."
+base64_encoding: "Base64 encoding"
+original_message: "Original message"
+encoded_message: "Encoded message"
+message_too_long_for_decoding: "Message too long, please enter 1024 characters or less."
+base64_decoding: "Base64 decoding"

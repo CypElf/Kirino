@@ -1,12 +1,13 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
-	name: "serverinfo",
+    name: "serverinfo",
     guildOnly: true,
     args: false,
     aliases: ["si"],
     cooldown: 3,
-    
+
     async execute(bot, msg) {
-        const { MessageEmbed } = require("discord.js")
 
         let creationDate = msg.guild.createdAt
         const creationMonth = String(creationDate.getMonth() + 1).padStart(2, "0")
@@ -21,17 +22,17 @@ module.exports = {
         const bots = members.filter(membre => membre.user.bot).size
         const humans = msg.guild.memberCount - bots
         const roles = msg.guild.roles.cache.filter(role => role.name !== "@everyone")
-        let displayedRoles = `<@&${roles.map(role => role.id).join(">, <@&")}>`
-        let rolesCount = roles.size
-        let displayedRolesCount = ` (${rolesCount} ${__n("roles", rolesCount).toLowerCase()})`
+        const displayedRoles = `<@&${roles.map(role => role.id).join(">, <@&")}>`
+        const rolesCount = roles.size
+        const displayedRolesCount = ` (${rolesCount} ${__n("roles", rolesCount).toLowerCase()})`
 
         const channels = msg.guild.channels.cache
-        const textChannelsCount = channels.filter(channel => channel.type === "text").size
-        const voiceChannelsCount = channels.filter(channel => channel.type === "voice").size
-        let emojis = [...msg.guild.emojis.cache.values()]
+        const textChannelsCount = channels.filter(channel => channel.isText() && !channel.isThread()).size
+        const voiceChannelsCount = channels.filter(channel => channel.isVoice()).size
+        const emojis = [...msg.guild.emojis.cache.values()]
         const emojisCount = emojis.length
 
-        let emojisArray = [""]
+        const emojisArray = [""]
         let displayedEmojisCount = ""
         if (emojisCount === 0) displayedEmojisCount = __("nothing")
 
@@ -89,11 +90,11 @@ module.exports = {
         else {
             informations.addField(__n("roles", rolesCount), `${__("too_much_roles")} (${rolesCount})`)
         }
-        
+
         informations.addField(__("channels"), textChannelsCount + " " + __n("text_channel", textChannelsCount) + ", " + voiceChannelsCount + " " + __n("vocal_channel", voiceChannelsCount), true)
             .addField(__("server_creation_date"), creationDate, true)
             .setThumbnail(msg.guild.iconURL({ dynamic: true }))
             .setFooter(__("request_from") + msg.author.username, msg.author.displayAvatarURL())
-        msg.channel.send(informations)
+        msg.channel.send({ embeds: [informations] })
     }
 }

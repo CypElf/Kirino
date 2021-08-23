@@ -1,9 +1,11 @@
+const { Util } = require("discord.js")
+
 module.exports = {
-	name: "queue",
+    name: "queue",
     guildOnly: true,
     args: false,
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         const queue = bot.voicesQueues.get(msg.guild.id)
 
         if (!msg.guild.me.voice.channel) {
@@ -13,11 +15,9 @@ module.exports = {
             msg.channel.send(`${__("queue_empty")} ${__("kirino_glad")}`)
         }
         else {
-            const toChunks = require("../../lib/string/to_chunks")
             const text = `${__("songs_in_queue_are")}\n- ${queue.songs.map(song => song.title).join("\n- ")}`
 
-            const textArray = toChunks(text, 2000)
-            for (const chunk of textArray) {
+            for (const chunk of Util.splitMessage(text)) {
                 msg.channel.send(chunk)
             }
         }

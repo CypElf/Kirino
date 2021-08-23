@@ -1,20 +1,22 @@
+const { Permissions } = require("discord.js")
+const getMember = require("../../lib/getters/get_member")
+
 module.exports = {
-	name: "kick",
+    name: "kick",
     guildOnly: true,
     args: true,
     cooldown: 3,
     permissions: ["kick members"],
 
-    async execute (bot, msg, [userToKick, ...reason]) {
-        if (!msg.member.hasPermission("KICK_MEMBERS")) {
+    async execute(bot, msg, [userToKick, ...reason]) {
+        if (!msg.member.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
             return msg.channel.send(`${__("you_are_missing_permissions_to_kick_members")} ${__("kirino_pff")}`)
         }
-    
-        if (!msg.guild.me.hasPermission("KICK_MEMBERS")) {
+
+        if (!msg.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
             return msg.channel.send(`${__("i_am_missing_permissions_to_kick_members")} ${__("kirino_pout")}`)
         }
 
-        const getMember = require("../../lib/getters/get_member")
         const kickMember = await getMember(msg, [userToKick, ...reason])
 
         if (kickMember === undefined) {
@@ -24,7 +26,7 @@ module.exports = {
         if (!kickMember.kickable) {
             return msg.channel.send(`${__("unable_to_kick_higher_than_me")} ${__("kirino_pout")}`)
         }
-    
+
         if (kickMember.id === msg.member.id) {
             return msg.channel.send(`${__("cannot_kick_yourself")} ${__("kirino_pff")}`)
         }
@@ -33,11 +35,12 @@ module.exports = {
             return msg.channel.send(`${__("you_cannot_kick_this_member")} ${__("kirino_pff")}`)
         }
 
-        kickMember.kick({ reason: `${reason.join(" ")} (${__("kicked_by")}${msg.author.tag})` })
+        reason = reason.length > 0 ? reason.join(" ") : __("no_kick_reason")
+        kickMember.kick({ reason: `${reason.join(" ")} (${__("kicked_by")} ${msg.author.tag})` })
             .then(member => {
                 msg.channel.send(`${member.user.username + __("has_been_kicked")} <:boot:568041855523094549>`)
 
-                msg.delete().catch(() => {})
+                msg.delete().catch()
             })
     }
 }

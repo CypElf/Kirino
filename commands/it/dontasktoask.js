@@ -1,9 +1,9 @@
 module.exports = {
-	name: "dontasktoask",
+    name: "dontasktoask",
     guildOnly: false,
     aliases: ["dont"],
 
-    async execute (bot, msg) {
+    async execute(bot, msg) {
         msg.channel.send(`${__("dont")}\nhttps://dontasktoask.com/`)
     }
 }

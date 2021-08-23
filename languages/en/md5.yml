@@ -1,0 +1,4 @@
+less_or_equal_to_1024: "The message must be less than or equal to 1024 characters."
+md5_hashing: "MD5 hashing"
+original_message: "Original message"
+hash: "Hash"
