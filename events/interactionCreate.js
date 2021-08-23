@@ -46,15 +46,15 @@ module.exports = bot => {
             timestamps.set(interaction.user.id, now)
             setTimeout(() => timestamps.delete(interaction.user.id), cooldown)
 
-            await i18next.loadNamespaces(commandName)
-            i18next.setDefaultNamespace(commandName)
-
             if (command.guildOnly && !interaction.inGuild()) {
                 return interaction.reply({ content: `${t("interactionCreate:command_not_available_in_dm")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
 
+            await i18next.loadNamespaces(commandName)
+            i18next.setDefaultNamespace(commandName)
+            console.log(`Executing slash command ${command.name} for ${interaction.user.tag} (from ${interaction.guild ? interaction.guild.name : "DM"})`)
+
             try {
-                console.log(`Executing slash command ${command.name} for ${interaction.user.tag} (from ${interaction.guild ? interaction.guild.name : "DM"})`)
                 await command.execute(bot, interaction)
             }
             catch (err) {

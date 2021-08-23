@@ -96,9 +96,9 @@ module.exports = bot => {
 
         await i18next.loadNamespaces(commandName)
         i18next.setDefaultNamespace(commandName)
+        console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"})`)
 
         try {
-            console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"})`)
             await command.execute(bot, msg, args)
         }
         catch (err) {
