@@ -1,6 +1,7 @@
 const fs = require("fs")
 const { MessageEmbed } = require("discord.js")
 const { Util } = require("discord.js")
+const { __ } = require("i18n")
 
 module.exports = {
     name: "help",
@@ -55,6 +56,7 @@ module.exports = {
         }
 
         helpEmbed.addField(`**${__("available_in_dm")}**`, command.guildOnly ? __("no") : __("yes"))
+        helpEmbed.addField(`**${__("is_beta")}**`, command.beta ? __("yes") : __("no"))
 
         if (command.aliases) helpEmbed.addField(`**${__("aliases")}**`, `\`${command.aliases.join("`, `")}\``)
 

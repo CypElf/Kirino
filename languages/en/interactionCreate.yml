@@ -2,3 +2,4 @@ command_not_available_in_dm: "I'm sorry, you cannot use this command outside a s
 command_runtime_error: "I'm sorry, but an error happened while executing your command."
 please_wait: "Please wait {{cooldown}} more second before reusing the command"
 please_wait_plural: "Please wait {{cooldown}} more seconds before reusing the command"
+command_in_beta: "This command is still in beta phase, you must have the beta mode enabled to use it. You can enable it with the command `beta enable`."

@@ -20,3 +20,5 @@ q_and_a_content: |-
   **How can I support Kirino?**
 
   You can [make a donation](https://www.paypal.me/cypelf) or just add Kirino to your servers and use it.
+beta_commands: "Beta commands"
+no_beta_command: "There is currently no command in the beta phase."

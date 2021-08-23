@@ -18,6 +18,14 @@ module.exports = bot => {
             const lang = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id)?.language ?? "en"
             await i18next.changeLanguage(lang)
 
+            if (command.beta) {
+                const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
+
+                if (betaRow === undefined) {
+                    return interaction.reply(`${t("interactionCreate:command_in_beta")} ${t("common:kirino_glad")}`)
+                }
+            }
+
             if (!bot.commandsCooldowns.has(command.name)) {
                 bot.commandsCooldowns.set(command.name, new Collection())
             }
