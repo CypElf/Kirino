@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { Permissions } = require("discord.js")
+const { Permissions, MessageButton, MessageActionRow } = require("discord.js")
 const i18next = require("i18next")
 const t = i18next.t.bind(i18next)
 
@@ -38,28 +38,36 @@ module.exports = {
                     return interaction.reply({ content: `${t("beta_already_enabled")} ${t("common:kirino_glad")}`, ephemeral: true })
                 }
 
-                await interaction.reply(`${t("beta_confirmation")} ${t("common:kirino_what")}`)
+                const actionRow = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId("confirmed")
+                            .setLabel(t("enable_anyway"))
+                            .setStyle("DANGER"),
+                        new MessageButton()
+                            .setCustomId("cancelled")
+                            .setLabel(t("cancel"))
+                            .setStyle("SECONDARY")
+                    )
+
+                await interaction.reply({ content: `${t("beta_confirmation")} ${t("common:kirino_what")}`, components: [actionRow] })
 
                 const confirmationMsg = await interaction.fetchReply()
-                confirmationMsg.react("✅")
-                confirmationMsg.react("❌")
 
                 const localeBackup = i18next.language
+                const filter = i => i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
 
-                const filter = (reaction, user) => reaction.emoji.name === "✅" && user.id === interaction.user.id || reaction.emoji.name === "❌" && user.id === interaction.user.id
-                const collector = confirmationMsg.createReactionCollector({ filter, max: 1, time: 30_000 })
+                const collector = confirmationMsg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
-                collector.on("collect", async reaction => {
+                collector.on("collect", async i => {
                     await i18next.changeLanguage(localeBackup)
                     i18next.setDefaultNamespace("beta")
-                    if (reaction.emoji.name === "✅") {
+                    if (i.customId === "confirmed") {
                         bot.db.prepare("INSERT INTO beta VALUES(?)").run(id)
-                        confirmationMsg.reactions.removeAll()
-                        interaction.editReply(`${t("beta_enabled")} ${t("common:kirino_glad")}`)
+                        interaction.editReply({ content: `${t("beta_enabled")} ${t("common:kirino_glad")}`, components: [] })
                     }
                     else {
-                        confirmationMsg.reactions.removeAll()
-                        interaction.editReply(`${t("beta_enabled_cancelled")} ${t("common:kirino_pout")}`)
+                        interaction.editReply({ content: `${t("beta_enabled_cancelled")} ${t("common:kirino_pout")}`, components: [] })
                     }
                 })
             }
