@@ -17,6 +17,8 @@ module.exports = {
 
     async execute(bot, interaction) {
         if (interaction.member.voice.channel) {
+            interaction.deferReply()
+
             if (!interaction.guild.me.voice.channel) {
                 i18next.loadNamespaces("join")
                 // eslint-disable-next-line node/global-require
@@ -29,7 +31,7 @@ module.exports = {
             await util.promisify(setTimeout)(300)
 
             if (!musicAuth(interaction.member, interaction.guild.me)) {
-                return interaction.reply({ content: `${t("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+                return interaction.editReply({ content: `${t("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
 
             const raw = interaction.options.getString("song")
@@ -57,11 +59,11 @@ module.exports = {
                             .addComponents(
                                 new MessageSelectMenu()
                                     .setCustomId("youtube_choice")
-                                    .setPlaceholder("Nothing selected")
+                                    .setPlaceholder(t("nothing_selected"))
                                     .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: t("cancel"), description: t("cancel_description"), value: "cancel" }]))
                             )
 
-                        await interaction.reply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
+                        await interaction.editReply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
                         const resultsMsg = await interaction.fetchReply()
 
                         const filter = i => {
@@ -85,7 +87,7 @@ module.exports = {
                     song = await getSongFromURL(video.url)
                 }
                 catch {
-                    return interaction.reply({ content: `${t("search_error")} ${t("common:kirino_what")}`, ephemeral: true })
+                    return interaction.editReply({ content: `${t("search_error")} ${t("common:kirino_what")}`, ephemeral: true })
                 }
             }
 
@@ -93,7 +95,7 @@ module.exports = {
             serverQueue.songs.push(song)
 
             const confirmation = `${t("added")}${song.title} ${t("to_the_queue")} ${t("common:kirino_glad")}`
-            if (wasDirectLink) interaction.reply(confirmation)
+            if (wasDirectLink) interaction.editReply(confirmation)
             else interaction.editReply({ content: confirmation, components: [] })
 
             if (serverQueue.songs.length === 1) play(interaction.channel, serverQueue)
