@@ -58,7 +58,7 @@ module.exports = {
                                 new MessageSelectMenu()
                                     .setCustomId("youtube_choice")
                                     .setPlaceholder("Nothing selected")
-                                    .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: "Cancel", description: "Cancel the command", value: "cancel" }]))
+                                    .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: t("cancel"), description: t("cancel_description"), value: "cancel" }]))
                             )
 
                         await interaction.reply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
