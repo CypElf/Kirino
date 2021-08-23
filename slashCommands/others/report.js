@@ -75,9 +75,15 @@ module.exports = {
                         await i18next.changeLanguage(senderLanguage)
                         interaction.editReply({ content: `${t("report_sent")} ${t("common:kirino_glad")} !`, components: [] })
                     }
-                    else interaction.editReply({ content: `${t("report_channel_unavailable")} ${t("common:kirino_what")} ${t("contact_dev")}`, components: [] })
+                    else {
+                        console.error("Report channel unavailable")
+                        interaction.editReply({ content: `${t("report_channel_unavailable")} ${t("common:kirino_what")}`, components: [] })
+                    }
                 }
-                else interaction.editReply({ content: `${t("report_server_unavailable")} ${t("common:kirino_what")} ${t("contact_dev")}`, components: [] })
+                else {
+                    console.error("Report server unavailable")
+                    interaction.editReply({ content: `${t("report_server_unavailable")} ${t("common:kirino_what")}`, components: [] })
+                }
             }
             else interaction.editReply({ content: t("report_cancelled"), components: [] })
         })

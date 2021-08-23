@@ -53,9 +53,15 @@ module.exports = {
                         setLocale(senderLanguage)
                         msg.channel.send(`${__("report_sent")} ${__("kirino_glad")} !`)
                     }
-                    else msg.channel.send(`${__("report_channel_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
+                    else {
+                        console.error("Report channel unavailable")
+                        msg.channel.send(`${__("report_channel_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
+                    }
                 }
-                else msg.channel.send(`${__("report_server_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
+                else {
+                    console.error("Report server unavailable")
+                    msg.channel.send(`${__("report_server_unavailable")} ${__("kirino_what")} ${__("contact_dev")}`)
+                }
             }
             else msg.channel.send(__("report_cancelled"))
         })
