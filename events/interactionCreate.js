@@ -1,3 +1,4 @@
+const { Collection } = require("discord.js")
 const i18next = require("i18next")
 const t = i18next.t.bind(i18next)
 
@@ -14,11 +15,31 @@ module.exports = bot => {
             const { commandName } = interaction
             const command = bot.slashCommands.get(commandName)
 
-            await i18next.loadNamespaces(commandName)
-            i18next.setDefaultNamespace(commandName)
-
             const lang = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id)?.language ?? "en"
             await i18next.changeLanguage(lang)
+
+            if (!bot.commandsCooldowns.has(command.name)) {
+                bot.commandsCooldowns.set(command.name, new Collection())
+            }
+
+            const now = Date.now()
+            const timestamps = bot.commandsCooldowns.get(command.name)
+            const cooldown = (command.cooldown || 2) * 1000 // default cooldown is 2 seconds
+
+            if (timestamps.has(interaction.user.id)) {
+                const expiration = timestamps.get(interaction.user.id) + cooldown
+
+                if (now < expiration) {
+                    const timeLeft = (expiration - now) / 1000
+                    return interaction.reply(`${t("interactionCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`)
+                }
+            }
+
+            timestamps.set(interaction.user.id, now)
+            setTimeout(() => timestamps.delete(interaction.user.id), cooldown)
+
+            await i18next.loadNamespaces(commandName)
+            i18next.setDefaultNamespace(commandName)
 
             if (command.guildOnly && !interaction.inGuild()) {
                 return interaction.reply({ content: `${t("interactionCreate:command_not_available_in_dm")} ${t("common:kirino_pout")}`, ephemeral: true })

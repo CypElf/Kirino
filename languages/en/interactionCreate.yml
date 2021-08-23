@@ -1,2 +1,4 @@
 command_not_available_in_dm: "I'm sorry, you cannot use this command outside a server!"
 command_runtime_error: "I'm sorry, but an error happened while executing your command."
+please_wait: "Please wait {{cooldown}} more second before reusing the command"
+please_wait_plural: "Please wait {{cooldown}} more seconds before reusing the command"

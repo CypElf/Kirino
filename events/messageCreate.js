@@ -82,7 +82,7 @@ module.exports = bot => {
 
             if (now < expiration) {
                 const timeLeft = (expiration - now) / 1000
-                return msg.channel.send(`${t("messageCreate:please_wait")} ${timeLeft.toFixed(1)} ${t("messageCreate:more_sec_before_reusing_command")} \`${command.name}\`.`)
+                return msg.channel.send(`${t("messageCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`)
             }
         }
 

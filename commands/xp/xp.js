@@ -9,6 +9,7 @@ module.exports = {
     guildOnly: true,
     args: false,
     permissions: ["{administrator}"],
+    cooldown: 3,
 
     async execute(bot, msg, args) {
 
