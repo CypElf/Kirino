@@ -26,12 +26,11 @@ for (const category of categories) {
     try {
         console.log("Started refreshing slash commands")
 
-        if (process.argv.length > 2 && process.argv[2] === "--debug") {
-            await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-        }
-        else {
+        if (process.argv.length <= 2 || process.argv[2] !== "--debug") {
             await rest.put(Routes.applicationCommands(clientId), { body: commands })
         }
+
+        await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 
         console.log("Successfully reloaded slash commands")
     }
