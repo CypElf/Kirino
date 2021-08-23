@@ -1,5 +1,6 @@
 const { createAudioResource } = require("@discordjs/voice")
 const { MessageEmbed } = require("discord.js")
+const util = require("util")
 const ytdl = require("ytdl-core-discord")
 const yts = require("yt-search")
 const musicAuth = require("../../lib/music/music_control_auth")
@@ -15,6 +16,10 @@ module.exports = {
                 // eslint-disable-next-line node/global-require
                 await require("./join").execute(bot, msg)
             }
+
+            // the voice state update a long time after the bot joined the voice channel for some reason...
+            // without this, even after the bot joined the voice channel, interaction.guild.me.voice.channel is null anyway
+            await util.promisify(setTimeout)(300)
 
             if (!musicAuth(msg.member, msg.guild.me)) {
                 return msg.channel.send(`${__("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${__("kirino_pout")}`)

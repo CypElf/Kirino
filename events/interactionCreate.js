@@ -22,7 +22,7 @@ module.exports = bot => {
                 const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
 
                 if (betaRow === undefined) {
-                    return interaction.reply(`${t("interactionCreate:command_in_beta")} ${t("common:kirino_glad")}`)
+                    return interaction.reply({ content: `${t("interactionCreate:command_in_beta")} ${t("common:kirino_glad")}`, ephemeral: true })
                 }
             }
 
@@ -39,7 +39,7 @@ module.exports = bot => {
 
                 if (now < expiration) {
                     const timeLeft = (expiration - now) / 1000
-                    return interaction.reply(`${t("interactionCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`)
+                    return interaction.reply({ content: `${t("interactionCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`, ephemeral: true })
                 }
             }
 

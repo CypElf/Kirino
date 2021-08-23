@@ -1,8 +1,9 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { createAudioResource } = require("@discordjs/voice")
-const { MessageEmbed } = require("discord.js")
+const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require("discord.js")
 const util = require("util")
-const t = require("i18next").t.bind(require("i18next"))
+const i18next = require("i18next")
+const t = i18next.t.bind(i18next)
 const ytdl = require("ytdl-core-discord")
 const yts = require("yt-search")
 const musicAuth = require("../../lib/music/music_control_auth")
@@ -17,6 +18,7 @@ module.exports = {
     async execute(bot, interaction) {
         if (interaction.member.voice.channel) {
             if (!interaction.guild.me.voice.channel) {
+                i18next.loadNamespaces("join")
                 // eslint-disable-next-line node/global-require
                 const join = require("./join")
                 await join.execute(bot, interaction, true)
@@ -24,7 +26,7 @@ module.exports = {
 
             // the voice state update a long time after the bot joined the voice channel for some reason...
             // without this, even after the bot joined the voice channel, interaction.guild.me.voice.channel is null anyway
-            await util.promisify(setTimeout)(200)
+            await util.promisify(setTimeout)(300)
 
             if (!musicAuth(interaction.member, interaction.guild.me)) {
                 return interaction.reply({ content: `${t("not_allowed_to_control_music_because_not_in_my_voice_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
@@ -41,23 +43,42 @@ module.exports = {
             }
             catch {
                 try {
-
                     const result = await yts(raw)
-                    const videos = result.videos.slice(0, 10)
+                    const videos = result.videos.slice(0, 10).map(video => {
+                        if (video.description.length > 100) {
+                            video.description = video.description.slice(0, 97) + "..."
+                        }
+                        return video
+                    })
                     let video = videos[0]
 
                     if (video.title.toLowerCase() !== raw.toLowerCase()) {
-                        await interaction.reply(`${t("youtube_results")} ${t("common:kirino_glad")}\n${videos.map((v, i) => (i + 1) + " - " + v.title).join("\n")}\nN - ${t("nothing")}`)
+                        const actionRow = new MessageActionRow()
+                            .addComponents(
+                                new MessageSelectMenu()
+                                    .setCustomId("youtube_choice")
+                                    .setPlaceholder("Nothing selected")
+                                    .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: "Cancel", description: "Cancel the command", value: "cancel" }]))
+                            )
 
-                        const filter = cMsg => interaction.user.id === interaction.user.id && cMsg.content.toUpperCase() === "N" || (!isNaN(cMsg.content) && cMsg.content > 0 && cMsg.content <= videos.length)
+                        await interaction.reply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
+                        const resultsMsg = await interaction.fetchReply()
 
-                        let cMsg = await interaction.channel.awaitMessages({ filter, max: 1, time: 30_000 })
-                        cMsg = [...cMsg.values()]
-                        if (cMsg.length === 1) {
-                            if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
-                            else return interaction.followUp(`${t("play_cancelled")} ${t("common:kirino_pout")}`)
+                        const filter = i => {
+                            i.deferUpdate()
+                            return interaction.user.id === i.user.id
+                        }
 
-                            cMsg[0].delete().catch()
+                        try {
+                            const i = await resultsMsg.awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 30_000 })
+
+                            if (i.values[0] === "cancel") throw new Error()
+
+                            const index = parseInt(i.values[0])
+                            video = videos[index]
+                        }
+                        catch {
+                            return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] })
                         }
                     }
 
@@ -73,7 +94,7 @@ module.exports = {
 
             const confirmation = `${t("added")}${song.title} ${t("to_the_queue")} ${t("common:kirino_glad")}`
             if (wasDirectLink) interaction.reply(confirmation)
-            else interaction.editReply(confirmation)
+            else interaction.editReply({ content: confirmation, components: [] })
 
             if (serverQueue.songs.length === 1) play(interaction.channel, serverQueue)
         }

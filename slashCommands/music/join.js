@@ -36,7 +36,7 @@ module.exports = {
                             currentQueue.songs.shift()
                             if (currentQueue.songs.length > 0) play(interaction.channel, currentQueue)
                             else {
-                                interaction.channel.send(`${t("queue_end_reached")} ${t("common:kirino_glad")}`)
+                                interaction.channel.send(`${t("join:queue_end_reached")} ${t("common:kirino_glad")}`)
                             }
                         })
 
