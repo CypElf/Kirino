@@ -16,6 +16,6 @@ module.exports = {
         if (i18next.language === "fr") possibleAnswers.push(t("ptdr_t_ki"))
 
         const choice = Math.floor(Math.random() * (possibleAnswers.length))
-        interaction.reply(`Question : ${interaction.options.getString("question")}\nAnswer : ${possibleAnswers[choice].toLowerCase()}`)
+        interaction.reply(`${t("question")} : ${interaction.options.getString("question")}\n${t("answer")} : ${possibleAnswers[choice].toLowerCase()}`)
     }
 }
