@@ -114,7 +114,7 @@ module.exports = {
             const youtubeRed = "#DF1F18"
 
             const embed = new MessageEmbed()
-                .setTitle(`${t("now_playing")} ${nextSong.title}`)
+                .setTitle(`${t("play:now_playing")} ${nextSong.title}`)
                 .setURL(nextSong.url)
                 .setColor(youtubeRed)
                 .setImage(nextSong.thumbnail)
