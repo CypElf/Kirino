@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders")
 const { joinVoiceChannel, createAudioPlayer, AudioPlayerStatus } = require("@discordjs/voice")
 const { Permissions } = require("discord.js")
 const t = require("i18next").t.bind(require("i18next"))
+const { play } = require("./play")
 
 module.exports = {
     data: new SlashCommandBuilder()

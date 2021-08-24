@@ -1,5 +1,6 @@
 const { joinVoiceChannel, createAudioPlayer, AudioPlayerStatus } = require("@discordjs/voice")
 const { Permissions } = require("discord.js")
+const { play } = require("./play")
 
 module.exports = {
     name: "join",

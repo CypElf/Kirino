@@ -103,29 +103,29 @@ module.exports = {
         else {
             interaction.reply({ content: `${t("you_are_not_in_any_voice_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
         }
-    }
-}
+    },
 
-async function play(channel, queue) {
-    if (queue.songs.length >= 1) {
-        const nextSong = queue.songs[0]
+    async play(channel, queue) {
+        if (queue.songs.length >= 1) {
+            const nextSong = queue.songs[0]
 
-        queue.player.play(nextSong.stream)
+            queue.player.play(nextSong.stream)
 
-        const youtubeRed = "#DF1F18"
+            const youtubeRed = "#DF1F18"
 
-        const embed = new MessageEmbed()
-            .setTitle(`${t("now_playing")} ${nextSong.title}`)
-            .setURL(nextSong.url)
-            .setColor(youtubeRed)
-            .setImage(nextSong.thumbnail)
-            .setAuthor(nextSong.author_name)
+            const embed = new MessageEmbed()
+                .setTitle(`${t("now_playing")} ${nextSong.title}`)
+                .setURL(nextSong.url)
+                .setColor(youtubeRed)
+                .setImage(nextSong.thumbnail)
+                .setAuthor(nextSong.author_name)
 
-        if (nextSong.description) {
-            embed.setDescription(nextSong.description.length > 150 ? nextSong.description.slice(0, 150) + "..." : nextSong.description)
+            if (nextSong.description) {
+                embed.setDescription(nextSong.description.length > 150 ? nextSong.description.slice(0, 150) + "..." : nextSong.description)
+            }
+
+            channel.send({ embeds: [embed] })
         }
-
-        channel.send({ embeds: [embed] })
     }
 }
 
