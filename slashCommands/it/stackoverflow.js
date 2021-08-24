@@ -10,6 +10,7 @@ module.exports = {
         .addStringOption(option => option.setName("query").setDescription("What you want to search for on stackoverflow").setRequired(true)),
     guildOnly: false,
     cooldown: 1,
+    beta: true,
 
     async execute(bot, interaction) {
         const query = interaction.options.getString("query")
@@ -18,14 +19,10 @@ module.exports = {
         const response = await fetch(`https://api.stackexchange.com/search/advanced?site=stackoverflow.com&sort=relevance&pagesize=5&q=${query}&filter=${filter}`)
         const { items } = await response.json()
 
-        let results
-        if (items.length === 0) results = "No result"
-        else {
-            results = items.map(item => `- **[${item.title}](${item.link})**\n${item.body_markdown.length > 100 ? item.body_markdown.slice(0, 97) + "..." : item.bo}`).join("\n\n")
-        }
+        const results = items.length === 0 ? t("no_result") : items.map(item => `- **[${item.title}](${item.link})**\n${item.body_markdown.length > 100 ? item.body_markdown.slice(0, 97) + "..." : item.bo}`).join("\n\n")
 
         const stackoverflowEmbed = new MessageEmbed()
-            .setTitle(`Stackoverflow results for "${query}":\n\u200b`)
+            .setTitle(`${t("title", { query })}\n\u200b`)
             .setDescription(results)
             .setThumbnail("https://media.discordapp.net/attachments/714381484617891980/879634994715328522/stackoverflow.png")
             .setColor("#DB8A0F")

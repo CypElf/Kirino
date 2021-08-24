@@ -585,3 +585,7 @@ description_learn: "Permet de récupérer des liens utiles pour apprendre diffé
 usage_learn: "[technologie]"
 no_learn_entry: "Désolée, je n'ai pas de liens à vous proposer pour cette technologie. Vérifiez qu'elle est bien proposée et que vous l'avez bien écrit."
 command_runtime_error: "Désolée, une erreur est survenue pendant l'exécution de cette commande !"
+description_stackoverflow: "Effectue une recherche sur stackoverflow et affiche ses résultats."
+usage_stackoverflow: "[recherche]"
+no_result_stackoverflow: "Aucun résultat."
+title_stackoverflow: "Résultats sur stackoverflow pour"

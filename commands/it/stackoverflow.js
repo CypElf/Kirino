@@ -18,7 +18,7 @@ module.exports = {
         const results = items.length === 0 ? __("no_result_stackoverflow") : items.map(item => `- **[${item.title}](${item.link})**\n${item.body_markdown.length > 100 ? item.body_markdown.slice(0, 97) + "..." : item.bo}`).join("\n\n")
 
         const stackoverflowEmbed = new MessageEmbed()
-            .setTitle(`${__("title_stackoverflow")} "${query}":\n\u200b`)
+            .setTitle(`${__("title_stackoverflow")} "${query}" :\n\u200b`)
             .setDescription(results)
             .setThumbnail("https://media.discordapp.net/attachments/714381484617891980/879634994715328522/stackoverflow.png")
             .setColor("#DB8A0F")

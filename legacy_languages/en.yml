@@ -586,3 +586,7 @@ description_learn: "Give you useful links to learn different programming languag
 usage_learn: "[technology]"
 no_learn_entry: "Sorry, I don't have any links for this technology. Please check that it is available and that you have written it correctly."
 command_runtime_error: "Sorry, an error occured while executing this command!"
+description_stackoverflow: "Make a search on stackoverflow and display its results."
+usage_stackoverflow: "[query]"
+no_result_stackoverflow: "No result."
+title_stackoverflow: "Results on stackoverflow for"
