@@ -98,7 +98,7 @@ module.exports = {
             if (wasDirectLink) interaction.editReply(confirmation)
             else interaction.editReply({ content: confirmation, components: [] })
 
-            if (serverQueue.songs.length === 1) play(interaction.channel, serverQueue)
+            if (serverQueue.songs.length === 1) this.play(interaction.channel, serverQueue)
         }
         else {
             interaction.reply({ content: `${t("you_are_not_in_any_voice_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
