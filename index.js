@@ -43,7 +43,7 @@ i18next.use(Backend).init({
     }
 })
 
-startXpApi(bot, { cooldowns: bot.apiCooldowns })
+startXpApi({ cooldowns: bot.apiCooldowns })
 
 const eventsFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"))
 for (const file of eventsFiles) {
