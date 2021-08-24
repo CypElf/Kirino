@@ -15,7 +15,7 @@ module.exports = {
             return interaction.reply({ content: `${t("you_cannot_delete_messages")} ${t("common:kirino_pff")}`, ephemeral: true })
         }
 
-        const count = interaction.options.getInteger("amount_of_messages") + 1
+        const count = interaction.options.getInteger("amount_of_messages")
 
         if (count <= 0) return interaction.reply({ content: `${t("please_insert_positive_integer")} ${t("common:kirino_pout")}`, ephemeral: true })
 
