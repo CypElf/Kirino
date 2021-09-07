@@ -10,7 +10,6 @@ module.exports = {
         .addStringOption(option => option.setName("query").setDescription("What you want to search for on stackoverflow").setRequired(true)),
     guildOnly: false,
     cooldown: 1,
-    beta: true,
 
     async execute(bot, interaction) {
         const query = interaction.options.getString("query")

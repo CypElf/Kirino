@@ -6,7 +6,6 @@ module.exports = {
     guildOnly: false,
     args: true,
     cooldown: 1,
-    beta: true,
 
     async execute(bot, msg, args) {
         const query = args.join(" ")
