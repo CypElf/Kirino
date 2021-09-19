@@ -15,7 +15,7 @@ module.exports = bot => {
                         console.log(`Still alone in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, it's time to leave`)
                         disconnect(oldState.guild.id)
                     }
-                    else if (othersUsersCount === 0) {
+                    else if (othersUsersCountAfterWait === 0) {
                         console.log(`I have already been disconnected from the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name} since the timer started`)
                     }
                     else {
