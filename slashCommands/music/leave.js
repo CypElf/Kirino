@@ -13,7 +13,7 @@ module.exports = {
         if (interaction.guild.me.voice.channel) {
             if (musicAuth(interaction.member, interaction.guild.me)) {
                 const connection = getVoiceConnection(interaction.guild.id)
-                bot.voicesQueues.get(interaction.guild.id).player.stop()
+                bot.voicesQueues.get(interaction.guild.id)?.player?.stop()
                 connection.destroy()
                 bot.voicesQueues.delete(interaction.guild.id)
 

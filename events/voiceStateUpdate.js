@@ -5,15 +5,18 @@ module.exports = bot => {
 
     bot.on("voiceStateUpdate", async (oldState, newState) => {
         if (oldState.channelId === oldState.guild.me.voice.channelId && !newState.channel) {
-            const othersUsersCount = oldState.channel.members.size - 1
+            const othersUsersCount = oldState.channel.members.size
 
-            if (oldState.channel != null && othersUsersCount === 0) {
+            if (oldState.channel != null && othersUsersCount <= 1) {
                 console.log(`I'm alone in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, I'll leave in ${timeOut} minutes if nobody join`)
                 setTimeout(() => {
-                    const othersUsersCountAfterWait = oldState.channel.members.size - 1
-                    if (othersUsersCountAfterWait === 0) {
+                    const othersUsersCountAfterWait = oldState.channel.members.size
+                    if (othersUsersCountAfterWait === 1) {
                         console.log(`Still alone in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, it's time to leave`)
                         disconnect(oldState.guild.id)
+                    }
+                    else if (othersUsersCount === 0) {
+                        console.log(`I have already been disconnected from the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name} since the timer started`)
                     }
                     else {
                         console.log(`Not alone anymore in the voice channel ${oldState.channel.name} on the server ${oldState.channel.guild.name}, so I won't leave now (${othersUsersCountAfterWait} user(s) are present)`)

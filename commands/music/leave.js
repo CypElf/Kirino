@@ -12,7 +12,7 @@ module.exports = {
         if (guild.me.voice.channel) {
             if (musicAuth(msg.member, guild.me)) {
                 const connection = getVoiceConnection(guild.id)
-                bot.voicesQueues.get(guild.id).player.stop()
+                bot.voicesQueues.get(guild.id)?.player?.stop()
                 connection.destroy()
                 bot.voicesQueues.delete(guild.id)
 
