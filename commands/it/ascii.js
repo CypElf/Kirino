@@ -10,7 +10,7 @@ module.exports = {
 
         const mode = args[0]
         args.splice(0, 1)
-        const input = args.join(" ")
+        const input = args.join("")
         let output = ""
 
         if (mode !== "encode" && mode !== "decode") return msg.channel.send(__("enter_valid_mode"))

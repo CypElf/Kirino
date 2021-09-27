@@ -11,7 +11,7 @@ module.exports = {
     guildOnly: false,
 
     async execute(bot, interaction) {
-        const text = interaction.options.getString("text")
+        const text = interaction.options.getString("text").replaceAll(" ", "")
         const subcommand = interaction.options.getSubcommand()
 
         let output = ""
