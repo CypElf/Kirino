@@ -7,7 +7,6 @@ module.exports = {
     args: false,
 
     async execute(bot, msg) {
-
         const guild = await bot.guilds.fetch(msg.guild.id)
         if (guild.me.voice.channel) {
             if (musicAuth(msg.member, guild.me)) {

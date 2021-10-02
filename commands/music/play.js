@@ -47,14 +47,17 @@ module.exports = {
 
                         let cMsg = await msg.channel.awaitMessages({ filter, max: 1, time: 30_000 })
                         cMsg = [...cMsg.values()]
+
+                        // eslint-disable-next-line no-empty-function
+                        cMsg[0].delete().catch(() => {})
+                        // eslint-disable-next-line no-empty-function
+                        choicesMsg.delete().catch(() => {})
+
+                        if (bot.voicesQueues.get(msg.guild.id) == undefined) return msg.channel.send(`${__("play_cancelled")} ${__("kirino_pout")}`)
                         if (cMsg.length === 1) {
                             if (cMsg[0].content.toUpperCase() !== "N") video = videos[cMsg[0].content - 1]
                             else return msg.channel.send(`${__("play_cancelled")} ${__("kirino_pout")}`)
-
-                            cMsg[0].delete().catch()
                         }
-
-                        choicesMsg.delete().catch()
                     }
 
                     song = await getSongFromURL(video.url)

@@ -80,6 +80,7 @@ module.exports = {
                             video = videos[index]
                         }
                         catch {
+                            i18next.setDefaultNamespace(this.data.name)
                             return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] })
                         }
                     }
@@ -91,7 +92,10 @@ module.exports = {
                 }
             }
 
+            i18next.setDefaultNamespace(this.data.name)
             const serverQueue = bot.voicesQueues.get(interaction.guild.id)
+            if (serverQueue === undefined) return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] }) // bot has left voice channel while choice was made
+
             serverQueue.songs.push(song)
 
             const confirmation = `${t("added")}${song.title} ${t("to_the_queue")} ${t("common:kirino_glad")}`
