@@ -82,7 +82,12 @@ module.exports = {
         if (queue.songs.length >= 1) {
             const nextSong = queue.songs[0]
 
-            queue.player.play(nextSong.stream)
+            try {
+                queue.player.play(nextSong.stream)
+            }
+            catch {
+                return
+            }
 
             const youtubeRed = "#DF1F18"
 

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed, Permissions, MessageButton, MessageActionRow } = require("discord.js")
+const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js")
 const i18next = require("i18next")
 const t = i18next.t.bind(i18next)
 
@@ -8,7 +8,7 @@ module.exports = {
         .setName("report")
         .setDescription("Allow you to submit a report to suggest new features, bugs, or anything that can improve me")
         .addStringOption(option => option.setName("message").setDescription("The message you want to send as a report").setRequired(true)),
-    guildOnly: false,
+    guildOnly: true,
     cooldown: 5,
 
     async execute(bot, interaction) {
@@ -17,7 +17,6 @@ module.exports = {
         let origin
         let originAvatar
         if (interaction.guild) {
-            if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
             origin = interaction.guild.name
             originAvatar = interaction.guild.iconURL()
         }
