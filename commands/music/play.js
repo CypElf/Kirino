@@ -70,7 +70,14 @@ module.exports = {
             const serverQueue = bot.voicesQueues.get(msg.guild.id)
             serverQueue.songs.push(song)
 
-            if (serverQueue.songs.length === 1) this.play(msg.channel, serverQueue)
+            if (serverQueue.songs.length === 1) {
+                try {
+                    this.play(msg.channel, serverQueue)
+                }
+                catch {
+                    return
+                }
+            }
             else msg.channel.send(`${__("added")}${song.title} ${__("to_the_queue")} ${__("kirino_glad")}`)
         }
         else {
