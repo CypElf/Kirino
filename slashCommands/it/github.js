@@ -22,7 +22,14 @@ module.exports = {
             const creation = time(dayjs(data.created_at).unix())
             const creationRelative = time(dayjs(data.created_at).unix(), "R")
 
-            const color = await ColorThief.getColor(data.avatar_url)
+            let color
+
+            try {
+                color = await ColorThief.getColor(data.avatar_url) // can fail if GitHub is down, if the network has an issue BUT also if someone uses an animated gif as an avatar because the magic bytes are broken and ColorThief can't deal with that
+            }
+            catch {
+                color = "#222222"
+            }
 
             const profileEmbed = new MessageEmbed()
                 .setAuthor(t("github_profile"), "https://cdn.discordapp.com/attachments/714381484617891980/879280737780662272/github.png")

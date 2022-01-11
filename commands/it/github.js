@@ -24,7 +24,14 @@ module.exports = {
             const creationDate = createdAt.split("T")[0].split("-").reverse().join("/")
             const creationTime = createdAt.split("T")[1].split("Z")[0]
 
-            const color = await ColorThief.getColor(data.avatar_url)
+            let color
+
+            try {
+                color = await ColorThief.getColor(data.avatar_url) // can fail if GitHub is down, if the network has an issue BUT also if someone uses an animated gif as an avatar because the magic bytes are broken and ColorThief can't deal with that
+            }
+            catch {
+                color = "#222222"
+            }
 
             const profileEmbed = new MessageEmbed()
                 .setAuthor(__("github_profile"), "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")

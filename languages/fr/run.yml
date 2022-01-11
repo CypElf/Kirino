@@ -3,3 +3,4 @@ cancelled: "Vous n'avez toujours pas envoyé votre code après une minute, la co
 paste_error: "Je suis désolée, l'output de votre code est trop gros et je n'ai pas réussi à en faire un paste avec un service en ligne."
 pasted_here: "L'output de votre code est trop gros, j'en ai fait un paste :"
 file_too_big: "Le code que vous avez envoyé est trop lourd, vous ne pouvez pas soumettre de fichier dont la taille est supérieure à {{max_size}} Mo."
+not_viewable: "Je n'ai pas accès à ce salon, je ne pourrais donc pas lire le message dans lequel vous allez envoyer votre code. Veuillez m'autoriser l'accès à ce salon ou refaire cette commande dans un autre salon auquel j'ai accès."

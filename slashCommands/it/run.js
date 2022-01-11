@@ -16,6 +16,7 @@ module.exports = {
     guildOnly: false,
 
     async execute(bot, interaction) {
+        if (!interaction.channel.viewable) return interaction.reply(`${t("not_viewable")} ${t("common:kirino_pout")}`)
         interaction.reply(`${t("send_your_code")} ${t("common:kirino_glad")}`)
         const replyMsg = await interaction.fetchReply()
         let codeMsg
@@ -27,7 +28,7 @@ module.exports = {
         }
         catch {
             replyMsg.delete()
-            return interaction.followUp({ content: `${t("cancelled")} ${t("common:kirino_pout")}`, ephemeral: true })
+            return interaction.followUp({ content: `${t("run:cancelled")} ${t("common:kirino_pout")}`, ephemeral: true })
         }
 
         i18next.setDefaultNamespace("run") // in case while we were awaiting for messages another command changed the namespace

@@ -3,3 +3,4 @@ cancelled: "You didn't send your code after a minute, so the command has been ca
 paste_error: "I'm sorry, your code output is too big and my attempts to create pastes with your output all failed."
 pasted_here: "Output was too big, I pasted it here:"
 file_too_big: "The code you submitted is too big, you can't submit a file larger than {{max_size}} Mo."
+not_viewable: "I do not have access to this channel, so I will not be able to read the message in which you are going to send your code. Please allow me access to this channel or place this order again in another lounge to which I have access."
