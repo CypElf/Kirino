@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { createAudioResource } = require("@discordjs/voice")
+const { createAudioResource, StreamType } = require("@discordjs/voice")
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require("discord.js")
 const util = require("util")
 const i18next = require("i18next")
@@ -44,52 +44,52 @@ module.exports = {
                 wasDirectLink = true
             }
             catch {
-                try {
-                    const result = await yts(raw)
-                    const videos = result.videos.slice(0, 10).map(video => {
-                        if (video.description.length > 100) {
-                            video.description = video.description.slice(0, 97) + "..."
-                        }
-                        return video
-                    })
-                    let video = videos[0]
+                // try {
+                const result = await yts(raw)
+                const videos = result.videos.slice(0, 10).map(video => {
+                    if (video.description.length > 100) {
+                        video.description = video.description.slice(0, 97) + "..."
+                    }
+                    return video
+                })
+                let video = videos[0]
 
-                    if (video.title.toLowerCase() !== raw.toLowerCase()) {
-                        const actionRow = new MessageActionRow()
-                            .addComponents(
-                                new MessageSelectMenu()
-                                    .setCustomId("youtube_choice")
-                                    .setPlaceholder(t("nothing_selected"))
-                                    .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: t("cancel"), description: t("cancel_description"), value: "cancel" }]))
-                            )
+                if (video.title.toLowerCase() !== raw.toLowerCase()) {
+                    const actionRow = new MessageActionRow()
+                        .addComponents(
+                            new MessageSelectMenu()
+                                .setCustomId("youtube_choice")
+                                .setPlaceholder(t("nothing_selected"))
+                                .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: t("cancel"), description: t("cancel_description"), value: "cancel" }]))
+                        )
 
-                        await interaction.editReply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
-                        const resultsMsg = await interaction.fetchReply()
+                    await interaction.editReply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
+                    const resultsMsg = await interaction.fetchReply()
 
-                        const filter = i => {
-                            i.deferUpdate()
-                            return interaction.user.id === i.user.id
-                        }
-
-                        try {
-                            const i = await resultsMsg.awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 30_000 })
-
-                            if (i.values[0] === "cancel") throw new Error()
-
-                            const index = parseInt(i.values[0])
-                            video = videos[index]
-                        }
-                        catch {
-                            i18next.setDefaultNamespace(this.data.name)
-                            return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] })
-                        }
+                    const filter = i => {
+                        i.deferUpdate()
+                        return interaction.user.id === i.user.id
                     }
 
-                    song = await getSongFromURL(video.url)
+                    // try {
+                    const i = await resultsMsg.awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 30_000 })
+
+                    if (i.values[0] === "cancel") throw new Error()
+
+                    const index = parseInt(i.values[0])
+                    video = videos[index]
+                    // }
+                    // catch {
+                    //     i18next.setDefaultNamespace(this.data.name)
+                    //     return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] })
+                    // }
                 }
-                catch {
-                    return interaction.editReply({ content: `${t("search_error")} ${t("common:kirino_what")}`, ephemeral: true })
-                }
+
+                song = await getSongFromURL(video.url)
+                // }
+                // catch {
+                //     return interaction.editReply({ content: `${t("search_error")} ${t("common:kirino_what")}`, ephemeral: true })
+                // }
             }
 
             i18next.setDefaultNamespace(this.data.name)
@@ -120,12 +120,12 @@ module.exports = {
         if (queue.songs.length >= 1) {
             const nextSong = queue.songs[0]
 
-            try {
-                queue.player.play(nextSong.stream)
-            }
-            catch {
-                return
-            }
+            // try {
+            queue.player.play(nextSong.stream)
+            // }
+            // catch {
+            //     return
+            // }
 
             const youtubeRed = "#DF1F18"
 
@@ -152,7 +152,7 @@ async function getSongFromURL(url) {
     const { author, title, description, thumbnails } = videoInfo.videoDetails
 
     return {
-        stream: createAudioResource(stream),
+        stream: createAudioResource(stream, { inputType: StreamType.Opus }),
         url,
         title,
         description,
