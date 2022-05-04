@@ -3,7 +3,6 @@ const { MessageAttachment, Permissions, MessageButton, MessageActionRow } = requ
 const t = require("i18next").t.bind(require("i18next"))
 const Canvas = require("canvas")
 const fetch = require("node-fetch")
-const updateBackground = require("../../lib/misc/update_background")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -449,4 +448,25 @@ module.exports = {
         }
         else interaction.reply({ content: `${t("currently_disabled_enable_with")} \`xpconfig enable\`.`, ephemeral: true })
     }
+}
+
+Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, width, height, rounded) {
+    const halfRadians = (2 * Math.PI) / 2
+    const quarterRadians = (2 * Math.PI) / 4
+    this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
+    this.lineTo(x, y + height - rounded)
+    this.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)
+    this.lineTo(x + width - rounded, y + height)
+    this.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)
+    this.lineTo(x + width, y + rounded)
+    this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)
+    this.lineTo(x + rounded, y)
+}
+
+function updateBackground(db, backgroundLink, user_id, guild_id) {
+    const userRow = db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(guild_id, user_id)
+    if (userRow.xp === undefined) userRow.xp = 0
+    if (userRow.total_xp === undefined) userRow.total_xp = 0
+    if (userRow.level === undefined) userRow.level = 0
+    db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level, background) VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET background=excluded.background").run(guild_id, user_id, userRow.xp, userRow.total_xp, userRow.level, backgroundLink)
 }

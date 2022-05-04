@@ -17,7 +17,7 @@ module.exports = {
             .addField(`**${t("q_and_a")}**\n\u200b`, t("q_and_a_content", { invite_link: process.env.INVITE_LINK }) + "\n\u200b")
             .addField(`**${t("beta_commands")}**\n\u200b`, betaCommands.length > 0 ? "`" + betaCommands.join("`, `") + "`" : t("no_beta_command"))
             .setColor("#DFC900")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [helpEmbed] })
     }

@@ -6,105 +6,14 @@ const removeDeletedRolesRewards = require("../lib/rolerewards/remove_deleted_rol
 
 module.exports = bot => {
     bot.on("messageCreate", async msg => {
-        const prefixRequest = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?")
-        const id = msg.guild ? msg.guild.id : msg.author.id
-
-        let prefix = prefixRequest.get(id)
-        if (!prefix) prefix = ";"
-        else prefix = prefix.prefix
-        bot.prefix = prefix
-
-        if (msg.author.bot) return
-
-        const separator = msg.content.split("\n")[0].split(" ").length > 1 ? " " : "\n"
-
-        const commandName = msg.content.split(separator)[0].toLowerCase().slice(bot.prefix.length)
-        let args = msg.content.split(separator).slice(1)
-
-        if (separator == "\n" && args.length > 0) args = args.join("\n").split(" ")
-
-        const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
+        if (msg.author.bot || msg.guild && !msg.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
 
         const lang = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(msg.guild ? msg.guild.id : msg.author.id)?.language ?? "en"
         await i18next.changeLanguage(lang)
-        setLocale(lang) // TODO : once the legacy commands support will be dropped, remove this line
-
-        if (msg.guild) {
-            // minimal needed permissions
-            if (!msg.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
-            if (msg.content.startsWith(bot.prefix) && command) {
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return msg.channel.send(t("messageCreate:need_handle_messages_perm"))
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS)) return msg.channel.send(t("messageCreate:need_embed_links"))
-                if (!msg.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY)) return msg.channel.send(t("messageCreate:need_read_message_history"))
-            }
-        }
 
         checkAfk(bot, msg)
         checkBanwords(bot, msg)
-
-        await handleXp(bot, msg, { cooldowns: bot.xpCooldowns })
-
-        // ------------------------------------------------------------- prefix reminder
-
-        if (msg.mentions.users.has(bot.user.id) && msg.content === `<@!${bot.user.id}>`) return msg.channel.send(`${t("messageCreate:bot_mention")} \`${bot.prefix}\`.`)
-
-        // ------------------------------------------------------------- command validity check
-
-        if (!msg.content.startsWith(bot.prefix)) return
-        if (!command) return
-
-        if (command.guildOnly && !msg.guild) {
-            return msg.reply(`${t("messageCreate:command_not_available_in_dm")} ${t("common:kirino_pout")}`)
-        }
-
-        // ------------------------------------------------------------- beta check
-
-        if (command.beta) {
-            const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
-
-            if (betaRow === undefined) {
-                return msg.channel.send(`${t("messageCreate:command_in_beta")} \`${bot.prefix}beta enable\` ${t("common:kirino_glad")}`)
-            }
-        }
-
-        // ------------------------------------------------------------- command cooldown check
-
-        if (!bot.commandsCooldowns.has(command.name)) {
-            bot.commandsCooldowns.set(command.name, new Collection())
-        }
-
-        const now = Date.now()
-        const timestamps = bot.commandsCooldowns.get(command.name)
-        const cooldown = (command.cooldown || 2) * 1000 // default cooldown is 2 seconds
-
-        if (timestamps.has(msg.author.id)) {
-            const expiration = timestamps.get(msg.author.id) + cooldown
-
-            if (now < expiration) {
-                const timeLeft = (expiration - now) / 1000
-                return msg.channel.send(`${t("messageCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`)
-            }
-        }
-
-        timestamps.set(msg.author.id, now)
-        setTimeout(() => timestamps.delete(msg.author.id), cooldown)
-
-        if (command.args && !args.length) {
-            if (command.category === "ignore") return
-            return bot.commands.get("help").execute(bot, msg, [].concat(command.name))
-        }
-
-        await i18next.loadNamespaces(commandName)
-        i18next.setDefaultNamespace(commandName)
-        console.log(`Executing ${command.name} for ${msg.author.tag} (from ${msg.guild ? msg.guild.name : "DM"})`)
-
-        try {
-            await command.execute(bot, msg, args)
-        }
-        catch (err) {
-            console.error(err.stack)
-            msg.channel.send(`${t("messageCreate:command_runtime_error")} ${t("common:kirino_what")}`)
-        }
+        handleXp(bot, msg, { cooldowns: bot.xpCooldowns })
     })
 }
 
@@ -141,7 +50,6 @@ function checkAfk(bot, msg) {
 
 async function handleXp(bot, msg, obj) {
     if (msg.guild) {
-
         const xpMetadataRequest = bot.db.prepare("SELECT is_enabled, level_up_message FROM xp_guilds WHERE guild_id = ?")
         const xpMetadata = xpMetadataRequest.get(msg.guild.id)
 

@@ -24,7 +24,7 @@ module.exports = {
 
         if (subcommand === "list") {
             rolesRows = roleRequest.all(interaction.guild.id)
-            if (rolesRows.length === 0) return interaction.reply({ content: t("no_role_reward_for_now"), ephemeral: true })
+            if (rolesRows.length === 0) return interaction.reply({ content: t("no_role_reward_for_now") })
 
             const colorRequest = bot.db.prepare("SELECT color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
             let color = colorRequest.get(interaction.guild.id, interaction.user.id)
@@ -36,7 +36,7 @@ module.exports = {
                 .setTitle(`**${t("roles_available")}**`)
                 .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
                 .setColor(color)
-                .setFooter(t("request_from") + interaction.user.username, interaction.user.displayAvatarURL())
+                .setFooter({ text: t("request_from") + interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 
             for (const level of [...new Set(rolesRows.map(row => row.level))]) {
                 const rolesNames = rolesRows.map(row => {

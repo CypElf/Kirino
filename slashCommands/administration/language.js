@@ -7,7 +7,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("language")
         .setDescription("Allow you to change the language I use for all my commands")
-        .addStringOption(option => option.setName("language").setDescription("The new language you want to set").setRequired(true).addChoice("French", "fr").addChoice("English", "en")),
+        .addStringOption(option => option.setName("language")
+            .setDescription("The new language you want to set")
+            .setRequired(true)
+            .addChoices({
+                name: "English",
+                value: "en"
+            }, {
+                name: "Français",
+                value: "fr"
+            })),
     guildOnly: false,
     cooldown: 3,
     permissions: ["manage guild"],
@@ -27,7 +36,6 @@ module.exports = {
         bot.db.prepare("INSERT INTO languages(id, language) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET language = excluded.language").run(id, language)
 
         await i18next.changeLanguage(language)
-        setLocale(language) // TODO : remove this when legacy commands compatibility will be dropped
 
         if (isInGuild) {
             interaction.reply(`${t("server_language_changed") + language}\` ${t("common:kirino_glad")} !`)

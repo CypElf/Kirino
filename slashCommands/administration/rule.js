@@ -79,7 +79,7 @@ module.exports = {
             const ruleEmbed = new MessageEmbed()
                 .addField(t("rule_title") + (index + 1), rule)
                 .setColor("#000000")
-                .setFooter(t("rules_from") + interaction.guild.name, interaction.guild.iconURL())
+                .setFooter({ text: t("rules_from") + interaction.guild.name, iconURL: interaction.guild.iconURL() })
 
             interaction.reply({ embeds: [ruleEmbed] })
         }

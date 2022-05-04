@@ -50,7 +50,7 @@ module.exports = {
         const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
 
         const informations = new MessageEmbed()
-            .setAuthor(member.user.tag, member.user.displayAvatarURL())
+            .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
             .setColor(color)
             .addField(t("id"), member.id, true)
             .addField(t("nickname"), nickname, true)
@@ -60,7 +60,7 @@ module.exports = {
             .addField(t("role", { count: nbRoles }), roles, true)
             .addField(t("permissions"), perms)
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })
     }

@@ -15,7 +15,7 @@ module.exports = {
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563485044748/712574232147656704/712320080884793537.png")
             .setImage("https://cdn.discordapp.com/attachments/698105563485044748/712577943666294814/unknown.png")
             .setColor("#000000")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [linksEmbed] })
     }

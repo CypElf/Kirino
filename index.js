@@ -3,16 +3,13 @@ const fs = require("fs")
 const http = require("http")
 const url = require("url")
 const bsqlite3 = require("better-sqlite3")
-const i18n = require("i18n")
 const i18next = require("i18next")
 const Backend = require("i18next-fs-backend")
-const yaml = require("js-yaml")
 
 require("dotenv").config()
 
 const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS] })
 
-bot.commands = new Collection()
 bot.slashCommands = new Collection()
 bot.db = new bsqlite3("database.db", { fileMustExist: true })
 bot.commandsCooldowns = new Collection()
@@ -20,15 +17,6 @@ bot.xpCooldowns = new Collection()
 bot.apiCooldowns = new Map()
 bot.voicesQueues = new Collection()
 bot.calls = new Collection()
-
-i18n.configure({ // TODO : when legacy commands support will be dropped, remove this
-    locales: ["en", "fr"],
-    staticCatalog: {
-        en: yaml.safeLoad(fs.readFileSync("./legacy_languages/en.yml", "utf-8")),
-        fr: yaml.safeLoad(fs.readFileSync("./legacy_languages/fr.yml", "utf-8"))
-    },
-    register: global
-})
 
 i18next.use(Backend).init({
     lng: "en",
@@ -52,18 +40,7 @@ for (const file of eventsFiles) {
     eventSetter(bot)
 }
 
-const categories = fs.readdirSync("./commands")
 const slashCategories = fs.readdirSync("./slashCommands")
-
-for (const category of categories) {
-    const commandFiles = fs.readdirSync(`./commands/${category}/`).filter(file => file.endsWith(".js"))
-    for (const commandFile of commandFiles) {
-        // eslint-disable-next-line node/global-require
-        const command = require(`./commands/${category}/${commandFile}`)
-        command.category = category
-        bot.commands.set(command.name, command)
-    }
-}
 
 for (const category of slashCategories) {
     const slashCommandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))

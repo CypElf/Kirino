@@ -66,7 +66,7 @@ module.exports = {
                             .setThumbnail(originAvatar)
                             .setDescription("**" + t("report_origin") + "** " + origin + "\n**" + t("message") + " :** " + report)
                             .setColor("#CC0101")
-                            .setFooter(t("report_from") + interaction.user.tag, interaction.user.displayAvatarURL())
+                            .setFooter({ text: t("report_from") + interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
 
                         const msg = await reportChannel.send({ embeds: [reportEmbed] })
                         msg.react("💬")

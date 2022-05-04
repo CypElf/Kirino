@@ -134,7 +134,7 @@ module.exports = {
                 .setURL(nextSong.url)
                 .setColor(youtubeRed)
                 .setImage(nextSong.thumbnail)
-                .setAuthor(nextSong.author_name)
+                .setAuthor({ name: nextSong.author_name })
 
             if (nextSong.description) {
                 embed.setDescription(nextSong.description.length > 150 ? nextSong.description.slice(0, 150) + "..." : nextSong.description)

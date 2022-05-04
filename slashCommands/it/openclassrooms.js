@@ -14,7 +14,7 @@ module.exports = {
             .setDescription(t("openclassrooms_explanation"))
             .setThumbnail("https://upload.wikimedia.org/wikipedia/fr/0/0d/Logo_OpenClassrooms.png")
             .setColor("#AA44FF")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [linksEmbed] })
     }

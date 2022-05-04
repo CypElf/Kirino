@@ -12,14 +12,31 @@ module.exports = {
             .addStringOption(option => option.setName("factor")
                 .setDescription("The factor by which to multiply the amount of XP earned")
                 .setRequired(true)
-                .addChoice("0.25", "0.25")
-                .addChoice("0.5", "0.5")
-                .addChoice("0.75", "0.75")
-                .addChoice("1", "1")
-                .addChoice("1.5", "1.5")
-                .addChoice("2", "2")
-                .addChoice("2.5", "2.5")
-                .addChoice("3", "3"))),
+                .addChoices({
+                    name: "0.25",
+                    value: "0.25"
+                }, {
+                    name: "0.5",
+                    value: "0.5"
+                }, {
+                    name: "0.75",
+                    value: "0.75"
+                }, {
+                    name: "1",
+                    value: "1"
+                }, {
+                    name: "1.5",
+                    value: "1.5"
+                }, {
+                    name: "2",
+                    value: "2"
+                }, {
+                    name: "2.5",
+                    value: "2.5"
+                }, {
+                    name: "3",
+                    value: "3"
+                }))),
     guildOnly: true,
     permissions: ["{administrator}"],
 

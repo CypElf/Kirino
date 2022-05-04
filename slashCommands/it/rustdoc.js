@@ -38,7 +38,7 @@ module.exports = {
             .setTitle(t("results"))
             .setColor("#353535")
             .setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         if (content[0] !== "") embed.addField(t("in_name"), content[0])
         if (content[1] !== "") embed.addField(t("in_settings"), content[1])

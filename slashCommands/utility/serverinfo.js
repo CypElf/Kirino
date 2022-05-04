@@ -52,7 +52,7 @@ module.exports = {
         const premiumTier = interaction.guild.premiumTier === "NONE" ? "0" : (interaction.guild.premiumTier === "TIER_1" ? "1" : (interaction.guild.premiumTier === "TIER_2" ? "2" : "3"))
 
         const informations = new MessageEmbed()
-            .setAuthor(interaction.guild.name, owner.user.displayAvatarURL())
+            .setAuthor({ name: interaction.guild.name, iconURL: owner.user.displayAvatarURL() })
             .setColor("#000000")
             .addField(t("server_owner"), owner.user.tag, true)
             .addField(t("server_id"), interaction.guild.id, true)
@@ -87,7 +87,7 @@ module.exports = {
         informations.addField(t("channels"), textChannelsCount + " " + t("text_channel", { count: textChannelsCount }) + ", " + voiceChannelsCount + " " + t("vocal_channel", { count: voiceChannelsCount }), true)
             .addField(t("server_creation_date"), `${time(interaction.guild.createdAt)} (${time(interaction.guild.createdAt, "R")})`)
             .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })
     }

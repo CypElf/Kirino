@@ -32,11 +32,11 @@ module.exports = {
             }
 
             const profileEmbed = new MessageEmbed()
-                .setAuthor(t("github_profile"), "https://cdn.discordapp.com/attachments/714381484617891980/879280737780662272/github.png")
+                .setAuthor({ name: t("github_profile"), iconURL: "https://cdn.discordapp.com/attachments/714381484617891980/879280737780662272/github.png" })
                 .setColor(color)
                 .setThumbnail(data.avatar_url)
                 .setURL(data.html_url)
-                .setFooter(`${t("common:request_from")}${interaction.user.username}`, interaction.user.displayAvatarURL())
+                .setFooter({ text: `${t("common:request_from", { username: interaction.user.username })}`, iconURL: interaction.user.displayAvatarURL() })
 
             if (data.name) profileEmbed.setTitle(`**${data.name}** (${data.login})`)
             else profileEmbed.setTitle(`**${data.login}**`)

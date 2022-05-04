@@ -31,7 +31,7 @@ module.exports = {
             .setColor("#000000")
             .addField(`${t("original_number_in_base")} ${inputBase}`, `**${number}**`)
             .addField(`${t("converted_number_in_base")} ${outputBase}`, `**${convertedToOutputBase}**`)
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds : [baseEmbed] })
     }

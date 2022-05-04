@@ -16,7 +16,7 @@ module.exports = {
         const perms = "`" + role.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
         const informations = new MessageEmbed()
-            .setAuthor(t("roles", 1) + " : " + role.name)
+            .setAuthor({ name: t("roles", 1) + " : " + role.name })
             .setColor(role.hexColor)
             .addField(t("id"), role.id, true)
             .addField(t("color"), role.hexColor.toUpperCase(), true)
@@ -26,7 +26,7 @@ module.exports = {
             .addField(t("external_handler"), role.managed ? t("yes") : t("no"), true)
             .addField(t("role_creation_date"), `${time(role.createdAt)} (${time(role.createdAt, "R")})`)
             .addField(t("permissions"), perms !== "``" ? perms : "`" + t("no_permissions") + "`")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })
     }

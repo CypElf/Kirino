@@ -20,7 +20,7 @@ module.exports = {
             .setTitle("ASCII")
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563195768846/720189759560876052/ascii.png")
             .setColor("#555599")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         if (subcommand === "encode") {
             if (text.length > 340) return interaction.reply({ content: t("less_or_equal_to_340"), ephemeral: true })

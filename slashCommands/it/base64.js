@@ -42,7 +42,7 @@ module.exports = {
         }
 
         base64Embed.setColor("#08857A")
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/714381707842813984/base64.png")
 
         interaction.reply({ embeds: [base64Embed] })

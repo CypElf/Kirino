@@ -7,20 +7,43 @@ module.exports = {
         .setName("learn")
         .setDescription("Give you useful links to learn different programming languages or technologies")
         .addStringOption(option => option.setName("techno").setDescription("The technology you want to get the links to learn").setRequired(true)
-            .addChoices([
-                ["C", "C"],
-                ["C++", "C++"],
-                ["C#", "C#"],
-                ["Discord.js", "Discord.js"],
-                ["Git", "Git"],
-                ["HTML / CSS", "HTML / CSS"],
-                ["Java", "Java"],
-                ["JavaScript", "JavaScript"],
-                ["PHP", "PHP"],
-                ["Python", "Python"],
-                ["Reverse engineering", "Reverse engineering"],
-                ["Rust", "Rust"]
-            ])
+            .addChoices({
+                name: "C",
+                value: "C"
+            }, {
+                name: "C++",
+                value: "C++"
+            }, {
+                name: "C#",
+                value: "C#"
+            }, {
+                name: "Discord.js",
+                value: "Discord.js"
+            }, {
+                name: "Git",
+                value: "Git"
+            }, {
+                name: "HTML / CSS",
+                value: "HTML / CSS"
+            }, {
+                name: "Java",
+                value: "Java"
+            }, {
+                name: "JavaScript",
+                value: "JavaScript"
+            }, {
+                name: "PHP",
+                value: "PHP"
+            }, {
+                name: "Python",
+                value: "Python"
+            }, {
+                name: "Reverse engineering",
+                value: "Reverse engineering"
+            }, {
+                name: "Rust",
+                value: "Rust"
+            })
         ),
     guildOnly: false,
 
@@ -28,7 +51,7 @@ module.exports = {
         const techno = interaction.options.getString("techno")
 
         const linksEmbed = new MessageEmbed()
-            .setFooter(t("common:request_from", { username: interaction.user.username }), interaction.user.displayAvatarURL())
+            .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         if (techno === "C") {
             linksEmbed
