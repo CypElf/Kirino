@@ -17,7 +17,7 @@ module.exports = {
 
     async execute(bot, interaction) {
         if (interaction.member.voice.channel) {
-            interaction.deferReply()
+            await interaction.deferReply()
 
             if (!interaction.guild.me.voice.channel) {
                 i18next.loadNamespaces("join")
@@ -44,52 +44,53 @@ module.exports = {
                 wasDirectLink = true
             }
             catch {
-                // try {
-                const result = await yts(raw)
-                const videos = result.videos.slice(0, 10).map(video => {
-                    if (video.description.length > 100) {
-                        video.description = video.description.slice(0, 97) + "..."
+                try {
+                    const result = await yts(raw)
+                    const videos = result.videos.slice(0, 10).map(video => {
+                        if (video.description.length > 100) {
+                            video.description = video.description.slice(0, 97) + "..."
+                        }
+                        return video
+                    })
+                    let video = videos[0]
+
+                    if (video.title.toLowerCase() !== raw.toLowerCase()) {
+                        const actionRow = new MessageActionRow()
+                            .addComponents(
+                                new MessageSelectMenu()
+                                    .setCustomId("youtube_choice")
+                                    .setPlaceholder(t("nothing_selected"))
+                                    .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: t("cancel"), description: t("cancel_description"), value: "cancel" }]))
+                            )
+
+                        await interaction.editReply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
+                        const resultsMsg = await interaction.fetchReply()
+
+                        const filter = i => {
+                            i.deferUpdate()
+                            return interaction.user.id === i.user.id
+                        }
+
+                        try {
+                            const i = await resultsMsg.awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 30_000 })
+
+                            if (i.values[0] === "cancel") throw new Error()
+
+                            const index = parseInt(i.values[0])
+                            video = videos[index]
+                        }
+                        catch {
+                            i18next.setDefaultNamespace(this.data.name)
+                            return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] })
+                        }
                     }
-                    return video
-                })
-                let video = videos[0]
 
-                if (video.title.toLowerCase() !== raw.toLowerCase()) {
-                    const actionRow = new MessageActionRow()
-                        .addComponents(
-                            new MessageSelectMenu()
-                                .setCustomId("youtube_choice")
-                                .setPlaceholder(t("nothing_selected"))
-                                .addOptions(videos.map((v, i) => ({ label: v.title, description: v.description, value: i.toString() })).concat([{ label: t("cancel"), description: t("cancel_description"), value: "cancel" }]))
-                        )
-
-                    await interaction.editReply({ content: `${t("youtube_results")} ${t("common:kirino_glad")}`, components: [actionRow] })
-                    const resultsMsg = await interaction.fetchReply()
-
-                    const filter = i => {
-                        i.deferUpdate()
-                        return interaction.user.id === i.user.id
-                    }
-
-                    // try {
-                    const i = await resultsMsg.awaitMessageComponent({ filter, componentType: "SELECT_MENU", time: 30_000 })
-
-                    if (i.values[0] === "cancel") throw new Error()
-
-                    const index = parseInt(i.values[0])
-                    video = videos[index]
-                    // }
-                    // catch {
-                    //     i18next.setDefaultNamespace(this.data.name)
-                    //     return interaction.editReply({ content: `${t("play_cancelled")} ${t("common:kirino_pout")}`, components: [] })
-                    // }
+                    song = await getSongFromURL(video.url)
                 }
-
-                song = await getSongFromURL(video.url)
-                // }
-                // catch {
-                //     return interaction.editReply({ content: `${t("search_error")} ${t("common:kirino_what")}`, ephemeral: true })
-                // }
+                catch (err) {
+                    console.error(err)
+                    return interaction.editReply({ content: `${t("error")} ${t("common:kirino_what")}`, ephemeral: true })
+                }
             }
 
             i18next.setDefaultNamespace(this.data.name)
