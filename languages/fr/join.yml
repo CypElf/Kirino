@@ -1,6 +1,0 @@
-queue_end_reached: "La fin de la file d'attente a été atteinte."
-voice_channel_joined: "Salon vocal rejoint."
-missing_perm_connect: "Je n'ai pas la permission de me connecter à un salon vocal."
-missing_perm_speak: "Je n'ai pas la permission de parler dans un salon vocal."
-you_are_not_in_any_voice_channel: "Vous n'êtes dans aucun salon vocal !"
-already_in_a_voice_channel: "Je suis déjà dans un salon vocal."
