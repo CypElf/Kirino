@@ -1,8 +1,13 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+import { SlashCommandBuilder } from "@discordjs/builders"
 const { Permissions, MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import { CommandInteraction, GuildMember } from "discord.js"
+import { Rule } from "../../lib/misc/database"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("rule")
         .setDescription("Manage the rules of the server")
@@ -13,22 +18,23 @@ module.exports = {
     guildOnly: true,
     permissions: ["{manage guild}"],
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const subcommand = interaction.options.getSubcommand()
+        const member = interaction.member as GuildMember | null
 
         // ------------------------------------------------------------------- add
 
         if (subcommand === "add") {
-            const rule = interaction.options.getString("rule")
+            const rule = interaction.options.getString("rule") as string
 
-            if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_enough_permissions_to_add_rule")} ${t("common:kirino_pff")}`, ephemeral: true })
+            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_enough_permissions_to_add_rule")} ${t("common:kirino_pff")}`, ephemeral: true })
 
             if (rule.length > 1000) return interaction.reply({ content: `${t("rule_too_long")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            const rulesCount = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild.id).length
+            const rulesCount = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild?.id).length
             if (rulesCount >= 30) return interaction.reply({ content: `${t("max_rules_number_reached")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            bot.db.prepare("INSERT INTO rules(guild_id, rule) VALUES(?,?)").run(interaction.guild.id, rule)
+            bot.db.prepare("INSERT INTO rules(guild_id, rule) VALUES(?,?)").run(interaction.guild?.id, rule)
 
             interaction.reply(`${t("the_following_rule")}\n\`\`\`${rule}\`\`\`\n${t("has_been_added_to_rules")}`)
         }
@@ -36,21 +42,21 @@ module.exports = {
         // ------------------------------------------------------------------- remove
 
         else if (subcommand === "remove") {
-            if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_enough_permissions_to_add_rule")} ${t("common:kirino_pff")}`, ephemeral: true })
+            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_enough_permissions_to_add_rule")} ${t("common:kirino_pff")}`, ephemeral: true })
 
-            const index = interaction.options.getInteger("rule_number") - 1
+            const index = interaction.options.getInteger("rule_number") as number - 1
 
-            const rules = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild.id).map(row => row.rule)
-            if (rules.length === 0) return interaction.reply({ content: t("no_rules_defined_on_this_server"), ephemeral: true })
+            const rows = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild?.id) as Rule[] //.map(row => row.rule)
+            if (rows.length === 0) return interaction.reply({ content: t("no_rules_defined_on_this_server"), ephemeral: true })
 
-            if (index < 0 || index >= rules.length) return interaction.reply({ content: `${t("no_rules_defined_at_this_index")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (index < 0 || index >= rows.length) return interaction.reply({ content: `${t("no_rules_defined_at_this_index")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            rules.splice(index, 1)
-            bot.db.prepare("DELETE FROM rules WHERE guild_id = ?").run(interaction.guild.id)
+            rows.splice(index, 1)
+            bot.db.prepare("DELETE FROM rules WHERE guild_id = ?").run(interaction.guild?.id)
 
-            if (rules.length > 0) {
-                for (const rule of rules) {
-                    bot.db.prepare("INSERT INTO rules(guild_id, rule) VALUES(?,?)").run(interaction.guild.id, rule)
+            if (rows.length > 0) {
+                for (const rule of rows.map(row => row.rule)) {
+                    bot.db.prepare("INSERT INTO rules(guild_id, rule) VALUES(?,?)").run(interaction.guild?.id, rule)
                 }
             }
 
@@ -60,26 +66,26 @@ module.exports = {
         // ------------------------------------------------------------------- count
 
         else if (subcommand === "count") {
-            const count = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild.id).length
+            const count = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild?.id).length
             interaction.reply(`${t("rules_count", { rules_count: count, count })}`)
         }
 
         // ------------------------------------------------------------------- display rule
 
         else if (subcommand === "get") {
-            const index = interaction.options.getInteger("rule_number") - 1
+            const index = interaction.options.getInteger("rule_number") as number - 1
 
-            const rules = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild.id).map(row => row.rule)
+            const rows = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild?.id) as Rule[]
 
-            if (rules.length === 0) return interaction.reply({ content: t("no_rules_defined_on_this_server"), ephemeral: true })
-            if (index < 0 || index >= rules.length) return interaction.reply({ content: `${t("no_rules_defined_at_this_index")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (rows.length === 0) return interaction.reply({ content: t("no_rules_defined_on_this_server"), ephemeral: true })
+            if (index < 0 || index >= rows.length) return interaction.reply({ content: `${t("no_rules_defined_at_this_index")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            const rule = rules[index]
+            const row = rows[index]
 
             const ruleEmbed = new MessageEmbed()
-                .addField(t("rule_title") + (index + 1), rule)
+                .addField(t("rule_title") + (index + 1), row.rule)
                 .setColor("#000000")
-                .setFooter({ text: t("rules_from") + interaction.guild.name, iconURL: interaction.guild.iconURL() })
+                .setFooter({ text: t("rules_from") + interaction.guild?.name, iconURL: interaction.guild?.iconURL() })
 
             interaction.reply({ embeds: [ruleEmbed] })
         }

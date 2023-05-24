@@ -1,8 +1,12 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+import { SlashCommandBuilder } from "@discordjs/builders"
 const { Permissions } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import { CommandInteraction, GuildMember, TextChannel } from "discord.js"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("purge")
         .setDescription("Delete the specified amount of messages from the last messages in the current channel")
@@ -10,17 +14,19 @@ module.exports = {
     guildOnly: true,
     permissions: ["manage messages"],
 
-    async execute(bot, interaction) {
-        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const member = interaction.member as GuildMember | null
+        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
             return interaction.reply({ content: `${t("you_cannot_delete_messages")} ${t("common:kirino_pff")}`, ephemeral: true })
         }
 
-        const count = interaction.options.getInteger("amount_of_messages")
+        const count = interaction.options.getInteger("amount_of_messages") as number
 
         if (count <= 0) return interaction.reply({ content: `${t("please_insert_positive_integer")} ${t("common:kirino_pout")}`, ephemeral: true })
 
         try {
-            await interaction.channel.bulkDelete(count)
+            const channel = interaction.channel as TextChannel
+            await channel.bulkDelete(count)
             interaction.reply({ content: `${t("purge_success")} ${t("common:kirino_glad")}`, ephemeral: true })
         }
         catch {

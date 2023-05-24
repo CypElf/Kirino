@@ -1,9 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { Permissions, MessageButton, MessageActionRow } = require("discord.js")
-const i18next = require("i18next")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { Permissions, MessageButton, MessageActionRow, CommandInteraction, GuildMember, Message, ButtonInteraction } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+
 const t = i18next.t.bind(i18next)
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("beta")
         .setDescription("Allow you to access the commands that are still in beta phase")
@@ -13,8 +15,8 @@ module.exports = {
     guildOnly: false,
     permissions: ["manage_guild"],
 
-    async execute(bot, interaction) {
-        const id = interaction.inGuild() ? interaction.guild.id : interaction.user.id
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const id = interaction.guild ? interaction.guild.id : interaction.user.id
         const isBetaEnabled = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id) !== undefined
 
         const subcommand = interaction.options.getSubcommand()
@@ -29,7 +31,8 @@ module.exports = {
         }
 
         else {
-            if (interaction.guild && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_SERVER)) {
+            const member = interaction.member as GuildMember | null
+            if (interaction.guild && member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
                 return interaction.reply({ content: `${t("missing_permissions_to_enable_beta")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
 
@@ -52,10 +55,10 @@ module.exports = {
 
                 await interaction.reply({ content: `${t("beta_confirmation")} ${t("common:kirino_what")}`, components: [actionRow] })
 
-                const confirmationMsg = await interaction.fetchReply()
+                const confirmationMsg = await interaction.fetchReply() as Message
 
                 const localeBackup = i18next.language
-                const filter = i => {
+                const filter = (i: ButtonInteraction) => {
                     i.deferUpdate()
                     return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
                 }

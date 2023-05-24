@@ -1,8 +1,12 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { Permissions } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, GuildMember, Permissions } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import { Banword } from "../../lib/misc/database"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("banword")
         .setDescription("Manage the banned words of the server")
@@ -12,10 +16,11 @@ module.exports = {
     guildOnly: true,
     permissions: ["manage messages"],
 
-    async execute(bot, interaction) {
-        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("missing_permissions_to_execute_this_command")} ${t("common:kirino_pout")}`, ephemeral: true })
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const member = interaction.member as GuildMember | null
+        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("missing_permissions_to_execute_this_command")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-        const parseEmoji = mot => {
+        const parseEmoji = (mot: string) => {
             if (mot.match(/<:(.*?):[0-9]*>/gm)) { // modification de la représentation des émojis
                 return ":" + mot.split(":")[1].split(":")[0] + ":"
             }
@@ -25,9 +30,9 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === "add") {
-            const word = parseEmoji(interaction.options.getString("word"))
+            const word = parseEmoji(interaction.options.getString("word") as string)
 
-            const bannedWords = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild.id).map(row => row.word)
+            const bannedWords = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild?.id)
             const banwordsCount = bannedWords.length > 0 ? bannedWords.length : 0
 
             if (banwordsCount + 1 > 40) {
@@ -36,23 +41,23 @@ module.exports = {
 
             if (word.length > 25) return interaction.reply({ content: t("word_beyond_25_chars") + " " + t("common:kirino_pout"), ephemeral: true })
 
-            bot.db.prepare("INSERT INTO banwords(guild_id, word) VALUES(?,?)").run(interaction.guild.id, word)
+            bot.db.prepare("INSERT INTO banwords(guild_id, word) VALUES(?,?)").run(interaction.guild?.id, word)
 
             interaction.reply(`${t("word_added_to_banwords", { word })} ${t("common:kirino_glad")}`)
         }
 
         else if (subcommand === "list") {
-            const wordsList = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild.id).map(row => row.word)
+            const wordsList = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild?.id) as Banword[]
 
-            interaction.reply((wordsList.length > 0 ? `${t("here_is_banword_list")} :\n\`${wordsList.join("`, `")}\`` : t("no_banwords_for_now") + " " + t("common:kirino_glad")))
+            interaction.reply((wordsList.length > 0 ? `${t("here_is_banword_list")} :\n\`${wordsList.map(row => row.word).join("`, `")}\`` : t("no_banwords_for_now") + " " + t("common:kirino_glad")))
         }
 
         else if (subcommand === "remove") {
-            const word = parseEmoji(interaction.options.getString("word"))
+            const word = parseEmoji(interaction.options.getString("word") as string)
 
-            const banwords = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild.id).map(row => row.word)
-            if (banwords.includes(word)) {
-                bot.db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?").run(interaction.guild.id, word)
+            const banwords = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild?.id) as Banword[]
+            if (banwords.map(row => row.word).includes(word)) {
+                bot.db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?").run(interaction.guild?.id, word)
                 interaction.reply(`${t("word_removed_from_banword", { word })} ${t("common:kirino_glad")}`)
             }
             else {

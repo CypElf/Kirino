@@ -1,9 +1,12 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+import { SlashCommandBuilder } from "@discordjs/builders"
 const { Permissions } = require("discord.js")
-const i18next = require("i18next")
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import { CommandInteraction, GuildMember } from "discord.js"
+
 const t = i18next.t.bind(i18next)
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("language")
         .setDescription("Allow you to change the language I use for all my commands")
@@ -21,18 +24,19 @@ module.exports = {
     cooldown: 3,
     permissions: ["manage guild"],
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const isInGuild = interaction.inGuild()
+        const member = interaction.member as GuildMember | null
 
         if (isInGuild) {
-            if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
+            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
                 return interaction.reply({ content: `${t("not_enough_permission_to_change_language")} ${t("common:kirino_pout")}`, ephemeral: true })
             }
         }
 
-        const language = interaction.options.getString("language")
+        const language = interaction.options.getString("language") as string
 
-        const id = isInGuild ? interaction.guild.id : interaction.user.id
+        const id = isInGuild ? interaction.guild?.id : interaction.user.id
         bot.db.prepare("INSERT INTO languages(id, language) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET language = excluded.language").run(id, language)
 
         await i18next.changeLanguage(language)

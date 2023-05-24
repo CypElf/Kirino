@@ -1,10 +1,15 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+import { SlashCommandBuilder } from "@discordjs/builders"
 const { Permissions } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
-const resetLeave = require("../../lib/joins_leaves/reset_leave")
-const formatJoinLeaveMessage = require("../../lib/joins_leaves/format_join_leave_message")
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import resetLeave from "../../lib/joins_leaves/reset_leave"
+import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
+import { Channel, CommandInteraction, GuildMember } from "discord.js"
+import { JoinLeave } from "../../lib/misc/database"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("leavemsg")
         .setDescription("Define a message to be sent each time a user leaves the server")
@@ -14,28 +19,32 @@ module.exports = {
     guildOnly: true,
     permissions: ["manage_guild"],
 
-    async execute(bot, interaction) {
-        if (!interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_allowed_to_use_this_command")} ${t("common:kirino_pff")}`, ephemeral: true })
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const member = interaction.member as GuildMember | null
+        
+        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_allowed_to_use_this_command")} ${t("common:kirino_pff")}`, ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === "reset") {
-            if (!resetLeave(bot.db, interaction.guild.id)) return interaction.reply({ content: `${t("already_no_leave_message")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (!resetLeave(bot.db, interaction.guild?.id as string)) return interaction.reply({ content: `${t("already_no_leave_message")} ${t("common:kirino_pout")}`, ephemeral: true })
 
             interaction.reply(`${t("leave_message_reset")} ${t("common:kirino_glad")}`)
         }
 
         else if (subcommand === "test") {
-            const leaveRow = bot.db.prepare("SELECT leaves_channel_id, leave_message FROM joins_leaves WHERE guild_id = ?").get(interaction.guild.id)
+            const leaveRow = bot.db.prepare("SELECT leaves_channel_id, leave_message FROM joins_leaves WHERE guild_id = ?").get(interaction.guild?.id) as JoinLeave
 
             if (leaveRow) {
                 const { leaves_channel_id, leave_message } = leaveRow
                 try {
-                    await interaction.guild.channels.fetch(leaves_channel_id) // assert that the channel where the join message should be sent still exists
-                    interaction.reply(formatJoinLeaveMessage(leave_message, interaction.member))
+                    if (!leaves_channel_id || !leave_message) throw new Error()
+
+                    await interaction.guild?.channels.fetch(leaves_channel_id) // assert that the channel where the join message should be sent still exists
+                    interaction.reply(formatJoinLeaveMessage(leave_message, member as GuildMember))
                 }
                 catch {
-                    resetLeave(bot.db, interaction.guild.id)
+                    resetLeave(bot.db, interaction.guild?.id as string)
                     interaction.reply(`${t("no_leave_message_set")} ${t("common:kirino_glad")}`)
                 }
             }
@@ -46,11 +55,11 @@ module.exports = {
 
         else if (subcommand === "set") {
             const message = interaction.options.getString("message")
-            const channel = interaction.options.getChannel("channel")
+            const channel = interaction.options.getChannel("channel") as Channel
 
             if (!channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id = excluded.leaves_channel_id, leave_message = excluded.leave_message").run(interaction.guild.id, channel.id, message)
+            bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id = excluded.leaves_channel_id, leave_message = excluded.leave_message").run(interaction.guild?.id, channel.id, message)
 
             interaction.reply(`${t("leave_message_set")} <#${channel.id}>. ${t("common:kirino_glad")}`)
         }
