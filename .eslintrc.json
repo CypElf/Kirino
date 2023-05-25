@@ -3,12 +3,15 @@
         "node": true,
         "es2021": true
     },
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
     "extends": [
         "eslint:recommended",
-        "plugin:node/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
     "rules": {
         "indent": ["error", 4],
@@ -45,7 +48,6 @@
         "space-infix-ops": "error",
         "space-unary-ops": "error",
         "spaced-comment": "error",
-        "node/exports-style": ["error", "module.exports"],
         "node/global-require": "error",
         "node/no-deprecated-api": "off"
     }
