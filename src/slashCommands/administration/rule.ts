@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-const { Permissions, MessageEmbed } = require("discord.js")
+import { CommandInteraction, GuildMember, Permissions, MessageEmbed } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { CommandInteraction, GuildMember } from "discord.js"
 import { Rule } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)

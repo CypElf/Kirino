@@ -1,10 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-const { Permissions } = require("discord.js")
+import { Channel, CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import resetJoin from "../../lib/joins_leaves/reset_join"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { Kirino } from "../../lib/misc/types"
-import { Channel, CommandInteraction, GuildMember } from "discord.js"
 import { JoinLeave } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
