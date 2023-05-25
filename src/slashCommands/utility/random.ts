@@ -1,7 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("random")
         .setDescription("Generate a random number in the given range")
@@ -10,9 +14,9 @@ module.exports = {
     guildOnly: false,
     cooldown: 1,
 
-    async execute(bot, interaction) {
-        const min = interaction.options.getInteger("minimum")
-        const max = interaction.options.getInteger("maximum")
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const min = interaction.options.getInteger("minimum") as number
+        const max = interaction.options.getInteger("maximum") as number
 
         if (min >= max) return interaction.reply({ content: `${t("min_greater_than_max")} ${t("common:kirino_pout")}`, ephemeral: true })
 

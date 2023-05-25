@@ -1,14 +1,18 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("afk")
         .setDescription("Allow you to leave a message for those who mention you while you're AFK")
         .addStringOption(option => option.setName("reason").setDescription("The reason why you're AFK")),
     guildOnly: true,
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const reason = interaction.options.getString("reason")
 
         if (reason && reason.length > 1800) {

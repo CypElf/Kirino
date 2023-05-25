@@ -1,9 +1,13 @@
-const { SlashCommandBuilder, time, roleMention } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
-const ColorThief = require("colorthief")
+import { SlashCommandBuilder, time, roleMention } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+// @ts-ignore
+import ColorThief from "colorthief"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("userinfo")
         .setDescription("Give you informations about a user")
@@ -11,14 +15,16 @@ module.exports = {
     guildOnly: true,
     cooldown: 3,
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const user = interaction.options.getUser("user") ?? interaction.user
-        const member = await interaction.guild.members.fetch(user.id)
+        const member = await interaction.guild?.members.fetch(user.id)
+
+        if (!member) return
 
         const perms = "`" + member.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
         const arrayTotalRoles = member.roles.cache
-        const arrayRoles = []
+        const arrayRoles: string[] = []
         let nbRoles = 0
         arrayTotalRoles.forEach((role) => {
             if (role.name !== "@everyone") {
@@ -28,19 +34,17 @@ module.exports = {
         })
         const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + t("role", { count: nbRoles }).toLowerCase() + ")"
 
-        let nickname = member.nickname
-        if (nickname === undefined || nickname === null) {
-            nickname = t("nothing")
-        }
+        let nickname: string = member.nickname ?? t("nothing")
 
-        let premiumSince = member.premiumSince
-        if (premiumSince) {
-            const premiumSinceMonth = String(premiumSince.getMonth() + 1).padStart(2, "0")
-            const premiumSinceDay = String(premiumSince.getDate()).padStart(2, "0")
-            const premiumSinceYear = premiumSince.getFullYear()
-            const premiumSinceHour = String(premiumSince.getHours()).padStart(2, "0")
-            const premiumSinceMinutes = String(premiumSince.getMinutes()).padStart(2, "0")
-            const premiumSinceSeconds = String(premiumSince.getSeconds()).padStart(2, "0")
+        const premiumSinceDate = member.premiumSince
+        let premiumSince = ""
+        if (premiumSinceDate) {
+            const premiumSinceMonth = String(premiumSinceDate.getMonth() + 1).padStart(2, "0")
+            const premiumSinceDay = String(premiumSinceDate.getDate()).padStart(2, "0")
+            const premiumSinceYear = premiumSinceDate.getFullYear()
+            const premiumSinceHour = String(premiumSinceDate.getHours()).padStart(2, "0")
+            const premiumSinceMinutes = String(premiumSinceDate.getMinutes()).padStart(2, "0")
+            const premiumSinceSeconds = String(premiumSinceDate.getSeconds()).padStart(2, "0")
             premiumSince = t("yes_since") + ` ${premiumSinceDay}/${premiumSinceMonth}/${premiumSinceYear} ${t("at")} ${premiumSinceHour}:${premiumSinceMinutes}:${premiumSinceSeconds}`
         }
         else {
@@ -52,13 +56,21 @@ module.exports = {
         const informations = new MessageEmbed()
             .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
             .setColor(color)
-            .addField(t("id"), member.id, true)
-            .addField(t("nickname"), nickname, true)
-            .addField(t("join_date"), `${time(member.joinedAt)} (${time(member.joinedAt, "R")})`)
-            .addField(t("user_creation_date"), `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})`)
-            .addField(t("booster"), premiumSince, true)
-            .addField(t("role", { count: nbRoles }), roles, true)
-            .addField(t("permissions"), perms)
+            .addFields(
+                { name: t("id"), value: member.id, inline: true },
+                { name: t("nickname"), value: nickname, inline: true }
+            )
+
+            if (member.joinedAt) {
+                informations.addFields({ name: t("join_date"), value: `${time(member.joinedAt)} (${time(member.joinedAt, "R")})` })
+            }
+        
+            informations.addFields(
+                { name: t("user_creation_date"), value: `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})` },
+                { name: t("booster"), value: premiumSince, inline: true },
+                { name: t("role", { count: nbRoles }), value: roles, inline: true },
+                { name: t("permissions"), value: perms }
+            )
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 

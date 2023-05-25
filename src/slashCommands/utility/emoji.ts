@@ -1,15 +1,19 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("emoji")
         .setDescription("Display the image used for an emoji")
         .addStringOption(option => option.setName("emoji").setDescription("The emoji you want to get the image").setRequired(true)),
     guildOnly: false,
 
-    async execute(bot, interaction) {
-        const raw = interaction.options.getString("emoji")
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const raw = interaction.options.getString("emoji") as string
 
         let emoji = raw.match(/<:(.*?):[0-9]*>/gm)
         let extension = "png"

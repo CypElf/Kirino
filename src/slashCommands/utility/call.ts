@@ -1,13 +1,16 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageAttachment, Permissions, Util } = require("discord.js")
-const dayjs = require("dayjs")
-const utc = require("dayjs/plugin/utc")
-const i18next = require("i18next")
-const t = i18next.t.bind(i18next)
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { Channel, CommandInteraction, GuildMember, Message, MessageAttachment, MessageReaction, Permissions, ReactionManager, TextBasedChannel, TextChannel, Util } from "discord.js"
+import i18next from "i18next"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import { Kirino } from "../../lib/misc/types"
+import { Database } from "better-sqlite3"
+import { Call } from "../../lib/misc/database"
 
 dayjs.extend(utc)
+const t = i18next.t.bind(i18next)
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("call")
         .setDescription("Start a call or configure the calls settings")
@@ -17,9 +20,11 @@ module.exports = {
     guildOnly: true,
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        if (!interaction.guild) return
+        const member = interaction.member as GuildMember | null
 
-        if (interaction.guild && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !interaction.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("not_enough_permissions_to_use_presence")} ${t("common:kirino_pff")}`, ephemeral: true })
+        if (interaction.guild && member && !member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("not_enough_permissions_to_use_presence")} ${t("common:kirino_pff")}`, ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
@@ -28,15 +33,15 @@ module.exports = {
             const newAsFile = interaction.options.getBoolean("as_file")
 
             bot.db.prepare("INSERT INTO calls VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET asfile = excluded.asfile").run(interaction.guild.id, null, 0, newAsFile ? 1 : 0)
-            deleteRowIfEmpty(bot.db, interaction.guild.id)
+            deleteRowIfEmpty(bot.db, interaction.guild?.id)
 
             interaction.reply(newAsFile ? t("asfile_success_on") : t("asfile_success_off"))
         }
 
         else if (subcommandGroup == "channel") {
             if (subcommand === "get") {
-                const row = bot.db.prepare("SELECT channel_id, dm FROM calls WHERE guild_id = ?").get(interaction.guild.id) ?? { channel_id: null, dm: 0, asfile: 0 }
-                const current = row.channel_id === null && row.dm === 0
+                const row = bot.db.prepare("SELECT channel_id, dm FROM calls WHERE guild_id = ?").get(interaction.guild.id) as Call ?? { channel_id: null, dm: 0, asfile: 0 }
+                const current = row.channel_id === null && !row.dm
 
                 if (row.dm) interaction.reply(`${t("presence_channel_is_set_to_dm")} ${t("common:kirino_glad")}`)
                 else if (current) interaction.reply(`${t("presence_channel_is_set_to_current")} ${t("common:kirino_glad")}`)
@@ -54,14 +59,14 @@ module.exports = {
             else {
                 const presenceRequest = bot.db.prepare("INSERT INTO calls VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET channel_id = excluded.channel_id, dm = excluded.dm, asfile = excluded.asfile")
 
-                const { asfile } = bot.db.prepare("SELECT * FROM calls WHERE guild_id = ?").get(interaction.guild.id) ?? { asfile: 0 }
+                const { asfile } = bot.db.prepare("SELECT * FROM calls WHERE guild_id = ?").get(interaction.guild.id) as Call ?? { asfile: 0 }
 
                 if (subcommand === "set") {
                     const channel = interaction.options.getChannel("channel")
-                    if (!channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    if (channel && channel.type !== "GUILD_TEXT") return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-                    presenceRequest.run(interaction.guild.id, channel.id, 0, asfile)
-                    interaction.reply(`${t("presence_channel_set")} <#${channel.id}>. ${t("common:kirino_glad")}`)
+                    presenceRequest.run(interaction.guild.id, channel?.id, 0, asfile)
+                    interaction.reply(`${t("presence_channel_set")} <#${channel?.id}>. ${t("common:kirino_glad")}`)
                 }
                 else if (subcommand === "reset") {
                     presenceRequest.run(interaction.guild.id, null, 0, asfile)
@@ -76,18 +81,18 @@ module.exports = {
         }
 
         else if (subcommand === "start") {
-            const duration = Math.round((parseFloat(interaction.options.getNumber("duration")) + Number.EPSILON) * 100) / 100
+            const duration = Math.round((interaction.options.getNumber("duration") as number + Number.EPSILON) * 100) / 100
             if (duration <= 0 || duration >= 15) return interaction.reply({ content: `${t("duration_out_of_range")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            const row = bot.db.prepare("SELECT channel_id, dm, asfile FROM calls WHERE guild_id = ?").get(interaction.guild.id) ?? { channel_id: null, dm: 0, asfile: 0 }
-            const current = row.channel_id === null && row.dm === 0
+            const row = bot.db.prepare("SELECT channel_id, dm, asfile FROM calls WHERE guild_id = ?").get(interaction.guild.id) as Call | undefined ?? { channel_id: null, dm: false, asfile: false }
+            const current = row.channel_id === null && !row.dm
 
             const lock = bot.calls.get(interaction.guild.id) ?? 0
 
             if (lock >= 3) return interaction.reply({ content: `${t("records_still_going_on")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            let channel
-            const channels = [...(await interaction.guild.channels.fetch()).values()].filter(ch => ch.id === row.channel_id)
+            let channel: TextBasedChannel | null
+            const channels = [...(await interaction.guild.channels.fetch()).values()].filter(ch => ch.id === row.channel_id) as TextChannel[]
 
             if (channels.length > 0 || row.dm || current) {
                 bot.calls.set(interaction.guild.id, lock + 1)
@@ -99,13 +104,15 @@ module.exports = {
                 else if (current) channel = interaction.channel
                 else channel = channels[0]
 
+                if (!channel) return
+
                 const callEmoji = "🙋"
 
                 await interaction.reply(`**${t("record_started")}** ${t("common:kirino_glad")}\n${t("you_have_x_min_to_react", { count: duration })} ${callEmoji}.`)
-                const recordMsg = await interaction.fetchReply()
+                const recordMsg = await interaction.fetchReply() as Message
                 recordMsg.react(callEmoji)
 
-                const filter = reaction => reaction.emoji.name === callEmoji
+                const filter = (reaction: MessageReaction) => reaction.emoji.name === callEmoji
 
                 const languageBak = i18next.language
                 const collected = await recordMsg.awaitReactions({ filter, time: 1000 * 60 * duration })
@@ -138,7 +145,8 @@ module.exports = {
                     })
 
                     const msg = await interaction.fetchReply()
-                    msg.reactions.removeAll()
+                    const reactions = msg.reactions as ReactionManager | undefined
+                    if (reactions) reactions.removeAll()
 
                     interaction.editReply(`**${t("record_ended")}** ${t("common:kirino_glad")}`)
 
@@ -148,14 +156,14 @@ module.exports = {
                         result += members.join("\n")
                     }
 
-                    result = row.asfile ? [result] : Util.splitMessage(result)
+                    const resultArray = row.asfile ? [result] : Util.splitMessage(result)
 
-                    for (const chunk of result) {
-                        const content = row.asfile ? new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt") : chunk
-
+                    for (const chunk of resultArray) {
                         try {
-                            if (row.asfile) await channel.send({ files: [content] })
-                            else await channel.send(content)
+                            if (row.asfile) {
+                                await channel.send({ files: [new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt")] })
+                            }
+                            else await channel.send(chunk)
                         }
                         catch {
                             let errorMsg = ""
@@ -165,10 +173,12 @@ module.exports = {
                                 bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id) // if the channel has been deleted during the call, it cannot be valid anymore in the future
                                 deleteRowIfEmpty(bot.db, interaction.guild.id)
                             }
-                            interaction.channel.send(`${errorMsg}\n${t("so_i_will_send_it_here")}`)
+                            interaction.channel?.send(`${errorMsg}\n${t("so_i_will_send_it_here")}`)
 
-                            if (row.asfile) interaction.channel.send({ files: [content] })
-                            else interaction.channel.send(content)
+                            if (row.asfile) {
+                                await interaction.channel?.send({ files: [new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt")] })
+                            }
+                            else await interaction.channel?.send(chunk)
                         }
                     }
                 }
@@ -184,7 +194,7 @@ module.exports = {
     }
 }
 
-function deleteRowIfEmpty(db, guild_id) {
-    const { channel_id, dm, asfile } = db.prepare("SELECT * FROM calls WHERE guild_id = ?").get(guild_id)
-    if (channel_id === null && dm === 0 && asfile === 0) db.prepare("DELETE FROM calls WHERE guild_id = ?").run(guild_id)
+function deleteRowIfEmpty(db: Database, guild_id: string) {
+    const row = db.prepare("SELECT * FROM calls WHERE guild_id = ?").get(guild_id) as Call | undefined
+    if (row && !row.channel_id && !row.dm && !row.asfile) db.prepare("DELETE FROM calls WHERE guild_id = ?").run(guild_id)
 }

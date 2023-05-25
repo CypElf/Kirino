@@ -1,8 +1,11 @@
-const { SlashCommandBuilder, time } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder, time } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed, Role } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("roleinfo")
         .setDescription("Give you informations about a role")
@@ -10,22 +13,24 @@ module.exports = {
     guildOnly: true,
     cooldown: 3,
 
-    async execute(bot, interaction) {
-        const role = interaction.options.getRole("role")
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const role = interaction.options.getRole("role") as Role
 
         const perms = "`" + role.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
         const informations = new MessageEmbed()
-            .setAuthor({ name: t("roles", 1) + " : " + role.name })
+            .setAuthor({ name: t("role") + " " + role.name })
             .setColor(role.hexColor)
-            .addField(t("id"), role.id, true)
-            .addField(t("color"), role.hexColor.toUpperCase(), true)
-            .addField(t("mentionnable"), role.mentionable ? t("yes") : t("no"), true)
-            .addField(t("separated_category"), role.hoist ? t("yes") : t("no"), true)
-            .addField(t("position"), role.position.toString(), true)
-            .addField(t("external_handler"), role.managed ? t("yes") : t("no"), true)
-            .addField(t("role_creation_date"), `${time(role.createdAt)} (${time(role.createdAt, "R")})`)
-            .addField(t("permissions"), perms !== "``" ? perms : "`" + t("no_permissions") + "`")
+            .addFields(
+                { name: t("id"), value: role.id, inline: true },
+                { name: t("color"), value: role.hexColor.toUpperCase(), inline: true },
+                { name: t("mentionnable"), value: role.mentionable ? t("yes") : t("no"), inline: true },
+                { name: t("separated_category"), value: role.hoist ? t("yes") : t("no"), inline: true },
+                { name: t("position"), value: role.position.toString(), inline: true },
+                { name: t("external_handler"), value: role.managed ? t("yes") : t("no"), inline: true },
+                { name: t("role_creation_date"), value: `${time(role.createdAt)} (${time(role.createdAt, "R")})` },
+                { name: t("permissions"), value: perms !== "``" ? perms : "`" + t("no_permissions") + "`" }
+            )
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })

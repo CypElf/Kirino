@@ -1,17 +1,22 @@
-const { SlashCommandBuilder, time } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder, time } from "@discordjs/builders"
+import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("serverinfo")
         .setDescription("Give you informations about this server"),
     guildOnly: true,
     cooldown: 3,
 
-    async execute(bot, interaction) {
-        const members = await interaction.guild.members.fetch()
-        const bots = members.filter(membre => membre.user.bot).size
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        if (!interaction.guild) return
+
+        const members = await interaction.guild.members.fetch() ?? []
+        const bots = [...members.values()].filter((member: GuildMember) => member.user.bot).length
         const humans = interaction.guild.memberCount - bots
         const roles = interaction.guild.roles.cache.filter(role => role.name !== "@everyone")
         const displayedRoles = `<@&${roles.map(role => role.id).join(">, <@&")}>`
@@ -86,7 +91,7 @@ module.exports = {
 
         informations.addField(t("channels"), textChannelsCount + " " + t("text_channel", { count: textChannelsCount }) + ", " + voiceChannelsCount + " " + t("vocal_channel", { count: voiceChannelsCount }), true)
             .addField(t("server_creation_date"), `${time(interaction.guild.createdAt)} (${time(interaction.guild.createdAt, "R")})`)
-            .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
+            .setThumbnail(interaction.guild.iconURL({ dynamic: true }) ?? "")
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })

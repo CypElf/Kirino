@@ -1,9 +1,12 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js")
-const i18next = require("i18next")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed, MessageButton, MessageActionRow, Message, ButtonInteraction, TextChannel  } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import { Language } from "../../lib/misc/database"
+
 const t = i18next.t.bind(i18next)
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("report")
         .setDescription("Allow you to submit a report to suggest new features, bugs, or anything that can improve me")
@@ -11,21 +14,21 @@ module.exports = {
     guildOnly: true,
     cooldown: 5,
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const report = interaction.options.getString("message")
 
-        let origin
-        let originAvatar
+        let origin = ""
+        let originAvatar = ""
         if (interaction.guild) {
             origin = interaction.guild.name
-            originAvatar = interaction.guild.iconURL()
+            originAvatar = interaction.guild.iconURL() ?? ""
         }
         else {
             origin = "DM"
             originAvatar = interaction.user.displayAvatarURL()
         }
 
-        const filter = i => {
+        const filter = (i: ButtonInteraction) => {
             i.deferUpdate()
             return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
         }
@@ -43,7 +46,7 @@ module.exports = {
             )
 
         await interaction.reply({ content: t("report_confirmation") + "\n```" + report + "```", components: [actionRow] })
-        const confirmationMsg = await interaction.fetchReply()
+        const confirmationMsg = await interaction.fetchReply() as Message
 
         const collector = confirmationMsg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
@@ -56,9 +59,11 @@ module.exports = {
             if (i.customId === "confirmed") {
                 const kirinoDebug = bot.guilds.cache.find(guild => guild.id === process.env.DEBUG_SERVER_ID)
                 if (kirinoDebug) {
-                    const reportChannel = kirinoDebug.channels.cache.find(channel => channel.id === process.env.REPORT_CHANNEL_ID)
+                    const reportChannel = kirinoDebug.channels.cache.find(channel => channel.type === "GUILD_TEXT" && channel.id === process.env.REPORT_CHANNEL_ID) as TextChannel | undefined
                     if (reportChannel) {
-                        const debugServerLanguage = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(process.env.DEBUG_SERVER_ID)?.language ?? "en"
+                        const row = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(process.env.DEBUG_SERVER_ID) as Language | null
+                        
+                        const debugServerLanguage = row?.language ?? "en"
                         await i18next.changeLanguage(debugServerLanguage)
 
                         const reportEmbed = new MessageEmbed()
