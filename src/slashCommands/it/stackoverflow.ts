@@ -1,9 +1,21 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
-const fetch = require("node-fetch")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+import fetch from "node-fetch"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+type StackOverflowResponse = {
+    items: {
+        title: string
+        link: string
+        body_markdown: string,
+        bo: string
+    }[]
+}
+
+export default {
     data: new SlashCommandBuilder()
         .setName("stackoverflow")
         .setDescription("Display the results of your search on stackoverflow")
@@ -11,12 +23,12 @@ module.exports = {
     guildOnly: false,
     cooldown: 1,
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const query = interaction.options.getString("query")
         const filter = "-(3ErjNFmyYQpKDo" // created with https://api.stackexchange.com/docs/create-filter
 
         const response = await fetch(`https://api.stackexchange.com/search/advanced?site=stackoverflow.com&sort=relevance&pagesize=5&q=${query}&filter=${filter}`)
-        const { items } = await response.json()
+        const { items } = await response.json() as StackOverflowResponse
 
         const results = items.length === 0 ? t("no_result") : items.map(item => `- **[${item.title}](${item.link})**\n${item.body_markdown.length > 100 ? item.body_markdown.slice(0, 97) + "..." : item.bo}`).join("\n\n")
 

@@ -1,11 +1,14 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const i18next = require("i18next")
-const t = i18next.t.bind(i18next)
-const { deflateSync } = require("zlib")
-const fetch = require("node-fetch")
-const paste = require("../../lib/misc/paste")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, Message } from "discord.js"
+import i18next from "i18next"
+import { deflateSync } from "zlib"
+import fetch from "node-fetch"
+import paste from "../../lib/misc/paste"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("run")
         .setDescription("Execute your code in any given programming language and give you the output")
@@ -15,15 +18,16 @@ module.exports = {
         .addStringOption(option => option.setName("flags").setDescription("The flags you want to submit to the C compiler if used")),
     guildOnly: false,
 
-    async execute(bot, interaction) {
-        if (!interaction.channel.viewable) return interaction.reply(`${t("not_viewable")} ${t("common:kirino_pout")}`)
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        if (!interaction.channel) return
+        if (interaction.channel.type === "GUILD_TEXT" && !interaction.channel.viewable) return interaction.reply(`${t("not_viewable")} ${t("common:kirino_pout")}`)
         interaction.reply(`${t("send_your_code")} ${t("common:kirino_glad")}`)
-        const replyMsg = await interaction.fetchReply()
+        const replyMsg = await interaction.fetchReply() as Message
         let codeMsg
 
-        const filter = msg => msg.author.id === interaction.user.id
+        const filter = (msg: Message) => msg.author.id === interaction.user.id
         try {
-            const collected = await interaction.channel.awaitMessages({ filter, max: 1, time: 60_000, errors: ["time"] })
+            const collected = await interaction.channel?.awaitMessages({ filter, max: 1, time: 60_000, errors: ["time"] })
             codeMsg = [...collected.values()][0]
         }
         catch {
@@ -78,7 +82,7 @@ module.exports = {
             vb: "vb-core"
         }))
 
-        let code
+        let code = ""
         let gotFromAttachment = false
 
         if (codeMsg.attachments.size > 0) {
@@ -87,7 +91,7 @@ module.exports = {
             const attachment = [...codeMsg.attachments.values()][0]
             if (attachment.size > max_size * 1_000_000) {
                 codeMsg.delete()
-                return interaction.editReply(`${t("file_too_big", { max_size })} ${__("kirino_pout")}`)
+                return interaction.editReply(`${t("file_too_big", { max_size })} ${t("kirino_pout")}`)
             }
             const res = await fetch(attachment.url)
             if (res.ok) {
@@ -104,7 +108,8 @@ module.exports = {
             if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
         }
 
-        const language = defaults.get(interaction.options.getString("language").toLowerCase()) ?? interaction.options.getString("language").toLowerCase()
+        const userLanguage = interaction.options.getString("language") as string
+        const language = defaults.get(userLanguage.toLowerCase()) ?? userLanguage.toLowerCase()
         const input = interaction.options.getString("input") ?? ""
         const args = interaction.options.getString("args")?.split(" ") ?? []
         const flags = interaction.options.getString("flags")?.split(" ") ?? []
@@ -134,11 +139,14 @@ module.exports = {
 }
 
 class Tio {
-    constructor(language, code, input = "", compilerFlags = [], commandLineOptions = [], cli_args = []) {
-        const to_bytes = (str) => Buffer.from(str, "utf8")
-        const zip = (array1, array2) => array1.map((e, i) => [e, array2[i]])
+    api: string
+    request: Buffer
 
-        function toTioString(couple) {
+    constructor(language: string, code: string, input: string = "", compilerFlags: string[] = [], commandLineOptions: string[] = [], cli_args: string[] = []) {
+        const to_bytes = (str: string) => Buffer.from(str, "utf8")
+        const zip = (array1: any[], array2: any[]) => array1.map((e, i) => [e, array2[i]])
+
+        function toTioString(couple: any[]) {
             const [name, obj] = couple
             if (!obj.length) {
                 return to_bytes("")

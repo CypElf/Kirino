@@ -82,9 +82,9 @@ export default {
             const row = rows[index]
 
             const ruleEmbed = new MessageEmbed()
-                .addField(t("rule_title") + (index + 1), row.rule)
+                .addFields({ name: t("rule_title") + (index + 1), value: row.rule })
                 .setColor("#000000")
-                .setFooter({ text: t("rules_from") + interaction.guild?.name, iconURL: interaction.guild?.iconURL() })
+                .setFooter({ text: t("rules_from") + interaction.guild?.name, iconURL: interaction.guild?.iconURL()?.toString() })
 
             interaction.reply({ embeds: [ruleEmbed] })
         }

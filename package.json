@@ -32,6 +32,7 @@
     "devDependencies": {
         "@types/better-sqlite3": "^7.6.4",
         "@types/i18next-fs-backend": "^1.1.2",
+        "@types/js-md5": "^0.7.0",
         "eslint": "^8.14.0",
         "eslint-plugin-node": "^11.1.0",
         "typescript": "^5.0.4"

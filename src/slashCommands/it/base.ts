@@ -1,8 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("base")
         .setDescription("Perform a base (radix) conversion")
@@ -11,10 +14,10 @@ module.exports = {
         .addIntegerOption(option => option.setName("new_base").setDescription("The base you want the number to be converted to").setRequired(true)),
     guildOnly: false,
 
-    async execute(bot, interaction) {
-        const number = interaction.options.getString("number")
-        const inputBase = interaction.options.getInteger("current_base")
-        const outputBase = interaction.options.getInteger("new_base")
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const number = interaction.options.getString("number") as string
+        const inputBase = interaction.options.getInteger("current_base") as number
+        const outputBase = interaction.options.getInteger("new_base") as number
 
         if (inputBase < 2 || inputBase > 36 || outputBase < 2 || outputBase > 36) {
             return interaction.reply({ content: t("base_out_of_range"), ephemeral: true })
@@ -29,8 +32,10 @@ module.exports = {
             .setTitle(t("numeric_base_conversion"))
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/720178440078229554/binary_flat.png")
             .setColor("#000000")
-            .addField(`${t("original_number_in_base")} ${inputBase}`, `**${number}**`)
-            .addField(`${t("converted_number_in_base")} ${outputBase}`, `**${convertedToOutputBase}**`)
+            .addFields(
+                { name: `${t("original_number_in_base")} ${inputBase}`, value: `**${number}**` },
+                { name: `${t("converted_number_in_base")} ${outputBase}`, value: `**${convertedToOutputBase}**` }
+            )
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds : [baseEmbed] })

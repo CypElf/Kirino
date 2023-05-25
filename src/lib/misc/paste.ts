@@ -1,7 +1,7 @@
 import fetch from "node-fetch"
 
 // return a string that contains the paste URL if successful, otherwise return null
-async function paste(content: string) {
+export default async function paste(content: string) {
     try {
         const res = await fetch("https://hastebin.com/documents", {
             method: "POST",
@@ -33,5 +33,3 @@ async function paste(content: string) {
         }
     }
 }
-
-module.exports = paste

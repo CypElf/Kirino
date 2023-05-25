@@ -1,8 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("ascii")
         .setDescription("Allows you to encode or decode ASCII")
@@ -10,8 +13,8 @@ module.exports = {
         .addSubcommand(option => option.setName("decode").setDescription("Decode a text from ASCII").addStringOption(option => option.setName("text").setDescription("The text to decode").setRequired(true))),
     guildOnly: false,
 
-    async execute(bot, interaction) {
-        const text = interaction.options.getString("text").replaceAll(" ", "")
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const text = interaction.options.getString("text")?.replaceAll(" ", "") as string
         const subcommand = interaction.options.getSubcommand()
 
         let output = ""
@@ -27,8 +30,10 @@ module.exports = {
             for (let i = 0; i < text.length; i++) {
                 output += text.charCodeAt(i)
             }
-            asciiEmbed.addField(t("original_message"), text)
-                .addField(t("encoded_message"), output)
+            asciiEmbed.addFields(
+                { name: t("original_message"), value: text },
+                { name: t("encoded_message"), value: output }
+            )
         }
 
         else if (subcommand === "decode") {
@@ -43,8 +48,10 @@ module.exports = {
             }
 
             if (!(/\S/.test(output))) output = t("char_not_printable")
-            asciiEmbed.addField(t("encoded_message"), text)
-                .addField(t("original_message"), output)
+            asciiEmbed.addFields(
+                { name: t("encoded_message"), value: text },
+                { name: t("original_message"), value: output }
+            )
         }
 
         interaction.reply({ embeds: [asciiEmbed] })

@@ -1,8 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { Permissions } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, GuildMember } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("edit")
         .setDescription("Edit a message I sent")
@@ -10,15 +13,17 @@ module.exports = {
         .addStringOption(option => option.setName("new_message").setDescription("The new content you want to be written in the message").setRequired(true)),
     guildOnly: true,
 
-    async execute(bot, interaction) {
-        if (interaction.user.id !== process.env.OWNER_ID && !interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const member = interaction.member as GuildMember | null
+        if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
             return interaction.reply({ content: t("not_allowed_to_use_this_command") + " " + t("common:kirino_pff"), ephemeral: true })
         }
 
-        const message_id = interaction.options.getString("message_id")
-        const new_message = interaction.options.getString("new_message")
+        const message_id = interaction.options.getString("message_id") as string
+        const new_message = interaction.options.getString("new_message") as string
 
         try {
+            if (!interaction.channel) return
             const msg = await interaction.channel.messages.fetch(message_id)
 
             if (!msg.editable) {

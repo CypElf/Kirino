@@ -1,11 +1,15 @@
-const { SlashCommandBuilder, time } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
-const dayjs = require("dayjs")
-const ColorThief = require("colorthief")
-const fetch = require("node-fetch")
+import { SlashCommandBuilder, time } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+import dayjs from "dayjs"
+// @ts-ignore
+import ColorThief from "colorthief"
+import fetch from "node-fetch"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("github")
         .setDescription("Display informations about a GitHub user")
@@ -13,7 +17,7 @@ module.exports = {
     guildOnly: false,
     cooldown: 3,
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const username = interaction.options.getString("username")
         const apiCall = await fetch(`https://api.github.com/users/${username}`)
         const data = await apiCall.json()
@@ -40,18 +44,19 @@ module.exports = {
 
             if (data.name) profileEmbed.setTitle(`**${data.name}** (${data.login})`)
             else profileEmbed.setTitle(`**${data.login}**`)
-            if (data.blog) profileEmbed.addField(t("blog"), data.blog)
-            if (data.company) profileEmbed.addField(t("company"), data.company, true)
-            if (data.location) profileEmbed.addField(t("location"), data.location, true)
-            if (data.email) profileEmbed.addField(t("email"), data.email)
+            if (data.blog) profileEmbed.addFields({ name: t("blog"), value: data.blog })
+            if (data.company) profileEmbed.addFields({ name: t("company"), value: data.company, inline: true })
+            if (data.location) profileEmbed.addFields({ name: t("location"), value: data.location, inline: true })
+            if (data.email) profileEmbed.addFields({ name: t("email"), value: data.email })
 
-            profileEmbed.addField(t("id"), data.id.toString(), true)
-                .addField(t("public_repos"), `[${data.public_repos}](https://github.com/${data.login}?tab=repositories)`, true)
-                .addField(t("public_gists"), data.public_gists.toString(), true)
-                .addField(t("followers"), `[${data.followers}](https://github.com/${data.login}?tab=followers)`, true)
-                .addField(t("following"), `[${data.following}](https://github.com/${data.login}?tab=following)`, true)
-                .addField(t("account_creation_date"), `${creation} (${creationRelative})`, true)
-
+            profileEmbed.addFields(
+                { name: t("id"), value: data.id.toString(), inline: true },
+                { name: t("public_repos"), value: `[${data.public_repos}](https://github.com/${data.login}?tab=repositories)`, inline: true },
+                { name: t("public_gists"), value: data.public_gists.toString(), inline: true },
+                { name: t("followers"), value: `[${data.followers}](https://github.com/${data.login}?tab=followers)`, inline: true },
+                { name: t("following"), value: `[${data.following}](https://github.com/${data.login}?tab=following)`, inline: true },
+                { name: t("account_creation_date"), value: `${creation} (${creationRelative})`, inline: true }
+            )
             if (data.bio) profileEmbed.setDescription(data.bio)
 
             interaction.reply({ embeds: [profileEmbed] })

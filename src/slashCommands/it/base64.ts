@@ -1,8 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("base64")
         .setDescription("Allows to encode or decode a message with base64 encoding")
@@ -10,8 +13,8 @@ module.exports = {
         .addSubcommand(option => option.setName("decode").setDescription("Decode a text from base64").addStringOption(option => option.setName("text").setDescription("The text to decode from base64").setRequired(true))),
     guildOnly: false,
 
-    async execute(bot, interaction) {
-        const text = interaction.options.getString("text")
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const text = interaction.options.getString("text") as string
         const subcommand = interaction.options.getSubcommand()
 
         const base64Embed = new MessageEmbed()
@@ -21,24 +24,28 @@ module.exports = {
                 return interaction.reply({ content: t("message_too_long_for_encoding"), ephemeral: true })
             }
 
-            const buffer = new Buffer.from(text)
+            const buffer = Buffer.from(text)
             const convertedInput = buffer.toString("base64")
 
             base64Embed.setTitle(t("base64_encoding"))
-                .addField(t("original_message"), `${text}`)
-                .addField(t("encoded_message"), `${convertedInput}`)
+                .addFields(
+                    { name: t("original_message"), value: text },
+                    { name: t("encoded_message"), value: convertedInput }
+                )
         }
 
         else if (subcommand === "decode") {
             if (text.length > 1024) {
                 return interaction.reply({ content: t("message_too_long_for_decoding"), ephemeral: true })
             }
-            const buffer = new Buffer.from(text, "base64")
+            const buffer = Buffer.from(text, "base64")
             const convertedInput = buffer.toString("utf8")
 
             base64Embed.setTitle(t("base64_decoding"))
-                .addField(t("encoded_message"), text)
-                .addField(t("original_message"), convertedInput)
+                .addFields(
+                    { name: t("encoded_message"), value: text },
+                    { name: t("original_message"), value: convertedInput }
+                )
         }
 
         base64Embed.setColor("#08857A")

@@ -1,9 +1,13 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
-const rustDocResearcher = require("../../lib/rustdoc/rustdoc_researcher")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageEmbed } from "discord.js"
+import i18next from "i18next"
+// @ts-ignore
+import { rustDocResearcher } from "../../lib/rustdoc/rustdoc_researcher"
+import { Kirino } from "../../lib/misc/types"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("rustdoc")
         .setDescription("Allow you to search through Rust's documentation and get the results")
@@ -11,7 +15,7 @@ module.exports = {
     guildOnly: false,
     cooldown: 3,
 
-    async execute(bot, interaction) {
+    async execute(bot: Kirino, interaction: CommandInteraction) {
         const query = interaction.options.getString("query")
         const results = rustDocResearcher(query)
 
@@ -40,10 +44,10 @@ module.exports = {
             .setThumbnail("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1024px-Rust_programming_language_black_logo.svg.png")
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
-        if (content[0] !== "") embed.addField(t("in_name"), content[0])
-        if (content[1] !== "") embed.addField(t("in_settings"), content[1])
-        if (content[2] !== "") embed.addField(t("in_return_types"), content[2])
-        if (content[0] === "" && content[1] === "" && content[2] === "") embed.addField(t("no_result_title"), t("no_result"))
+        if (content[0] !== "") embed.addFields({ name: t("in_name"), value: content[0] })
+        if (content[1] !== "") embed.addFields({ name: t("in_settings"), value: content[1] })
+        if (content[2] !== "") embed.addFields({ name: t("in_return_types"), value: content[2] })
+        if (content[0] === "" && content[1] === "" && content[2] === "") embed.addFields({ name: t("no_result_title"), value: t("no_result") })
 
         interaction.reply({ embeds: [embed] })
     }
