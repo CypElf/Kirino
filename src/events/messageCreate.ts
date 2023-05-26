@@ -8,7 +8,7 @@ import { Afk, Language, XpBlacklistedChannel, XpBlacklistedRole, XpGuild, XpProf
 
 const t = i18next.t.bind(i18next)
 
-export default function messageCreate(bot: Kirino) {
+export function eventHandler(bot: Kirino) {
     bot.on("messageCreate", async msg => {
         if (msg.author.bot || msg.guild && !msg.guild.me?.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
 

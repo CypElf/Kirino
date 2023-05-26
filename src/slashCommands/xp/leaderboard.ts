@@ -6,7 +6,7 @@ import { XpGuild } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("leaderboard")
         .setDescription("Give you this server's XP leaderboard link")

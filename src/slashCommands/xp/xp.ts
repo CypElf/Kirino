@@ -9,7 +9,7 @@ import { Database } from "better-sqlite3"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("xp")
         .setDescription("Allow to consult your XP card, config the XP system or customize some of its elements")
@@ -305,7 +305,7 @@ export default {
                 if (rank === 0) rank = serverRankingRows.length + 1
 
                 const canvas = Canvas.createCanvas(934, 282)
-                const ctx = canvasToCanvasWithRectangleDrawing(canvas.getContext("2d"))
+                const ctx = canvas.getContext("2d")
 
                 const backgroundUrl = (bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id) as XpProfile | null)?.background
 
@@ -433,7 +433,7 @@ export default {
 
                     ctx.fillStyle = "#555555" // progress bar background
                     ctx.beginPath()
-                    ctx.roundedRectangle(270, 200, progressBarWidth, progressBarHeight, 20)
+                    roundedRectangle(ctx, 270, 200, progressBarWidth, progressBarHeight, 20)
                     ctx.fill()
                     ctx.stroke()
                     ctx.clip()
@@ -441,7 +441,7 @@ export default {
                     ctx.fillStyle = color // progress bar foreground
                     ctx.beginPath()
                     const offsetXpBar = percent / 100 * progressBarWidth
-                    ctx.roundedRectangle(270, 200, offsetXpBar, progressBarHeight, 20)
+                    roundedRectangle(ctx, 270, 200, offsetXpBar, progressBarHeight, 20)
                     ctx.fill()
 
                     ctx.restore()
@@ -472,26 +472,17 @@ export default {
     }
 }
 
-interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
-    roundedRectangle(x: number, y: number, width: number, height: number, rounded: number): void
-}
-
-function canvasToCanvasWithRectangleDrawing(canvas: CanvasRenderingContext2D): ExtendedCanvasRenderingContext2D {
-    return {
-        ...canvas,
-        roundedRectangle(x: number, y: number, width: number, height: number, rounded: number) {
-            const halfRadians = (2 * Math.PI) / 2
-            const quarterRadians = (2 * Math.PI) / 4
-            this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
-            this.lineTo(x, y + height - rounded)
-            this.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)
-            this.lineTo(x + width - rounded, y + height)
-            this.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)
-            this.lineTo(x + width, y + rounded)
-            this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)
-            this.lineTo(x + rounded, y)
-        }
-    }
+function roundedRectangle(canvas: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, rounded: number) {
+    const halfRadians = (2 * Math.PI) / 2
+    const quarterRadians = (2 * Math.PI) / 4
+    canvas.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
+    canvas.lineTo(x, y + height - rounded)
+    canvas.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)
+    canvas.lineTo(x + width - rounded, y + height)
+    canvas.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)
+    canvas.lineTo(x + width, y + rounded)
+    canvas.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)
+    canvas.lineTo(x + rounded, y)
 }
 
 function updateBackground(db: Database, backgroundLink: string | undefined, user_id: string, guild_id: string) {

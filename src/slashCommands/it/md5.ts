@@ -6,7 +6,7 @@ import { Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("md5")
         .setDescription("Hash the specified text with the MD5 algorithm")

@@ -8,7 +8,7 @@ import { JoinLeave } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("leavemsg")
         .setDescription("Define a message to be sent each time a user leaves the server")

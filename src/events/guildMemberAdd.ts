@@ -3,7 +3,7 @@ import formatJoinLeaveMessage from "../lib/joins_leaves/format_join_leave_messag
 import { Kirino } from "../lib/misc/types"
 import { JoinLeave } from "../lib/misc/database"
 
-export default function guildMemberAdd(bot: Kirino) {
+export function eventHandler(bot: Kirino) {
     bot.on("guildMemberAdd", async member => {
         const row = bot.db.prepare("SELECT joins_channel_id, join_message FROM joins_leaves WHERE guild_id = ?").get(member.guild.id) as JoinLeave | undefined
 

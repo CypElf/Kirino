@@ -5,7 +5,7 @@ import { Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("language")
         .setDescription("Allow you to change the language I use for all my commands")

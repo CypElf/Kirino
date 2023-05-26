@@ -6,7 +6,7 @@ import { Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("donation")
         .setDescription("Display my developer's paypal if you want to support me by donating"),

@@ -10,7 +10,7 @@ import { Call } from "../../lib/misc/database"
 dayjs.extend(utc)
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("call")
         .setDescription("Start a call or configure the calls settings")

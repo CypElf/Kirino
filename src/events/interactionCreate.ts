@@ -5,7 +5,7 @@ import { Language, Prefix } from "../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export default function interadtionCreate(bot: Kirino) {
+export function eventHandler(bot: Kirino) {
     bot.on("interactionCreate", async interaction => {
         if (interaction.isCommand() && !interaction.user.bot) {
             const id = interaction.guild ? interaction.guild.id : interaction.user.id

@@ -1,7 +1,7 @@
 import { Kirino } from "../lib/misc/types"
 import updateActivity from "../lib/misc/update_activity"
 
-export default function guildDelete(bot: Kirino) {
+export function eventHandler(bot: Kirino) {
     bot.on("guildDelete", async guild => {
         if (guild.name) console.log(`Server left: ${guild.name}`)
 

@@ -6,7 +6,7 @@ import { Language } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("report")
         .setDescription("Allow you to submit a report to suggest new features, bugs, or anything that can improve me")

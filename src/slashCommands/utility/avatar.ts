@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import { Kirino } from "../../lib/misc/types"
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("avatar")
         .setDescription("Display the avatar of a user")

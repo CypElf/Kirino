@@ -6,7 +6,7 @@ import { Banword } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("banword")
         .setDescription("Manage the banned words of the server")

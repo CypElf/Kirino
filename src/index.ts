@@ -36,46 +36,52 @@ type ApiData = {
 
 const bot = new Kirino({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS] })
 
-i18next.use(Backend).init({
-    lng: "en",
-    fallbackLng: "en",
-    supportedLngs: ["en", "fr"],
-    ns: ["common", "interactionCreate", "messageCreate"],
-    defaultNS: "common",
-    preload: fs.readdirSync("./languages/"),
-    backend: {
-        loadPath: __dirname + "../languages/{{lng}}/{{ns}}.yml",
-        addPath: __dirname + "../languages/{{lng}}/{{ns}}.missing.yml"
-    }
-})
+async function main() {
+    i18next.use(Backend).init({
+        lng: "en",
+        fallbackLng: "en",
+        supportedLngs: ["en", "fr"],
+        ns: ["common", "interactionCreate", "messageCreate"],
+        defaultNS: "common",
+        preload: fs.readdirSync(`${__dirname}/../languages/`),
+        backend: {
+            loadPath: __dirname + "/../languages/{{lng}}/{{ns}}.yml",
+            addPath: __dirname + "/../languages/{{lng}}/{{ns}}.missing.yml"
+        }
+    })
 
-startXpApi(bot.apiCooldowns)
+    startXpApi(bot.apiCooldowns)
 
-const eventsFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"))
-for (const file of eventsFiles) {
-    // eslint-disable-next-line node/global-require
-    const eventSetter = require(`./events/${file}`)
-    eventSetter(bot)
-}
-
-const slashCategories = fs.readdirSync("./slashCommands")
-
-for (const category of slashCategories) {
-    const slashCommandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))
-    for (const commandFile of slashCommandFiles) {
+    const eventsFiles = fs.readdirSync(`${__dirname}/events`).filter(file => file.endsWith(".js"))
+    for (const file of eventsFiles) {
         // eslint-disable-next-line node/global-require
-        const command = require(`./slashCommands/${category}/${commandFile}`)
-        command.category = category
-        command.name = command.data.toJSON().name
-        bot.slashCommands.set(command.name, command)
+        const { eventHandler } = await import(`${__dirname}/events/${file}`)
+        eventHandler(bot)
     }
+
+    const slashCategories = fs.readdirSync(`${__dirname}/slashCommands`)
+
+    for (const category of slashCategories) {
+        const slashCommandFiles = fs.readdirSync(`${__dirname}/slashCommands/${category}/`).filter(file => file.endsWith(".js"))
+        for (const commandFile of slashCommandFiles) {
+            // eslint-disable-next-line node/global-require
+            const { command } = await import(`${__dirname}/slashCommands/${category}/${commandFile}`)
+
+            command.category = category
+            command.name = command.data.toJSON().name
+            bot.slashCommands.set(command.name, command)
+        }
+    }
+
+    process.on("unhandledRejection", error => {
+        console.error("Unhandled promise rejection:", error)
+    })
+
+    if (!process.env.KIRINO_TOKEN) throw new Error("No token provided, please check your env.")
+    bot.login(process.env.KIRINO_TOKEN)
 }
 
-process.on("unhandledRejection", error => {
-    console.error("Unhandled promise rejection:", error)
-})
-
-bot.login(process.env.KIRINO_TOKEN)
+main()
 
 // ------------------------------------------------------------- utility functions
 

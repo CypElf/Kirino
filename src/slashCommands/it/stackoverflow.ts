@@ -15,7 +15,7 @@ type StackOverflowResponse = {
     }[]
 }
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("stackoverflow")
         .setDescription("Display the results of your search on stackoverflow")

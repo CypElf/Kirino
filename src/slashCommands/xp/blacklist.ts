@@ -7,7 +7,7 @@ import { Database } from "better-sqlite3"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("blacklist")
         .setDescription("Allow you to blacklist a role or channel from the XP system")

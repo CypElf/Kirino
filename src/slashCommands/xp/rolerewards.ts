@@ -10,7 +10,7 @@ import { Role } from "discord.js"
 
 const t = i18next.t.bind(i18next)
 
-export default {
+export const command = {
     data: new SlashCommandBuilder()
         .setName("rolerewards")
         .setDescription("Manage the role rewards of the XP system")
