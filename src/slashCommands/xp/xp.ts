@@ -1,10 +1,15 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageAttachment, Permissions, MessageButton, MessageActionRow } = require("discord.js")
-const t = require("i18next").t.bind(require("i18next"))
-const Canvas = require("canvas")
-const fetch = require("node-fetch")
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction, MessageAttachment, Permissions, MessageButton, MessageActionRow, GuildMember, Message, ButtonInteraction, Interaction } from "discord.js"
+import i18next from "i18next"
+import Canvas from "canvas"
+import fetch from "node-fetch"
+import { Kirino } from "../../lib/misc/types"
+import { XpGuild, XpProfile } from "../../lib/misc/database"
+import { Database } from "better-sqlite3"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("xp")
         .setDescription("Allow to consult your XP card, config the XP system or customize some of its elements")
@@ -22,14 +27,16 @@ module.exports = {
     cooldown: 3,
     permissions: ["{administrator}"],
 
-    async execute(bot, interaction) {
-        const isEnabled = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id)?.is_enabled
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        if (!interaction.guild) return
+        const member = interaction.member as GuildMember | null
 
+        const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled
         const subcommand = interaction.options.getSubcommand()
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
 
         if (subcommand === "enable" || subcommand === "disable") {
-            if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_enable_or_disable")} ${t("common:kirino_pff")}`, ephemeral: true })
+            if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_enable_or_disable")} ${t("common:kirino_pff")}`, ephemeral: true })
             const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (subcommand === "enable") {
@@ -46,7 +53,7 @@ module.exports = {
         }
 
         else if (isEnabled) {
-            const filter = i => {
+            const filter = (i: ButtonInteraction) => {
                 i.deferUpdate()
                 return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
             }
@@ -64,18 +71,18 @@ module.exports = {
                 )
 
             if (subcommandGroup === "reset") {
-                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_reset_xp")} ${t("common:kirino_pff")}`, ephemeral: true })
-                if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
+                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_reset_xp")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 if (subcommand === "all") {
                     await interaction.reply({ content: `${t("server_xp_reset_validation")} ${t("common:kirino_what")}`, components: [actionRow] })
-                    const validationMessage = await interaction.fetchReply()
+                    const validationMessage = await interaction.fetchReply() as Message
 
                     const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
                     collector.on("collect", i => {
                         if (i.customId === "confirmed") {
-                            const profiles = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ?").all(interaction.guild.id)
+                            const profiles = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ?").all(interaction.guild?.id) as XpProfile[]
 
                             for (const profile of profiles) {
                                 bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp=excluded.xp, total_xp=excluded.total_xp, level=excluded.level").run(profile.guild_id, profile.user_id, 0, 0, 0)
@@ -101,12 +108,12 @@ module.exports = {
                     if (user.id === interaction.user.id) await interaction.reply({ content: `${t("your_xp_reset_validation")} ${t("common:kirino_what")}`, components: [actionRow] })
                     else await interaction.reply({ content: `${t("are_you_sure_you_want_to_reset", { username: user.username })} ${t("common:kirino_what")}`, components: [actionRow] })
 
-                    const validationMessage = await interaction.fetchReply()
+                    const validationMessage = await interaction.fetchReply() as Message
                     const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
 
                     collector.on("collect", i => {
                         if (i.customId === "confirmed") {
-                            bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp = excluded.xp, total_xp = excluded.total_xp, level = excluded.level").run(interaction.guild.id, user.id, 0, 0, 0)
+                            bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp = excluded.xp, total_xp = excluded.total_xp, level = excluded.level").run(interaction.guild?.id, user.id, 0, 0, 0)
 
                             if (user.id === interaction.user.id) interaction.editReply({ content: `${t("your_xp_successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
                             else interaction.editReply({ content: `${t("xp_reset_of")}${user.username}${t("successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
@@ -119,7 +126,7 @@ module.exports = {
             }
 
             else if (subcommandGroup === "message") {
-                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_lvl_up_msg")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_lvl_up_msg")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                 const newMsg = subcommand === "reset" ? null : interaction.options.getString("message")
                 bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message").run(interaction.guild.id, 1, newMsg)
@@ -130,12 +137,12 @@ module.exports = {
 
             else if (subcommandGroup === "channel") {
                 if (subcommand === "get") {
-                    let channel = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id).level_up_channel_id
+                    let channelId = (bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id) as XpGuild | null)?.level_up_channel_id
 
-                    if (channel === null) interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
+                    if (!channelId) interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
                     else {
-                        channel = await interaction.guild.channels.fetch(channel)
-                        if (channel === undefined) {
+                        const channel = await interaction.guild.channels.fetch(channelId)
+                        if (!channel) {
                             bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, null)
 
                             interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
@@ -146,11 +153,11 @@ module.exports = {
                     }
                 }
                 else {
-                    if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
+                    if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                     const channel = subcommand === "reset" ? null : interaction.options.getChannel("channel")
 
-                    if (subcommand === "set" && channel && !channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    if (subcommand === "set" && channel && channel.type === "GUILD_TEXT") return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                     bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, channel ? channel.id : null)
 
@@ -160,109 +167,121 @@ module.exports = {
             }
 
             else if (subcommand === "import") {
-                if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_import")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_import")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                 await interaction.reply({ content: `${t("xp_import_verification")} ${t("common:kirino_what")}`, components: [actionRow] })
-                const validationMessage = await interaction.fetchReply()
+                const validationMessage = await interaction.fetchReply() as Message
 
-                const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
+                const i = await validationMessage.awaitMessageComponent({ filter, componentType: "BUTTON", time: 30_000 })
 
-                collector.on("collect", async i => {
-                    if (i.customId === "confirmed") {
-                        await interaction.editReply({ content: t("starting_import"), components: [] })
+                if (i.customId === "confirmed") {
+                    await interaction.editReply({ content: t("starting_import"), components: [] })
 
-                        const players = []
-                        let pagePlayers = []
+                    const players = []
+                    let pagePlayers = []
 
-                        let index = 0
-                        do {
-                            const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${interaction.guild.id}?limit=1000&page=${index}`)
-                            const data = await res.json()
+                    let index = 0
+                    do {
+                        const res = await fetch(`https://mee6.xyz/api/plugins/levels/leaderboard/${interaction.guild.id}?limit=1000&page=${index}`)
+                        const data = await res.json()
 
-                            if (!res.ok) return interaction.editReply(t("guild_not_found_on_mee6_api"))
+                        if (!res.ok) return interaction.editReply(t("guild_not_found_on_mee6_api"))
 
-                            pagePlayers = data.players
-                            players.push(...pagePlayers)
+                        pagePlayers = data.players
+                        players.push(...pagePlayers)
 
-                            index++
-                        } while (pagePlayers.length > 0)
+                        index++
+                    } while (pagePlayers.length > 0)
 
-                        if (players.length === 0) return interaction.editReply(t("zero_xp_found_on_mee6_api"))
+                    if (players.length === 0) return interaction.editReply(t("zero_xp_found_on_mee6_api"))
 
-                        const oldPlayersRow = bot.db.prepare("SELECT user_id, color, background FROM xp_profiles WHERE guild_id = ?").all(interaction.guild.id)
-                        bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?").run(interaction.guild.id)
+                    const oldPlayersRow = bot.db.prepare("SELECT user_id, color, background FROM xp_profiles WHERE guild_id = ?").all(interaction.guild.id) as XpProfile[]
+                    bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ?").run(interaction.guild.id)
 
-                        for (const player of players) {
-                            let color = null
-                            let background = null
+                    for (const player of players) {
+                        let color = null
+                        let background = null
 
-                            const filtered = oldPlayersRow.filter(row => row.user_id === player.id)
-                            if (filtered.length > 0) {
-                                color = filtered[0].color
-                                background = filtered[0].background
-                            }
-
-                            bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?,?)").run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, color, background)
+                        const filtered = oldPlayersRow.filter(row => row.user_id === player.id)
+                        if (filtered.length > 0) {
+                            color = filtered[0].color
+                            background = filtered[0].background
                         }
-                        interaction.editReply(`${t("mee6_levels_successfully_imported")} ${t("common:kirino_glad")}`)
+
+                        bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?,?)").run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, color, background)
                     }
-                    else {
-                        interaction.editReply({ content: `${t("import_cancelled")} ${t("common:kirino_glad")}`, components: [] })
-                    }
-                })
+                    interaction.editReply(`${t("mee6_levels_successfully_imported")} ${t("common:kirino_glad")}`)
+                }
+                else {
+                    interaction.editReply({ content: `${t("import_cancelled")} ${t("common:kirino_glad")}`, components: [] })
+                }
             }
 
             else if (subcommandGroup === "color") {
-                const xpRow = bot.db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, interaction.user.id)
+                const xpRow = bot.db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, interaction.user.id) as XpProfile | null
 
                 const updateColorRequest = bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level, color) VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id,user_id) DO UPDATE SET color=excluded.color")
 
                 if (subcommand === "reset") {
-                    updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
+                    if (xpRow) {
+                        updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
+                    }
                     interaction.reply(`${t("color_reset")} ${t("common:kirino_glad")}`)
                 }
                 else {
-                    let color = interaction.options.getString("color")
+                    let color = interaction.options.getString("color") as string
                     if (!color.startsWith("#")) color = `#${color}`
 
                     const colorRegex = /^#[0-9A-F]{6}$/i
                     if (!colorRegex.test(color)) return interaction.reply({ content: `${t("invalid_color")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-                    updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
+                    if (!xpRow) {
+                        updateColorRequest.run(interaction.guild.id, interaction.user.id, 0, 0, 0, color)
+                    }
+                    else {
+                        updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
+                    }
                     interaction.reply(`${t("color_updated")} ${t("common:kirino_glad")}`)
                 }
             }
 
             else if (subcommandGroup === "background") {
                 if (subcommand === "reset") {
-                    updateBackground(bot.db, null, interaction.user.id, interaction.guild.id)
+                    updateBackground(bot.db, undefined, interaction.user.id, interaction.guild.id)
                     return interaction.reply(`${t("background_reset")} ${t("common:kirino_glad")}`)
                 }
+                else {
+                    const link = interaction.options.getString("link") as string
 
-                const link = interaction.options.getString("link")
-
-                try {
-                    await Canvas.loadImage(link)
-                }
-                catch {
-                    return interaction.reply({ content: `${t("bad_image")} ${t("common:kirino_pout")}`, ephemeral: true })
-                }
-
-                updateBackground(bot.db, link, interaction.user.id, interaction.guild.id)
-
-                interaction.reply(`${t("background_set")} ${t("common:kirino_glad")}`)
+                    try {
+                        await Canvas.loadImage(link)
+                    }
+                    catch {
+                        return interaction.reply({ content: `${t("bad_image")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    }
+    
+                    updateBackground(bot.db, link, interaction.user.id, interaction.guild.id)
+                    interaction.reply(`${t("background_set")} ${t("common:kirino_glad")}`)
+                }                
             }
 
             else if (subcommand === "get") {
-                if (!interaction.guild.me.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${t("need_send_files")} ${t("common:kirino_pout")}`, ephemeral: true })
+                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${t("need_send_files")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 const user = interaction.options.getUser("user") ?? interaction.user
                 if (user.bot) return interaction.reply({ content: `${t("bots_not_allowed")} ${t("common:kirino_pff")}`, ephemeral: true })
 
                 await interaction.deferReply()
 
-                let xpRow = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)
-                if (xpRow === undefined) xpRow = { "xp": 0, "total_xp": 0, "level": 0 }
+                let xpRow = bot.db.prepare("SELECT xp, level, color FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id) as { xp: number, level: number, color: string | undefined } | null
+
+                if (!xpRow) {
+                    xpRow = {
+                        xp: 0,
+                        level: 0,
+                        color: undefined
+                    }
+                }
 
                 const { level } = xpRow
                 let { xp, color } = xpRow
@@ -270,9 +289,9 @@ module.exports = {
                 if (!color) color = "#1FE7F0"
 
                 let nextLvlXp = 5 * (level * level) + 50 * level + 100
-                const percent = (xp / nextLvlXp * 100).toFixed(1)
+                const percent = xp / nextLvlXp * 100
 
-                const serverRankingRows = bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC").all(interaction.guild.id).map(row => row.user_id).filter(async user_id => {
+                const serverRankingRows = (bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC").all(interaction.guild.id) as XpProfile[]).map(row => row.user_id).filter(async user_id => {
                     try {
                         await bot.users.fetch(user_id)
                         return true
@@ -286,17 +305,18 @@ module.exports = {
                 if (rank === 0) rank = serverRankingRows.length + 1
 
                 const canvas = Canvas.createCanvas(934, 282)
-                const ctx = canvas.getContext("2d")
+                const ctx = canvasToCanvasWithRectangleDrawing(canvas.getContext("2d"))
 
-                const backgroundUrl = bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)?.background
+                const backgroundUrl = (bot.db.prepare("SELECT background FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id) as XpProfile | null)?.background
 
                 if (backgroundUrl !== null && backgroundUrl !== undefined) {
                     try {
                         const background = await Canvas.loadImage(backgroundUrl)
+                        // @ts-ignore
                         ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
                     }
                     catch {
-                        updateBackground(bot.db, null, interaction.user.id, interaction.guild.id)
+                        updateBackground(bot.db, undefined, interaction.user.id, interaction.guild.id)
 
                         ctx.fillStyle = "black"
                         ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -342,7 +362,7 @@ module.exports = {
                     }
                     usernameMeasure = ctx.measureText(username)
                     ctx.font = "30px ubuntu"
-                    tooLongTextMeasure = ctx.measureText(tooLongText)
+                    const tooLongTextMeasure = ctx.measureText(tooLongText)
                     usernameTotalMeasure = usernameMeasure.width + tooLongTextMeasure.width
                 }
 
@@ -364,10 +384,10 @@ module.exports = {
 
                 ctx.fillStyle = color // level
                 ctx.font = "70px ubuntu"
-                const levelMeasure = ctx.measureText(level)
+                const levelMeasure = ctx.measureText(level.toString())
                 const offsetLevel = canvas.width - levelMeasure.width - 40
-                ctx.fillText(level, offsetLevel, 85)
-                ctx.strokeText(level, offsetLevel, 85)
+                ctx.fillText(level.toString(), offsetLevel, 85)
+                ctx.strokeText(level.toString(), offsetLevel, 85)
 
                 ctx.font = "25px ubuntu" // level prefix
                 const levelPrefix = t("level").toUpperCase()
@@ -392,18 +412,19 @@ module.exports = {
 
                 if (level < 100) {
                     ctx.fillStyle = "#AAAAAA" // next level xp
-                    if (nextLvlXp >= 1000) nextLvlXp = (nextLvlXp / 1000).toPrecision(3) + "K"
-                    const nextLvlXpMeasure = ctx.measureText(`/ ${nextLvlXp} XP`)
+
+                    const nextLvlXpStr = nextLvlXp < 1000 ? nextLvlXp.toString() : (nextLvlXp / 1000).toPrecision(3) + "K"
+                    const nextLvlXpMeasure = ctx.measureText(`/ ${nextLvlXpStr} XP`)
                     const offsetNextLvlXpMeasure = canvas.width - nextLvlXpMeasure.width - 50
-                    ctx.fillText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
-                    ctx.strokeText(`/ ${nextLvlXp} XP`, offsetNextLvlXpMeasure, 176)
+                    ctx.fillText(`/ ${nextLvlXpStr} XP`, offsetNextLvlXpMeasure, 176)
+                    ctx.strokeText(`/ ${nextLvlXpStr} XP`, offsetNextLvlXpMeasure, 176)
 
                     ctx.fillStyle = "#FFFFFF" // current xp
-                    if (xp >= 1000) xp = (xp / 1000).toPrecision(3) + "K"
-                    const xpMeasure = ctx.measureText(xp)
+                    const xpStr = xp < 1000 ? xp.toString() : (xp / 1000).toPrecision(3) + "K"
+                    const xpMeasure = ctx.measureText(xpStr)
                     const offsetXp = offsetNextLvlXpMeasure - xpMeasure.width - spaceMeasure.width
-                    ctx.fillText(xp, offsetXp, 176)
-                    ctx.strokeText(xp, offsetXp, 176)
+                    ctx.fillText(xpStr, offsetXp, 176)
+                    ctx.strokeText(xpStr, offsetXp, 176)
 
                     ctx.save()
 
@@ -439,6 +460,7 @@ module.exports = {
                 ctx.clip()
 
                 const avatar = await Canvas.loadImage(user.displayAvatarURL({ format: "png" }))
+                // @ts-ignore
                 ctx.drawImage(avatar, 40, 40, 200, 200)
 
                 const card = new MessageAttachment(canvas.toBuffer(), "card.png")
@@ -450,23 +472,42 @@ module.exports = {
     }
 }
 
-Canvas.CanvasRenderingContext2D.prototype.roundedRectangle = function(x, y, width, height, rounded) {
-    const halfRadians = (2 * Math.PI) / 2
-    const quarterRadians = (2 * Math.PI) / 4
-    this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
-    this.lineTo(x, y + height - rounded)
-    this.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)
-    this.lineTo(x + width - rounded, y + height)
-    this.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)
-    this.lineTo(x + width, y + rounded)
-    this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)
-    this.lineTo(x + rounded, y)
+interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
+    roundedRectangle(x: number, y: number, width: number, height: number, rounded: number): void
 }
 
-function updateBackground(db, backgroundLink, user_id, guild_id) {
-    const userRow = db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(guild_id, user_id)
-    if (userRow.xp === undefined) userRow.xp = 0
-    if (userRow.total_xp === undefined) userRow.total_xp = 0
-    if (userRow.level === undefined) userRow.level = 0
+function canvasToCanvasWithRectangleDrawing(canvas: CanvasRenderingContext2D): ExtendedCanvasRenderingContext2D {
+    return {
+        ...canvas,
+        roundedRectangle(x: number, y: number, width: number, height: number, rounded: number) {
+            const halfRadians = (2 * Math.PI) / 2
+            const quarterRadians = (2 * Math.PI) / 4
+            this.arc(rounded + x, rounded + y, rounded, -quarterRadians, halfRadians, true)
+            this.lineTo(x, y + height - rounded)
+            this.arc(rounded + x, height - rounded + y, rounded, halfRadians, quarterRadians, true)
+            this.lineTo(x + width - rounded, y + height)
+            this.arc(x + width - rounded, y + height - rounded, rounded, quarterRadians, 0, true)
+            this.lineTo(x + width, y + rounded)
+            this.arc(x + width - rounded, y + rounded, rounded, 0, -quarterRadians, true)
+            this.lineTo(x + rounded, y)
+        }
+    }
+}
+
+function updateBackground(db: Database, backgroundLink: string | undefined, user_id: string, guild_id: string) {
+    let userRow = db.prepare("SELECT xp, total_xp, level FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(guild_id, user_id) as XpProfile | null
+
+    if (!userRow) {
+        userRow = {
+            guild_id: guild_id,
+            user_id: user_id,
+            color: undefined,
+            background: backgroundLink,
+            xp: 0,
+            total_xp: 0,
+            level: 0
+        }
+    }
+
     db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level, background) VALUES(?,?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET background=excluded.background").run(guild_id, user_id, userRow.xp, userRow.total_xp, userRow.level, backgroundLink)
 }

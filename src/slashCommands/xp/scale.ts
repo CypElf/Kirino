@@ -1,7 +1,12 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const t = require("i18next").t.bind(require("i18next"))
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { CommandInteraction } from "discord.js"
+import i18next from "i18next"
+import { Kirino } from "../../lib/misc/types"
+import { XpGuild } from "../../lib/misc/database"
 
-module.exports = {
+const t = i18next.t.bind(i18next)
+
+export default {
     data: new SlashCommandBuilder()
         .setName("scale")
         .setDescription("Change the factor by which the XP you earn gets multiplied")
@@ -40,22 +45,20 @@ module.exports = {
     guildOnly: true,
     permissions: ["{administrator}"],
 
-    async execute(bot, interaction) {
-        const xpActivationRequest = bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?")
-        let isEnabled = xpActivationRequest.get(interaction.guild.id)
-        if (isEnabled) isEnabled = isEnabled.is_enabled
-        if (!isEnabled) return interaction.reply(`${t("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`)
+    async execute(bot: Kirino, interaction: CommandInteraction) {
+        const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled
+        if (!isEnabled) return interaction.reply({ content: `${t("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`, ephemeral: true })
 
         if (interaction.options.getSubcommand() === "set") {
-            const scale = parseFloat(interaction.options.getString("factor"))
-            bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale").run(interaction.guild.id, 1, scale === 1 ? null : scale)
+            const scale = parseFloat(interaction.options.getString("factor") as string)
+            bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale").run(interaction.guild?.id, 1, scale === 1 ? null : scale)
 
             interaction.reply(`${t("scale_set")} \`${scale}\`. ${t("common:kirino_glad")}`)
         }
 
         else {
-            const scale = bot.db.prepare("SELECT scale FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id).scale
-            interaction.reply(`${t("current_scale_is")} \`${scale === null ? 1 : scale}\`. ${t("common:kirino_glad")}`)
+            const scale = (bot.db.prepare("SELECT scale FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.scale
+            interaction.reply(`${t("current_scale_is")} \`${scale ? scale : 1}\`. ${t("common:kirino_glad")}`)
         }
     }
 }
