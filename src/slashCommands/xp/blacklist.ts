@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { Channel, CommandInteraction, Guild, GuildMember, Permissions, Role } from "discord.js"
+import { Channel, CommandInteraction, Guild, GuildMember, MessageEmbed, Permissions, Role } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { XpBlacklistedChannel, XpBlacklistedRole, XpGuild } from "../../lib/misc/database"
