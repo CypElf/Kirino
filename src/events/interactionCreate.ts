@@ -11,7 +11,7 @@ export function eventHandler(bot: Kirino) {
             const id = interaction.guild ? interaction.guild.id : interaction.user.id
 
             const { commandName } = interaction
-            const command = bot.slashCommands.get(commandName)
+            const command = bot.commands.get(commandName)
 
             const languageRow = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id) as Language | undefined //?.language ?? "en"
             const lang = languageRow?.language ?? "en"

@@ -59,17 +59,17 @@ async function main() {
         eventHandler(bot)
     }
 
-    const slashCategories = fs.readdirSync(`${__dirname}/slashCommands`)
+    const slashCategories = fs.readdirSync(`${__dirname}/commands`)
 
     for (const category of slashCategories) {
-        const slashCommandFiles = fs.readdirSync(`${__dirname}/slashCommands/${category}/`).filter(file => file.endsWith(".js"))
+        const slashCommandFiles = fs.readdirSync(`${__dirname}/commands/${category}/`).filter(file => file.endsWith(".js"))
         for (const commandFile of slashCommandFiles) {
             // eslint-disable-next-line node/global-require
-            const { command } = await import(`${__dirname}/slashCommands/${category}/${commandFile}`)
+            const { command } = await import(`${__dirname}/commands/${category}/${commandFile}`)
 
             command.category = category
             command.name = command.data.toJSON().name
-            bot.slashCommands.set(command.name, command)
+            bot.commands.set(command.name, command)
         }
     }
 

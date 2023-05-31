@@ -2,7 +2,7 @@ import { Client, ClientOptions, Collection } from "discord.js"
 import bsqlite3 from "better-sqlite3"
 
 export class Kirino extends Client {
-    slashCommands: Collection<string, any>
+    commands: Collection<string, any>
     db: bsqlite3.Database
     commandsCooldowns: Collection<string, Collection<string, number>>
     xpCooldowns: Collection<string, Collection<string, number>>
@@ -12,7 +12,7 @@ export class Kirino extends Client {
 
     constructor(options: ClientOptions) {
         super(options)
-        this.slashCommands = new Collection()
+        this.commands = new Collection()
         this.db = new bsqlite3(__dirname + "../../../../database.db", { fileMustExist: true })
         this.commandsCooldowns = new Collection()
         this.xpCooldowns = new Collection()

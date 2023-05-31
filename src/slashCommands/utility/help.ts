@@ -12,7 +12,7 @@ export const command = {
     guildOnly: false,
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
-        const betaCommands = bot.slashCommands.filter(command => command.beta).map(command => command.name)
+        const betaCommands = bot.commands.filter(command => command.beta).map(command => command.name)
 
         const helpEmbed = new MessageEmbed()
             .setTitle(`**${t("help")}**`)

@@ -5,7 +5,7 @@ const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
 
 const commands = []
-const categories = fs.readdirSync("./slashCommands")
+const categories = fs.readdirSync("./commands")
 
 const clientId = process.env.CLIENT_ID
 const guildId = process.env.DEBUG_SERVER_ID
@@ -13,11 +13,11 @@ const guildId = process.env.DEBUG_SERVER_ID
 const rest = new REST({ version: "9" }).setToken(process.env.KIRINO_TOKEN)
 
 for (const category of categories) {
-    const commandFiles = fs.readdirSync(`./slashCommands/${category}/`).filter(file => file.endsWith(".js"))
+    const commandFiles = fs.readdirSync(`./commands/${category}/`).filter(file => file.endsWith(".js"))
 
     for (const commandFile of commandFiles) {
         // eslint-disable-next-line node/global-require
-        const command = require(`./slashCommands/${category}/${commandFile}`)
+        const command = require(`./commands/${category}/${commandFile}`)
         commands.push(command.data.toJSON())
     }
 }
