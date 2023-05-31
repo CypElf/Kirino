@@ -29,10 +29,14 @@ export const command = {
         const message_id = interaction.options.getString("message_id") as string
         const emoji = interaction.options.getString("emoji") as string
 
-        const msg = await interaction.channel.messages.fetch(message_id)
-            .catch(() => {
-                return interaction.reply({ content: t("bad_message_id") + " " + t("common:kirino_pout"), ephemeral: true })
-            }) as Message
+        let msg: Message
+
+        try {
+            msg = await interaction.channel.messages.fetch(message_id)
+        }
+        catch {
+            return interaction.reply({ content: t("bad_message_id") + " " + t("common:kirino_pout"), ephemeral: true })
+        }
 
         try {
             await msg.react(emoji) // work only for default emojis
