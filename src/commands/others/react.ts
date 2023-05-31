@@ -50,6 +50,6 @@ export const command = {
             }
         }
 
-        interaction.reply(`${t("reaction_added")} ${t("common:kirino_glad")}`)
+        interaction.reply({ content: `${t("reaction_added")} ${t("common:kirino_glad")}`, ephemeral: true })
     }
 }
