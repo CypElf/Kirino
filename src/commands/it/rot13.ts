@@ -9,16 +9,17 @@ export const command = {
     data: new SlashCommandBuilder()
         .setName("rot13")
         .setDescription("Encode your text with ROT13 (shift of 13 letters in the alphabet)")
-        .addStringOption(option => option.setName("text").setDescription("The text you want to encode").setRequired(true)),
+        .addStringOption(option => option.setName("text").setDescription("The text you want to encode").setRequired(true))
+        .addIntegerOption(option => option.setName("shift").setDescription("The shift you want to use (default: 13)")),
     guildOnly: false,
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const plaintext = interaction.options.getString("text") as string
+        const shift = interaction.options.getNumber("shift") ?? 13
+
         if (plaintext.length > 1024) return interaction.reply({ content: t("less_or_equal_to_1024"), ephemeral: true })
 
-        // TODO : fix this
-        // @ts-ignore
-        const encrypted = plaintext.replace(/[a-zA-Z]/g, c => String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26))
+        const encrypted = ROT13(plaintext, shift)
 
         const baseEmbed = new MessageEmbed()
             .setTitle("ROT13")
@@ -32,4 +33,15 @@ export const command = {
 
         interaction.reply({ embeds: [baseEmbed] })
     }
+}
+
+function ROT13(str: string, shift: number) {
+    const lowercase = "abcdefghijklmnopqrstuvwxyz"
+    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    return str
+        .split("")
+        .map((s) => lowercase.includes(s) ? lowercase[(lowercase.indexOf(s) + shift) % 26] : s)
+        .map((s) => uppercase.includes(s) ? uppercase[(uppercase.indexOf(s) + shift) % 26] : s)
+        .join("")
 }
