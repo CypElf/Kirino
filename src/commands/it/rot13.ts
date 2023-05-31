@@ -8,7 +8,7 @@ const t = i18next.t.bind(i18next)
 export const command = {
     data: new SlashCommandBuilder()
         .setName("rot13")
-        .setDescription("Encode your text with ROT13 (shift of 13 letters in the alphabet)")
+        .setDescription("Encode your text with ROT13")
         .addStringOption(option => option.setName("text").setDescription("The text you want to encode").setRequired(true))
         .addIntegerOption(option => option.setName("shift").setDescription("The shift you want to use (default: 13)")),
     guildOnly: false,
