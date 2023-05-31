@@ -1,7 +1,7 @@
 import { Collection } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../lib/misc/types"
-import { Language, Prefix } from "../lib/misc/database"
+import { Language } from "../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
@@ -10,25 +10,12 @@ export function eventHandler(bot: Kirino) {
         if (interaction.isCommand() && !interaction.user.bot) {
             const id = interaction.guild ? interaction.guild.id : interaction.user.id
 
-            const prefixRow = bot.db.prepare("SELECT * FROM prefixs WHERE id = ?").get(id) as Prefix | undefined
-            if (prefixRow?.prefix) {
-                bot.prefix = prefixRow.prefix
-            }
-
             const { commandName } = interaction
             const command = bot.slashCommands.get(commandName)
 
             const languageRow = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id) as Language | undefined //?.language ?? "en"
             const lang = languageRow?.language ?? "en"
             await i18next.changeLanguage(lang)
-
-            if (command.beta) {
-                const betaRow = bot.db.prepare("SELECT * FROM beta WHERE id = ?").get(id)
-
-                if (betaRow === undefined) {
-                    return interaction.reply({ content: `${t("interactionCreate:command_in_beta")} ${t("common:kirino_glad")}`, ephemeral: true })
-                }
-            }
 
             if (!bot.commandsCooldowns.has(command.name)) {
                 bot.commandsCooldowns.set(command.name, new Collection())

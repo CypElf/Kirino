@@ -9,7 +9,6 @@ export class Kirino extends Client {
     apiCooldowns: Map<string, number>
     voicesQueues: Collection<string, any>
     calls: Collection<string, any>
-    prefix: string
 
     constructor(options: ClientOptions) {
         super(options)
@@ -20,6 +19,5 @@ export class Kirino extends Client {
         this.apiCooldowns = new Map()
         this.voicesQueues = new Collection()
         this.calls = new Collection()
-        this.prefix = ";"
     }
 }

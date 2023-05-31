@@ -47,7 +47,7 @@ export const command = {
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled
-        if (!isEnabled) return interaction.reply({ content: `${t("currently_disabled_enable_with")} \`${bot.prefix}xp enable\`.`, ephemeral: true })
+        if (!isEnabled) return interaction.reply({ content: `${t("xp_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
 
         if (interaction.options.getSubcommand() === "set") {
             const scale = parseFloat(interaction.options.getString("factor") as string)

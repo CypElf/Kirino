@@ -19,10 +19,6 @@ export type Afk = {
     reason: string | undefined
 }
 
-export type Beta = {
-    id: string
-}
-
 export type Call = {
     guild_id: string,
     channel_id: string | undefined,
@@ -75,9 +71,4 @@ export type XpRole = {
     guild_id: string,
     role_id: string,
     level: number
-}
-
-export type Prefix = {
-    id: string,
-    prefix: string | undefined
 }

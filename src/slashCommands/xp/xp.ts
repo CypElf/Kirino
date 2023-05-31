@@ -48,7 +48,7 @@ export const command = {
             else {
                 if (!isEnabled) return interaction.reply({ content: `${t("xp_already_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
                 enableRequest.run(interaction.guild.id, 0)
-                interaction.reply(`${t("xp_disabled")} ${t("common:kirino_glad")}`)
+                interaction.reply(`${t("xp_has_been_disabled")} ${t("common:kirino_glad")}`)
             }
         }
 
@@ -468,7 +468,7 @@ export const command = {
                 interaction.editReply({ files: [card] })
             }
         }
-        else interaction.reply({ content: `${t("currently_disabled_enable_with")} \`xpconfig enable\`.`, ephemeral: true })
+        else interaction.reply({ content: `${t("xp_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
     }
 }
 

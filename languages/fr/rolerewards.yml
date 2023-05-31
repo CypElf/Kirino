@@ -1,4 +1,4 @@
-currently_disabled_enable_with: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer avec la commande"
+xp_disabled: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer pour pouvoir utiliser cette commande."
 no_role_reward_for_now: "Il n'y a actuellement aucun rôle récompense."
 roles_available: "Rôles disponibles"
 request_from: "Requête de "

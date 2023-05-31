@@ -1,4 +1,4 @@
-currently_disabled_enable_with: "The XP system is currently disabled. You must first activate it with the command"
+xp_disabled: "The XP system is currently disabled. You must first enable it to use this command."
 missing_permissions_to_remove_channel: "You do not have the necessary permissions to remove a channel from the blacklisted channels."
 not_a_text_channel: "The specified channel must be a text channel!"
 channel_not_in_db: "This channel is already not present in the blacklisted channels."

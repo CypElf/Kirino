@@ -7,11 +7,6 @@ CREATE TABLE IF NOT EXISTS "calls" (
 	"asfile"	INTEGER NOT NULL,
 	PRIMARY KEY("guild_id")
 );
-DROP TABLE IF EXISTS "beta";
-CREATE TABLE IF NOT EXISTS "beta" (
-	"id"	TEXT,
-	PRIMARY KEY("id")
-);
 DROP TABLE IF EXISTS "joins_leaves";
 CREATE TABLE IF NOT EXISTS "joins_leaves" (
 	"guild_id"	TEXT,
@@ -62,12 +57,6 @@ DROP TABLE IF EXISTS "rules";
 CREATE TABLE IF NOT EXISTS "rules" (
 	"guild_id"	TEXT NOT NULL,
 	"rule"	TEXT NOT NULL
-);
-DROP TABLE IF EXISTS "prefixs";
-CREATE TABLE IF NOT EXISTS "prefixs" (
-	"id"	TEXT NOT NULL,
-	"prefix"	TEXT,
-	PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "banwords";
 CREATE TABLE IF NOT EXISTS "banwords" (

@@ -1,3 +1,3 @@
-currently_disabled_enable_with: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer avec la commande"
+xp_disabled: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer pour pouvoir utiliser cette commande."
 scale_set: "Le coefficient a bien été défini à"
 current_scale_is: "Le coefficient est actuellement de"

@@ -1,4 +1,4 @@
-currently_disabled_enable_with: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer avec la commande"
+xp_disabled: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer pour pouvoir utiliser cette commande."
 missing_permissions_to_remove_channel: "Vous n'avez pas les permissions nécessaires pour retirer un salon des salons blacklistés."
 not_a_text_channel: "Le salon spécifié doit être un salon textuel !"
 channel_not_in_db: "Ce salon n'est déjà pas présent dans les salons blacklistés."
