@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, User, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { denied, error } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -19,11 +20,11 @@ export const command = {
         const kickerMember = interaction.member as GuildMember | null
 
         if (kickerMember && !kickerMember.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
-            return interaction.reply({ content: `${t("you_are_missing_permissions_to_kick_members")} ${t("common:kirino_pff")}`, ephemeral: true })
+            return interaction.reply({ content: denied(t("you_are_missing_permissions_to_kick_members")), ephemeral: true })
         }
 
         if (interaction.guild && interaction.guild.me && !interaction.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
-            return interaction.reply({ content: `${t("i_am_missing_permissions_to_kick_members")} ${t("common:kirino_pout")}`, ephemeral: true })
+            return interaction.reply({ content: error(t("i_am_missing_permissions_to_kick_members")), ephemeral: true })
         }
 
         const user = interaction.options.getUser("user") as User
@@ -33,15 +34,15 @@ export const command = {
             const kickedMember = await interaction.guild?.members.fetch(user.id)
 
             if (kickedMember && !kickedMember.kickable) {
-                return interaction.reply({ content: `${t("unable_to_kick_higher_than_me")} ${t("common:kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: error(t("unable_to_kick_higher_than_me")), ephemeral: true })
             }
 
             if (kickedMember && kickedMember.id === kickerMember?.id) {
-                return interaction.reply({ content: `${t("cannot_kick_yourself")} ${t("common:kirino_pff")}`, ephemeral: true })
+                return interaction.reply({ content: denied(t("cannot_kick_yourself")), ephemeral: true })
             }
 
             if (kickerMember && kickedMember && kickerMember.roles.highest.comparePositionTo(kickedMember.roles.highest) < 0) {
-                return interaction.reply({ content: `${t("you_cannot_kick_this_member")} ${t("common:kirino_pff")}`, ephemeral: true })
+                return interaction.reply({ content: denied(t("you_cannot_kick_this_member")), ephemeral: true })
             }
 
             await kickedMember?.kick(`${reason} (${t("kicked_by")} ${interaction.user.tag})`)
@@ -49,7 +50,7 @@ export const command = {
             interaction.reply(`${user.username + t("has_been_kicked")} <:boot:568041855523094549>`)
         }
         catch {
-            interaction.reply({ content: `${t("user_not_on_server")} ${t("common:kirino_pout")}`, ephemeral: true })
+            interaction.reply({ content: error(t("user_not_on_server")), ephemeral: true })
         }
     }
 }

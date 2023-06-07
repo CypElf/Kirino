@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, error, denied } from "../../lib/misc/format"
 import { Banword } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -19,7 +19,7 @@ export const command = {
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("missing_permissions_to_execute_this_command")} ${t("common:kirino_pout")}`, ephemeral: true })
+        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: denied(t("missing_permissions_to_execute_this_command")), ephemeral: true })
 
         const parseEmoji = (mot: string) => {
             if (mot.match(/<:(.*?):[0-9]*>/gm)) { // modification de la représentation des émojis
@@ -37,10 +37,10 @@ export const command = {
             const banwordsCount = bannedWords.length > 0 ? bannedWords.length : 0
 
             if (banwordsCount + 1 > 40) {
-                return interaction.reply({ content: `${t("banwords_count_limited")} ${t("common:kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: error(t("banwords_count_limited")), ephemeral: true })
             }
 
-            if (word.length > 25) return interaction.reply({ content: t("word_beyond_25_chars") + " " + t("common:kirino_pout"), ephemeral: true })
+            if (word.length > 25) return interaction.reply({ content: error(t("word_beyond_25_chars")), ephemeral: true })
 
             bot.db.prepare("INSERT INTO banwords(guild_id, word) VALUES(?,?)").run(interaction.guild?.id, word)
 

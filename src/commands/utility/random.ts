@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { error, success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -19,7 +19,7 @@ export const command = {
         const min = interaction.options.getInteger("minimum") as number
         const max = interaction.options.getInteger("maximum") as number
 
-        if (min >= max) return interaction.reply({ content: `${t("min_greater_than_max")} ${t("common:kirino_pout")}`, ephemeral: true })
+        if (min >= max) return interaction.reply({ content: error(t("min_greater_than_max")), ephemeral: true })
 
         interaction.reply(success(`${t("random_number")} ${Math.floor(Math.random() * (max - min + 1) + min)}.`))
     }

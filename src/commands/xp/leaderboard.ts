@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { error, success } from "../../lib/misc/format"
 import { XpGuild } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -17,7 +17,7 @@ export const command = {
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled
-        if (!isEnabled) return interaction.reply({ content: `${t("xp_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
+        if (!isEnabled) return interaction.reply({ content: error(t("xp_disabled")), ephemeral: true })
 
         const page = interaction.options.getInteger("page")
         const limit = interaction.options.getInteger("limit")

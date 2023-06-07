@@ -4,7 +4,7 @@ import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
 import { Kirino } from "../../lib/misc/types"
-import { success, what } from "../../lib/misc/format"
+import { denied, error, success, what } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
 
@@ -37,17 +37,17 @@ export const command = {
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
 
         if (subcommand === "enable" || subcommand === "disable") {
-            if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_enable_or_disable")} ${t("common:kirino_pff")}`, ephemeral: true })
+            if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_enable_or_disable")), ephemeral: true })
             const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (subcommand === "enable") {
-                if (isEnabled) return interaction.reply({ content: `${t("xp_already_enabled")} ${t("common:kirino_pout")}`, ephemeral: true })
+                if (isEnabled) return interaction.reply({ content: error(t("xp_already_enabled")), ephemeral: true })
                 enableRequest.run(interaction.guild.id, 1)
                 interaction.reply(success(t("xp_enabled")))
             }
 
             else {
-                if (!isEnabled) return interaction.reply({ content: `${t("xp_already_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
+                if (!isEnabled) return interaction.reply({ content: error(t("xp_already_disabled")), ephemeral: true })
                 enableRequest.run(interaction.guild.id, 0)
                 interaction.reply(success(t("xp_has_been_disabled")))
             }
@@ -72,8 +72,8 @@ export const command = {
                 )
 
             if (subcommandGroup === "reset") {
-                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_reset_xp")} ${t("common:kirino_pff")}`, ephemeral: true })
-                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
+                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_reset_xp")), ephemeral: true })
+                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: error(t("cannot_react_to_messages")), ephemeral: true })
 
                 if (subcommand === "all") {
                     await interaction.reply({ content: what(t("server_xp_reset_validation")), components: [actionRow] })
@@ -100,7 +100,7 @@ export const command = {
                 else {
                     const user = interaction.options.getUser("user") ?? interaction.user
 
-                    if (user.bot) return interaction.reply({ content: `${t("bots_not_allowed")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    if (user.bot) return interaction.reply({ content: error(t("bots_not_allowed")), ephemeral: true })
 
                     const isInXpTable = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ? AND user_id = ?").get(interaction.guild.id, user.id)
 
@@ -127,7 +127,7 @@ export const command = {
             }
 
             else if (subcommandGroup === "message") {
-                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_lvl_up_msg")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_change_lvl_up_msg")), ephemeral: true })
 
                 const newMsg = subcommand === "reset" ? null : interaction.options.getString("message")
                 bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message").run(interaction.guild.id, 1, newMsg)
@@ -154,11 +154,11 @@ export const command = {
                     }
                 }
                 else {
-                    if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_change_channel")} ${t("common:kirino_pff")}`, ephemeral: true })
+                    if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_change_channel")), ephemeral: true })
 
                     const channel = subcommand === "reset" ? null : interaction.options.getChannel("channel")
 
-                    if (subcommand === "set" && channel && channel.type === "GUILD_TEXT") return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    if (subcommand === "set" && channel && channel.type === "GUILD_TEXT") return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
                     bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, channel ? channel.id : null)
 
@@ -168,7 +168,7 @@ export const command = {
             }
 
             else if (subcommand === "import") {
-                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_import")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_import")), ephemeral: true })
 
                 await interaction.reply({ content: what(t("xp_import_verification")), components: [actionRow] })
                 const validationMessage = await interaction.fetchReply() as Message
@@ -234,7 +234,7 @@ export const command = {
                     if (!color.startsWith("#")) color = `#${color}`
 
                     const colorRegex = /^#[0-9A-F]{6}$/i
-                    if (!colorRegex.test(color)) return interaction.reply({ content: `${t("invalid_color")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    if (!colorRegex.test(color)) return interaction.reply({ content: error(t("invalid_color")), ephemeral: true })
 
                     if (!xpRow) {
                         updateColorRequest.run(interaction.guild.id, interaction.user.id, 0, 0, 0, color)
@@ -258,7 +258,7 @@ export const command = {
                         await Canvas.loadImage(link)
                     }
                     catch {
-                        return interaction.reply({ content: `${t("bad_image")} ${t("common:kirino_pout")}`, ephemeral: true })
+                        return interaction.reply({ content: error(t("bad_image")), ephemeral: true })
                     }
     
                     updateBackground(bot.db, link, interaction.user.id, interaction.guild.id)
@@ -267,10 +267,10 @@ export const command = {
             }
 
             else if (subcommand === "get") {
-                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: `${t("need_send_files")} ${t("common:kirino_pout")}`, ephemeral: true })
+                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: error(t("need_send_files")), ephemeral: true })
 
                 const user = interaction.options.getUser("user") ?? interaction.user
-                if (user.bot) return interaction.reply({ content: `${t("bots_not_allowed")} ${t("common:kirino_pff")}`, ephemeral: true })
+                if (user.bot) return interaction.reply({ content: denied(t("bots_not_allowed")), ephemeral: true })
 
                 await interaction.deferReply()
 
@@ -469,7 +469,7 @@ export const command = {
                 interaction.editReply({ files: [card] })
             }
         }
-        else interaction.reply({ content: `${t("xp_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
+        else interaction.reply({ content: error(t("xp_disabled")), ephemeral: true })
     }
 }
 

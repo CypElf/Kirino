@@ -4,7 +4,7 @@ import i18next from "i18next"
 import resetJoin from "../../lib/joins_leaves/reset_join"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, error, denied } from "../../lib/misc/format"
 import { JoinLeave } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -21,12 +21,12 @@ export const command = {
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_allowed_to_use_this_command")} ${t("common:kirino_pff")}`, ephemeral: true })
+        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === "reset") {
-            if (interaction.guild && !resetJoin(bot.db, interaction.guild.id)) return interaction.reply({ content: `${t("already_no_join_message")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (interaction.guild && !resetJoin(bot.db, interaction.guild.id)) return interaction.reply({ content: error(t("already_no_join_message")), ephemeral: true })
 
             interaction.reply(success(t("join_message_reset")))
         }
@@ -56,7 +56,7 @@ export const command = {
             const message = interaction.options.getString("message")
             const channel = interaction.options.getChannel("channel") as Channel
 
-            if (channel && !channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (channel && !channel.isText()) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
             bot.db.prepare("INSERT INTO joins_leaves(guild_id, joins_channel_id, join_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET joins_channel_id=excluded.joins_channel_id, join_message=excluded.join_message").run(interaction.guild?.id, channel.id, message)
 

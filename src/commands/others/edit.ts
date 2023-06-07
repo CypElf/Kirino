@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { denied, error, success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -17,7 +17,7 @@ export const command = {
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const member = interaction.member as GuildMember | null
         if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-            return interaction.reply({ content: t("not_allowed_to_use_this_command") + " " + t("common:kirino_pff"), ephemeral: true })
+            return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
         }
 
         const message_id = interaction.options.getString("message_id") as string
@@ -28,14 +28,14 @@ export const command = {
             const msg = await interaction.channel.messages.fetch(message_id)
 
             if (!msg.editable) {
-                return interaction.reply({ content: `${t("cannot_edit_this_message")} ${t("common:kirino_pff")}`, ephemeral: true })
+                return interaction.reply({ content: denied(t("cannot_edit_this_message")), ephemeral: true })
             }
 
             msg.edit(new_message)
             interaction.reply({ content: success(t("message_edited")), ephemeral: true })
         }
         catch {
-            interaction.reply({ content: `${t("bad_message_id")} ${t("common:kirino_pout")}`, ephemeral: true })
+            interaction.reply({ content: error(t("bad_message_id")), ephemeral: true })
         }
     }
 }

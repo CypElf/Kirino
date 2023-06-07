@@ -4,7 +4,7 @@ import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import { Kirino } from "../../lib/misc/types"
-import { success, what } from "../../lib/misc/format"
+import { denied, error, success, what } from "../../lib/misc/format"
 import { Database } from "better-sqlite3"
 import { Call } from "../../lib/misc/database"
 
@@ -25,7 +25,7 @@ export const command = {
         if (!interaction.guild) return
         const member = interaction.member as GuildMember | null
 
-        if (interaction.guild && member && !member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: `${t("not_enough_permissions_to_use_presence")} ${t("common:kirino_pff")}`, ephemeral: true })
+        if (interaction.guild && member && !member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: denied(t("not_enough_permissions_to_use_presence")), ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
@@ -52,7 +52,7 @@ export const command = {
                     else {
                         bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id)
                         deleteRowIfEmpty(bot.db, interaction.guild.id)
-                        interaction.reply(`${t("presence_channel_outdated")} ${t("common:kirino_pout")}`)
+                        interaction.reply(error(t("presence_channel_outdated")))
                     }
                 }
             }
@@ -64,7 +64,7 @@ export const command = {
 
                 if (subcommand === "set") {
                     const channel = interaction.options.getChannel("channel")
-                    if (channel && channel.type !== "GUILD_TEXT") return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+                    if (channel && channel.type !== "GUILD_TEXT") return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
                     presenceRequest.run(interaction.guild.id, channel?.id, 0, asfile)
                     interaction.reply(success(`${t("presence_channel_set")} <#${channel?.id}>.`))
@@ -83,14 +83,14 @@ export const command = {
 
         else if (subcommand === "start") {
             const duration = Math.round((interaction.options.getNumber("duration") as number + Number.EPSILON) * 100) / 100
-            if (duration <= 0 || duration >= 15) return interaction.reply({ content: `${t("duration_out_of_range")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (duration <= 0 || duration >= 15) return interaction.reply({ content: error(t("duration_out_of_range")), ephemeral: true })
 
             const row = bot.db.prepare("SELECT channel_id, dm, asfile FROM calls WHERE guild_id = ?").get(interaction.guild.id) as Call | undefined ?? { channel_id: null, dm: false, asfile: false }
             const current = row.channel_id === null && !row.dm
 
             const lock = bot.calls.get(interaction.guild.id) ?? 0
 
-            if (lock >= 3) return interaction.reply({ content: `${t("records_still_going_on")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (lock >= 3) return interaction.reply({ content: error(t("records_still_going_on")), ephemeral: true })
 
             let channel: TextBasedChannel | null
             const channels = [...(await interaction.guild.channels.fetch()).values()].filter(ch => ch.id === row.channel_id) as TextChannel[]

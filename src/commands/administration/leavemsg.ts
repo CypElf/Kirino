@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { Channel, CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { denied, error, success } from "../../lib/misc/format"
 import resetLeave from "../../lib/joins_leaves/reset_leave"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { JoinLeave } from "../../lib/misc/database"
@@ -22,12 +22,12 @@ export const command = {
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const member = interaction.member as GuildMember | null
         
-        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: `${t("not_allowed_to_use_this_command")} ${t("common:kirino_pff")}`, ephemeral: true })
+        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === "reset") {
-            if (!resetLeave(bot.db, interaction.guild?.id as string)) return interaction.reply({ content: `${t("already_no_leave_message")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (!resetLeave(bot.db, interaction.guild?.id as string)) return interaction.reply({ content: error(t("already_no_leave_message")), ephemeral: true })
 
             interaction.reply(success(t("leave_message_reset")))
         }
@@ -57,7 +57,7 @@ export const command = {
             const message = interaction.options.getString("message")
             const channel = interaction.options.getChannel("channel") as Channel
 
-            if (!channel.isText()) return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
+            if (!channel.isText()) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
             bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id = excluded.leaves_channel_id, leave_message = excluded.leave_message").run(interaction.guild?.id, channel.id, message)
 

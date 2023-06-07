@@ -5,7 +5,7 @@ import { deflateSync } from "zlib"
 import fetch from "node-fetch"
 import paste from "../../lib/misc/paste"
 import { Kirino } from "../../lib/misc/types"
-import { success, what } from "../../lib/misc/format"
+import { error, success, what } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -21,7 +21,7 @@ export const command = {
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         if (!interaction.channel) return
-        if (interaction.channel.type === "GUILD_TEXT" && !interaction.channel.viewable) return interaction.reply(`${t("not_viewable")} ${t("common:kirino_pout")}`)
+        if (interaction.channel.type === "GUILD_TEXT" && !interaction.channel.viewable) return interaction.reply(error(t("not_viewable")))
         interaction.reply(success(t("send_your_code")))
         const replyMsg = await interaction.fetchReply() as Message
         let codeMsg
@@ -33,7 +33,7 @@ export const command = {
         }
         catch {
             replyMsg.delete()
-            return interaction.followUp({ content: `${t("run:cancelled")} ${t("common:kirino_pout")}`, ephemeral: true })
+            return interaction.followUp({ content: error(t("run:cancelled")), ephemeral: true })
         }
 
         i18next.setDefaultNamespace("run") // in case while we were awaiting for messages another command changed the namespace

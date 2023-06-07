@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Message, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { denied, error, success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -20,11 +20,11 @@ export const command = {
         const member = interaction.member as GuildMember | null
 
         if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-            return interaction.reply({ content: `${t("not_allowed_to_use_this_command")} ${t("common:kirino_pff")}`, ephemeral: true })
+            return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
         }
 
         if (interaction.guild && interaction.guild.me && !interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-            return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
+            return interaction.reply({ content: error(t("cannot_react_to_messages")), ephemeral: true })
         }
 
         const message_id = interaction.options.getString("message_id") as string
@@ -36,7 +36,7 @@ export const command = {
             msg = await interaction.channel.messages.fetch(message_id)
         }
         catch {
-            return interaction.reply({ content: t("bad_message_id") + " " + t("common:kirino_pout"), ephemeral: true })
+            return interaction.reply({ content: error(t("bad_message_id")), ephemeral: true })
         }
 
         try {
@@ -51,7 +51,7 @@ export const command = {
                 await msg.react(customEmoji)
             }
             catch {
-                return interaction.reply({ content: t("access_to_emoji_denied") + " " + t("common:kirino_pout"), ephemeral: true })
+                return interaction.reply({ content: error(t("access_to_emoji_denied")), ephemeral: true })
             }
         }
 

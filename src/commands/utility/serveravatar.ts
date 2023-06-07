@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { error } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -17,6 +18,6 @@ export const command = {
             size: 4096
         })
         if (avatar) interaction.reply(avatar)
-        else interaction.reply(`${t("no_avatar")} ${t("common:kirino_pout")}`)
+        else interaction.reply(error(t("no_avatar")))
     }
 }

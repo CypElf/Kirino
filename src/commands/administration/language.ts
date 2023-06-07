@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, denied } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -30,7 +30,7 @@ export const command = {
 
         if (isInGuild) {
             if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
-                return interaction.reply({ content: `${t("not_enough_permission_to_change_language")} ${t("common:kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: denied(t("not_enough_permission_to_change_language")), ephemeral: true })
             }
         }
 
