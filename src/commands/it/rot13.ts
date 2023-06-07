@@ -15,7 +15,7 @@ export const command = {
 
     async execute(bot: Kirino, interaction: CommandInteraction) {
         const plaintext = interaction.options.getString("text") as string
-        const shift = interaction.options.getNumber("shift") ?? 13
+        const shift = interaction.options.getInteger("shift") ?? 13
 
         if (plaintext.length > 1024) return interaction.reply({ content: t("less_or_equal_to_1024"), ephemeral: true })
 
