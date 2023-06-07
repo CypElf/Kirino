@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions, User } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { what, denied, error } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -19,11 +20,11 @@ export const command = {
         const bannerMember = interaction.member as GuildMember | null
 
         if (!bannerMember?.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
-            return interaction.reply({ content: `${t("you_are_missing_permissions_to_ban_members")} ${t("common:kirino_pff")}`, ephemeral: true })
+            return interaction.reply({ content: denied(t("you_are_missing_permissions_to_ban_members")), ephemeral: true })
         }
 
         if (!interaction.guild?.me?.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
-            return interaction.reply({ content: `${t("i_am_missing_permissions_to_ban_members")} ${t("common:kirino_pout")}`, ephemeral: true })
+            return interaction.reply({ content: error(t("i_am_missing_permissions_to_ban_members")), ephemeral: true })
         }
 
         const user = interaction.options.getUser("user") as User
@@ -35,19 +36,19 @@ export const command = {
             targetMember = await interaction.guild.members.fetch(user.id)
 
             if (!targetMember.bannable) {
-                return interaction.reply({ content: `${t("unable_to_ban_higher_than_me")} ${t("common:kirino_pout")}`, ephemeral: true })
+                return interaction.reply({ content: error(t("unable_to_ban_higher_than_me")), ephemeral: true })
             }
 
             if (targetMember.id === bannerMember.id) {
-                return interaction.reply({ content: `${t("cannot_ban_yourself")} ${t("common:kirino_pff")}`, ephemeral: true })
+                return interaction.reply({ content: denied(t("cannot_ban_yourself")), ephemeral: true })
             }
 
             if (bannerMember.roles.highest.comparePositionTo(targetMember.roles.highest) < 0) {
-                return interaction.reply({ content: `${t("you_cannot_ban_this_member")} ${t("common:kirino_pff")}`, ephemeral: true })
+                return interaction.reply({ content: denied(t("you_cannot_ban_this_member")), ephemeral: true })
             }
         }
         catch {
-            return interaction.reply({ content: `${t("user_not_found")} ${t("common:kirino_what")}`, ephemeral: true })
+            return interaction.reply({ content: what(t("user_not_found")), ephemeral: true })
         }
 
         interaction.guild.members.ban(user, { reason: `${reason} (${t("banned_by")} ${interaction.user.tag})` })

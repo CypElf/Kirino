@@ -4,7 +4,7 @@ import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, what } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
 
@@ -76,7 +76,7 @@ export const command = {
                 if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: `${t("cannot_react_to_messages")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                 if (subcommand === "all") {
-                    await interaction.reply({ content: `${t("server_xp_reset_validation")} ${t("common:kirino_what")}`, components: [actionRow] })
+                    await interaction.reply({ content: what(t("server_xp_reset_validation")), components: [actionRow] })
                     const validationMessage = await interaction.fetchReply() as Message
 
                     const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
@@ -106,8 +106,8 @@ export const command = {
 
                     if (!isInXpTable) return interaction.reply({ content: t("member_zero_xp"), ephemeral: true })
 
-                    if (user.id === interaction.user.id) await interaction.reply({ content: `${t("your_xp_reset_validation")} ${t("common:kirino_what")}`, components: [actionRow] })
-                    else await interaction.reply({ content: `${t("are_you_sure_you_want_to_reset", { username: user.username })} ${t("common:kirino_what")}`, components: [actionRow] })
+                    if (user.id === interaction.user.id) await interaction.reply({ content: what(t("your_xp_reset_validation")), components: [actionRow] })
+                    else await interaction.reply({ content: what(`${t("are_you_sure_you_want_to_reset", { username: user.username })}`), components: [actionRow] })
 
                     const validationMessage = await interaction.fetchReply() as Message
                     const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
@@ -170,7 +170,7 @@ export const command = {
             else if (subcommand === "import") {
                 if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: `${t("not_allowed_to_import")} ${t("common:kirino_pff")}`, ephemeral: true })
 
-                await interaction.reply({ content: `${t("xp_import_verification")} ${t("common:kirino_what")}`, components: [actionRow] })
+                await interaction.reply({ content: what(t("xp_import_verification")), components: [actionRow] })
                 const validationMessage = await interaction.fetchReply() as Message
 
                 const i = await validationMessage.awaitMessageComponent({ filter, componentType: "BUTTON", time: 30_000 })

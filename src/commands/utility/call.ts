@@ -4,7 +4,7 @@ import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, what } from "../../lib/misc/format"
 import { Database } from "better-sqlite3"
 import { Call } from "../../lib/misc/database"
 
@@ -168,9 +168,9 @@ export const command = {
                         }
                         catch {
                             let errorMsg = ""
-                            if (row.dm) errorMsg += `${t("presence_dm_disabled")} ${t("common:kirino_what")}`
+                            if (row.dm) errorMsg += what(t("presence_dm_disabled"))
                             else {
-                                errorMsg += `${t("presence_channel_deleted_during_call")} ${t("common:kirino_what")}`
+                                errorMsg += what(t("presence_channel_deleted_during_call"))
                                 bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id) // if the channel has been deleted during the call, it cannot be valid anymore in the future
                                 deleteRowIfEmpty(bot.db, interaction.guild.id)
                             }
@@ -189,7 +189,7 @@ export const command = {
             else {
                 bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id)
                 deleteRowIfEmpty(bot.db, interaction.guild.id)
-                interaction.reply({ content: `${t("presence_channel_not_found")} ${t("common:kirino_what")}`, ephemeral: true })
+                interaction.reply({ content: what(t("presence_channel_not_found")), ephemeral: true })
             }
         }
     }

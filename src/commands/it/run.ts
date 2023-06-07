@@ -5,7 +5,7 @@ import { deflateSync } from "zlib"
 import fetch from "node-fetch"
 import paste from "../../lib/misc/paste"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, what } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -126,7 +126,7 @@ export const command = {
             if (url === null) {
                 replyMsg.delete()
                 codeMsg.delete()
-                interaction.followUp({ content: `${t("paste_error")} ${t("common:kirino_what")}`, ephemeral: true })
+                interaction.followUp({ content: what(t("paste_error")), ephemeral: true })
             }
             else codeMsg.reply({ content: success(`${t("pasted_here")} ${url}`), allowedMentions: { repliedUser: false } })
         }

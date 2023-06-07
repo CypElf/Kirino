@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, MessageEmbed, MessageButton, MessageActionRow, Message, ButtonInteraction, TextChannel  } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
-import { success } from "../../lib/misc/format"
+import { success, what } from "../../lib/misc/format"
 import { Language } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -82,12 +82,12 @@ export const command = {
                     }
                     else {
                         console.error("Report channel unavailable")
-                        interaction.editReply({ content: `${t("report_channel_unavailable")} ${t("common:kirino_what")}`, components: [] })
+                        interaction.editReply({ content: what(t("report_channel_unavailable")), components: [] })
                     }
                 }
                 else {
                     console.error("Report server unavailable")
-                    interaction.editReply({ content: `${t("report_server_unavailable")} ${t("common:kirino_what")}`, components: [] })
+                    interaction.editReply({ content: what(t("report_server_unavailable")), components: [] })
                 }
             }
             else interaction.editReply({ content: t("report_cancelled"), components: [] })

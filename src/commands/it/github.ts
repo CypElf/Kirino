@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import ColorThief from "colorthief"
 import fetch from "node-fetch"
 import { Kirino } from "../../lib/misc/types"
+import { what } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -62,7 +63,7 @@ export const command = {
             interaction.reply({ embeds: [profileEmbed] })
         }
         else {
-            interaction.reply({ content: `${t("user_not_found")} ${t("common:kirino_what")}`, ephemeral: true })
+            interaction.reply({ content: what(t("user_not_found")), ephemeral: true })
         }
     }
 }

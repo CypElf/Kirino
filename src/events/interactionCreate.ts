@@ -1,6 +1,7 @@
 import { Collection } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../lib/misc/types"
+import { what } from "../lib/misc/format"
 import { Language } from "../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -56,7 +57,7 @@ export function eventHandler(bot: Kirino) {
                 else {
                     console.error(err)
                 }
-                interaction.reply({ content: `${t("interactionCreate:command_runtime_error")} ${t("common:kirino_what")}`, ephemeral: true })
+                interaction.reply({ content: what(t("interactionCreate:command_runtime_error")), ephemeral: true })
             }
         }
     })
