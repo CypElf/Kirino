@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -22,10 +23,10 @@ export const command = {
         bot.db.prepare("INSERT INTO afk(user_id, reason) VALUES(?, ?)").run(interaction.user.id, reason)
 
         if (reason) {
-            return interaction.reply(`${t("added_to_afk_with_reason")} ${t("common:kirino_glad")} : ${reason}`)
+            return interaction.reply(`${success(t("added_to_afk_with_reason"))} : ${reason}`)
         }
         else {
-            return interaction.reply(`${t("added_to_afk_without_reason")} ${t("common:kirino_glad")}`)
+            return interaction.reply(success(t("added_to_afk_without_reason")))
         }
     }
 }

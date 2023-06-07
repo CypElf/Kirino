@@ -5,6 +5,7 @@ import { deflateSync } from "zlib"
 import fetch from "node-fetch"
 import paste from "../../lib/misc/paste"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -21,7 +22,7 @@ export const command = {
     async execute(bot: Kirino, interaction: CommandInteraction) {
         if (!interaction.channel) return
         if (interaction.channel.type === "GUILD_TEXT" && !interaction.channel.viewable) return interaction.reply(`${t("not_viewable")} ${t("common:kirino_pout")}`)
-        interaction.reply(`${t("send_your_code")} ${t("common:kirino_glad")}`)
+        interaction.reply(success(t("send_your_code")))
         const replyMsg = await interaction.fetchReply() as Message
         let codeMsg
 
@@ -127,7 +128,7 @@ export const command = {
                 codeMsg.delete()
                 interaction.followUp({ content: `${t("paste_error")} ${t("common:kirino_what")}`, ephemeral: true })
             }
-            else codeMsg.reply({ content: `${t("pasted_here")} ${url} ${t("common:kirino_glad")}`, allowedMentions: { repliedUser: false } })
+            else codeMsg.reply({ content: success(`${t("pasted_here")} ${url}`), allowedMentions: { repliedUser: false } })
         }
         else {
             // prevent markdown code block within the output by adding zero width spaces between the backticks

@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -41,10 +42,10 @@ export const command = {
         await i18next.changeLanguage(language)
 
         if (isInGuild) {
-            interaction.reply(`${t("server_language_changed") + language}\` ${t("common:kirino_glad")} !`)
+            interaction.reply(success(t("server_language_changed") + language + "`"))
         }
         else {
-            interaction.reply(`${t("dm_language_changed") + language}\` ${t("common:kirino_glad")} !`)
+            interaction.reply(success(t("dm_language_changed") + language + "`"))
         }
     }
 }

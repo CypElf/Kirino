@@ -4,6 +4,7 @@ import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { Database } from "better-sqlite3"
 import { Call } from "../../lib/misc/database"
 
@@ -43,11 +44,11 @@ export const command = {
                 const row = bot.db.prepare("SELECT channel_id, dm FROM calls WHERE guild_id = ?").get(interaction.guild.id) as Call ?? { channel_id: null, dm: 0, asfile: 0 }
                 const current = row.channel_id === null && !row.dm
 
-                if (row.dm) interaction.reply(`${t("presence_channel_is_set_to_dm")} ${t("common:kirino_glad")}`)
-                else if (current) interaction.reply(`${t("presence_channel_is_set_to_current")} ${t("common:kirino_glad")}`)
+                if (row.dm) interaction.reply(success(t("presence_channel_is_set_to_dm")))
+                else if (current) interaction.reply(success(t("presence_channel_is_set_to_current")))
                 else {
                     const channels = [...interaction.guild.channels.cache.values()].filter(channel => channel.id === row.channel_id)
-                    if (channels.length > 0) interaction.reply(`${t("presence_channel_is_set_to_channel")} <#${row.channel_id}>. ${t("common:kirino_glad")}`)
+                    if (channels.length > 0) interaction.reply(success(`${t("presence_channel_is_set_to_channel")} <#${row.channel_id}>.`))
                     else {
                         bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id)
                         deleteRowIfEmpty(bot.db, interaction.guild.id)
@@ -66,16 +67,16 @@ export const command = {
                     if (channel && channel.type !== "GUILD_TEXT") return interaction.reply({ content: `${t("not_a_text_channel")} ${t("common:kirino_pout")}`, ephemeral: true })
 
                     presenceRequest.run(interaction.guild.id, channel?.id, 0, asfile)
-                    interaction.reply(`${t("presence_channel_set")} <#${channel?.id}>. ${t("common:kirino_glad")}`)
+                    interaction.reply(success(`${t("presence_channel_set")} <#${channel?.id}>.`))
                 }
                 else if (subcommand === "reset") {
                     presenceRequest.run(interaction.guild.id, null, 0, asfile)
                     deleteRowIfEmpty(bot.db, interaction.guild.id)
-                    interaction.reply(`${t("i_will_send_it_in_current")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("i_will_send_it_in_current")))
                 }
                 else if (subcommand === "dm") {
                     presenceRequest.run(interaction.guild.id, null, 1, asfile)
-                    interaction.reply(`${t("presence_channel_set_to_dm")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("presence_channel_set_to_dm")))
                 }
             }
         }
@@ -108,7 +109,7 @@ export const command = {
 
                 const callEmoji = "🙋"
 
-                await interaction.reply(`**${t("record_started")}** ${t("common:kirino_glad")}\n${t("you_have_x_min_to_react", { count: duration })} ${callEmoji}.`)
+                await interaction.reply(`**${success(t("record_started"))}**\n${t("you_have_x_min_to_react", { count: duration })} ${callEmoji}.`)
                 const recordMsg = await interaction.fetchReply() as Message
                 recordMsg.react(callEmoji)
 
@@ -148,7 +149,7 @@ export const command = {
                     const reactions = msg.reactions as ReactionManager | undefined
                     if (reactions) reactions.removeAll()
 
-                    interaction.editReply(`**${t("record_ended")}** ${t("common:kirino_glad")}`)
+                    interaction.editReply(success(`**${t("record_ended")}**`))
 
                     let result = `${row.asfile ? "" : "**"}${t("record_from_call", { username: interaction.user.username })}${row.asfile ? "" : "**"} ${row.asfile ? `(${dayjs.utc().format("HH:mm:ss DD/MM/YYYY")} UTC)` : ""} :\n`
                     if (members.length === 0) result += t("nobody")

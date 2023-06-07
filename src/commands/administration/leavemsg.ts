@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { Channel, CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import resetLeave from "../../lib/joins_leaves/reset_leave"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { JoinLeave } from "../../lib/misc/database"
@@ -28,7 +29,7 @@ export const command = {
         if (subcommand === "reset") {
             if (!resetLeave(bot.db, interaction.guild?.id as string)) return interaction.reply({ content: `${t("already_no_leave_message")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            interaction.reply(`${t("leave_message_reset")} ${t("common:kirino_glad")}`)
+            interaction.reply(success(t("leave_message_reset")))
         }
 
         else if (subcommand === "test") {
@@ -44,11 +45,11 @@ export const command = {
                 }
                 catch {
                     resetLeave(bot.db, interaction.guild?.id as string)
-                    interaction.reply(`${t("no_leave_message_set")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("no_leave_message_set")))
                 }
             }
             else {
-                interaction.reply(`${t("no_leave_message_set")} ${t("common:kirino_glad")}`)
+                interaction.reply(success(t("no_leave_message_set")))
             }
         }
 
@@ -60,7 +61,7 @@ export const command = {
 
             bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id = excluded.leaves_channel_id, leave_message = excluded.leave_message").run(interaction.guild?.id, channel.id, message)
 
-            interaction.reply(`${t("leave_message_set")} <#${channel.id}>. ${t("common:kirino_glad")}`)
+            interaction.reply(success(`${t("leave_message_set")} <#${channel.id}>.`))
         }
     }
 }

@@ -4,6 +4,7 @@ import i18next from "i18next"
 import resetJoin from "../../lib/joins_leaves/reset_join"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { JoinLeave } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -27,7 +28,7 @@ export const command = {
         if (subcommand === "reset") {
             if (interaction.guild && !resetJoin(bot.db, interaction.guild.id)) return interaction.reply({ content: `${t("already_no_join_message")} ${t("common:kirino_pout")}`, ephemeral: true })
 
-            interaction.reply(`${t("join_message_reset")} ${t("common:kirino_glad")}`)
+            interaction.reply(success(t("join_message_reset")))
         }
 
         else if (subcommand === "test") {
@@ -43,11 +44,11 @@ export const command = {
                 }
                 catch {
                     if (interaction.guild) resetJoin(bot.db, interaction.guild.id)
-                    interaction.reply(`${t("no_join_message_set")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("no_join_message_set")))
                 }
             }
             else {
-                interaction.reply(`${t("no_join_message_set")} ${t("common:kirino_glad")}`)
+                interaction.reply(success(t("no_join_message_set")))
             }
         }
 
@@ -59,7 +60,7 @@ export const command = {
 
             bot.db.prepare("INSERT INTO joins_leaves(guild_id, joins_channel_id, join_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET joins_channel_id=excluded.joins_channel_id, join_message=excluded.join_message").run(interaction.guild?.id, channel.id, message)
 
-            interaction.reply(`${t("join_message_set")} <#${channel.id}>. ${t("common:kirino_glad")}`)
+            interaction.reply(success(`${t("join_message_set")} <#${channel.id}>.`))
         }
     }
 }

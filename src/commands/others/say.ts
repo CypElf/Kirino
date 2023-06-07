@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -22,6 +23,6 @@ export const command = {
         }
 
         await interaction.channel?.send(text)
-        interaction.reply({ content: `${t("say_success")} ${t("common:kirino_glad")}`, ephemeral: true })
+        interaction.reply({ content: success(t("say_success")), ephemeral: true })
     }
 }

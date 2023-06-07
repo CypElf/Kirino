@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { Channel, CommandInteraction, Guild, GuildMember, MessageEmbed, Permissions, Role } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { XpBlacklistedChannel, XpBlacklistedRole, XpGuild } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
 
@@ -50,7 +51,7 @@ export const command = {
 
                 bot.db.prepare("DELETE FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?").run(interaction.guild.id, channel.id)
 
-                interaction.reply(`${t("the_channel")} <#${channel.id}> ${t("has_been_removed_from_channels_list")} ${t("common:kirino_glad")}`)
+                interaction.reply(success(`${t("the_channel")} <#${channel.id}> ${t("has_been_removed_from_channels_list")}`))
             }
 
             else {
@@ -61,7 +62,7 @@ export const command = {
 
                 bot.db.prepare("DELETE FROM xp_blacklisted_roles WHERE guild_id = ? AND role_id = ?").run(interaction.guild.id, role.id)
 
-                interaction.reply(`${t("the_role")} ${role.name} ${t("has_been_removed_from_roles_list")} ${t("common:kirino_glad")}`)
+                interaction.reply(success(`${t("the_role")} ${role.name} ${t("has_been_removed_from_roles_list")}`))
             }
         }
         else if (interaction.options.getSubcommand() === "list") {
@@ -97,7 +98,7 @@ export const command = {
                 const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_channels VALUES(?,?)")
                 addChannelRequest.run(interaction.guild.id, channel.id)
 
-                return interaction.reply(`${t("the_channel")} <#${channel.id}> ${t("has_been_added_to_channels_list")} ${t("common:kirino_glad")}`)
+                return interaction.reply(success(`${t("the_channel")} <#${channel.id}> ${t("has_been_added_to_channels_list")}`))
             }
 
             else {
@@ -110,7 +111,7 @@ export const command = {
                 const addChannelRequest = bot.db.prepare("INSERT INTO xp_blacklisted_roles VALUES(?,?)")
                 addChannelRequest.run(interaction.guild.id, role.id)
 
-                return interaction.reply(`${t("the_role")} ${role.name} ${t("has_been_added_to_roles_list")} ${t("common:kirino_glad")}`)
+                return interaction.reply(success(`${t("the_role")} ${role.name} ${t("has_been_added_to_roles_list")}`))
             }
         }
     }

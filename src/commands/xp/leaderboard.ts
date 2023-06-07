@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { XpGuild } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -23,6 +24,6 @@ export const command = {
         const params = (page ? `/${page}` : "") + (limit ? `/${limit}` : "")
 
         const lang = i18next.language === "fr" ? "/fr" : ""
-        interaction.reply(`${t("leaderboard_of")}${interaction.guild?.name}${t("is_available_at")} https://kirino.xyz${lang}/leaderboards/${interaction.guild?.id}${params} ${t("common:kirino_glad")}`)
+        interaction.reply(success(`${t("leaderboard_of")}${interaction.guild?.name}${t("is_available_at")} https://kirino.xyz${lang}/leaderboards/${interaction.guild?.id}${params}`))
     }
 }

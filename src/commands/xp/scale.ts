@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { XpGuild } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -53,12 +54,12 @@ export const command = {
             const scale = parseFloat(interaction.options.getString("factor") as string)
             bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale").run(interaction.guild?.id, 1, scale === 1 ? null : scale)
 
-            interaction.reply(`${t("scale_set")} \`${scale}\`. ${t("common:kirino_glad")}`)
+            interaction.reply(success(`${t("scale_set")} \`${scale}\`.`))
         }
 
         else {
             const scale = (bot.db.prepare("SELECT scale FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.scale
-            interaction.reply(`${t("current_scale_is")} \`${scale ? scale : 1}\`. ${t("common:kirino_glad")}`)
+            interaction.reply(success(`${t("current_scale_is")} \`${scale ? scale : 1}\`.`))
         }
     }
 }

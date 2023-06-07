@@ -3,6 +3,7 @@ import { CommandInteraction, MessageEmbed, Permissions } from "discord.js"
 import i18next from "i18next"
 import removeDeletedRolesRewards from "../../lib/rolerewards/remove_deleted_roles_rewards"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { XpGuild, XpProfile, XpRole } from "../../lib/misc/database"
 import { HexColorString } from "discord.js"
 import { GuildMember } from "discord.js"
@@ -72,7 +73,7 @@ export const command = {
 
             bot.db.prepare("DELETE FROM xp_roles WHERE guild_id = ? AND role_id = ?").run(interaction.guild.id, role.id)
 
-            interaction.reply(`${t("role_removed_from_database")} ${t("common:kirino_glad")}`)
+            interaction.reply(success(`${t("role_removed_from_database")}`))
         }
         else if (subcommand === "add") {
             if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return interaction.reply({ content: `${t("missing_permissions_to_add_role")} ${t("common:kirino_pff")}`, ephemeral: true })
@@ -91,7 +92,7 @@ export const command = {
 
             bot.db.prepare("INSERT INTO xp_roles VALUES(?,?,?)").run(interaction.guild.id, role.id, level)
 
-            interaction.reply(`${t("the_role")} ${role.name} ${t("has_successfully_been_added_to_list")} ${t("common:kirino_glad")}`)
+            interaction.reply(success(`${t("the_role")} ${role.name} ${t("has_successfully_been_added_to_list")}`))
         }
     }
 }

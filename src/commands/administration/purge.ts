@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, TextChannel, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -26,10 +27,10 @@ export const command = {
         try {
             const channel = interaction.channel as TextChannel
             await channel.bulkDelete(count)
-            interaction.reply({ content: `${t("purge_success")} ${t("common:kirino_glad")}`, ephemeral: true })
+            interaction.reply({ content: success(t("purge_success")), ephemeral: true })
         }
         catch {
-            interaction.reply({ content: `${t("purge_does_not_work_beyond_14_days")} ${t("common:kirino_pout")}`, ephemeral: true })
+            interaction.reply({ content: success(t("purge_does_not_work_beyond_14_days")), ephemeral: true })
         }
     }
 }

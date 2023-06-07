@@ -4,6 +4,7 @@ import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
 
@@ -42,13 +43,13 @@ export const command = {
             if (subcommand === "enable") {
                 if (isEnabled) return interaction.reply({ content: `${t("xp_already_enabled")} ${t("common:kirino_pout")}`, ephemeral: true })
                 enableRequest.run(interaction.guild.id, 1)
-                interaction.reply(`${t("xp_enabled")} ${t("common:kirino_glad")}`)
+                interaction.reply(success(t("xp_enabled")))
             }
 
             else {
                 if (!isEnabled) return interaction.reply({ content: `${t("xp_already_disabled")} ${t("common:kirino_pout")}`, ephemeral: true })
                 enableRequest.run(interaction.guild.id, 0)
-                interaction.reply(`${t("xp_has_been_disabled")} ${t("common:kirino_glad")}`)
+                interaction.reply(success(t("xp_has_been_disabled")))
             }
         }
 
@@ -89,10 +90,10 @@ export const command = {
                                 bot.db.prepare("DELETE FROM xp_profiles WHERE guild_id = ? AND color IS NULL AND background IS NULL").run(profile.guild_id)
                             }
 
-                            interaction.editReply({ content: `${t("server_xp_successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
+                            interaction.editReply({ content: success(t("server_xp_successfully_reset")), components: [] })
                         }
                         else {
-                            interaction.editReply({ content: `${t("server_xp_cancelled")} ${t("common:kirino_pout")}`, components: [] })
+                            interaction.editReply({ content: success(t("server_xp_cancelled")), components: [] })
                         }
                     })
                 }
@@ -115,8 +116,8 @@ export const command = {
                         if (i.customId === "confirmed") {
                             bot.db.prepare("INSERT INTO xp_profiles(guild_id, user_id, xp, total_xp, level) VALUES(?,?,?,?,?) ON CONFLICT(guild_id, user_id) DO UPDATE SET xp = excluded.xp, total_xp = excluded.total_xp, level = excluded.level").run(interaction.guild?.id, user.id, 0, 0, 0)
 
-                            if (user.id === interaction.user.id) interaction.editReply({ content: `${t("your_xp_successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
-                            else interaction.editReply({ content: `${t("xp_reset_of")}${user.username}${t("successfully_reset")} ${t("common:kirino_glad")}`, components: [] })
+                            if (user.id === interaction.user.id) interaction.editReply({ content: success(t("your_xp_successfully_reset")), components: [] })
+                            else interaction.editReply({ content: success(`${t("xp_reset_of")}${user.username}${t("successfully_reset")}`), components: [] })
                         }
                         else {
                             interaction.editReply({ content: `${t("xp_reset_of")}${user.username}${t("cancelled")}`, components: [] })
@@ -131,24 +132,24 @@ export const command = {
                 const newMsg = subcommand === "reset" ? null : interaction.options.getString("message")
                 bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message").run(interaction.guild.id, 1, newMsg)
 
-                if (subcommand === "reset") interaction.reply(`${t("lvl_up_msg_reset")} ${t("common:kirino_glad")}`)
-                else interaction.reply(`${t("lvl_up_msg_updated")} ${t("common:kirino_glad")}`)
+                if (subcommand === "reset") interaction.reply(success(t("lvl_up_msg_reset")))
+                else interaction.reply(success(t("lvl_up_msg_updated")))
             }
 
             else if (subcommandGroup === "channel") {
                 if (subcommand === "get") {
                     let channelId = (bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id) as XpGuild | null)?.level_up_channel_id
 
-                    if (!channelId) interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
+                    if (!channelId) interaction.reply(success(t("no_level_up_channel")))
                     else {
                         const channel = await interaction.guild.channels.fetch(channelId)
                         if (!channel) {
                             bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, null)
 
-                            interaction.reply(`${t("no_level_up_channel")} ${t("common:kirino_glad")}`)
+                            interaction.reply(success(t("no_level_up_channel")))
                         }
                         else {
-                            interaction.reply(`${t("level_up_channel_is")} <#${channel.id}>. ${t("common:kirino_glad")}`)
+                            interaction.reply(success(`${t("level_up_channel_is")} <#${channel.id}>.`))
                         }
                     }
                 }
@@ -161,8 +162,8 @@ export const command = {
 
                     bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, channel ? channel.id : null)
 
-                    if (channel !== null) interaction.reply(`${t("the_channel")} <#${channel.id}> ${t("has_been_set_as_level_up_channel")} ${t("common:kirino_glad")}`)
-                    else interaction.reply(`${t("level_up_channel_reset")} ${t("common:kirino_glad")}`)
+                    if (channel !== null) interaction.reply(success(`${t("the_channel")} <#${channel.id}> ${t("has_been_set_as_level_up_channel")}`))
+                    else interaction.reply(success(t("level_up_channel_reset")))
                 }
             }
 
@@ -210,10 +211,10 @@ export const command = {
 
                         bot.db.prepare("INSERT INTO xp_profiles VALUES(?,?,?,?,?,?,?)").run(player.guild_id, player.id, player.detailed_xp[0], player.xp, player.level, color, background)
                     }
-                    interaction.editReply(`${t("mee6_levels_successfully_imported")} ${t("common:kirino_glad")}`)
+                    interaction.editReply(success(t("mee6_levels_successfully_imported")))
                 }
                 else {
-                    interaction.editReply({ content: `${t("import_cancelled")} ${t("common:kirino_glad")}`, components: [] })
+                    interaction.editReply({ content: success(t("import_cancelled")), components: [] })
                 }
             }
 
@@ -226,7 +227,7 @@ export const command = {
                     if (xpRow) {
                         updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, null)
                     }
-                    interaction.reply(`${t("color_reset")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("color_reset")))
                 }
                 else {
                     let color = interaction.options.getString("color") as string
@@ -241,14 +242,14 @@ export const command = {
                     else {
                         updateColorRequest.run(interaction.guild.id, interaction.user.id, xpRow.xp, xpRow.total_xp, xpRow.level, color)
                     }
-                    interaction.reply(`${t("color_updated")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("color_updated")))
                 }
             }
 
             else if (subcommandGroup === "background") {
                 if (subcommand === "reset") {
                     updateBackground(bot.db, undefined, interaction.user.id, interaction.guild.id)
-                    return interaction.reply(`${t("background_reset")} ${t("common:kirino_glad")}`)
+                    return interaction.reply(success(t("background_reset")))
                 }
                 else {
                     const link = interaction.options.getString("link") as string
@@ -261,7 +262,7 @@ export const command = {
                     }
     
                     updateBackground(bot.db, link, interaction.user.id, interaction.guild.id)
-                    interaction.reply(`${t("background_set")} ${t("common:kirino_glad")}`)
+                    interaction.reply(success(t("background_set")))
                 }                
             }
 

@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
@@ -31,7 +32,7 @@ export const command = {
             }
 
             msg.edit(new_message)
-            interaction.reply({ content: `${t("message_edited")} ${t("common:kirino_glad")}`, ephemeral: true })
+            interaction.reply({ content: success(t("message_edited")), ephemeral: true })
         }
         catch {
             interaction.reply({ content: `${t("bad_message_id")} ${t("common:kirino_pout")}`, ephemeral: true })

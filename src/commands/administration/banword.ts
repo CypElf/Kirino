@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, GuildMember, Permissions } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { Banword } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -43,13 +44,13 @@ export const command = {
 
             bot.db.prepare("INSERT INTO banwords(guild_id, word) VALUES(?,?)").run(interaction.guild?.id, word)
 
-            interaction.reply(`${t("word_added_to_banwords", { word })} ${t("common:kirino_glad")}`)
+            interaction.reply(success(t("word_added_to_banwords", { word })))
         }
 
         else if (subcommand === "list") {
             const wordsList = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild?.id) as Banword[]
 
-            interaction.reply((wordsList.length > 0 ? `${t("here_is_banword_list")} :\n\`${wordsList.map(row => row.word).join("`, `")}\`` : t("no_banwords_for_now") + " " + t("common:kirino_glad")))
+            interaction.reply(success(wordsList.length > 0 ? `${t("here_is_banword_list")} :\n\`${wordsList.map(row => row.word).join("`, `")}\`` : t("no_banwords_for_now")))
         }
 
         else if (subcommand === "remove") {
@@ -58,10 +59,10 @@ export const command = {
             const banwords = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?").all(interaction.guild?.id) as Banword[]
             if (banwords.map(row => row.word).includes(word)) {
                 bot.db.prepare("DELETE FROM banwords WHERE guild_id = ? AND word = ?").run(interaction.guild?.id, word)
-                interaction.reply(`${t("word_removed_from_banword", { word })} ${t("common:kirino_glad")}`)
+                interaction.reply(success(t("word_removed_from_banword", { word })))
             }
             else {
-                interaction.reply({ content: `${t("word_not_found_in_banwords")} ${t("common:kirino_glad")}`, ephemeral: true })
+                interaction.reply({ content: success(t("word_not_found_in_banwords")), ephemeral: true })
             }
         }
     }

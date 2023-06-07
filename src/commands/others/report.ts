@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { CommandInteraction, MessageEmbed, MessageButton, MessageActionRow, Message, ButtonInteraction, TextChannel  } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
+import { success } from "../../lib/misc/format"
 import { Language } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -77,7 +78,7 @@ export const command = {
                         msg.react("💬")
 
                         await i18next.changeLanguage(senderLanguage)
-                        interaction.editReply({ content: `${t("report_sent")} ${t("common:kirino_glad")} !`, components: [] })
+                        interaction.editReply({ content: success(t("report_sent")), components: [] })
                     }
                     else {
                         console.error("Report channel unavailable")
