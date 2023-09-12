@@ -1,6 +1,6 @@
 {
     "name": "kirino",
-    "version": "3.0.1",
+    "version": "4.0.0",
     "description": " A public, IT / programming oriented bot for discord.",
     "main": "dist/index.js",
     "author": "Elf",
