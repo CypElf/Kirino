@@ -13,7 +13,7 @@ export class Kirino extends Client {
     constructor(options: ClientOptions) {
         super(options)
         this.commands = new Collection()
-        this.db = new bsqlite3(__dirname + "../../../../database.db", { fileMustExist: true })
+        this.db = new bsqlite3(__dirname + "/../../../database.db", { fileMustExist: true })
         this.commandsCooldowns = new Collection()
         this.xpCooldowns = new Collection()
         this.apiCooldowns = new Map()
