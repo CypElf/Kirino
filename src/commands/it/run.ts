@@ -92,7 +92,7 @@ export const command = {
             const attachment = [...codeMsg.attachments.values()][0]
             if (attachment.size > max_size * 1_000_000) {
                 codeMsg.delete()
-                return interaction.editReply(`${t("file_too_big", { max_size })} ${t("kirino_pout")}`)
+                return interaction.editReply(error(t("file_too_big", { max_size })))
             }
             const res = await fetch(attachment.url)
             if (res.ok) {
