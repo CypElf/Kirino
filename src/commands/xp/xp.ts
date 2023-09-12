@@ -3,6 +3,7 @@ import { CommandInteraction, MessageAttachment, Permissions, MessageButton, Mess
 import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
+import { CanvasRenderingContext2D } from "canvas"
 import { Kirino } from "../../lib/misc/types"
 import { denied, error, success, what } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"

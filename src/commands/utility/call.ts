@@ -93,7 +93,7 @@ export const command = {
             if (lock >= 3) return interaction.reply({ content: error(t("records_still_going_on")), ephemeral: true })
 
             let channel: TextBasedChannel | null
-            const channels = [...(await interaction.guild.channels.fetch()).values()].filter(ch => ch.id === row.channel_id) as TextChannel[]
+            const channels = [...(await interaction.guild.channels.fetch()).values()].filter(ch => ch?.id === row.channel_id) as TextChannel[]
 
             if (channels.length > 0 || row.dm || current) {
                 bot.calls.set(interaction.guild.id, lock + 1)
