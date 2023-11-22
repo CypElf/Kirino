@@ -60,7 +60,7 @@ export const command = {
             .setAuthor({ name: interaction.guild.name, iconURL: owner.user.displayAvatarURL() })
             .setColor("#000000")
             .addFields(
-                { name: t("server_owner"), value: owner.user.tag, inline: true },
+                { name: t("server_owner"), value: owner.user.displayName, inline: true },
                 { name: t("server_id"), value: interaction.guild.id, inline: true },
                 { name: t("member", { count: interaction.guild.memberCount }), value: interaction.guild.memberCount.toString(), inline: true },
                 { name: t("human", { count: humans }), value: humans.toString(), inline: true },

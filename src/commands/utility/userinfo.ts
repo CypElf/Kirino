@@ -54,7 +54,7 @@ export const command = {
         const color = await ColorThief.getColor(member.user.displayAvatarURL({ extension: "png" }))
 
         const informations = new EmbedBuilder()
-            .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
+            .setAuthor({ name: member.user.displayName, iconURL: member.user.displayAvatarURL() })
             .setColor(color)
             .addFields(
                 { name: t("id"), value: member.id, inline: true },

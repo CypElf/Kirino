@@ -47,7 +47,7 @@ export function eventHandler(bot: Kirino) {
 
             await i18next.loadNamespaces(commandName)
             i18next.setDefaultNamespace(commandName)
-            console.log(`Executing command ${command.name} for ${interaction.user.tag} (from ${interaction.guild ? interaction.guild.name : "DM"})`)
+            console.log(`Executing command ${command.name} for ${interaction.user.tag} (from server ${interaction.guild ? interaction.guild.name : "DM"})`)
 
             try {
                 await command.execute(bot, interaction)

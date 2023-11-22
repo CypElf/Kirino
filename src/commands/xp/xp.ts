@@ -335,9 +335,7 @@ export const command = {
 
                 ctx.lineWidth = 0.5
 
-                const totalName = user.tag.split("#")
-                const tag = totalName.pop()
-                let username = totalName.join("#")
+                let username = user.displayName
 
                 ctx.font = "25px ubuntu"
                 const spaceMeasure = ctx.measureText(" ")
@@ -377,13 +375,6 @@ export const command = {
                 ctx.strokeText(tooLongText, 270 + usernameMeasure.width, 176)
                 ctx.font = "21px ubuntu"
                 ctx.fillStyle = "#AAAAAA"
-
-                ctx.lineWidth = 0.25
-
-                ctx.fillText("#" + tag, usernameTotalMeasure + 275, 176)
-                ctx.strokeText("#" + tag, usernameTotalMeasure + 275, 176)
-
-                ctx.lineWidth = 0.5
 
                 ctx.fillStyle = color // level
                 ctx.font = "70px ubuntu"

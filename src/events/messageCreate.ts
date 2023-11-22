@@ -133,7 +133,7 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
                     if (levelUpMsg === undefined || levelUpMsg === null) levelUpMsg = t("messageCreate:default_lvl_up_msg")
                     levelUpMsg = levelUpMsg
                         .replace("{user}", `<@${msg.author.id}>`)
-                        .replace("{username}", msg.author.username)
+                        .replace("{username}", msg.author.displayName)
                         .replace("{tag}", msg.author.tag)
                         .replace("{level}", newLvl.toString())
                         .replace("{server}", msg.guild.name)

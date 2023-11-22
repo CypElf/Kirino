@@ -187,7 +187,7 @@ function startXpApi(cooldowns: Map<string, number>) {
 
                         data.players.push({
                             id: user.id,
-                            tag: user.tag,
+                            tag: user.displayName,
                             avatar: user.displayAvatarURL({ size: 128 }),
                             xp: row.xp,
                             total_xp: row.total_xp,
