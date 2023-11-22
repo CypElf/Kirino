@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, Permissions, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { Rule } from "../../lib/misc/database"
@@ -18,7 +18,7 @@ export const command = {
     guildOnly: true,
     permissions: ["{manage guild}"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const subcommand = interaction.options.getSubcommand()
         const member = interaction.member as GuildMember | null
 
@@ -27,7 +27,7 @@ export const command = {
         if (subcommand === "add") {
             const rule = interaction.options.getString("rule") as string
 
-            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: denied(t("not_enough_permissions_to_add_rule")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_enough_permissions_to_add_rule")), ephemeral: true })
 
             if (rule.length > 1000) return interaction.reply({ content: error(t("rule_too_long")), ephemeral: true })
 
@@ -42,7 +42,7 @@ export const command = {
         // ------------------------------------------------------------------- remove
 
         else if (subcommand === "remove") {
-            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: denied(t("not_enough_permissions_to_add_rule")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_enough_permissions_to_add_rule")), ephemeral: true })
 
             const index = interaction.options.getInteger("rule_number") as number - 1
 
@@ -82,7 +82,7 @@ export const command = {
 
             const row = rows[index]
 
-            const ruleEmbed = new MessageEmbed()
+            const ruleEmbed = new EmbedBuilder()
                 .addFields({ name: t("rule_title") + (index + 1), value: row.rule })
                 .setColor("#000000")
                 .setFooter({ text: t("rules_from") + interaction.guild?.name, iconURL: interaction.guild?.iconURL()?.toString() })

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -11,10 +11,10 @@ export const command = {
         .setDescription("Give you some ways to get help if you need it"),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const betaCommands = bot.commands.filter(command => command.beta).map(command => command.name)
 
-        const helpEmbed = new MessageEmbed()
+        const helpEmbed = new EmbedBuilder()
             .setTitle(`**${t("help")}**`)
             .setThumbnail("https://media.discordapp.net/attachments/714381484617891980/878930768959799326/help.png")
             .addFields(

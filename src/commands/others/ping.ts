@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { success, what } from "../../lib/misc/format"
@@ -13,7 +13,7 @@ export const command = {
     guildOnly: false,
     cooldown: 1,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const start = Date.now()
         await interaction.reply(what("ping"))
         interaction.editReply(success("pong") + ` (${Date.now() - start} ms)`)

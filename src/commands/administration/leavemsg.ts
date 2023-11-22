@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { Channel, CommandInteraction, GuildMember, Permissions } from "discord.js"
+import { Channel, ChannelType, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
@@ -19,10 +19,10 @@ export const command = {
     guildOnly: true,
     permissions: ["manage_guild"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null
         
-        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
+        if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
 
@@ -57,7 +57,7 @@ export const command = {
             const message = interaction.options.getString("message")
             const channel = interaction.options.getChannel("channel") as Channel
 
-            if (!channel.isText()) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
+            if (channel.type !== ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
             bot.db.prepare("INSERT INTO joins_leaves(guild_id, leaves_channel_id, leave_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET leaves_channel_id = excluded.leaves_channel_id, leave_message = excluded.leave_message").run(interaction.guild?.id, channel.id, message)
 

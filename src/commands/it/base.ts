@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -14,7 +14,7 @@ export const command = {
         .addIntegerOption(option => option.setName("new_base").setDescription("The base you want the number to be converted to").setRequired(true)),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const number = interaction.options.getString("number") as string
         const inputBase = interaction.options.getInteger("current_base") as number
         const outputBase = interaction.options.getInteger("new_base") as number
@@ -28,7 +28,7 @@ export const command = {
 
         const convertedToOutputBase = convertedToDecimal.toString(outputBase)
 
-        const baseEmbed = new MessageEmbed()
+        const baseEmbed = new EmbedBuilder()
             .setTitle(t("numeric_base_conversion"))
             .setThumbnail("https://cdn.discordapp.com/attachments/714381484617891980/720178440078229554/binary_flat.png")
             .setColor("#000000")

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, Message } from "discord.js"
+import { ChannelType, ChatInputCommandInteraction, Message } from "discord.js"
 import i18next from "i18next"
 import { deflateSync } from "zlib"
 import fetch from "node-fetch"
@@ -19,9 +19,9 @@ export const command = {
         .addStringOption(option => option.setName("flags").setDescription("The flags you want to submit to the C compiler if used")),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.channel) return
-        if (interaction.channel.type === "GUILD_TEXT" && !interaction.channel.viewable) return interaction.reply(error(t("not_viewable")))
+        if (interaction.channel.type === ChannelType.GuildText && !interaction.channel.viewable) return interaction.reply(error(t("not_viewable")))
         interaction.reply(success(t("send_your_code")))
         const replyMsg = await interaction.fetchReply() as Message
         let codeMsg

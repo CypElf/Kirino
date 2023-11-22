@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, TextChannel, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, TextChannel, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
@@ -14,9 +14,9 @@ export const command = {
     guildOnly: true,
     permissions: ["manage messages"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+        if (member && !member.permissions.has(PermissionFlagsBits.ManageMessages)) {
             return interaction.reply({ content: denied(t("you_cannot_delete_messages")), ephemeral: true })
         }
 

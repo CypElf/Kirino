@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 import { Kirino } from "../../lib/misc/types"
 
 export const command = {
@@ -9,12 +9,9 @@ export const command = {
         .addUserOption(option => option.setName("user").setDescription("The user you want to get the avatar")),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const user = interaction.options.getUser("user") ?? interaction.user
 
-        interaction.reply(user.displayAvatarURL({
-            dynamic: true,
-            size: 4096
-        }))
+        interaction.reply(user.displayAvatarURL({ size: 4096 }))
     }
 }

@@ -1,4 +1,4 @@
-import { Collection, Message, PartialMessage, Permissions } from "discord.js"
+import { ChannelType, Collection, Events, Message, PartialMessage, PermissionFlagsBits } from "discord.js"
 import { Database } from "better-sqlite3"
 import i18next from "i18next"
 import checkBanwords from "../lib/banwords/check_banwords"
@@ -9,8 +9,8 @@ import { Afk, Language, XpBlacklistedChannel, XpBlacklistedRole, XpGuild, XpProf
 const t = i18next.t.bind(i18next)
 
 export function eventHandler(bot: Kirino) {
-    bot.on("messageCreate", async msg => {
-        if (msg.author.bot || msg.guild && !msg.guild.me?.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
+    bot.on(Events.MessageCreate, async msg => {
+        if (msg.author.bot || msg.guild && !msg.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessages)) return
 
         const queryResult = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(msg.guild ? msg.guild.id : msg.author.id) as Language | undefined
         const lang = queryResult ? queryResult.language : "en"
@@ -146,7 +146,7 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
 
                     try {
                         channel = await msg.guild.channels.fetch(channelId)
-                        if (channel === null || !channel.isText()) throw new Error()
+                        if (channel?.type !== ChannelType.GuildText) throw new Error()
                     }
                     catch {
                         resetLevelUpChannel(bot.db, msg.guild.id)

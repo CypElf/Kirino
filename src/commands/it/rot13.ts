@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -13,7 +13,7 @@ export const command = {
         .addIntegerOption(option => option.setName("shift").setDescription("The shift you want to use (default: 13)")),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const plaintext = interaction.options.getString("text") as string
         const shift = interaction.options.getInteger("shift") ?? 13
 
@@ -21,7 +21,7 @@ export const command = {
 
         const encrypted = ROT13(plaintext, shift)
 
-        const baseEmbed = new MessageEmbed()
+        const baseEmbed = new EmbedBuilder()
             .setTitle("ROT13")
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563195768846/720184508514828318/rot13.png")
             .setColor("#555599")

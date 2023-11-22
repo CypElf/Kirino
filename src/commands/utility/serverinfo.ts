@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, time } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js"
+import { ChannelType, ChatInputCommandInteraction, GuildMember, EmbedBuilder, GuildPremiumTier } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -12,7 +12,7 @@ export const command = {
     guildOnly: true,
     cooldown: 3,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
 
         const members = await interaction.guild.members.fetch() ?? []
@@ -24,8 +24,8 @@ export const command = {
         const displayedRolesCount = ` (${rolesCount} ${t("role", { count: rolesCount }).toLowerCase()})`
 
         const channels = interaction.guild.channels.cache
-        const textChannelsCount = channels.filter(channel => channel.isText() && !channel.isThread()).size
-        const voiceChannelsCount = channels.filter(channel => channel.isVoice()).size
+        const textChannelsCount = channels.filter(channel => channel.type === ChannelType.GuildText).size
+        const voiceChannelsCount = channels.filter(channel => channel.type === ChannelType.GuildVoice).size
         const emojis = [...interaction.guild.emojis.cache.values()]
         const emojisCount = emojis.length
 
@@ -54,44 +54,46 @@ export const command = {
         }
 
         const owner = await interaction.guild.fetchOwner()
-        const premiumTier = interaction.guild.premiumTier === "NONE" ? "0" : (interaction.guild.premiumTier === "TIER_1" ? "1" : (interaction.guild.premiumTier === "TIER_2" ? "2" : "3"))
+        const premiumTier = interaction.guild.premiumTier === GuildPremiumTier.None ? "0" : (interaction.guild.premiumTier === GuildPremiumTier.Tier1 ? "1" : (interaction.guild.premiumTier === GuildPremiumTier.Tier2 ? "2" : "3"))
 
-        const informations = new MessageEmbed()
+        const informations = new EmbedBuilder()
             .setAuthor({ name: interaction.guild.name, iconURL: owner.user.displayAvatarURL() })
             .setColor("#000000")
-            .addField(t("server_owner"), owner.user.tag, true)
-            .addField(t("server_id"), interaction.guild.id, true)
-            .addField(t("member", { count: interaction.guild.memberCount }), interaction.guild.memberCount.toString(), true)
-            .addField(t("human", { count: humans }), humans.toString(), true)
-            .addField(t("bot", { count: bots }), bots.toString(), true)
-            .addField(t("boost_level"), t("level") + " " + premiumTier, true)
+            .addFields(
+                { name: t("server_owner"), value: owner.user.tag, inline: true },
+                { name: t("server_id"), value: interaction.guild.id, inline: true },
+                { name: t("member", { count: interaction.guild.memberCount }), value: interaction.guild.memberCount.toString(), inline: true },
+                { name: t("human", { count: humans }), value: humans.toString(), inline: true },
+                { name: t("bot", { count: bots }), value: bots.toString(), inline: true },
+                { name: t("boost_level"), value: t("level") + " " + premiumTier, inline: true }
+            )
 
         if (emojisCount <= 100) {
             let first = true
             emojisArray.forEach(msg1024 => {
                 if (first) {
-                    informations.addField(t("emojis"), msg1024)
+                    informations.addFields({ name: t("emojis"), value: msg1024 })
                     first = false
                 }
                 else {
-                    informations.addField(t("emojis_continuation"), msg1024)
+                    informations.addFields({ name: t("emojis_continuation"), value: msg1024 })
                 }
             })
         }
         else {
-            informations.addField(t("emojis"), `${t("too_much_emojis")} (${emojisCount})`)
+            informations.addFields({ name: t("emojis"), value: `${t("too_much_emojis")} (${emojisCount})` })
         }
 
         if (displayedRoles.length <= 1024) {
-            informations.addField(t("role", { count: rolesCount }), `${displayedRoles} ${displayedRolesCount}`)
+            informations.addFields({ name: t("role", { count: rolesCount }), value: `${displayedRoles} ${displayedRolesCount}` })
         }
         else {
-            informations.addField(t("role", { count: rolesCount }), `${t("too_much_roles")} (${rolesCount})`)
+            informations.addFields({ name: t("role", { count: rolesCount }), value: `${t("too_much_roles")} (${rolesCount})` })
         }
 
-        informations.addField(t("channels"), textChannelsCount + " " + t("text_channel", { count: textChannelsCount }) + ", " + voiceChannelsCount + " " + t("vocal_channel", { count: voiceChannelsCount }), true)
-            .addField(t("server_creation_date"), `${time(interaction.guild.createdAt)} (${time(interaction.guild.createdAt, "R")})`)
-            .setThumbnail(interaction.guild.iconURL({ dynamic: true }) ?? "")
+        informations.addFields({ name: t("channels"), value: textChannelsCount + " " + t("text_channel", { count: textChannelsCount }) + ", " + voiceChannelsCount + " " + t("vocal_channel", { count: voiceChannelsCount }), inline: true })
+            .addFields({ name: t("server_creation_date"), value: `${time(interaction.guild.createdAt)} (${time(interaction.guild.createdAt, "R")})` })
+            .setThumbnail(interaction.guild.iconURL() ?? "")
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })

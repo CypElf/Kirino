@@ -1,4 +1,4 @@
-import { Intents } from "discord.js"
+import { Client, Events, GatewayIntentBits } from "discord.js"
 import fs from "fs"
 import http from "http"
 import url from "url"
@@ -7,6 +7,7 @@ import Backend from "i18next-fs-backend"
 import { Kirino } from "./lib/misc/types"
 import { XpProfile } from "./lib/misc/database"
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config()
 
 type ApiQuery = {
@@ -34,7 +35,7 @@ type ApiData = {
     }[]
 }
 
-const bot = new Kirino({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS] })
+const bot = new Kirino({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions] })
 
 async function main() {
     i18next.use(Backend).init({
@@ -122,7 +123,7 @@ function startXpApi(cooldowns: Map<string, number>) {
 
         console.log("Receiving a request on the XP API")
         if (controlRequest(req, res, cooldowns, 500)) {
-            
+
             let { id, limit, page }: ApiQuery = url.parse(req.url, true).query // url.parse is deprecated but there is no easy workaround on the internet and the URL class is terrible to use imo
 
             if (limit === undefined) limit = 20 // default values
@@ -173,7 +174,7 @@ function startXpApi(cooldowns: Map<string, number>) {
                         guild_metadata: {
                             id: guild.id,
                             name: guild.name,
-                            icon: guild.iconURL({ format: "png", dynamic: true, size: 128 }),
+                            icon: guild.iconURL({ extension: "png", size: 128 }),
                             players: serverRows.length
                         },
                         players: []
@@ -187,7 +188,7 @@ function startXpApi(cooldowns: Map<string, number>) {
                         data.players.push({
                             id: user.id,
                             tag: user.tag,
-                            avatar: user.displayAvatarURL({ dynamic: true, size: 128 }),
+                            avatar: user.displayAvatarURL({ size: 128 }),
                             xp: row.xp,
                             total_xp: row.total_xp,
                             level: row.level,

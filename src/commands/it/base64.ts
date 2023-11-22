@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -13,11 +13,11 @@ export const command = {
         .addSubcommand(option => option.setName("decode").setDescription("Decode a text from base64").addStringOption(option => option.setName("text").setDescription("The text to decode from base64").setRequired(true))),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const text = interaction.options.getString("text") as string
         const subcommand = interaction.options.getSubcommand()
 
-        const base64Embed = new MessageEmbed()
+        const base64Embed = new EmbedBuilder()
 
         if (subcommand === "encode") {
             if (text.length > 760) {

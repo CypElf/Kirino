@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { error, success } from "../../lib/misc/format"
@@ -13,7 +13,7 @@ export const command = {
         .addStringOption(option => option.setName("reason").setDescription("The reason why you're AFK")),
     guildOnly: true,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const reason = interaction.options.getString("reason")
 
         if (reason && reason.length > 1800) {

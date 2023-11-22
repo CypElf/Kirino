@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -13,13 +13,13 @@ export const command = {
         .addSubcommand(option => option.setName("decode").setDescription("Decode a text from ASCII").addStringOption(option => option.setName("text").setDescription("The text to decode").setRequired(true))),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const text = interaction.options.getString("text")?.replaceAll(" ", "") as string
         const subcommand = interaction.options.getSubcommand()
 
         let output = ""
 
-        const asciiEmbed = new MessageEmbed()
+        const asciiEmbed = new EmbedBuilder()
             .setTitle("ASCII")
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563195768846/720189759560876052/ascii.png")
             .setColor("#555599")

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { success, error, denied } from "../../lib/misc/format"
@@ -17,9 +17,9 @@ export const command = {
     guildOnly: true,
     permissions: ["manage messages"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: denied(t("missing_permissions_to_execute_this_command")), ephemeral: true })
+        if (member && !member.permissions.has(PermissionFlagsBits.ManageMessages)) return interaction.reply({ content: denied(t("missing_permissions_to_execute_this_command")), ephemeral: true })
 
         const parseEmoji = (mot: string) => {
             if (mot.match(/<:(.*?):[0-9]*>/gm)) { // modification de la représentation des émojis

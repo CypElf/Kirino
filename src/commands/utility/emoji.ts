@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -12,7 +12,7 @@ export const command = {
         .addStringOption(option => option.setName("emoji").setDescription("The emoji you want to get the image").setRequired(true)),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const raw = interaction.options.getString("emoji") as string
 
         let emoji = raw.match(/<:(.*?):[0-9]*>/gm)

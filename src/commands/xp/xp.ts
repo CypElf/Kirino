@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageAttachment, Permissions, MessageButton, MessageActionRow, GuildMember, Message, ButtonInteraction } from "discord.js"
+import { ChatInputCommandInteraction, AttachmentBuilder, PermissionFlagsBits, ActionRowBuilder, GuildMember, Message, ButtonInteraction, ButtonBuilder, ButtonStyle, ComponentType, ChannelType } from "discord.js"
 import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
@@ -29,7 +29,7 @@ export const command = {
     cooldown: 3,
     permissions: ["{administrator}"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
         const member = interaction.member as GuildMember | null
 
@@ -38,7 +38,7 @@ export const command = {
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
 
         if (subcommand === "enable" || subcommand === "disable") {
-            if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_enable_or_disable")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_enable_or_disable")), ephemeral: true })
             const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (subcommand === "enable") {
@@ -60,27 +60,27 @@ export const command = {
                 return i.user.id === interaction.user.id && i.customId === "confirmed" || i.customId === "cancelled"
             }
 
-            const actionRow = new MessageActionRow()
+            const actionRow = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId("confirmed")
                         .setLabel(t("confirm"))
-                        .setStyle("DANGER"),
-                    new MessageButton()
+                        .setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder()
                         .setCustomId("cancelled")
                         .setLabel(t("cancel"))
-                        .setStyle("SECONDARY")
+                        .setStyle(ButtonStyle.Secondary)
                 )
 
             if (subcommandGroup === "reset") {
-                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_reset_xp")), ephemeral: true })
-                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) return interaction.reply({ content: error(t("cannot_react_to_messages")), ephemeral: true })
+                if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_reset_xp")), ephemeral: true })
+                if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.AddReactions)) return interaction.reply({ content: error(t("cannot_react_to_messages")), ephemeral: true })
 
                 if (subcommand === "all") {
                     await interaction.reply({ content: what(t("server_xp_reset_validation")), components: [actionRow] })
                     const validationMessage = await interaction.fetchReply() as Message
 
-                    const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
+                    const collector = validationMessage.createMessageComponentCollector({ filter, componentType: ComponentType.Button, time: 30_000 })
 
                     collector.on("collect", i => {
                         if (i.customId === "confirmed") {
@@ -111,7 +111,7 @@ export const command = {
                     else await interaction.reply({ content: what(`${t("are_you_sure_you_want_to_reset", { username: user.username })}`), components: [actionRow] })
 
                     const validationMessage = await interaction.fetchReply() as Message
-                    const collector = validationMessage.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 30_000 })
+                    const collector = validationMessage.createMessageComponentCollector({ filter, componentType: ComponentType.Button, time: 30_000 })
 
                     collector.on("collect", i => {
                         if (i.customId === "confirmed") {
@@ -128,7 +128,7 @@ export const command = {
             }
 
             else if (subcommandGroup === "message") {
-                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_change_lvl_up_msg")), ephemeral: true })
+                if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_change_lvl_up_msg")), ephemeral: true })
 
                 const newMsg = subcommand === "reset" ? null : interaction.options.getString("message")
                 bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message").run(interaction.guild.id, 1, newMsg)
@@ -155,11 +155,12 @@ export const command = {
                     }
                 }
                 else {
-                    if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_change_channel")), ephemeral: true })
+                    if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_change_channel")), ephemeral: true })
 
                     const channel = subcommand === "reset" ? null : interaction.options.getChannel("channel")
 
-                    if (subcommand === "set" && channel && channel.type === "GUILD_TEXT") return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
+                    // TODO fix the comparison if it's a bug (test it, this code is weird)
+                    if (subcommand === "set" && channel?.type === ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
                     bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_channel_id) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_channel_id=excluded.level_up_channel_id").run(interaction.guild.id, 1, channel ? channel.id : null)
 
@@ -169,12 +170,12 @@ export const command = {
             }
 
             else if (subcommand === "import") {
-                if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("not_allowed_to_import")), ephemeral: true })
+                if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_import")), ephemeral: true })
 
                 await interaction.reply({ content: what(t("xp_import_verification")), components: [actionRow] })
                 const validationMessage = await interaction.fetchReply() as Message
 
-                const i = await validationMessage.awaitMessageComponent({ filter, componentType: "BUTTON", time: 30_000 })
+                const i = await validationMessage.awaitMessageComponent({ filter, componentType: ComponentType.Button, time: 30_000 })
 
                 if (i.customId === "confirmed") {
                     await interaction.editReply({ content: t("starting_import"), components: [] })
@@ -268,7 +269,7 @@ export const command = {
             }
 
             else if (subcommand === "get") {
-                if (!interaction.guild.me?.permissions.has(Permissions.FLAGS.ATTACH_FILES)) return interaction.reply({ content: error(t("need_send_files")), ephemeral: true })
+                if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.AttachFiles)) return interaction.reply({ content: error(t("need_send_files")), ephemeral: true })
 
                 const user = interaction.options.getUser("user") ?? interaction.user
                 if (user.bot) return interaction.reply({ content: denied(t("bots_not_allowed")), ephemeral: true })
@@ -461,11 +462,11 @@ export const command = {
                 ctx.closePath()
                 ctx.clip()
 
-                const avatar = await Canvas.loadImage(user.displayAvatarURL({ format: "png" }))
+                const avatar = await Canvas.loadImage(user.displayAvatarURL({ extension: "png" }))
                 // @ts-ignore
                 ctx.drawImage(avatar, 40, 40, 200, 200)
 
-                const card = new MessageAttachment(canvas.toBuffer(), "card.png")
+                const card = new AttachmentBuilder(canvas.toBuffer(), { name: "card.png" })
 
                 interaction.editReply({ files: [card] })
             }

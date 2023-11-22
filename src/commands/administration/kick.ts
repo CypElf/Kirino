@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, User, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, User, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { denied, error } from "../../lib/misc/format"
@@ -16,14 +16,14 @@ export const command = {
     cooldown: 3,
     permissions: ["kick members"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const kickerMember = interaction.member as GuildMember | null
 
-        if (kickerMember && !kickerMember.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
+        if (kickerMember && !kickerMember.permissions.has(PermissionFlagsBits.KickMembers)) {
             return interaction.reply({ content: denied(t("you_are_missing_permissions_to_kick_members")), ephemeral: true })
         }
 
-        if (interaction.guild && interaction.guild.me && !interaction.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
+        if (interaction.guild && interaction.guild.members.me && !interaction.guild.members.me.permissions.has(PermissionFlagsBits.KickMembers)) {
             return interaction.reply({ content: error(t("i_am_missing_permissions_to_kick_members")), ephemeral: true })
         }
 

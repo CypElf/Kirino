@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import fetch from "node-fetch"
 import { Kirino } from "../../lib/misc/types"
@@ -23,7 +23,7 @@ export const command = {
     guildOnly: false,
     cooldown: 1,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const query = interaction.options.getString("query")
         const filter = "-(3ErjNFmyYQpKDo" // created with https://api.stackexchange.com/docs/create-filter
 
@@ -32,7 +32,7 @@ export const command = {
 
         const results = items.length === 0 ? t("no_result") : items.map(item => `- **[${item.title}](${item.link})**\n${item.body_markdown.length > 100 ? item.body_markdown.slice(0, 97) + "..." : item.bo}`).join("\n\n")
 
-        const stackoverflowEmbed = new MessageEmbed()
+        const stackoverflowEmbed = new EmbedBuilder()
             .setTitle(`${t("title", { query })}\n\u200b`)
             .setDescription(results)
             .setThumbnail("https://media.discordapp.net/attachments/714381484617891980/879634994715328522/stackoverflow.png")

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, time } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import dayjs from "dayjs"
 // @ts-ignore
@@ -18,7 +18,7 @@ export const command = {
     guildOnly: false,
     cooldown: 3,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const username = interaction.options.getString("username")
         const apiCall = await fetch(`https://api.github.com/users/${username}`)
         const data = await apiCall.json()
@@ -36,7 +36,7 @@ export const command = {
                 color = "#222222"
             }
 
-            const profileEmbed = new MessageEmbed()
+            const profileEmbed = new EmbedBuilder()
                 .setAuthor({ name: t("github_profile"), iconURL: "https://cdn.discordapp.com/attachments/714381484617891980/879280737780662272/github.png" })
                 .setColor(color)
                 .setThumbnail(data.avatar_url)

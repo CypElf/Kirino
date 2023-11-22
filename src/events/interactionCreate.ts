@@ -1,4 +1,4 @@
-import { Collection } from "discord.js"
+import { Collection, Events } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../lib/misc/types"
 import { error, what } from "../lib/misc/format"
@@ -7,8 +7,8 @@ import { Language } from "../lib/misc/database"
 const t = i18next.t.bind(i18next)
 
 export function eventHandler(bot: Kirino) {
-    bot.on("interactionCreate", async interaction => {
-        if (interaction.isCommand() && !interaction.user.bot) {
+    bot.on(Events.InteractionCreate, async interaction => {
+        if (interaction.isChatInputCommand() && !interaction.user.bot) {
             const id = interaction.guild ? interaction.guild.id : interaction.user.id
 
             const { commandName } = interaction
@@ -32,7 +32,8 @@ export function eventHandler(bot: Kirino) {
 
                 if (now < expiration) {
                     const timeLeft = (expiration - now) / 1000
-                    return interaction.reply({ content: `${t("interactionCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`, ephemeral: true })
+                    interaction.reply({ content: `${t("interactionCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`, ephemeral: true })
+                    return
                 }
             }
 
@@ -40,7 +41,8 @@ export function eventHandler(bot: Kirino) {
             setTimeout(() => timestamps.delete(interaction.user.id), cooldown)
 
             if (command.guildOnly && !interaction.inGuild()) {
-                return interaction.reply({ content: error(t("interactionCreate:command_not_available_in_dm")), ephemeral: true })
+                interaction.reply({ content: error(t("interactionCreate:command_not_available_in_dm")), ephemeral: true })
+                return
             }
 
             await i18next.loadNamespaces(commandName)

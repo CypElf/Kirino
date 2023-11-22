@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { Channel, CommandInteraction, Guild, GuildMember, MessageEmbed, Permissions, Role } from "discord.js"
+import { Channel, ChatInputCommandInteraction, Guild, GuildMember, EmbedBuilder, PermissionFlagsBits, Role, ChannelType } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
@@ -22,7 +22,7 @@ export const command = {
     guildOnly: true,
     permissions: ["{administrator}"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
         const member = interaction.member as GuildMember | null
 
@@ -39,10 +39,10 @@ export const command = {
 
         if (interaction.options.getSubcommand() === "remove") {
 
-            if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: denied(t("missing_permissions_to_remove_channel")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("missing_permissions_to_remove_channel")), ephemeral: true })
 
             if (interaction.options.getSubcommandGroup() === "channel") {
-                if (channel.type !== "GUILD_TEXT") return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
+                if (channel.type !== ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
                 const spChannelRequest = bot.db.prepare("SELECT * FROM xp_blacklisted_channels WHERE guild_id = ? AND channel_id = ?")
                 const channelRow = spChannelRequest.get(interaction.guild.id, channel.id)
@@ -71,7 +71,7 @@ export const command = {
             const blacklistedChannels = [...interaction.guild.channels.cache.values()].filter(ch => channelsRows.includes(ch.id)).map(ch => ch.id)
             const blacklistedRoles = [...interaction.guild.roles.cache.values()].filter(r => rolesRows.includes(r.id)).map(r => r.id)
 
-            const blacklistEmbed = new MessageEmbed()
+            const blacklistEmbed = new EmbedBuilder()
                 .setTitle(t("blacklist"))
                 .setColor("#000000")
 
@@ -84,10 +84,10 @@ export const command = {
             interaction.reply({ embeds: [blacklistEmbed] })
         }
         else {
-            if (member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return interaction.reply({ content: t("missing_perm_to_add_channel"), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: t("missing_perm_to_add_channel"), ephemeral: true })
 
             if (interaction.options.getSubcommandGroup() === "channel") {
-                if (channel.type !== "GUILD_TEXT") return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
+                if (channel.type !== ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
                 const channelsRows = channelRequest.all(interaction.guild.id) as XpBlacklistedChannel[]
 

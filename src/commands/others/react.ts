@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, Message, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, Message, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
@@ -15,15 +15,15 @@ export const command = {
     guildOnly: false,
     permissions: ["administrator"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.channel) return
         const member = interaction.member as GuildMember | null
 
-        if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(PermissionFlagsBits.Administrator)) {
             return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
         }
 
-        if (interaction.guild && interaction.guild.me && !interaction.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
+        if (!interaction.guild?.members.me?.permissions.has(PermissionFlagsBits.AddReactions)) {
             return interaction.reply({ content: error(t("cannot_react_to_messages")), ephemeral: true })
         }
 

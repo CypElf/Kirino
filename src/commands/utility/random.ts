@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { error, success } from "../../lib/misc/format"
@@ -15,7 +15,7 @@ export const command = {
     guildOnly: false,
     cooldown: 1,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const min = interaction.options.getInteger("minimum") as number
         const max = interaction.options.getInteger("maximum") as number
 

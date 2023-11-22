@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -11,8 +11,8 @@ export const command = {
         .setDescription("Tell you how to send a block of code with appropriate syntax highlighting on Discord"),
     guildOnly: false,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
-        const linksEmbed = new MessageEmbed()
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
+        const linksEmbed = new EmbedBuilder()
             .setTitle(t("send_code"))
             .setDescription(t("explanation_code"))
             .setThumbnail("https://cdn.discordapp.com/attachments/698105563485044748/712574232147656704/712320080884793537.png")

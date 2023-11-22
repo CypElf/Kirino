@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { success, denied } from "../../lib/misc/format"
@@ -24,12 +24,12 @@ export const command = {
     cooldown: 3,
     permissions: ["manage guild"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const isInGuild = interaction.inGuild()
         const member = interaction.member as GuildMember | null
 
         if (isInGuild) {
-            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)) {
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) {
                 return interaction.reply({ content: denied(t("not_enough_permission_to_change_language")), ephemeral: true })
             }
         }

@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, Permissions, User } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, User } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { what, denied, error } from "../../lib/misc/format"
@@ -16,14 +15,14 @@ export const command = {
     cooldown: 3,
     permissions: ["ban members"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction ) {
         const bannerMember = interaction.member as GuildMember | null
 
-        if (!bannerMember?.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
+        if (!bannerMember?.permissions.has(PermissionFlagsBits.BanMembers)) {
             return interaction.reply({ content: denied(t("you_are_missing_permissions_to_ban_members")), ephemeral: true })
         }
 
-        if (!interaction.guild?.me?.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
+        if (!interaction.guild?.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
             return interaction.reply({ content: error(t("i_am_missing_permissions_to_ban_members")), ephemeral: true })
         }
 

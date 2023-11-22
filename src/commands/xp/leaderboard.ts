@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction } from "discord.js"
+import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { error, success } from "../../lib/misc/format"
@@ -15,7 +15,7 @@ export const command = {
         .addIntegerOption(option => option.setName("limit").setDescription("The number of players to list in the page")),
     guildOnly: true,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled
         if (!isEnabled) return interaction.reply({ content: error(t("xp_disabled")), ephemeral: true })
 

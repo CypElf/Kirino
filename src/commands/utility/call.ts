@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { Channel, CommandInteraction, GuildMember, Message, MessageAttachment, MessageReaction, Permissions, ReactionManager, TextBasedChannel, TextChannel, Util } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, Message, AttachmentBuilder, MessageReaction, PermissionFlagsBits, ReactionManager, TextBasedChannel, TextChannel, ChannelType } from "discord.js"
 import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
@@ -7,6 +7,7 @@ import { Kirino } from "../../lib/misc/types"
 import { denied, error, success, what } from "../../lib/misc/format"
 import { Database } from "better-sqlite3"
 import { Call } from "../../lib/misc/database"
+import splitMessage from "../../lib/misc/split_message"
 
 dayjs.extend(utc)
 const t = i18next.t.bind(i18next)
@@ -21,11 +22,11 @@ export const command = {
     guildOnly: true,
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
         const member = interaction.member as GuildMember | null
 
-        if (interaction.guild && member && !member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) && !member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) && !member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return interaction.reply({ content: denied(t("not_enough_permissions_to_use_presence")), ephemeral: true })
+        if (interaction.guild && member && !member.permissions.has(PermissionFlagsBits.ManageChannels) && !member.permissions.has(PermissionFlagsBits.ManageGuild) && !member.permissions.has(PermissionFlagsBits.ManageMessages)) return interaction.reply({ content: denied(t("not_enough_permissions_to_use_presence")), ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
@@ -64,7 +65,7 @@ export const command = {
 
                 if (subcommand === "set") {
                     const channel = interaction.options.getChannel("channel")
-                    if (channel && channel.type !== "GUILD_TEXT") return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
+                    if (channel && channel.type !== ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
 
                     presenceRequest.run(interaction.guild.id, channel?.id, 0, asfile)
                     interaction.reply(success(`${t("presence_channel_set")} <#${channel?.id}>.`))
@@ -157,12 +158,12 @@ export const command = {
                         result += members.join("\n")
                     }
 
-                    const resultArray = row.asfile ? [result] : Util.splitMessage(result)
+                    const resultArray = row.asfile ? [result] : splitMessage(result)
 
                     for (const chunk of resultArray) {
                         try {
                             if (row.asfile) {
-                                await channel.send({ files: [new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt")] })
+                                await channel.send({ files: [new AttachmentBuilder(Buffer.from(chunk, "utf-8"),  { name: "record.txt" })] })
                             }
                             else await channel.send(chunk)
                         }
@@ -177,7 +178,7 @@ export const command = {
                             interaction.channel?.send(`${errorMsg}\n${t("so_i_will_send_it_here")}`)
 
                             if (row.asfile) {
-                                await interaction.channel?.send({ files: [new MessageAttachment(Buffer.from(chunk, "utf-8"), "record.txt")] })
+                                await interaction.channel?.send({ files: [new AttachmentBuilder(Buffer.from(chunk, "utf-8"), { name: "record.txt" })] })
                             }
                             else await interaction.channel?.send(chunk)
                         }

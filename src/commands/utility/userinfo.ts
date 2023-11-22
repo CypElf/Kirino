@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, time, roleMention } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 // @ts-ignore
 import ColorThief from "colorthief"
@@ -15,7 +15,7 @@ export const command = {
     guildOnly: true,
     cooldown: 3,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const user = interaction.options.getUser("user") ?? interaction.user
         const member = await interaction.guild?.members.fetch(user.id)
 
@@ -51,9 +51,9 @@ export const command = {
             premiumSince = t("no_capitalized")
         }
 
-        const color = await ColorThief.getColor(member.user.displayAvatarURL({ format: "png" }))
+        const color = await ColorThief.getColor(member.user.displayAvatarURL({ extension: "png" }))
 
-        const informations = new MessageEmbed()
+        const informations = new EmbedBuilder()
             .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
             .setColor(color)
             .addFields(
@@ -71,7 +71,7 @@ export const command = {
                 { name: t("role", { count: nbRoles }), value: roles, inline: true },
                 { name: t("permissions"), value: perms }
             )
-            .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+            .setThumbnail(member.user.displayAvatarURL())
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [informations] })

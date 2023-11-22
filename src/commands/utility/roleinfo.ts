@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, time } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed, Role } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder, Role } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 
@@ -13,12 +13,12 @@ export const command = {
     guildOnly: true,
     cooldown: 3,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const role = interaction.options.getRole("role") as Role
 
         const perms = "`" + role.permissions.toArray().map(flag => flag.toLowerCase().replaceAll("_", " ")).join("`, `") + "`"
 
-        const informations = new MessageEmbed()
+        const informations = new EmbedBuilder()
             .setAuthor({ name: t("role") + " " + role.name })
             .setColor(role.hexColor)
             .addFields(

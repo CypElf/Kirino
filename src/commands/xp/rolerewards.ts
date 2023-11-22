@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, roleMention } from "@discordjs/builders"
-import { CommandInteraction, MessageEmbed, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import removeDeletedRolesRewards from "../../lib/rolerewards/remove_deleted_roles_rewards"
 import { Kirino } from "../../lib/misc/types"
@@ -20,7 +20,7 @@ export const command = {
         .addSubcommand(option => option.setName("list").setDescription("List the currently available role rewards")),
     guildOnly: true,
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
         const member = interaction.member as GuildMember | null
 
@@ -40,9 +40,9 @@ export const command = {
             let colorRow = colorRequest.get(interaction.guild.id, interaction.user.id) as XpProfile | null
             const color = colorRow?.color ? colorRow.color as HexColorString : "#1FE7F0"
 
-            const rolesEmbed = new MessageEmbed()
+            const rolesEmbed = new EmbedBuilder()
                 .setTitle(`**${t("roles_available")}**`)
-                .setThumbnail(interaction.guild.iconURL({ dynamic: true }) ?? "")
+                .setThumbnail(interaction.guild.iconURL() ?? "")
                 .setColor(color)
                 .setFooter({ text: t("request_from") + interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 
@@ -64,7 +64,7 @@ export const command = {
             interaction.reply({ embeds: [rolesEmbed] })
         }
         else if (subcommand === "remove") {
-            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return interaction.reply({ content: denied(t("missing_permissions_to_remove_role")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageRoles)) return interaction.reply({ content: denied(t("missing_permissions_to_remove_role")), ephemeral: true })
 
             const role = interaction.options.getRole("role") as Role
 
@@ -76,7 +76,7 @@ export const command = {
             interaction.reply(success(`${t("role_removed_from_database")}`))
         }
         else if (subcommand === "add") {
-            if (member && !member.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return interaction.reply({ content: denied(t("missing_permissions_to_add_role")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageRoles)) return interaction.reply({ content: denied(t("missing_permissions_to_add_role")), ephemeral: true })
 
             const role = interaction.options.getRole("role") as Role
             const level = interaction.options.getInteger("level") as number

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, GuildMember, Permissions } from "discord.js"
+import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../../lib/misc/types"
 import { denied, success } from "../../lib/misc/format"
@@ -14,11 +14,11 @@ export const command = {
     guildOnly: true,
     permissions: ["administrator"],
 
-    async execute(bot: Kirino, interaction: CommandInteraction) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const text = interaction.options.getString("message") as string
 
         const member = interaction.member as GuildMember | null
-        if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        if (interaction.user.id !== process.env.OWNER_ID && member && !member.permissions.has(PermissionFlagsBits.Administrator)) {
             return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
         }
 
