@@ -37,7 +37,7 @@ export const command = {
             if (rolesRows.length === 0) return interaction.reply({ content: t("no_role_reward_for_now") })
 
             const colorRequest = bot.db.prepare("SELECT color FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-            let colorRow = colorRequest.get(interaction.guild.id, interaction.user.id) as XpProfile | null
+            const colorRow = colorRequest.get(interaction.guild.id, interaction.user.id) as XpProfile | null
             const color = colorRow?.color ? colorRow.color as HexColorString : "#1FE7F0"
 
             const rolesEmbed = new EmbedBuilder()
@@ -47,7 +47,7 @@ export const command = {
                 .setFooter({ text: t("request_from") + interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
 
             for (const level of [...new Set(rolesRows.map(row => row.level))]) {
-                let rolesNames = []
+                const rolesNames = []
 
                 for (const row of rolesRows) {
                     const roles = await interaction.guild?.roles.fetch()

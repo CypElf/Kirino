@@ -139,7 +139,7 @@ export const command = {
 
             else if (subcommandGroup === "channel") {
                 if (subcommand === "get") {
-                    let channelId = (bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id) as XpGuild | null)?.level_up_channel_id
+                    const channelId = (bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?").get(interaction.guild.id) as XpGuild | null)?.level_up_channel_id
 
                     if (!channelId) interaction.reply(success(t("no_level_up_channel")))
                     else {
@@ -262,10 +262,10 @@ export const command = {
                     catch {
                         return interaction.reply({ content: error(t("bad_image")), ephemeral: true })
                     }
-    
+
                     updateBackground(bot.db, link, interaction.user.id, interaction.guild.id)
                     interaction.reply(success(t("background_set")))
-                }                
+                }
             }
 
             else if (subcommand === "get") {
@@ -286,12 +286,12 @@ export const command = {
                     }
                 }
 
-                const { level } = xpRow
-                let { xp, color } = xpRow
+                const { level, xp } = xpRow
+                let { color } = xpRow
 
                 if (!color) color = "#1FE7F0"
 
-                let nextLvlXp = 5 * (level * level) + 50 * level + 100
+                const nextLvlXp = 5 * (level * level) + 50 * level + 100
                 const percent = xp / nextLvlXp * 100
 
                 const serverRankingRows = (bot.db.prepare("SELECT user_id FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC").all(interaction.guild.id) as XpProfile[]).map(row => row.user_id).filter(async user_id => {
@@ -346,7 +346,6 @@ export const command = {
                 let usernameMeasure = ctx.measureText(username)
 
                 let tooLongText = ""
-                let usernameTotalMeasure = usernameMeasure.width
                 if (usernameMeasure.width > 270) {
                     let i = 0
                     let sum = 0
@@ -363,8 +362,6 @@ export const command = {
                     }
                     usernameMeasure = ctx.measureText(username)
                     ctx.font = "30px ubuntu"
-                    const tooLongTextMeasure = ctx.measureText(tooLongText)
-                    usernameTotalMeasure = usernameMeasure.width + tooLongTextMeasure.width
                 }
 
                 ctx.font = "40px ubuntu"

@@ -1,14 +1,21 @@
-import { Client, ClientOptions, Collection } from "discord.js"
+import { ChatInputCommandInteraction, Client, ClientOptions, Collection } from "discord.js"
 import bsqlite3 from "better-sqlite3"
 
+export interface Command {
+    name: string,
+    category: string,
+    cooldown: number | undefined,
+    guildOnly: boolean,
+    execute(bot: Kirino, interaction: ChatInputCommandInteraction): Promise<void>
+}
+
 export class Kirino extends Client {
-    commands: Collection<string, any>
+    commands: Collection<string, Command>
     db: bsqlite3.Database
     commandsCooldowns: Collection<string, Collection<string, number>>
     xpCooldowns: Collection<string, Collection<string, number>>
     apiCooldowns: Map<string, number>
-    voicesQueues: Collection<string, any>
-    calls: Collection<string, any>
+    calls: Collection<string, number>
 
     constructor(options: ClientOptions) {
         super(options)
@@ -17,7 +24,6 @@ export class Kirino extends Client {
         this.commandsCooldowns = new Collection()
         this.xpCooldowns = new Collection()
         this.apiCooldowns = new Map()
-        this.voicesQueues = new Collection()
         this.calls = new Collection()
     }
 }

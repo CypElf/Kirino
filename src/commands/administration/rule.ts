@@ -46,7 +46,7 @@ export const command = {
 
             const index = interaction.options.getInteger("rule_number") as number - 1
 
-            const rows = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild?.id) as Rule[] //.map(row => row.rule)
+            const rows = bot.db.prepare("SELECT * FROM rules WHERE guild_id = ?").all(interaction.guild?.id) as Rule[]
             if (rows.length === 0) return interaction.reply({ content: t("no_rules_defined_on_this_server"), ephemeral: true })
 
             if (index < 0 || index >= rows.length) return interaction.reply({ content: error(t("no_rules_defined_at_this_index")), ephemeral: true })

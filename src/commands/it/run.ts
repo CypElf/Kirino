@@ -145,9 +145,9 @@ class Tio {
 
     constructor(language: string, code: string, input: string = "", compilerFlags: string[] = [], commandLineOptions: string[] = [], cli_args: string[] = []) {
         const to_bytes = (str: string) => Buffer.from(str, "utf8")
-        const zip = (array1: any[], array2: any[]) => array1.map((e, i) => [e, array2[i]])
+        const zip = (array1: string[], array2: (string | string[])[]) => array1.map((e, i) => [e, array2[i]])
 
-        function toTioString(couple: any[]) {
+        function toTioString(couple: (string | string[])[]) {
             const [name, obj] = couple
             if (!obj.length) {
                 return to_bytes("")

@@ -34,7 +34,7 @@ export const command = {
         })
         const roles = arrayRoles.join(", ") + " (" + nbRoles + " " + t("role", { count: nbRoles }).toLowerCase() + ")"
 
-        let nickname: string = member.nickname ?? t("nothing")
+        const nickname: string = member.nickname ?? t("nothing")
 
         const premiumSinceDate = member.premiumSince
         let premiumSince = ""
@@ -61,16 +61,16 @@ export const command = {
                 { name: t("nickname"), value: nickname, inline: true }
             )
 
-            if (member.joinedAt) {
-                informations.addFields({ name: t("join_date"), value: `${time(member.joinedAt)} (${time(member.joinedAt, "R")})` })
-            }
-        
-            informations.addFields(
-                { name: t("user_creation_date"), value: `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})` },
-                { name: t("booster"), value: premiumSince, inline: true },
-                { name: t("role", { count: nbRoles }), value: roles, inline: true },
-                { name: t("permissions"), value: perms }
-            )
+        if (member.joinedAt) {
+            informations.addFields({ name: t("join_date"), value: `${time(member.joinedAt)} (${time(member.joinedAt, "R")})` })
+        }
+
+        informations.addFields(
+            { name: t("user_creation_date"), value: `${time(member.user.createdAt)} (${time(member.user.createdAt, "R")})` },
+            { name: t("booster"), value: premiumSince, inline: true },
+            { name: t("role", { count: nbRoles }), value: roles, inline: true },
+            { name: t("permissions"), value: perms }
+        )
             .setThumbnail(member.user.displayAvatarURL())
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
 

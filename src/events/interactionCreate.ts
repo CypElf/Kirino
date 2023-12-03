@@ -14,7 +14,9 @@ export function eventHandler(bot: Kirino) {
             const { commandName } = interaction
             const command = bot.commands.get(commandName)
 
-            const languageRow = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id) as Language | undefined //?.language ?? "en"
+            if (command === undefined) return
+
+            const languageRow = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id) as Language | undefined
             const lang = languageRow?.language ?? "en"
             await i18next.changeLanguage(lang)
 

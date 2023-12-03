@@ -12,14 +12,11 @@ export const command = {
     guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
-        const betaCommands = bot.commands.filter(command => command.beta).map(command => command.name)
-
         const helpEmbed = new EmbedBuilder()
             .setTitle(`**${t("help")}**`)
             .setThumbnail("https://media.discordapp.net/attachments/714381484617891980/878930768959799326/help.png")
             .addFields(
-                { name: `**${t("q_and_a")}**\n\u200b`, value: t("q_and_a_content", { invite_link: process.env.INVITE_LINK }) + "\n\u200b" },
-                { name: `**${t("beta_commands")}**\n\u200b`, value: betaCommands.length > 0 ? "`" + betaCommands.join("`, `") + "`" : t("no_beta_command") }
+                { name: `**${t("q_and_a")}**\n\u200b`, value: t("q_and_a_content", { invite_link: process.env.INVITE_LINK }) + "\n\u200b" }
             )
             .setColor("#DFC900")
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })

@@ -2,7 +2,7 @@ import { SlashCommandBuilder, time } from "@discordjs/builders"
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import dayjs from "dayjs"
-// @ts-ignore
+// @ts-ignore: no types available for this package
 import ColorThief from "colorthief"
 import fetch from "node-fetch"
 import { Kirino } from "../../lib/misc/types"

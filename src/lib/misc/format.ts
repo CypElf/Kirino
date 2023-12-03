@@ -2,7 +2,7 @@ import i18next from "i18next"
 const t = i18next.t.bind(i18next)
 
 export function success(message: string) {
-  return `${message} ${t("common:kirino_glad")}`
+    return `${message} ${t("common:kirino_glad")}`
 }
 
 export function error(message: string) {

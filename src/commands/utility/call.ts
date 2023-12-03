@@ -128,21 +128,21 @@ export const command = {
                         presents = await reaction.users.fetch()
                     }
                     catch {
-                        return bot.calls.set(interaction.guild.id, bot.calls.get(interaction.guild.id) - 1) // happens if the call message is deleted before its end, causing the bot to be unable to get the users who reacted, so we just cancel the call
+                        return bot.calls.set(interaction.guild.id, bot.calls.get(interaction.guild.id) as number - 1) // happens if the call message is deleted before its end, causing the bot to be unable to get the users who reacted, so we just cancel the call
                     }
 
                     presents = [...presents.values()].filter(user => !user.bot)
 
                     let members = []
                     for (const user of presents) {
-                        const member = await interaction.guild.members.fetch(user)
-                        if (member !== null) members.push(member)
+                        const mem = await interaction.guild.members.fetch(user)
+                        if (mem !== null) members.push(mem)
                         else console.error(`Ignored user ${user.tag} for a call because fetching it as a member returned null`)
                     }
 
-                    members = members.map(member => {
-                        let txt = `- ${member.user.username}`
-                        if (member.nickname) txt += ` (${member.nickname})`
+                    members = members.map(mem => {
+                        let txt = `- ${mem.user.username}`
+                        if (mem.nickname) txt += ` (${mem.nickname})`
                         return txt
                     })
 
@@ -163,7 +163,7 @@ export const command = {
                     for (const chunk of resultArray) {
                         try {
                             if (row.asfile) {
-                                await channel.send({ files: [new AttachmentBuilder(Buffer.from(chunk, "utf-8"),  { name: "record.txt" })] })
+                                await channel.send({ files: [new AttachmentBuilder(Buffer.from(chunk, "utf-8"), { name: "record.txt" })] })
                             }
                             else await channel.send(chunk)
                         }
@@ -185,7 +185,7 @@ export const command = {
                     }
                 }
 
-                bot.calls.set(interaction.guild.id, bot.calls.get(interaction.guild.id) - 1)
+                bot.calls.set(interaction.guild.id, bot.calls.get(interaction.guild.id) as number - 1)
             }
             else {
                 bot.db.prepare("UPDATE calls SET channel_id = ? WHERE guild_id = ?").run(null, interaction.guild.id)

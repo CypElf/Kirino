@@ -5,12 +5,12 @@ import { Banword } from "../misc/database"
 export default function checkBanwords(bot: Kirino, msg: Message | PartialMessage) {
     if (msg.guild) {
         const banwordsRequest = bot.db.prepare("SELECT * FROM banwords WHERE guild_id = ?")
-        let banwords = banwordsRequest.all(msg.guild.id) as Banword[]
+        const banwords = banwordsRequest.all(msg.guild.id) as Banword[]
 
-        let emojiMatches = msg.content?.match(/<:(.*?):[0-9]*>/gm)
+        const emojiMatches = msg.content?.match(/<:(.*?):[0-9]*>/gm)
         let emojiNames: string[] | undefined
         if (emojiMatches) emojiNames = emojiMatches.map(emoji => emoji.split(":")[1].split(":")[0])
-        
+
         const messageArray = msg.content?.split(" ")
         if (!messageArray) return
 
@@ -24,6 +24,5 @@ export default function checkBanwords(bot: Kirino, msg: Message | PartialMessage
                 }
             }
         }
-        
     }
 }

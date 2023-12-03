@@ -15,7 +15,7 @@ export const command = {
     cooldown: 3,
     permissions: ["ban members"],
 
-    async execute(bot: Kirino, interaction: ChatInputCommandInteraction ) {
+    async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const bannerMember = interaction.member as GuildMember | null
 
         if (!bannerMember?.permissions.has(PermissionFlagsBits.BanMembers)) {

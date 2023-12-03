@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from "discord.js"
+import { GatewayIntentBits } from "discord.js"
 import fs from "fs"
 import http from "http"
 import url from "url"
@@ -55,7 +55,6 @@ async function main() {
 
     const eventsFiles = fs.readdirSync(`${__dirname}/events`).filter(file => file.endsWith(".js"))
     for (const file of eventsFiles) {
-        // eslint-disable-next-line node/global-require
         const { eventHandler } = await import(`${__dirname}/events/${file}`)
         eventHandler(bot)
     }
@@ -65,7 +64,6 @@ async function main() {
     for (const category of slashCategories) {
         const slashCommandFiles = fs.readdirSync(`${__dirname}/commands/${category}/`).filter(file => file.endsWith(".js"))
         for (const commandFile of slashCommandFiles) {
-            // eslint-disable-next-line node/global-require
             const { command } = await import(`${__dirname}/commands/${category}/${commandFile}`)
 
             command.category = category

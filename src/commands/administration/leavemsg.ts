@@ -21,7 +21,7 @@ export const command = {
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null
-        
+
         if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
 
         const subcommand = interaction.options.getSubcommand()

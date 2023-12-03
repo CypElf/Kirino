@@ -14,6 +14,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "@typescript-eslint/ban-ts-comment": "off",
         "indent": ["error", 4],
         "max-nested-callbacks": ["error", { "max": 4 }],
         "max-statements-per-line": ["error", { "max": 1 }],
@@ -48,7 +49,6 @@
         "space-infix-ops": "error",
         "space-unary-ops": "error",
         "spaced-comment": "error",
-        "node/global-require": "error",
         "node/no-deprecated-api": "off"
     }
 }

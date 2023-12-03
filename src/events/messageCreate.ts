@@ -115,8 +115,8 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
 
             if (currentLvl < 100) {
                 const scaleRequest = bot.db.prepare("SELECT scale FROM xp_guilds WHERE guild_id = ?")
-                let row = scaleRequest.get(msg.guild.id) as XpGuild | undefined
-                let scale = row?.scale ?? 1
+                const row = scaleRequest.get(msg.guild.id) as XpGuild | undefined
+                const scale = row?.scale ?? 1
 
                 const xpAdded = Math.floor((Math.floor(Math.random() * (25 - 15 + 1)) + 15) * scale) // the xp added to the user is generated between 15 and 25 and multiplied by the server scale
 
@@ -139,9 +139,9 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
                         .replace("{server}", msg.guild.name)
 
 
-                    let xpGuildRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?")
-                    const row = xpGuildRequest.get(msg.guild.id) as XpGuild | undefined
-                    const channelId = row?.level_up_channel_id ?? msg.channel.id
+                    const xpGuildRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?")
+                    const channelRow = xpGuildRequest.get(msg.guild.id) as XpGuild | undefined
+                    const channelId = channelRow?.level_up_channel_id ?? msg.channel.id
                     let channel
 
                     try {
@@ -162,9 +162,9 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
                     const roleRequest = bot.db.prepare("SELECT * FROM xp_roles WHERE guild_id = ? ORDER BY level ASC")
                     const rolesRows = roleRequest.all(msg.guild.id) as XpRole[]
 
-                    for (const row of rolesRows) {
-                        if (row.level === newLvl) {
-                            const role = [...msg.guild.roles.cache.values()].find(currentRole => currentRole.id === row.role_id)
+                    for (const roleRow of rolesRows) {
+                        if (roleRow.level === newLvl) {
+                            const role = [...msg.guild.roles.cache.values()].find(currentRole => currentRole.id === roleRow.role_id)
 
                             if (role !== undefined) {
                                 if ([...msg.member.roles.cache.values()].includes(role)) {
@@ -175,7 +175,7 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
                                 else {
                                     try {
                                         await msg.member.roles.add(role)
-    
+
                                         channel.send(`${t("messageCreate:i_gave_you_the_role")} ${role.name}.`).catch(() => {
                                             msg.channel.send(`${t("messageCreate:i_gave_you_the_role")} ${role.name}.`)
                                         })
