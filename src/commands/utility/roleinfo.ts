@@ -11,7 +11,6 @@ export const command: KirinoCommand = {
         .setDescription("Give you informations about a role")
         .addRoleOption(option => option.setName("role").setDescription("The role you want informations about").setRequired(true)),
     guildOnly: true,
-    cooldown: 3,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const role = interaction.options.getRole("role") as Role

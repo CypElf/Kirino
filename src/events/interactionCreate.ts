@@ -1,4 +1,4 @@
-import { Collection, Events } from "discord.js"
+import { Events } from "discord.js"
 import i18next from "i18next"
 import { Kirino } from "../lib/misc/types"
 import { error, what } from "../lib/misc/format"
@@ -19,28 +19,6 @@ export function eventHandler(bot: Kirino) {
             const languageRow = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(id) as Language | undefined
             const lang = languageRow?.language ?? "en"
             await i18next.changeLanguage(lang)
-
-            if (!bot.commandsCooldowns.has(command.name)) {
-                bot.commandsCooldowns.set(command.name, new Collection())
-            }
-
-            const now = Date.now()
-            const timestamps = bot.commandsCooldowns.get(command.name) as Collection<string, number>
-            const timestamp = timestamps.get(interaction.user.id)
-            const cooldown = (command.cooldown ?? 2) * 1000 // default cooldown is 2 seconds
-
-            if (timestamp) {
-                const expiration = timestamp + cooldown
-
-                if (now < expiration) {
-                    const timeLeft = (expiration - now) / 1000
-                    interaction.reply({ content: `${t("interactionCreate:please_wait", { count: Math.ceil(timeLeft), cooldown: timeLeft.toFixed(1) })} \`${command.name}\`.`, ephemeral: true })
-                    return
-                }
-            }
-
-            timestamps.set(interaction.user.id, now)
-            setTimeout(() => timestamps.delete(interaction.user.id), cooldown)
 
             if (command.guildOnly && !interaction.inGuild()) {
                 interaction.reply({ content: error(t("interactionCreate:command_not_available_in_dm")), ephemeral: true })

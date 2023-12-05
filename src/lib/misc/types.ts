@@ -9,7 +9,6 @@ export interface KirinoCommand {
     builder: KirinoCommandBuilder,
     name?: string,
     category?: string,
-    cooldown?: number,
     permissions?: string[],
     guildOnly: boolean,
     execute(bot: Kirino, interaction: ChatInputCommandInteraction): Promise<unknown>
@@ -27,7 +26,6 @@ export interface CommandFileObject {
 export class Kirino extends Client {
     commands: Collection<string, KirinoCommandWithMetadata>
     db: bsqlite3.Database
-    commandsCooldowns: Collection<string, Collection<string, number>>
     xpCooldowns: Collection<string, Collection<string, number>>
     apiCooldowns: Map<string, number>
     calls: Collection<string, number>
@@ -36,7 +34,6 @@ export class Kirino extends Client {
         super(options)
         this.commands = new Collection()
         this.db = new bsqlite3(__dirname + "/../../../database.db", { fileMustExist: true })
-        this.commandsCooldowns = new Collection()
         this.xpCooldowns = new Collection()
         this.apiCooldowns = new Map()
         this.calls = new Collection()

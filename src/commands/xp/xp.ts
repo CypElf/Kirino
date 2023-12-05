@@ -26,7 +26,6 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("get").setDescription("Display the XP card of a user").addUserOption(option => option.setName("user").setDescription("The user you want to get the XP card"))),
 
     guildOnly: true,
-    cooldown: 3,
     permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

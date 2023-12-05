@@ -21,7 +21,6 @@ export const command: KirinoCommand = {
                 value: "fr"
             })),
     guildOnly: false,
-    cooldown: 3,
     permissions: ["manage guild"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

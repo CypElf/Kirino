@@ -12,7 +12,6 @@ export const command: KirinoCommand = {
         .addUserOption(option => option.setName("user").setDescription("The user to ban").setRequired(true))
         .addStringOption(option => option.setName("reason").setDescription("The reason why the user will be banned")),
     guildOnly: true,
-    cooldown: 3,
     permissions: ["ban members"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

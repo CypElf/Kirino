@@ -8,7 +8,6 @@ export const command: KirinoCommand = {
         .setName("ping")
         .setDescription("Display my ping in milliseconds"),
     guildOnly: false,
-    cooldown: 1,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const start = Date.now()

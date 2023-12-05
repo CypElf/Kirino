@@ -10,7 +10,6 @@ export const command: KirinoCommand = {
         .setName("serverinfo")
         .setDescription("Give you informations about this server"),
     guildOnly: true,
-    cooldown: 3,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return

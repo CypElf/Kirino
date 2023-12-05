@@ -13,7 +13,6 @@ export const command: KirinoCommand = {
         .setDescription("Give you informations about a user")
         .addUserOption(option => option.setName("user").setDescription("The user you want informations about")),
     guildOnly: true,
-    cooldown: 3,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const user = interaction.options.getUser("user") ?? interaction.user

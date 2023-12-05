@@ -13,7 +13,6 @@ export const command: KirinoCommand = {
         .addIntegerOption(option => option.setName("minimum").setDescription("The lower bound").setRequired(true))
         .addIntegerOption(option => option.setName("maximum").setDescription("The upper bound").setRequired(true)),
     guildOnly: false,
-    cooldown: 1,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const min = interaction.options.getInteger("minimum") as number

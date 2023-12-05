@@ -21,7 +21,6 @@ export const command: KirinoCommand = {
         .setDescription("Display the results of your search on stackoverflow")
         .addStringOption(option => option.setName("query").setDescription("What you want to search for on stackoverflow").setRequired(true)),
     guildOnly: false,
-    cooldown: 1,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const query = interaction.options.getString("query")
