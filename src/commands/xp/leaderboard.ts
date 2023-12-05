@@ -1,14 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { error, success } from "../../lib/misc/format"
 import { XpGuild } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("leaderboard")
         .setDescription("Give you this server's XP leaderboard link")
         .addIntegerOption(option => option.setName("page").setDescription("The page of the leaderboard you want to open"))

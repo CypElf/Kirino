@@ -1,16 +1,31 @@
-import { ChatInputCommandInteraction, Client, ClientOptions, Collection } from "discord.js"
+import { ChatInputCommandInteraction, Client, ClientOptions, Collection, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
 import bsqlite3 from "better-sqlite3"
 
-export interface Command {
-    name: string,
-    category: string,
-    cooldown: number | undefined,
+export interface KirinoCommandBuilder {
+    toJSON(): RESTPostAPIChatInputApplicationCommandsJSONBody
+}
+
+export interface KirinoCommand {
+    builder: KirinoCommandBuilder,
+    name?: string,
+    category?: string,
+    cooldown?: number,
+    permissions?: string[],
     guildOnly: boolean,
-    execute(bot: Kirino, interaction: ChatInputCommandInteraction): Promise<void>
+    execute(bot: Kirino, interaction: ChatInputCommandInteraction): Promise<unknown>
+}
+
+export interface KirinoCommandWithMetadata extends KirinoCommand {
+    name: string,
+    category: string
+}
+
+export interface CommandFileObject {
+    command: KirinoCommand
 }
 
 export class Kirino extends Client {
-    commands: Collection<string, Command>
+    commands: Collection<string, KirinoCommandWithMetadata>
     db: bsqlite3.Database
     commandsCooldowns: Collection<string, Collection<string, number>>
     xpCooldowns: Collection<string, Collection<string, number>>

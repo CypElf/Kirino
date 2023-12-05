@@ -1,12 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("emoji")
         .setDescription("Display the image used for an emoji")
         .addStringOption(option => option.setName("emoji").setDescription("The emoji you want to get the image").setRequired(true)),

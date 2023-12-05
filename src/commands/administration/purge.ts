@@ -1,13 +1,13 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, GuildMember, TextChannel, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("purge")
         .setDescription("Delete the specified amount of messages from the last messages in the current channel")
         .addIntegerOption(option => option.setName("amount_of_messages").setDescription("The number of messages you want to delete").setRequired(true)),

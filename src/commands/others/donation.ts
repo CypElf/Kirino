@@ -2,12 +2,12 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import getOwnerAvatar from "../../lib/misc/get_owner_avatar"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("donation")
         .setDescription("Display my developer's paypal if you want to support me by donating"),
     guildOnly: false,

@@ -4,13 +4,13 @@ import i18next from "i18next"
 import { deflateSync } from "zlib"
 import fetch from "node-fetch"
 import paste from "../../lib/misc/paste"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { error, success, what } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("run")
         .setDescription("Execute your code in any given programming language and give you the output")
         .addStringOption(option => option.setName("language").setDescription("The language your code is written in").setRequired(true))

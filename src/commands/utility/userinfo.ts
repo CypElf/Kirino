@@ -3,12 +3,12 @@ import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 // @ts-ignore
 import ColorThief from "colorthief"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("userinfo")
         .setDescription("Give you informations about a user")
         .addUserOption(option => option.setName("user").setDescription("The user you want informations about")),

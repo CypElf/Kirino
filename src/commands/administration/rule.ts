@@ -1,14 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { Rule } from "../../lib/misc/database"
 import { denied, error } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("rule")
         .setDescription("Manage the rules of the server")
         .addSubcommand(option => option.setName("get").setDescription("Display a rule").addIntegerOption(option => option.setName("rule_number").setDescription("The number of the rule you want to display").setRequired(true)))

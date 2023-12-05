@@ -3,14 +3,14 @@ import { Channel, ChannelType, ChatInputCommandInteraction, GuildMember, Permiss
 import i18next from "i18next"
 import resetJoin from "../../lib/joins_leaves/reset_join"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { success, error, denied } from "../../lib/misc/format"
 import { JoinLeave } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("joinmsg")
         .setDescription("Define a message to be sent each time a user joins the server")
         .addSubcommand(option => option.setName("set").setDescription("Change the join message").addStringOption(option => option.setName("message").setDescription("The new join message. You can use {user}, {username}, {tag}, {server} and {count} (members count)").setRequired(true)).addChannelOption(option => option.setName("channel").setDescription("The channel where the join messages will be sent").setRequired(true)))

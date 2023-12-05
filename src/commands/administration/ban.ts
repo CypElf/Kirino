@@ -1,12 +1,12 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, User } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { what, denied, error } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("ban")
         .setDescription("Ban the specified user")
         .addUserOption(option => option.setName("user").setDescription("The user to ban").setRequired(true))

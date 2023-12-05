@@ -1,13 +1,13 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("say")
         .setDescription("Make me say something")
         .addStringOption(option => option.setName("message").setDescription("The text content you want me to send as a message").setRequired(true)),

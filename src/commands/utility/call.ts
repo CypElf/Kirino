@@ -3,7 +3,7 @@ import { ChatInputCommandInteraction, GuildMember, Message, AttachmentBuilder, M
 import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success, what } from "../../lib/misc/format"
 import { Database } from "better-sqlite3"
 import { Call } from "../../lib/misc/database"
@@ -12,8 +12,8 @@ import splitMessage from "../../lib/misc/split_message"
 dayjs.extend(utc)
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("call")
         .setDescription("Start a call or configure the calls settings")
         .addSubcommand(option => option.setName("start").setDescription("Start a new call").addNumberOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true)))

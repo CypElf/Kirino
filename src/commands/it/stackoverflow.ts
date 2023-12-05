@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import fetch from "node-fetch"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
@@ -15,8 +15,8 @@ type StackOverflowResponse = {
     }[]
 }
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("stackoverflow")
         .setDescription("Display the results of your search on stackoverflow")
         .addStringOption(option => option.setName("query").setDescription("What you want to search for on stackoverflow").setRequired(true)),

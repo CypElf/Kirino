@@ -1,14 +1,14 @@
 import { GatewayIntentBits } from "discord.js"
+import dotenv from "dotenv"
 import fs from "fs"
 import http from "http"
 import url from "url"
 import i18next from "i18next"
 import Backend from "i18next-fs-backend"
-import { Kirino } from "./lib/misc/types"
+import { Kirino, CommandFileObject } from "./lib/misc/types"
 import { XpProfile } from "./lib/misc/database"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require("dotenv").config()
+dotenv.config()
 
 type ApiQuery = {
     id?: string,
@@ -64,11 +64,10 @@ async function main() {
     for (const category of slashCategories) {
         const slashCommandFiles = fs.readdirSync(`${__dirname}/commands/${category}/`).filter(file => file.endsWith(".js"))
         for (const commandFile of slashCommandFiles) {
-            const { command } = await import(`${__dirname}/commands/${category}/${commandFile}`)
+            const { command }: CommandFileObject = await import(`${__dirname}/commands/${category}/${commandFile}`)
 
-            command.category = category
-            command.name = command.data.toJSON().name
-            bot.commands.set(command.name, command)
+            const commandName = command.builder.toJSON().name
+            bot.commands.set(commandName, { ...command, name: commandName, category })
         }
     }
 

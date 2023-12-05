@@ -2,7 +2,7 @@ import { SlashCommandBuilder, roleMention } from "@discordjs/builders"
 import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import removeDeletedRolesRewards from "../../lib/rolerewards/remove_deleted_roles_rewards"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
 import { XpGuild, XpProfile, XpRole } from "../../lib/misc/database"
 import { HexColorString } from "discord.js"
@@ -11,8 +11,8 @@ import { Role } from "discord.js"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("rolerewards")
         .setDescription("Manage the role rewards of the XP system")
         .addSubcommand(option => option.setName("add").setDescription("Add a role to the role rewards").addRoleOption(option => option.setName("role").setDescription("The role to add to the role rewards").setRequired(true)).addIntegerOption(option => option.setName("level").setDescription("The level you want to assign the role as a reward").setRequired(true)))

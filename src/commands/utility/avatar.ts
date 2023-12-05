@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction } from "discord.js"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("avatar")
         .setDescription("Display the avatar of a user")
         .addUserOption(option => option.setName("user").setDescription("The user you want to get the avatar")),

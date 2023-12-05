@@ -1,15 +1,15 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { Channel, ChatInputCommandInteraction, Guild, GuildMember, EmbedBuilder, PermissionFlagsBits, Role, ChannelType } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
 import { XpBlacklistedChannel, XpBlacklistedRole, XpGuild } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("blacklist")
         .setDescription("Allow you to blacklist a role or channel from the XP system")
         .addSubcommand(option => option.setName("list").setDescription("Display the blacklisted roles and channels"))

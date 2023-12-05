@@ -1,12 +1,12 @@
 import { SlashCommandBuilder, time } from "@discordjs/builders"
 import { ChatInputCommandInteraction, EmbedBuilder, Role } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("roleinfo")
         .setDescription("Give you informations about a role")
         .addRoleOption(option => option.setName("role").setDescription("The role you want informations about").setRequired(true)),

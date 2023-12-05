@@ -1,13 +1,13 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, GuildMember, Message, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("react")
         .setDescription("Make me react to a message")
         .addStringOption(option => option.setName("message_id").setDescription("The ID of the message you want me to react to").setRequired(true))

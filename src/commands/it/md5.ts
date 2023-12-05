@@ -2,12 +2,12 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import md5 from "js-md5"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("md5")
         .setDescription("Hash the specified text with the MD5 algorithm")
         .addStringOption(option => option.setName("text").setDescription("The text you want to get the hash").setRequired(true)),

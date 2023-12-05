@@ -5,13 +5,13 @@ import dayjs from "dayjs"
 // @ts-ignore: no types available for this package
 import ColorThief from "colorthief"
 import fetch from "node-fetch"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { what } from "../../lib/misc/format"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("github")
         .setDescription("Display informations about a GitHub user")
         .addStringOption(option => option.setName("username").setDescription("The GitHub username of the user you want to get the profile").setRequired(true)),

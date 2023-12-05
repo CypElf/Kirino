@@ -1,6 +1,6 @@
 {
     "name": "kirino",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": " A public, IT / programming oriented bot for discord.",
     "main": "dist/index.js",
     "author": "Elf",
@@ -12,7 +12,8 @@
         "start": "node dist/index.js",
         "build": "rimraf dist && tsc",
         "lint": "eslint src/**/*.ts",
-        "register": "node registerSlashCommands.js"
+        "registerProd": "node dist/register.js",
+        "registerDebug": "node dist/register.js --debug"
     },
     "dependencies": {
         "better-sqlite3": "^9.1.1",

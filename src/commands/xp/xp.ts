@@ -4,15 +4,15 @@ import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
 import { CanvasRenderingContext2D } from "canvas"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success, what } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("xp")
         .setDescription("Allow to consult your XP card, config the XP system or customize some of its elements")
         .addSubcommandGroup(option => option.setName("color").setDescription("Allow you to change or reset the color of your XP card").addSubcommand(option => option.setName("set").setDescription("Allow you to change the color of your XP card").addStringOption(option => option.setName("color").setDescription("The hexadecimal color code of the color you want").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Reset the color of your XP card to the default")))

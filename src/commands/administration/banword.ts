@@ -1,14 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
-import { Kirino } from "../../lib/misc/types"
+import { Kirino, KirinoCommand } from "../../lib/misc/types"
 import { success, error, denied } from "../../lib/misc/format"
 import { Banword } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("banword")
         .setDescription("Manage the banned words of the server")
         .addSubcommand(option => option.setName("add").setDescription("Add a word to the banned words").addStringOption(option => option.setName("word").setDescription("The word to add to the banned words").setRequired(true)))

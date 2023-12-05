@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { ChatInputCommandInteraction } from "discord.js"
-import { Kirino } from "../../lib/misc/types"
+import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { success, what } from "../../lib/misc/format"
 
-export const command = {
-    data: new SlashCommandBuilder()
+export const command: KirinoCommand = {
+    builder: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Display my ping in milliseconds"),
     guildOnly: false,
