@@ -1,5 +1,6 @@
 import { GatewayIntentBits } from "discord.js"
 import dotenv from "dotenv"
+import path from "path"
 import fs from "fs"
 import http from "http"
 import url from "url"
@@ -35,7 +36,14 @@ type ApiData = {
     }[]
 }
 
-const bot = new Kirino({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions] })
+const bot = new Kirino({ intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions
+] })
 
 async function main() {
     i18next.use(Backend).init({
@@ -44,27 +52,27 @@ async function main() {
         supportedLngs: ["en", "fr"],
         ns: ["common", "interactionCreate", "messageCreate"],
         defaultNS: "common",
-        preload: fs.readdirSync(`${__dirname}/../languages/`),
+        preload: fs.readdirSync(path.join(__dirname, "..", "languages")),
         backend: {
-            loadPath: __dirname + "/../languages/{{lng}}/{{ns}}.yml",
-            addPath: __dirname + "/../languages/{{lng}}/{{ns}}.missing.yml"
+            loadPath: path.join(__dirname, "..", "languages", "{{lng}}", "{{ns}}.yml"),
+            addPath: path.join(__dirname, "..", "languages", "{{lng}}", "{{ns}}.missing.yml")
         }
     })
 
     startXpApi(bot.apiCooldowns)
 
-    const eventsFiles = fs.readdirSync(`${__dirname}/events`).filter(file => file.endsWith(".js"))
+    const eventsFiles = fs.readdirSync(path.join(__dirname, "events")).filter(file => file.endsWith(".js"))
     for (const file of eventsFiles) {
-        const { eventHandler } = await import(`${__dirname}/events/${file}`)
+        const { eventHandler } = await import(path.join(__dirname, "events", file))
         eventHandler(bot)
     }
 
-    const slashCategories = fs.readdirSync(`${__dirname}/commands`)
+    const categories = fs.readdirSync(path.join(__dirname, "commands"))
 
-    for (const category of slashCategories) {
-        const slashCommandFiles = fs.readdirSync(`${__dirname}/commands/${category}/`).filter(file => file.endsWith(".js"))
-        for (const commandFile of slashCommandFiles) {
-            const { command }: CommandFileObject = await import(`${__dirname}/commands/${category}/${commandFile}`)
+    for (const category of categories) {
+        const commandFiles = fs.readdirSync(path.join(__dirname, "commands", category)).filter(file => file.endsWith(".js"))
+        for (const commandFile of commandFiles) {
+            const { command }: CommandFileObject = await import(path.join(__dirname, "commands", category, commandFile))
 
             const commandName = command.builder.toJSON().name
             bot.commands.set(commandName, { ...command, name: commandName, category })

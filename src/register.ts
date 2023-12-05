@@ -10,7 +10,6 @@ async function register() {
     const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = []
     const categories = fs.readdirSync(path.join(__dirname, "/commands"))
 
-
     const clientId = process.env.CLIENT_ID
     const guildId = process.env.DEBUG_SERVER_ID
     const token = process.env.KIRINO_TOKEN
@@ -25,8 +24,7 @@ async function register() {
         const commandFiles = fs.readdirSync(path.join(__dirname, "commands", category)).filter(file => file.endsWith(".js"))
 
         for (const commandFile of commandFiles) {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const { command }: CommandFileObject = require(path.join(__dirname, "commands", category, commandFile))
+            const { command }: CommandFileObject = await import(path.join(__dirname, "commands", category, commandFile))
             commands.push(command.builder.toJSON())
         }
     }
