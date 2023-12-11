@@ -4,16 +4,14 @@ import i18next from "i18next"
 import checkBanwords from "../lib/banwords/check_banwords"
 import removeDeletedRolesRewards from "../lib/rolerewards/remove_deleted_roles_rewards"
 import { Kirino } from "../lib/misc/types"
-import { Afk, Language, XpBlacklistedChannel, XpBlacklistedRole, XpGuild, XpProfile, XpRole } from "../lib/misc/database"
+import { Afk, XpBlacklistedChannel, XpBlacklistedRole, XpGuild, XpProfile, XpRole } from "../lib/misc/database"
 import { t } from "../lib/misc/i18n"
 
 export function eventHandler(bot: Kirino) {
     bot.on(Events.MessageCreate, async msg => {
         if (msg.author.bot || msg.guild && !msg.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessages)) return
 
-        const queryResult = bot.db.prepare("SELECT * FROM languages WHERE id = ?").get(msg.guild ? msg.guild.id : msg.author.id) as Language | undefined
-        const lang = queryResult ? queryResult.language : "en"
-        await i18next.changeLanguage(lang)
+        await i18next.changeLanguage("en")
 
         checkAfk(bot, msg)
         checkBanwords(bot, msg)

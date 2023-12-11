@@ -1,8 +1,3 @@
-export type Language = {
-    id: string
-    language: string
-}
-
 export type Banword = {
     guild_id: string,
     word: string

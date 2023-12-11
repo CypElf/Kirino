@@ -21,12 +21,6 @@ CREATE TABLE IF NOT EXISTS "rules" (
 	"guild_id"	TEXT NOT NULL,
 	"rule"	TEXT NOT NULL
 );
-DROP TABLE IF EXISTS "languages";
-CREATE TABLE IF NOT EXISTS "languages" (
-	"id"	TEXT,
-	"language"	TEXT,
-	PRIMARY KEY("id")
-);
 DROP TABLE IF EXISTS "afk";
 CREATE TABLE IF NOT EXISTS "afk" (
 	"user_id"	TEXT,
