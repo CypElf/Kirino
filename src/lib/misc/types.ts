@@ -9,7 +9,6 @@ export interface KirinoCommand {
     builder: KirinoCommandBuilder,
     name?: string,
     category?: string,
-    permissions?: string[],
     execute(bot: Kirino, interaction: ChatInputCommandInteraction): Promise<unknown>
 }
 
