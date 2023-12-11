@@ -1,7 +1,7 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, GuildMember } from "discord.js"
 import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-import { error, success } from "../../lib/misc/format"
+import { denied, error, success } from "../../lib/misc/format"
 import { XpGuild } from "../../lib/misc/database"
 
 const t = i18next.t.bind(i18next)
@@ -13,7 +13,7 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("get")
             .setDescription("Display the current scale factor of the XP system"))
         .addSubcommand(option => option.setName("set")
-            .setDescription("Change the scale factor of the XP system")
+            .setDescription("Change the scale factor of the XP system (need the manage guild permission)")
             .addStringOption(option => option.setName("factor")
                 .setDescription("The factor by which to multiply the amount of XP earned")
                 .setRequired(true)
@@ -43,13 +43,15 @@ export const command: KirinoCommand = {
                     value: "3"
                 })))
         .setDMPermission(false),
-    permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled
         if (!isEnabled) return interaction.reply({ content: error(t("xp_disabled")), ephemeral: true })
 
         if (interaction.options.getSubcommand() === "set") {
+            const member = interaction.member as GuildMember | null
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("missing_permissions")), ephemeral: true })
+
             const scale = parseFloat(interaction.options.getString("factor") as string)
             bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, scale) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET scale=excluded.scale").run(interaction.guild?.id, 1, scale === 1 ? null : scale)
 

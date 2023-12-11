@@ -1,4 +1,3 @@
-not_allowed_to_use_this_command: "You are not allowed to use this command!"
 already_no_leave_message: "There is already no leave message configured."
 leave_message_reset: "The leave message has been successfully removed."
 leave_test_sent: "Leave test message sent!"

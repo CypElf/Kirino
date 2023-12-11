@@ -1,4 +1,3 @@
-not_allowed_to_use_this_command: "You are not allowed to use this command!"
 cannot_react_to_messages: "You can't use this command if I don't have permission to add reactions."
 bad_message_id: "The message ID provided is incorrect!"
 access_to_emoji_denied: "The emoji entered is incorrect or I don't have access to it!"

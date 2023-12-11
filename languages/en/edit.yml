@@ -1,4 +1,3 @@
-not_allowed_to_use_this_command: "You are not allowed to use this command!"
 cannot_edit_this_message: "I can't edit this message!"
 message_edited: "The message has successfully been edited."
 bad_message_id: "The message ID provided is incorrect!"

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, Message, AttachmentBuilder, MessageReaction, PermissionFlagsBits, ReactionManager, TextBasedChannel, TextChannel, ChannelType } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, Message, AttachmentBuilder, MessageReaction, ReactionManager, TextBasedChannel, TextChannel, ChannelType, PermissionFlagsBits, GuildMember } from "discord.js"
 import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
@@ -16,25 +16,23 @@ export const command: KirinoCommand = {
         .setName("call")
         .setDescription("Start a call or configure the calls settings")
         .addSubcommand(option => option.setName("start").setDescription("Start a new call").addNumberOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true)))
-        .addSubcommandGroup(option => option.setName("channel").setDescription("Manage the channel in which the call result will be sent").addSubcommand(option => option.setName("get").setDescription("Display the currently set channel in which the calls results will be sent")).addSubcommand(option => option.setName("set").setDescription("Change the channel in which the calls results will be sent").addChannelOption(option => option.setName("channel").setDescription("The new channel in which to send the calls results").setRequired(true))).addSubcommand(option => option.setName("dm").setDescription("Set the channel in which the calls results will be to the user's DM")).addSubcommand(option => option.setName("reset").setDescription("Restore the default behavior where the results are sent in the same channel as the call itself")))
-        .addSubcommand(option => option.setName("asfile").setDescription("Enable or disable if the calls results are sent as plain text or as a text file in an attachment").addBooleanOption(option => option.setName("as_file").setDescription("Whether to send the file as plain text or as a text file in an attachment").setRequired(true)))
+        .addSubcommandGroup(option => option.setName("channel").setDescription("Manage the channel in which the call result will be sent").addSubcommand(option => option.setName("get").setDescription("Display the currently set channel in which the calls results will be sent")).addSubcommand(option => option.setName("set").setDescription("Change the channel in which the calls results will be sent (need the manage guild permission)").addChannelOption(option => option.setName("channel").setDescription("The new channel in which to send the calls results").setRequired(true))).addSubcommand(option => option.setName("dm").setDescription("Set the channel in which the calls results will be to the user's DM (need the manage guild permission)")).addSubcommand(option => option.setName("reset").setDescription("Restore the default behavior where the results are sent in the same channel as the call itself (need the manage guild permission)")))
+        .addSubcommand(option => option.setName("asfile").setDescription("Enable or disable if the calls results are sent as plain text or as a text file in an attachment (need the manage guild permission)").addBooleanOption(option => option.setName("as_file").setDescription("Whether to send the file as plain text or as a text file in an attachment").setRequired(true)))
         .setDMPermission(false),
-    permissions: ["manage_channels", "manage_guild or manage_messages"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
         const member = interaction.member as GuildMember | null
-
-        if (interaction.guild && member && !member.permissions.has(PermissionFlagsBits.ManageChannels) && !member.permissions.has(PermissionFlagsBits.ManageGuild) && !member.permissions.has(PermissionFlagsBits.ManageMessages)) return interaction.reply({ content: denied(t("not_enough_permissions_to_use_presence")), ephemeral: true })
-
         const subcommand = interaction.options.getSubcommand()
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
+
+        if (subcommand !== "start" && subcommand !== "get" && !member?.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_enough_permissions_to_use_presence")), ephemeral: true })
 
         if (subcommand === "asfile") {
             const newAsFile = interaction.options.getBoolean("as_file")
 
             bot.db.prepare("INSERT INTO calls VALUES(?,?,?,?) ON CONFLICT(guild_id) DO UPDATE SET asfile = excluded.asfile").run(interaction.guild.id, null, 0, newAsFile ? 1 : 0)
-            deleteRowIfEmpty(bot.db, interaction.guild?.id)
+            deleteRowIfEmpty(bot.db, interaction.guild.id)
 
             interaction.reply(newAsFile ? t("asfile_success_on") : t("asfile_success_off"))
         }

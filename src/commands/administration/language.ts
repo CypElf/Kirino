@@ -1,9 +1,8 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-import { success, denied } from "../../lib/misc/format"
-
-const t = i18next.t.bind(i18next)
+import { success } from "../../lib/misc/format"
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
@@ -18,19 +17,11 @@ export const command: KirinoCommand = {
             }, {
                 name: "Français",
                 value: "fr"
-            })),
-    permissions: ["manage guild"],
+            }))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
-        const isInGuild = interaction.inGuild()
-        const member = interaction.member as GuildMember | null
-
-        if (isInGuild) {
-            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) {
-                return interaction.reply({ content: denied(t("not_enough_permission_to_change_language")), ephemeral: true })
-            }
-        }
-
+        const isInGuild = interaction.inGuild()    
         const language = interaction.options.getString("language") as string
 
         const id = isInGuild ? interaction.guild?.id : interaction.user.id

@@ -10,15 +10,10 @@ export const command: KirinoCommand = {
         .setName("purge")
         .setDescription("Delete the specified amount of messages from the last messages in the current channel")
         .addIntegerOption(option => option.setName("amount_of_messages").setDescription("The number of messages you want to delete").setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .setDMPermission(false),
-    permissions: ["manage messages"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
-        const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-            return interaction.reply({ content: denied(t("you_cannot_delete_messages")), ephemeral: true })
-        }
-
         const count = interaction.options.getInteger("amount_of_messages") as number
 
         if (count <= 0) return interaction.reply({ content: error(t("please_insert_positive_integer")), ephemeral: true })

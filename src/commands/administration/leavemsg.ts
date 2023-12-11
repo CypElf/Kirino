@@ -1,12 +1,10 @@
 import { SlashCommandBuilder, Channel, ChannelType, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
-import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-import { denied, error, success } from "../../lib/misc/format"
+import { error, success } from "../../lib/misc/format"
 import resetLeave from "../../lib/joins_leaves/reset_leave"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { JoinLeave } from "../../lib/misc/database"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
@@ -15,14 +13,11 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("set").setDescription("Change the leave message").addStringOption(option => option.setName("message").setDescription("The new leave message. You can use {user}, {username}, {tag}, {server} and {count} (members count)").setRequired(true)).addChannelOption(option => option.setName("channel").setDescription("The channel where the leave messages will be sent").setRequired(true)))
         .addSubcommand(option => option.setName("reset").setDescription("Remove the leave message"))
         .addSubcommand(option => option.setName("test").setDescription("Test the leave message by sending it here and now as if you just left the server"))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setDMPermission(false),
-    permissions: ["manage_guild"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null
-
-        if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
-
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === "reset") {

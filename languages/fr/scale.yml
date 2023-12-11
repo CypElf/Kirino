@@ -1,3 +1,4 @@
+missing_permissions: "Vous avez besoin de la permission gérer le serveur pour pouvoir changer le coefficient d'XP du serveur."
 xp_disabled: "Le système d'XP est actuellement désactivé. Vous devez d'abord l'activer pour pouvoir utiliser cette commande."
 scale_set: "Le coefficient a bien été défini à"
 current_scale_is: "Le coefficient est actuellement de"

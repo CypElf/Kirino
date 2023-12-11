@@ -1,3 +1,4 @@
+missing_permissions: "You need the manage guild permission to change the server's XP scale factor."
 xp_disabled: "The XP system is currently disabled. You must first enable it to use this command."
 scale_set: "The coefficient has been set to"
 current_scale_is: "The coefficient is currently"

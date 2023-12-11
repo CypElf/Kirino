@@ -14,18 +14,27 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("xp")
         .setDescription("Allow to consult your XP card, config the XP system or customize some of its elements")
-        .addSubcommandGroup(option => option.setName("color").setDescription("Allow you to change or reset the color of your XP card").addSubcommand(option => option.setName("set").setDescription("Allow you to change the color of your XP card").addStringOption(option => option.setName("color").setDescription("The hexadecimal color code of the color you want").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Reset the color of your XP card to the default")))
-        .addSubcommandGroup(option => option.setName("background").setDescription("Allow you to change or remove the custom background of your XP card").addSubcommand(option => option.setName("set").setDescription("Allow you to change the custom background of your XP card").addStringOption(option => option.setName("link").setDescription("A link to the image to set as the new custom background").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Remove the custom background from your XP card")))
-        .addSubcommandGroup(option => option.setName("channel").setDescription("Allow you to change or remove the fixed channel for level up messages").addSubcommand(option => option.setName("get").setDescription("Allow you to know in what channel are currently sent the level up messages")).addSubcommand(option => option.setName("set").setDescription("Allow you to change the fixed channel for level up messages").addChannelOption(option => option.setName("channel").setDescription("The new channel for the level up messages").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Remove the fixed channel for level up messages and restore the default behavior")))
-        .addSubcommandGroup(option => option.setName("reset").setDescription("Allow you to reset the level of a member or the whole server").addSubcommand(option => option.setName("user").setDescription("Reset the level of a member in the server").addUserOption(option => option.setName("user").setDescription("The user you want to reset the level. If not specified, default is yourself"))).addSubcommand(option => option.setName("all").setDescription("Reset all the levels in the server")))
-        .addSubcommandGroup(option => option.setName("message").setDescription("Allow you to change or reset to the default the level up message").addSubcommand(option => option.setName("set").setDescription("Change the level up message").addStringOption(option => option.setName("message").setDescription("The new level up message").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Reset the level up message to the default")))
-        .addSubcommand(option => option.setName("enable").setDescription("Enable the XP system"))
-        .addSubcommand(option => option.setName("disable").setDescription("Disable the XP system"))
-        .addSubcommand(option => option.setName("import").setDescription("Import the level from MEE6's XP system"))
+        .addSubcommandGroup(option => option.setName("color").setDescription("Allow you to change or reset the color of your XP card")
+            .addSubcommand(option => option.setName("set").setDescription("Allow you to change the color of your XP card").addStringOption(option => option.setName("color").setDescription("The hexadecimal color code of the color you want").setRequired(true)))
+            .addSubcommand(option => option.setName("reset").setDescription("Reset the color of your XP card to the default")))
+        .addSubcommandGroup(option => option.setName("background").setDescription("Allow you to change or remove the custom background of your XP card")
+            .addSubcommand(option => option.setName("set").setDescription("Allow you to change the custom background of your XP card").addStringOption(option => option.setName("link").setDescription("A link to the image to set as the new custom background").setRequired(true)))
+            .addSubcommand(option => option.setName("reset").setDescription("Remove the custom background from your XP card")))
+        .addSubcommandGroup(option => option.setName("channel").setDescription("Allow you to change or remove the fixed channel for level up messages")
+            .addSubcommand(option => option.setName("get").setDescription("Allow you to know in what channel are currently sent the level up messages"))
+            .addSubcommand(option => option.setName("set").setDescription("Allow you to change the fixed channel for level up messages (need the manage guild permission)").addChannelOption(option => option.setName("channel").setDescription("The new channel for the level up messages").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Remove the fixed channel for level up messages and restore the default behavior")))
+        .addSubcommandGroup(option => option.setName("reset").setDescription("Allow you to reset the level of a member or the whole server")
+            .addSubcommand(option => option.setName("user").setDescription("Reset the level of a member in the server (need the manage guild permission)")
+            .addUserOption(option => option.setName("user").setDescription("The user you want to reset the level. If not specified, default is yourself (need the manage guild permission)")))
+            .addSubcommand(option => option.setName("all").setDescription("Reset all the levels in the server (need the manage guild permission)")))
+        .addSubcommandGroup(option => option.setName("message").setDescription("Allow you to change or reset to the default the level up message")
+            .addSubcommand(option => option.setName("set").setDescription("Change the level up message (need the manage guild permission)").addStringOption(option => option.setName("message").setDescription("The new level up message").setRequired(true)))
+            .addSubcommand(option => option.setName("reset").setDescription("Reset the level up message to the default (need the manage guild permission)")))
+        .addSubcommand(option => option.setName("enable").setDescription("Enable the XP system (need the manage guild permission)"))
+        .addSubcommand(option => option.setName("disable").setDescription("Disable the XP system (need the manage guild permission)"))
+        .addSubcommand(option => option.setName("import").setDescription("Import the level from MEE6's XP system (need the manage guild permission)"))
         .addSubcommand(option => option.setName("get").setDescription("Display the XP card of a user").addUserOption(option => option.setName("user").setDescription("The user you want to get the XP card")))
         .setDMPermission(false),
-
-    permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
@@ -36,7 +45,7 @@ export const command: KirinoCommand = {
         const subcommandGroup = interaction.options.getSubcommandGroup(false)
 
         if (subcommand === "enable" || subcommand === "disable") {
-            if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_enable_or_disable")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_enable_or_disable")), ephemeral: true })
             const enableRequest = bot.db.prepare("INSERT INTO xp_guilds(guild_id,is_enabled) VALUES(?,?) ON CONFLICT(guild_id) DO UPDATE SET is_enabled=excluded.is_enabled")
 
             if (subcommand === "enable") {
@@ -71,7 +80,7 @@ export const command: KirinoCommand = {
                 )
 
             if (subcommandGroup === "reset") {
-                if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_reset_xp")), ephemeral: true })
+                if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_reset_xp")), ephemeral: true })
                 if (!interaction.guild.members.me?.permissions.has(PermissionFlagsBits.AddReactions)) return interaction.reply({ content: error(t("cannot_react_to_messages")), ephemeral: true })
 
                 if (subcommand === "all") {
@@ -126,7 +135,7 @@ export const command: KirinoCommand = {
             }
 
             else if (subcommandGroup === "message") {
-                if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_change_lvl_up_msg")), ephemeral: true })
+                if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_change_lvl_up_msg")), ephemeral: true })
 
                 const newMsg = subcommand === "reset" ? null : interaction.options.getString("message")
                 bot.db.prepare("INSERT INTO xp_guilds(guild_id, is_enabled, level_up_message) VALUES(?,?,?) ON CONFLICT(guild_id) DO UPDATE SET level_up_message=excluded.level_up_message").run(interaction.guild.id, 1, newMsg)
@@ -153,7 +162,7 @@ export const command: KirinoCommand = {
                     }
                 }
                 else {
-                    if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_change_channel")), ephemeral: true })
+                    if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_change_channel")), ephemeral: true })
 
                     const channel = subcommand === "reset" ? null : interaction.options.getChannel("channel")
 
@@ -168,7 +177,7 @@ export const command: KirinoCommand = {
             }
 
             else if (subcommand === "import") {
-                if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("not_allowed_to_import")), ephemeral: true })
+                if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_import")), ephemeral: true })
 
                 await interaction.reply({ content: what(t("xp_import_verification")), components: [actionRow] })
                 const validationMessage = await interaction.fetchReply() as Message

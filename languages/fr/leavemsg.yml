@@ -1,4 +1,3 @@
-not_allowed_to_use_this_command: "Vous n'êtes pas autorisés à utiliser cette commande !"
 already_no_leave_message: "Il n'y a déjà pas de message de leave de configuré."
 leave_message_reset: "Le message de leave a bien été retiré."
 leave_test_sent: "Message de test de leave envoyé !"

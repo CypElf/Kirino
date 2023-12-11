@@ -13,13 +13,12 @@ export const command: KirinoCommand = {
         .setDescription("Allow you to blacklist a role or channel from the XP system")
         .addSubcommand(option => option.setName("list").setDescription("Display the blacklisted roles and channels"))
         .addSubcommandGroup(option => option.setName("channel").setDescription("Add or remove a channel from the blacklist")
-            .addSubcommand(option => option.setName("add").setDescription("Blacklist a channel").addChannelOption(option => option.setName("channel").setDescription("The channel to blacklist").setRequired(true)))
-            .addSubcommand(option => option.setName("remove").setDescription("Remove a channel from the blacklist").addChannelOption(option => option.setName("channel").setDescription("The channel to remove from the blacklist").setRequired(true))))
+            .addSubcommand(option => option.setName("add").setDescription("Blacklist a channel (need the manage guild permission)").addChannelOption(option => option.setName("channel").setDescription("The channel to blacklist").setRequired(true)))
+            .addSubcommand(option => option.setName("remove").setDescription("Remove a channel from the blacklist (need the manage guild permission)").addChannelOption(option => option.setName("channel").setDescription("The channel to remove from the blacklist").setRequired(true))))
         .addSubcommandGroup(option => option.setName("role").setDescription("Add or remove a role from the blacklist")
-            .addSubcommand(option => option.setName("add").setDescription("Blacklist a role").addRoleOption(option => option.setName("role").setDescription("The role to blacklist").setRequired(true)))
-            .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the blacklist").addRoleOption(option => option.setName("role").setDescription("The role to remove from the blacklist").setRequired(true))))
+            .addSubcommand(option => option.setName("add").setDescription("Blacklist a role (need the manage guild permission)").addRoleOption(option => option.setName("role").setDescription("The role to blacklist").setRequired(true)))
+            .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the blacklist (need the manage guild permission)").addRoleOption(option => option.setName("role").setDescription("The role to remove from the blacklist").setRequired(true))))
             .setDMPermission(false),
-    permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return
@@ -38,7 +37,7 @@ export const command: KirinoCommand = {
 
         if (interaction.options.getSubcommand() === "remove") {
 
-            if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: denied(t("missing_permissions_to_remove_channel")), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("missing_permissions_to_remove_channel")), ephemeral: true })
 
             if (interaction.options.getSubcommandGroup() === "channel") {
                 if (channel.type !== ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
@@ -83,7 +82,7 @@ export const command: KirinoCommand = {
             interaction.reply({ embeds: [blacklistEmbed] })
         }
         else {
-            if (member && !member.permissions.has(PermissionFlagsBits.Administrator)) return interaction.reply({ content: t("missing_perm_to_add_channel"), ephemeral: true })
+            if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: t("missing_perm_to_add_channel"), ephemeral: true })
 
             if (interaction.options.getSubcommandGroup() === "channel") {
                 if (channel.type !== ChannelType.GuildText) return interaction.reply({ content: error(t("not_a_text_channel")), ephemeral: true })
