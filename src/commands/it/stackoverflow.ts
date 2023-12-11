@@ -1,9 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
-import i18next from "i18next"
 import fetch from "node-fetch"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 type StackOverflowResponse = {
     items: {

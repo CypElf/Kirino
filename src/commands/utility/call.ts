@@ -7,9 +7,9 @@ import { denied, error, success, what } from "../../lib/misc/format"
 import { Database } from "better-sqlite3"
 import { Call } from "../../lib/misc/database"
 import splitMessage from "../../lib/misc/split_message"
+import { t } from "../../lib/misc/i18n"
 
 dayjs.extend(utc)
-const t = i18next.t.bind(i18next)
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

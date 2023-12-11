@@ -3,8 +3,7 @@ import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { error, success } from "../../lib/misc/format"
 import { XpGuild } from "../../lib/misc/database"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

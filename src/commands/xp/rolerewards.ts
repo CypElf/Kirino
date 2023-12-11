@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, roleMention, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js"
-import i18next from "i18next"
 import removeDeletedRolesRewards from "../../lib/rolerewards/remove_deleted_roles_rewards"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
@@ -7,8 +6,7 @@ import { XpGuild, XpProfile, XpRole } from "../../lib/misc/database"
 import { HexColorString } from "discord.js"
 import { GuildMember } from "discord.js"
 import { Role } from "discord.js"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

@@ -1,11 +1,9 @@
 import { SlashCommandBuilder, Channel, ChatInputCommandInteraction, Guild, GuildMember, EmbedBuilder, PermissionFlagsBits, Role, ChannelType } from "discord.js"
-import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
 import { XpBlacklistedChannel, XpBlacklistedRole, XpGuild } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

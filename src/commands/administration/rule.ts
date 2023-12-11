@@ -1,10 +1,8 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, EmbedBuilder } from "discord.js"
-import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { Rule } from "../../lib/misc/database"
 import { denied, error } from "../../lib/misc/format"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

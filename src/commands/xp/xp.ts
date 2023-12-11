@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, AttachmentBuilder, PermissionFlagsBits, ActionRowBuilder, GuildMember, Message, ButtonInteraction, ButtonBuilder, ButtonStyle, ComponentType, ChannelType } from "discord.js"
-import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"
 import { CanvasRenderingContext2D } from "canvas"
@@ -7,8 +6,7 @@ import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success, what } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"
 import { Database } from "better-sqlite3"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

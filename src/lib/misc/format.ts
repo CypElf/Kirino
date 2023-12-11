@@ -1,5 +1,4 @@
-import i18next from "i18next"
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export function success(message: string) {
     return `${message} ${t("common:kirino_glad")}`

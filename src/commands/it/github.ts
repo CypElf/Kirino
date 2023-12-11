@@ -1,13 +1,11 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, time } from "discord.js"
-import i18next from "i18next"
 import dayjs from "dayjs"
 // @ts-ignore: no types available for this package
 import ColorThief from "colorthief"
 import fetch from "node-fetch"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { what } from "../../lib/misc/format"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

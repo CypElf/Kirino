@@ -5,8 +5,7 @@ import checkBanwords from "../lib/banwords/check_banwords"
 import removeDeletedRolesRewards from "../lib/rolerewards/remove_deleted_roles_rewards"
 import { Kirino } from "../lib/misc/types"
 import { Afk, Language, XpBlacklistedChannel, XpBlacklistedRole, XpGuild, XpProfile, XpRole } from "../lib/misc/database"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../lib/misc/i18n"
 
 export function eventHandler(bot: Kirino) {
     bot.on(Events.MessageCreate, async msg => {

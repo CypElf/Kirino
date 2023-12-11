@@ -3,8 +3,7 @@ import i18next from "i18next"
 import { Kirino } from "../lib/misc/types"
 import { what } from "../lib/misc/format"
 import { Language } from "../lib/misc/database"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../lib/misc/i18n"
 
 export function eventHandler(bot: Kirino) {
     bot.on(Events.InteractionCreate, async interaction => {

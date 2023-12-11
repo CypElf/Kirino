@@ -1,10 +1,8 @@
 import { SlashCommandBuilder, roleMention, ChatInputCommandInteraction, EmbedBuilder, time } from "discord.js"
-import i18next from "i18next"
 // @ts-ignore
 import ColorThief from "colorthief"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()

@@ -1,9 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
-import i18next from "i18next"
 import md5 from "js-md5"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
