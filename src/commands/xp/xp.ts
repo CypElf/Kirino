@@ -23,9 +23,9 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("enable").setDescription("Enable the XP system"))
         .addSubcommand(option => option.setName("disable").setDescription("Disable the XP system"))
         .addSubcommand(option => option.setName("import").setDescription("Import the level from MEE6's XP system"))
-        .addSubcommand(option => option.setName("get").setDescription("Display the XP card of a user").addUserOption(option => option.setName("user").setDescription("The user you want to get the XP card"))),
+        .addSubcommand(option => option.setName("get").setDescription("Display the XP card of a user").addUserOption(option => option.setName("user").setDescription("The user you want to get the XP card")))
+        .setDMPermission(false),
 
-    guildOnly: true,
     permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

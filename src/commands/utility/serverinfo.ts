@@ -8,8 +8,8 @@ const t = i18next.t.bind(i18next)
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("serverinfo")
-        .setDescription("Give you informations about this server"),
-    guildOnly: true,
+        .setDescription("Give you informations about this server")
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return

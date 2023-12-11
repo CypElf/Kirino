@@ -9,7 +9,6 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("invite")
         .setDescription("Give you the link to invite me to a new Discord server"),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const invite = new EmbedBuilder()

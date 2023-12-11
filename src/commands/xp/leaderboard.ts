@@ -12,8 +12,8 @@ export const command: KirinoCommand = {
         .setName("leaderboard")
         .setDescription("Give you this server's XP leaderboard link")
         .addIntegerOption(option => option.setName("page").setDescription("The page of the leaderboard you want to open"))
-        .addIntegerOption(option => option.setName("limit").setDescription("The number of players to list in the page")),
-    guildOnly: true,
+        .addIntegerOption(option => option.setName("limit").setDescription("The number of players to list in the page"))
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const isEnabled = (bot.db.prepare("SELECT is_enabled FROM xp_guilds WHERE guild_id = ?").get(interaction.guild?.id) as XpGuild | null)?.is_enabled

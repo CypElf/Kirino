@@ -9,7 +9,6 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("dontasktoask")
         .setDescription("Explain why should explain your issue instead of saying no more than you have an issue"),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         interaction.reply(`${t("dont")}\nhttps://dontasktoask.com/`)

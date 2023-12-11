@@ -10,7 +10,6 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("donation")
         .setDescription("Display my developer's paypal if you want to support me by donating"),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const donationEmbed = new EmbedBuilder()

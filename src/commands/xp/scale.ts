@@ -42,8 +42,8 @@ export const command: KirinoCommand = {
                 }, {
                     name: "3",
                     value: "3"
-                }))),
-    guildOnly: true,
+                })))
+        .setDMPermission(false),
     permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

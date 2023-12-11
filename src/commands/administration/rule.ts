@@ -14,8 +14,8 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("get").setDescription("Display a rule").addIntegerOption(option => option.setName("rule_number").setDescription("The number of the rule you want to display").setRequired(true)))
         .addSubcommand(option => option.setName("count").setDescription("Tell you how many rules are currently registered in the server"))
         .addSubcommand(option => option.setName("add").setDescription("Add a rule to the server").addStringOption(option => option.setName("rule").setDescription("The rule to add to the server").setRequired(true)))
-        .addSubcommand(option => option.setName("remove").setDescription("Remove a rule from the server").addIntegerOption(option => option.setName("rule_number").setDescription("The number of the rule to remove from the server").setRequired(true))),
-    guildOnly: true,
+        .addSubcommand(option => option.setName("remove").setDescription("Remove a rule from the server").addIntegerOption(option => option.setName("rule_number").setDescription("The number of the rule to remove from the server").setRequired(true)))
+        .setDMPermission(false),
     permissions: ["{manage guild}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

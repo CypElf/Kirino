@@ -17,8 +17,8 @@ export const command: KirinoCommand = {
         .setDescription("Manage the role rewards of the XP system")
         .addSubcommand(option => option.setName("add").setDescription("Add a role to the role rewards").addRoleOption(option => option.setName("role").setDescription("The role to add to the role rewards").setRequired(true)).addIntegerOption(option => option.setName("level").setDescription("The level you want to assign the role as a reward").setRequired(true)))
         .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the role rewards").addRoleOption(option => option.setName("role").setDescription("The role to remove from the role rewards").setRequired(true)))
-        .addSubcommand(option => option.setName("list").setDescription("List the currently available role rewards")),
-    guildOnly: true,
+        .addSubcommand(option => option.setName("list").setDescription("List the currently available role rewards"))
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return

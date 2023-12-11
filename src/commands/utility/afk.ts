@@ -10,8 +10,8 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("afk")
         .setDescription("Allow you to leave a message for those who mention you while you're AFK")
-        .addStringOption(option => option.setName("reason").setDescription("The reason why you're AFK")),
-    guildOnly: true,
+        .addStringOption(option => option.setName("reason").setDescription("The reason why you're AFK"))
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const reason = interaction.options.getString("reason")

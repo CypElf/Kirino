@@ -11,7 +11,6 @@ export const command: KirinoCommand = {
         .setName("md5")
         .setDescription("Hash the specified text with the MD5 algorithm")
         .addStringOption(option => option.setName("text").setDescription("The text you want to get the hash").setRequired(true)),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const plaintext = interaction.options.getString("text") as string

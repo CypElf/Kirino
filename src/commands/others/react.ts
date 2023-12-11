@@ -12,7 +12,6 @@ export const command: KirinoCommand = {
         .setDescription("Make me react to a message")
         .addStringOption(option => option.setName("message_id").setDescription("The ID of the message you want me to react to").setRequired(true))
         .addStringOption(option => option.setName("emoji").setDescription("The emoji you want to me react with").setRequired(true)),
-    guildOnly: false,
     permissions: ["administrator"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

@@ -15,8 +15,8 @@ export const command: KirinoCommand = {
         .setDescription("Define a message to be sent each time a user joins the server")
         .addSubcommand(option => option.setName("set").setDescription("Change the join message").addStringOption(option => option.setName("message").setDescription("The new join message. You can use {user}, {username}, {tag}, {server} and {count} (members count)").setRequired(true)).addChannelOption(option => option.setName("channel").setDescription("The channel where the join messages will be sent").setRequired(true)))
         .addSubcommand(option => option.setName("reset").setDescription("Remove the join message"))
-        .addSubcommand(option => option.setName("test").setDescription("Test the join message by sending it here and now as if you just joined the server")),
-    guildOnly: true,
+        .addSubcommand(option => option.setName("test").setDescription("Test the join message by sending it here and now as if you just joined the server"))
+        .setDMPermission(false),
     permissions: ["manage_guild"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

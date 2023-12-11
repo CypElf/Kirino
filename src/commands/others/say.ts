@@ -10,8 +10,8 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("say")
         .setDescription("Make me say something")
-        .addStringOption(option => option.setName("message").setDescription("The text content you want me to send as a message").setRequired(true)),
-    guildOnly: true,
+        .addStringOption(option => option.setName("message").setDescription("The text content you want me to send as a message").setRequired(true))
+        .setDMPermission(false),
     permissions: ["administrator"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

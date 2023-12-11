@@ -11,8 +11,8 @@ export const command: KirinoCommand = {
         .setName("edit")
         .setDescription("Edit a message I sent")
         .addStringOption(option => option.setName("message_id").setDescription("The ID of the message you want me to edit").setRequired(true))
-        .addStringOption(option => option.setName("new_message").setDescription("The new content you want to be written in the message").setRequired(true)),
-    guildOnly: true,
+        .addStringOption(option => option.setName("new_message").setDescription("The new content you want to be written in the message").setRequired(true))
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null

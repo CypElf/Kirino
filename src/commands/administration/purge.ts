@@ -10,8 +10,8 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("purge")
         .setDescription("Delete the specified amount of messages from the last messages in the current channel")
-        .addIntegerOption(option => option.setName("amount_of_messages").setDescription("The number of messages you want to delete").setRequired(true)),
-    guildOnly: true,
+        .addIntegerOption(option => option.setName("amount_of_messages").setDescription("The number of messages you want to delete").setRequired(true))
+        .setDMPermission(false),
     permissions: ["manage messages"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

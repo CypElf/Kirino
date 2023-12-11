@@ -17,7 +17,6 @@ export const command: KirinoCommand = {
         .addStringOption(option => option.setName("input").setDescription("The input you want to send to the program's standard input"))
         .addStringOption(option => option.setName("args").setDescription("The command line arguments you want to send to the program"))
         .addStringOption(option => option.setName("flags").setDescription("The flags you want to submit to the C compiler if used")),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.channel) return

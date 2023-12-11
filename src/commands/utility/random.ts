@@ -12,7 +12,6 @@ export const command: KirinoCommand = {
         .setDescription("Generate a random number in the given range")
         .addIntegerOption(option => option.setName("minimum").setDescription("The lower bound").setRequired(true))
         .addIntegerOption(option => option.setName("maximum").setDescription("The upper bound").setRequired(true)),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const min = interaction.options.getInteger("minimum") as number

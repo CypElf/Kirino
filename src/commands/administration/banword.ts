@@ -13,8 +13,8 @@ export const command: KirinoCommand = {
         .setDescription("Manage the banned words of the server")
         .addSubcommand(option => option.setName("add").setDescription("Add a word to the banned words").addStringOption(option => option.setName("word").setDescription("The word to add to the banned words").setRequired(true)))
         .addSubcommand(option => option.setName("remove").setDescription("Remove a word from the banned words").addStringOption(option => option.setName("word").setDescription("The word to remove from the banned words").setRequired(true)))
-        .addSubcommand(option => option.setName("list").setDescription("Tell you what words are currently in the banned words")),
-    guildOnly: true,
+        .addSubcommand(option => option.setName("list").setDescription("Tell you what words are currently in the banned words"))
+        .setDMPermission(false),
     permissions: ["manage messages"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

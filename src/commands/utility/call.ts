@@ -18,8 +18,8 @@ export const command: KirinoCommand = {
         .setDescription("Start a call or configure the calls settings")
         .addSubcommand(option => option.setName("start").setDescription("Start a new call").addNumberOption(option => option.setName("duration").setDescription("The duration of the call").setRequired(true)))
         .addSubcommandGroup(option => option.setName("channel").setDescription("Manage the channel in which the call result will be sent").addSubcommand(option => option.setName("get").setDescription("Display the currently set channel in which the calls results will be sent")).addSubcommand(option => option.setName("set").setDescription("Change the channel in which the calls results will be sent").addChannelOption(option => option.setName("channel").setDescription("The new channel in which to send the calls results").setRequired(true))).addSubcommand(option => option.setName("dm").setDescription("Set the channel in which the calls results will be to the user's DM")).addSubcommand(option => option.setName("reset").setDescription("Restore the default behavior where the results are sent in the same channel as the call itself")))
-        .addSubcommand(option => option.setName("asfile").setDescription("Enable or disable if the calls results are sent as plain text or as a text file in an attachment").addBooleanOption(option => option.setName("as_file").setDescription("Whether to send the file as plain text or as a text file in an attachment").setRequired(true))),
-    guildOnly: true,
+        .addSubcommand(option => option.setName("asfile").setDescription("Enable or disable if the calls results are sent as plain text or as a text file in an attachment").addBooleanOption(option => option.setName("as_file").setDescription("Whether to send the file as plain text or as a text file in an attachment").setRequired(true)))
+        .setDMPermission(false),
     permissions: ["manage_channels", "manage_guild or manage_messages"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

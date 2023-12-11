@@ -10,7 +10,6 @@ export const command: KirinoCommand = {
         .setName("emoji")
         .setDescription("Display the image used for an emoji")
         .addStringOption(option => option.setName("emoji").setDescription("The emoji you want to get the image").setRequired(true)),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const raw = interaction.options.getString("emoji") as string

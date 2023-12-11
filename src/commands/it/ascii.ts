@@ -11,7 +11,6 @@ export const command: KirinoCommand = {
         .setDescription("Allows you to encode or decode ASCII")
         .addSubcommand(option => option.setName("encode").setDescription("Encode a text in ASCII").addStringOption(option => option.setName("text").setDescription("The text to encode").setRequired(true)))
         .addSubcommand(option => option.setName("decode").setDescription("Decode a text from ASCII").addStringOption(option => option.setName("text").setDescription("The text to decode").setRequired(true))),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const text = interaction.options.getString("text")?.replaceAll(" ", "") as string

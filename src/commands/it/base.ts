@@ -12,7 +12,6 @@ export const command: KirinoCommand = {
         .addStringOption(option => option.setName("number").setDescription("The number you want to convert").setRequired(true))
         .addIntegerOption(option => option.setName("current_base").setDescription("The current base of the number you want to convert").setRequired(true))
         .addIntegerOption(option => option.setName("new_base").setDescription("The base you want the number to be converted to").setRequired(true)),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const number = interaction.options.getString("number") as string

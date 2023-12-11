@@ -9,7 +9,6 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("codeblock")
         .setDescription("Tell you how to send a block of code with appropriate syntax highlighting on Discord"),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const linksEmbed = new EmbedBuilder()

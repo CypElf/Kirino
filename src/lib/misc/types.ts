@@ -10,7 +10,6 @@ export interface KirinoCommand {
     name?: string,
     category?: string,
     permissions?: string[],
-    guildOnly: boolean,
     execute(bot: Kirino, interaction: ChatInputCommandInteraction): Promise<unknown>
 }
 

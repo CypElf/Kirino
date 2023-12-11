@@ -9,8 +9,8 @@ const t = i18next.t.bind(i18next)
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("serveravatar")
-        .setDescription("Display the image used for the server avatar"),
-    guildOnly: true,
+        .setDescription("Display the image used for the server avatar")
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const avatar = interaction.guild?.iconURL({ size: 4096 })

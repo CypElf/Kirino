@@ -11,8 +11,8 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("userinfo")
         .setDescription("Give you informations about a user")
-        .addUserOption(option => option.setName("user").setDescription("The user you want informations about")),
-    guildOnly: true,
+        .addUserOption(option => option.setName("user").setDescription("The user you want informations about"))
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const user = interaction.options.getUser("user") ?? interaction.user

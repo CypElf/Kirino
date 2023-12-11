@@ -15,8 +15,8 @@ export const command: KirinoCommand = {
         .setDescription("Define a message to be sent each time a user leaves the server")
         .addSubcommand(option => option.setName("set").setDescription("Change the leave message").addStringOption(option => option.setName("message").setDescription("The new leave message. You can use {user}, {username}, {tag}, {server} and {count} (members count)").setRequired(true)).addChannelOption(option => option.setName("channel").setDescription("The channel where the leave messages will be sent").setRequired(true)))
         .addSubcommand(option => option.setName("reset").setDescription("Remove the leave message"))
-        .addSubcommand(option => option.setName("test").setDescription("Test the leave message by sending it here and now as if you just left the server")),
-    guildOnly: true,
+        .addSubcommand(option => option.setName("test").setDescription("Test the leave message by sending it here and now as if you just left the server"))
+        .setDMPermission(false),
     permissions: ["manage_guild"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

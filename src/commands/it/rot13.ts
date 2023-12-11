@@ -11,7 +11,6 @@ export const command: KirinoCommand = {
         .setDescription("Encode your text with ROT13")
         .addStringOption(option => option.setName("text").setDescription("The text you want to encode").setRequired(true))
         .addIntegerOption(option => option.setName("shift").setDescription("The shift you want to use (default: 13)")),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const plaintext = interaction.options.getString("text") as string

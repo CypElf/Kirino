@@ -11,7 +11,6 @@ export const command: KirinoCommand = {
         .setDescription("Allows to encode or decode a message with base64 encoding")
         .addSubcommand(option => option.setName("encode").setDescription("Encode a text in base64").addStringOption(option => option.setName("text").setDescription("The text to encode in base64").setRequired(true)))
         .addSubcommand(option => option.setName("decode").setDescription("Decode a text from base64").addStringOption(option => option.setName("text").setDescription("The text to decode from base64").setRequired(true))),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const text = interaction.options.getString("text") as string

@@ -11,8 +11,8 @@ export const command: KirinoCommand = {
         .setName("kick")
         .setDescription("Kick the specified user")
         .addUserOption(option => option.setName("user").setDescription("The user to kick").setRequired(true))
-        .addStringOption(option => option.setName("reason").setDescription("The reason why the user will be kick")),
-    guildOnly: true,
+        .addStringOption(option => option.setName("reason").setDescription("The reason why the user will be kick"))
+        .setDMPermission(false),
     permissions: ["kick members"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

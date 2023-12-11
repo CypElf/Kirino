@@ -9,8 +9,8 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("roleinfo")
         .setDescription("Give you informations about a role")
-        .addRoleOption(option => option.setName("role").setDescription("The role you want informations about").setRequired(true)),
-    guildOnly: true,
+        .addRoleOption(option => option.setName("role").setDescription("The role you want informations about").setRequired(true))
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const role = interaction.options.getRole("role") as Role

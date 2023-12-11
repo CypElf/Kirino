@@ -7,7 +7,6 @@ export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Display my ping in milliseconds"),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const start = Date.now()

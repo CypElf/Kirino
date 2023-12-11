@@ -15,7 +15,6 @@ export const command: KirinoCommand = {
         .setName("github")
         .setDescription("Display informations about a GitHub user")
         .addStringOption(option => option.setName("username").setDescription("The GitHub username of the user you want to get the profile").setRequired(true)),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const username = interaction.options.getString("username")

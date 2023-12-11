@@ -18,8 +18,8 @@ export const command: KirinoCommand = {
             .addSubcommand(option => option.setName("remove").setDescription("Remove a channel from the blacklist").addChannelOption(option => option.setName("channel").setDescription("The channel to remove from the blacklist").setRequired(true))))
         .addSubcommandGroup(option => option.setName("role").setDescription("Add or remove a role from the blacklist")
             .addSubcommand(option => option.setName("add").setDescription("Blacklist a role").addRoleOption(option => option.setName("role").setDescription("The role to blacklist").setRequired(true)))
-            .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the blacklist").addRoleOption(option => option.setName("role").setDescription("The role to remove from the blacklist").setRequired(true)))),
-    guildOnly: true,
+            .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the blacklist").addRoleOption(option => option.setName("role").setDescription("The role to remove from the blacklist").setRequired(true))))
+            .setDMPermission(false),
     permissions: ["{administrator}"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {

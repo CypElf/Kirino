@@ -7,7 +7,6 @@ export const command: KirinoCommand = {
         .setName("avatar")
         .setDescription("Display the avatar of a user")
         .addUserOption(option => option.setName("user").setDescription("The user you want to get the avatar")),
-    guildOnly: false,
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const user = interaction.options.getUser("user") ?? interaction.user
