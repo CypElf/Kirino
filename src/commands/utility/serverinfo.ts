@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, time } from "@discordjs/builders"
-import { ChannelType, ChatInputCommandInteraction, GuildMember, EmbedBuilder, GuildPremiumTier } from "discord.js"
+import { SlashCommandBuilder, ChannelType, ChatInputCommandInteraction, GuildMember, EmbedBuilder, GuildPremiumTier, time } from "discord.js"
 import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 

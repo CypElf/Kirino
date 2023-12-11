@@ -1,11 +1,8 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
-import i18next from "i18next"
+import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js"
 import { Kirino, KirinoCommand } from "../../lib/misc/types"
-import { success, error, denied } from "../../lib/misc/format"
+import { success, error } from "../../lib/misc/format"
 import { Banword } from "../../lib/misc/database"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
@@ -14,13 +11,10 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("add").setDescription("Add a word to the banned words").addStringOption(option => option.setName("word").setDescription("The word to add to the banned words").setRequired(true)))
         .addSubcommand(option => option.setName("remove").setDescription("Remove a word from the banned words").addStringOption(option => option.setName("word").setDescription("The word to remove from the banned words").setRequired(true)))
         .addSubcommand(option => option.setName("list").setDescription("Tell you what words are currently in the banned words"))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .setDMPermission(false),
-    permissions: ["manage messages"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
-        const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(PermissionFlagsBits.ManageMessages)) return interaction.reply({ content: denied(t("missing_permissions_to_execute_this_command")), ephemeral: true })
-
         const parseEmoji = (mot: string) => {
             if (mot.match(/<:(.*?):[0-9]*>/gm)) { // modification de la représentation des émojis
                 return ":" + mot.split(":")[1].split(":")[0] + ":"

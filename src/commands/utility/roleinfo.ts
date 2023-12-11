@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, time } from "@discordjs/builders"
-import { ChatInputCommandInteraction, EmbedBuilder, Role } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, Role, time } from "discord.js"
 import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 

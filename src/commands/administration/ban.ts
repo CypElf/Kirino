@@ -1,9 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, User } from "discord.js"
-import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { what, denied, error } from "../../lib/misc/format"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
@@ -11,15 +9,12 @@ export const command: KirinoCommand = {
         .setDescription("Ban the specified user")
         .addUserOption(option => option.setName("user").setDescription("The user to ban").setRequired(true))
         .addStringOption(option => option.setName("reason").setDescription("The reason why the user will be banned"))
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .setDMPermission(false),
-    permissions: ["ban members"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const bannerMember = interaction.member as GuildMember | null
-
-        if (!bannerMember?.permissions.has(PermissionFlagsBits.BanMembers)) {
-            return interaction.reply({ content: denied(t("you_are_missing_permissions_to_ban_members")), ephemeral: true })
-        }
+        if (!bannerMember) return
 
         if (!interaction.guild?.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
             return interaction.reply({ content: error(t("i_am_missing_permissions_to_ban_members")), ephemeral: true })
@@ -28,10 +23,8 @@ export const command: KirinoCommand = {
         const user = interaction.options.getUser("user") as User
         const reason = interaction.options.getString("reason") ?? t("no_ban_reason")
 
-        let targetMember
-
         try {
-            targetMember = await interaction.guild.members.fetch(user.id)
+            const targetMember = await interaction.guild.members.fetch(user.id)
 
             if (!targetMember.bannable) {
                 return interaction.reply({ content: error(t("unable_to_ban_higher_than_me")), ephemeral: true })

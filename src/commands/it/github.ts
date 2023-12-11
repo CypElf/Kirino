@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, time } from "@discordjs/builders"
-import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, time } from "discord.js"
 import i18next from "i18next"
 import dayjs from "dayjs"
 // @ts-ignore: no types available for this package

@@ -1,4 +1,3 @@
-not_allowed_to_use_this_command: "You are not allowed to use this command!"
 already_no_join_message: "There is already no join message configured."
 join_message_reset: "The join message has been successfully removed."
 no_join_message_set: "There is currently no join message configured."

@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, AttachmentBuilder, PermissionFlagsBits, ActionRowBuilder, GuildMember, Message, ButtonInteraction, ButtonBuilder, ButtonStyle, ComponentType, ChannelType } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, AttachmentBuilder, PermissionFlagsBits, ActionRowBuilder, GuildMember, Message, ButtonInteraction, ButtonBuilder, ButtonStyle, ComponentType, ChannelType } from "discord.js"
 import i18next from "i18next"
 import Canvas from "canvas"
 import fetch from "node-fetch"

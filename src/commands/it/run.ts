@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChannelType, ChatInputCommandInteraction, Message } from "discord.js"
+import { SlashCommandBuilder, ChannelType, ChatInputCommandInteraction, Message } from "discord.js"
 import i18next from "i18next"
 import { deflateSync } from "zlib"
 import fetch from "node-fetch"

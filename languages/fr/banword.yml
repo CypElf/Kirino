@@ -1,4 +1,3 @@
-missing_permissions_to_execute_this_command: "Vous n'avez pas les permissions suffisantes pour utiliser cette commande !"
 banwords_count_limited: "Le nombre de mots bloqués est limité à 100 par serveurs. Veuillez en effacer afin de libérer des places."
 word_beyond_25_chars: "La longueur maximale de chaque mot est de 25 caractères. Veuillez renseigner uniquement des mots plus petits ou de cette longueur."
 word_added_to_banwords: "Le mot `{{word}}` a été ajouté aux mots bannis avec succès."

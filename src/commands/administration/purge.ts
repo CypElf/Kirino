@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, GuildMember, TextChannel, PermissionFlagsBits } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, TextChannel, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"

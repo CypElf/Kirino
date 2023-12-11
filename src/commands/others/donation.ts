@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import getOwnerAvatar from "../../lib/misc/get_owner_avatar"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"

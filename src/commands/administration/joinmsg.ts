@@ -1,13 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { Channel, ChannelType, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
-import i18next from "i18next"
+import { SlashCommandBuilder, Channel, ChannelType, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from "discord.js"
 import resetJoin from "../../lib/joins_leaves/reset_join"
 import formatJoinLeaveMessage from "../../lib/joins_leaves/format_join_leave_message"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-import { success, error, denied } from "../../lib/misc/format"
+import { success, error } from "../../lib/misc/format"
 import { JoinLeave } from "../../lib/misc/database"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
@@ -16,13 +13,12 @@ export const command: KirinoCommand = {
         .addSubcommand(option => option.setName("set").setDescription("Change the join message").addStringOption(option => option.setName("message").setDescription("The new join message. You can use {user}, {username}, {tag}, {server} and {count} (members count)").setRequired(true)).addChannelOption(option => option.setName("channel").setDescription("The channel where the join messages will be sent").setRequired(true)))
         .addSubcommand(option => option.setName("reset").setDescription("Remove the join message"))
         .addSubcommand(option => option.setName("test").setDescription("Test the join message by sending it here and now as if you just joined the server"))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .setDMPermission(false),
-    permissions: ["manage_guild"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember | null
-        if (member && !member.permissions.has(PermissionFlagsBits.ManageGuild)) return interaction.reply({ content: denied(t("not_allowed_to_use_this_command")), ephemeral: true })
-
+        if (!member) return
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === "reset") {
@@ -40,7 +36,7 @@ export const command: KirinoCommand = {
                     if (!joins_channel_id || !join_message) throw new Error()
 
                     await interaction.guild?.channels.fetch(joins_channel_id) // assert that the channel where the join message should be sent still exists
-                    interaction.reply(formatJoinLeaveMessage(join_message, member as GuildMember))
+                    interaction.reply(formatJoinLeaveMessage(join_message, member))
                 }
                 catch {
                     if (interaction.guild) resetJoin(bot.db, interaction.guild.id)

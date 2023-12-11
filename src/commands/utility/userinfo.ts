@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, time, roleMention } from "@discordjs/builders"
-import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
+import { SlashCommandBuilder, roleMention, ChatInputCommandInteraction, EmbedBuilder, time } from "discord.js"
 import i18next from "i18next"
 // @ts-ignore
 import ColorThief from "colorthief"

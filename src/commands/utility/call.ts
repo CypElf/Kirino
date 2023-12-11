@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, GuildMember, Message, AttachmentBuilder, MessageReaction, PermissionFlagsBits, ReactionManager, TextBasedChannel, TextChannel, ChannelType } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, Message, AttachmentBuilder, MessageReaction, PermissionFlagsBits, ReactionManager, TextBasedChannel, TextChannel, ChannelType } from "discord.js"
 import i18next from "i18next"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"

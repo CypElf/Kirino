@@ -1,10 +1,7 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, GuildMember, User, PermissionFlagsBits } from "discord.js"
-import i18next from "i18next"
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, User, PermissionFlagsBits } from "discord.js"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error } from "../../lib/misc/format"
-
-const t = i18next.t.bind(i18next)
+import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
     builder: new SlashCommandBuilder()
@@ -12,15 +9,11 @@ export const command: KirinoCommand = {
         .setDescription("Kick the specified user")
         .addUserOption(option => option.setName("user").setDescription("The user to kick").setRequired(true))
         .addStringOption(option => option.setName("reason").setDescription("The reason why the user will be kick"))
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .setDMPermission(false),
-    permissions: ["kick members"],
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         const kickerMember = interaction.member as GuildMember | null
-
-        if (kickerMember && !kickerMember.permissions.has(PermissionFlagsBits.KickMembers)) {
-            return interaction.reply({ content: denied(t("you_are_missing_permissions_to_kick_members")), ephemeral: true })
-        }
 
         if (interaction.guild && interaction.guild.members.me && !interaction.guild.members.me.permissions.has(PermissionFlagsBits.KickMembers)) {
             return interaction.reply({ content: error(t("i_am_missing_permissions_to_kick_members")), ephemeral: true })

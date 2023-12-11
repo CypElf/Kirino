@@ -1,4 +1,3 @@
-missing_permissions_to_execute_this_command: "You do not have sufficient permissions to use this command!"
 banwords_count_limited: "The number of blocked words is limited to 100 per server. Please delete some of them in order to free up space."
 word_beyond_25_chars: "The maximum length of each word is 25 characters. Please enter only smaller words or words of this length."
 word_added_to_banwords: "The word `{{word}}` was successfully added to the banwords"

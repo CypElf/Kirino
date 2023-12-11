@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, roleMention } from "@discordjs/builders"
-import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js"
+import { SlashCommandBuilder, roleMention, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js"
 import i18next from "i18next"
 import removeDeletedRolesRewards from "../../lib/rolerewards/remove_deleted_roles_rewards"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"

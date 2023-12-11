@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
 import i18next from "i18next"
 import fetch from "node-fetch"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
