@@ -14,7 +14,7 @@ export function eventHandler(bot: Kirino) {
                 const formatted = formatJoinLeaveMessage(row.join_message, member)
 
                 if (channel && channel.type === ChannelType.GuildText) {
-                    channel.send(formatted)
+                    await channel.send(formatted)
                 }
                 else {
                     resetJoin(bot.db, member.guild.id)
