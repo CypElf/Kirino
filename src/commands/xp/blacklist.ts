@@ -16,7 +16,7 @@ export const command: KirinoCommand = {
         .addSubcommandGroup(option => option.setName("role").setDescription("Add or remove a role from the blacklist")
             .addSubcommand(option => option.setName("add").setDescription("Blacklist a role (need the manage guild permission)").addRoleOption(option => option.setName("role").setDescription("The role to blacklist").setRequired(true)))
             .addSubcommand(option => option.setName("remove").setDescription("Remove a role from the blacklist (need the manage guild permission)").addRoleOption(option => option.setName("role").setDescription("The role to remove from the blacklist").setRequired(true))))
-            .setDMPermission(false),
+        .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
         if (!interaction.guild) return

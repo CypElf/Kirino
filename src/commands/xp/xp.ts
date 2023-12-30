@@ -23,7 +23,7 @@ export const command: KirinoCommand = {
             .addSubcommand(option => option.setName("set").setDescription("Allow you to change the fixed channel for level up messages (need the manage guild permission)").addChannelOption(option => option.setName("channel").setDescription("The new channel for the level up messages").setRequired(true))).addSubcommand(option => option.setName("reset").setDescription("Remove the fixed channel for level up messages and restore the default behavior")))
         .addSubcommandGroup(option => option.setName("reset").setDescription("Allow you to reset the level of a member or the whole server")
             .addSubcommand(option => option.setName("user").setDescription("Reset the level of a member in the server (need the manage guild permission)")
-            .addUserOption(option => option.setName("user").setDescription("The user you want to reset the level. If not specified, default is yourself (need the manage guild permission)")))
+                .addUserOption(option => option.setName("user").setDescription("The user you want to reset the level. Default is you (need the manage guild permission)")))
             .addSubcommand(option => option.setName("all").setDescription("Reset all the levels in the server (need the manage guild permission)")))
         .addSubcommandGroup(option => option.setName("message").setDescription("Allow you to change or reset to the default the level up message")
             .addSubcommand(option => option.setName("set").setDescription("Change the level up message (need the manage guild permission)").addStringOption(option => option.setName("message").setDescription("The new level up message").setRequired(true)))
