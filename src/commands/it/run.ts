@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChannelType, ChatInputCommandInteraction, Message } from "discord.js"
+import { SlashCommandBuilder, ChannelType, ChatInputCommandInteraction, Message, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ModalActionRowComponentBuilder } from "discord.js"
 import i18next from "i18next"
 import { deflateSync } from "zlib"
 import fetch from "node-fetch"
@@ -31,6 +31,30 @@ export const command: KirinoCommand = {
         catch {
             replyMsg.delete()
             return interaction.followUp({ content: error(t("run:cancelled")), ephemeral: true })
+        }
+
+        const codeModal = new ModalBuilder()
+            .setCustomId("codeModal")
+            .setTitle("Code")
+
+        const codeInputField = new TextInputBuilder()
+            .setCustomId("codeInputField")
+            .setLabel("Enter your code here")
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(10000)
+            .setRequired(true)
+        
+        const actionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(codeInputField)
+        codeModal.addComponents(actionRow)
+        interaction.showModal(codeModal)
+
+        let code: string
+        try {
+            const i = await interaction.awaitModalSubmit({ time: 60_000, filter: i => i.user.id === interaction.user.id })
+            code = i.fields.getTextInputValue("codeInputField")
+        }
+        catch {
+            return
         }
 
         i18next.setDefaultNamespace("run") // in case while we were awaiting for messages another command changed the namespace
@@ -80,31 +104,31 @@ export const command: KirinoCommand = {
             vb: "vb-core"
         }))
 
-        let code = ""
-        let gotFromAttachment = false
+        // let code = ""
+        // let gotFromAttachment = false
 
-        if (codeMsg.attachments.size > 0) {
-            const max_size = 1 // Mo
+        // if (codeMsg.attachments.size > 0) {
+        //     const max_size = 1 // Mo
 
-            const attachment = [...codeMsg.attachments.values()][0]
-            if (attachment.size > max_size * 1_000_000) {
-                codeMsg.delete()
-                return interaction.editReply(error(t("file_too_big", { max_size })))
-            }
-            const res = await fetch(attachment.url)
-            if (res.ok) {
-                code = await res.text()
-                gotFromAttachment = true
-            }
-        }
+        //     const attachment = [...codeMsg.attachments.values()][0]
+        //     if (attachment.size > max_size * 1_000_000) {
+        //         codeMsg.delete()
+        //         return interaction.editReply(error(t("file_too_big", { max_size })))
+        //     }
+        //     const res = await fetch(attachment.url)
+        //     if (res.ok) {
+        //         code = await res.text()
+        //         gotFromAttachment = true
+        //     }
+        // }
 
-        if (!gotFromAttachment) {
-            code = codeMsg.content
+        // if (!gotFromAttachment) {
+        //     code = codeMsg.content
 
-            if (code.split("\n").length > 1 && code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
-            else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
-            if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
-        }
+        //     if (code.split("\n").length > 1 && code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
+        //     else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
+        //     if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
+        // }
 
         const userLanguage = interaction.options.getString("language") as string
         const language = defaults.get(userLanguage.toLowerCase()) ?? userLanguage.toLowerCase()
@@ -172,7 +196,7 @@ class Tio {
         const bytes = Buffer.concat(zip(Object.keys(strings), Object.values(strings)).map(toTioString).concat([to_bytes("R")]))
 
         this.request = deflateSync(bytes)
-        this.request = this.request.slice(2, this.request.length - 4)
+        this.request = this.request.subarray(2, this.request.length - 4)
     }
 
     async send() {
