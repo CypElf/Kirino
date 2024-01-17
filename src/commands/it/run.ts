@@ -1,10 +1,10 @@
-import { SlashCommandBuilder, ChannelType, ChatInputCommandInteraction, Message, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ModalActionRowComponentBuilder } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ModalActionRowComponentBuilder, ModalSubmitInteraction } from "discord.js"
 import i18next from "i18next"
 import { deflateSync } from "zlib"
 import fetch from "node-fetch"
 import paste from "../../lib/misc/paste"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
-import { error, success, what } from "../../lib/misc/format"
+import { success, what } from "../../lib/misc/format"
 import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {
@@ -17,22 +17,6 @@ export const command: KirinoCommand = {
         .addStringOption(option => option.setName("flags").setDescription("The flags you want to submit to the C compiler if used")),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
-        if (!interaction.channel) return
-        if (interaction.channel.type === ChannelType.GuildText && !interaction.channel.viewable) return interaction.reply(error(t("not_viewable")))
-        interaction.reply(success(t("send_your_code")))
-        const replyMsg = await interaction.fetchReply() as Message
-        let codeMsg
-
-        const filter = (msg: Message) => msg.author.id === interaction.user.id
-        try {
-            const collected = await interaction.channel?.awaitMessages({ filter, max: 1, time: 60_000, errors: ["time"] })
-            codeMsg = [...collected.values()][0]
-        }
-        catch {
-            replyMsg.delete()
-            return interaction.followUp({ content: error(t("run:cancelled")), ephemeral: true })
-        }
-
         const codeModal = new ModalBuilder()
             .setCustomId("codeModal")
             .setTitle("Code")
@@ -41,23 +25,24 @@ export const command: KirinoCommand = {
             .setCustomId("codeInputField")
             .setLabel("Enter your code here")
             .setStyle(TextInputStyle.Paragraph)
-            .setMaxLength(10000)
             .setRequired(true)
-        
+
         const actionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(codeInputField)
         codeModal.addComponents(actionRow)
         interaction.showModal(codeModal)
 
         let code: string
+        let interaction2: ModalSubmitInteraction
         try {
-            const i = await interaction.awaitModalSubmit({ time: 60_000, filter: i => i.user.id === interaction.user.id })
-            code = i.fields.getTextInputValue("codeInputField")
+            interaction2 = await interaction.awaitModalSubmit({ time: 60_000, filter: i => i.user.id === interaction.user.id && i.customId === "codeModal" })
+            await interaction2.deferReply()
+            code = interaction2.fields.getTextInputValue("codeInputField")
         }
         catch {
             return
         }
 
-        i18next.setDefaultNamespace("run") // in case while we were awaiting for messages another command changed the namespace
+        i18next.setDefaultNamespace("run") // in case the namespace changed because another command was run while waiting for the modal to be filled
 
         const defaults = new Map(Object.entries({
             asm: "assembly-nasm",
@@ -104,114 +89,74 @@ export const command: KirinoCommand = {
             vb: "vb-core"
         }))
 
-        // let code = ""
-        // let gotFromAttachment = false
-
-        // if (codeMsg.attachments.size > 0) {
-        //     const max_size = 1 // Mo
-
-        //     const attachment = [...codeMsg.attachments.values()][0]
-        //     if (attachment.size > max_size * 1_000_000) {
-        //         codeMsg.delete()
-        //         return interaction.editReply(error(t("file_too_big", { max_size })))
-        //     }
-        //     const res = await fetch(attachment.url)
-        //     if (res.ok) {
-        //         code = await res.text()
-        //         gotFromAttachment = true
-        //     }
-        // }
-
-        // if (!gotFromAttachment) {
-        //     code = codeMsg.content
-
-        //     if (code.split("\n").length > 1 && code.split("\n")[0].split(" ").length === 1 && code.startsWith("```")) code = code.split("\n").slice(1).join("\n") // remove the markdown code block header with a specified language
-        //     else if (code.startsWith("```")) code = code.slice(3) // remove the markdown code block header without a specified language
-        //     if (code.endsWith("```")) code = code.slice(0, code.length - 3) // remove the markdown code block footer
-        // }
-
         const userLanguage = interaction.options.getString("language") as string
         const language = defaults.get(userLanguage.toLowerCase()) ?? userLanguage.toLowerCase()
         const input = interaction.options.getString("input") ?? ""
         const args = interaction.options.getString("args")?.split(" ") ?? []
         const flags = interaction.options.getString("flags")?.split(" ") ?? []
 
-        const tio = new Tio(language, code, input, flags, [], args)
-
-        let data = await tio.send()
-        data = data.split("\n").filter(line => !line.startsWith("Real time: ") && !line.startsWith("User time: ") && !line.startsWith("Sys. time: ") && !line.startsWith("CPU share: ")).join("\n")
-
-        if (data.split("\n").length > 30 || data.length > (2000 - 8)) { // - 8 because of "```\n" + data + "\n```" below
-            const url = await paste(data)
-
-            if (url === null) {
-                replyMsg.delete()
-                codeMsg.delete()
-                interaction.followUp({ content: what(t("paste_error")), ephemeral: true })
-            }
-            else codeMsg.reply({ content: success(`${t("pasted_here")} ${url}`), allowedMentions: { repliedUser: false } })
-        }
-        else {
-            // prevent markdown code block within the output by adding zero width spaces between the backticks
-            data = "```\n" + data.replaceAll("```", "\u200B`\u200B`\u200B`\u200B") + "\n```"
-
-            codeMsg.reply({ content: data, allowedMentions: { repliedUser: false } })
-        }
-    }
-}
-
-class Tio {
-    api: string
-    request: Buffer
-
-    constructor(language: string, code: string, input: string = "", compilerFlags: string[] = [], commandLineOptions: string[] = [], cli_args: string[] = []) {
-        const to_bytes = (str: string) => Buffer.from(str, "utf8")
-        const zip = (array1: string[], array2: (string | string[])[]) => array1.map((e, i) => [e, array2[i]])
-
-        function toTioString(couple: (string | string[])[]) {
-            const [name, obj] = couple
-            if (!obj.length) {
-                return to_bytes("")
-            }
-            else if (typeof obj === "object") {
-                const content = ["V" + name, obj.length.toString()].concat(obj)
-                return to_bytes(content.join("\x00") + "\x00")
-            }
-            else {
-                return to_bytes(`F${name}\x00${to_bytes(obj).length}\x00${obj}\x00`)
-            }
-        }
-
-        this.api = "https://tio.run/cgi-bin/run/api/"
+        // TIO specifics
+        const tioApi = "https://tio.run/cgi-bin/run/api/"
 
         const strings = {
             lang: [language],
             ".code.tio": code,
             ".input.tio": input,
-            "TIO_CFLAGS": compilerFlags,
-            "TIO_OPTIONS": commandLineOptions,
-            args: cli_args
+            "TIO_CFLAGS": flags,
+            "TIO_OPTIONS": [],
+            args
         }
 
-        const bytes = Buffer.concat(zip(Object.keys(strings), Object.values(strings)).map(toTioString).concat([to_bytes("R")]))
+        const zip = (array1: string[], array2: (string | string[])[]) => array1.map((e, i) => [e, array2[i]])
+        const bytes = Buffer.concat(zip(Object.keys(strings), Object.values(strings)).map(toTioString).concat([Buffer.from("R", "utf-8")]))
+        const request = deflateSync(bytes).subarray(2, -4)
 
-        this.request = deflateSync(bytes)
-        this.request = this.request.subarray(2, this.request.length - 4)
-    }
-
-    async send() {
-        const res = await fetch(this.api, {
+        const res = await fetch(tioApi, {
             method: "POST",
-            body: this.request,
+            body: request,
             headers: { "Content-Type": "application/octet-stream" }
         })
 
-        const buff = await res.buffer()
+        const respBuff = await res.buffer()
+        const respText = respBuff.toString("utf8")
+        const token = respText.slice(0, 16)
+        const data = respText.replaceAll(token, "")
 
-        let text = buff.toString("utf8")
-        const token = text.slice(0, 16)
-        text = text.replaceAll(token, "")
+        // separation of the actual output and the stats provided by TIO
+        const output = data.split("\n").slice(0, -5).join("\n")
+        const stats = data.split("\n").slice(-5).join("\n")
 
-        return text
+        const zeroWidthSpace = "\u200B"
+        const escapedOutput = output.replaceAll("```", zeroWidthSpace + "`" + zeroWidthSpace + "`" + zeroWidthSpace + "`" + zeroWidthSpace)
+        const formattedEscapedOutput = (output.length > 0 ? ("```\n" + escapedOutput + "```") : t("no_output")) + `\n${t("stats")}\n\n${stats}`
+
+        const maxMessageLength = 2000
+
+        // limit to 20 lines for readability
+        if (formattedEscapedOutput.length <= maxMessageLength && formattedEscapedOutput.split("\n").length <= 20) {
+            interaction2.editReply({ content: formattedEscapedOutput })
+        }
+        else {
+            const url = await paste(output)
+
+            if (url === null) {
+                interaction2.editReply({ content: what(t("paste_error")) })
+            }
+            else interaction2.editReply({ content: success(`${t("pasted_here")} ${url}`) + `\n${t("stats")}\n\n${stats}` })
+        }
+    }
+}
+
+function toTioString(couple: (string | string[])[]) {
+    const [name, obj] = couple
+    if (!obj.length) {
+        return Buffer.from("", "utf-8")
+    }
+    else if (typeof obj === "object") {
+        const content = ["V" + name, obj.length.toString()].concat(obj)
+        return Buffer.from(content.join("\x00") + "\x00", "utf-8")
+    }
+    else {
+        return Buffer.from(`F${name}\x00${Buffer.from(obj, "utf-8").length}\x00${obj}\x00`, "utf-8")
     }
 }

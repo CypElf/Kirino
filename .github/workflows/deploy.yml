@@ -21,4 +21,5 @@ jobs:
             git pull "https://${{secrets.SSH_LOGIN}}:${{secrets.SSH_GITHUB_TOKEN}}@github.com/CypElf/Kirino.git" master
             npm install
             npm run build
+            npm run registerProd
             pm2 restart kirino
