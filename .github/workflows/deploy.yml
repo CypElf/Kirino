@@ -19,6 +19,8 @@ jobs:
             cd Kirino
             git reset --hard
             git pull "https://${{secrets.SSH_LOGIN}}:${{secrets.SSH_GITHUB_TOKEN}}@github.com/CypElf/Kirino.git" master
+            source ~/.nvm/nvm.sh
+            nvm use --lts
             npm install
             npm run build
             npm run registerProd
