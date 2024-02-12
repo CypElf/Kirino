@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ModalActionRowComponentBuilder, ModalSubmitInteraction } from "discord.js"
+import { SlashCommandBuilder, ChatInputCommandInteraction, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, ModalActionRowComponentBuilder, ModalSubmitInteraction, Locale } from "discord.js"
 import i18next from "i18next"
 import { deflateSync } from "zlib"
 import fetch from "node-fetch"
@@ -42,6 +42,8 @@ export const command: KirinoCommand = {
             return
         }
 
+        const lang = interaction.locale === Locale.French ? "fr" : "en"
+        await i18next.changeLanguage(lang)
         i18next.setDefaultNamespace("run") // in case the namespace changed because another command was run while waiting for the modal to be filled
 
         const defaults = new Map(Object.entries({
