@@ -5,6 +5,7 @@
     "main": "dist/index.js",
     "author": "Elf",
     "license": "GPL-3.0-or-later",
+    "packageManager": "yarn@4.1.1",
     "engines": {
         "node": ">=16.11.0"
     },
