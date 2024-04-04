@@ -64,15 +64,12 @@ export function startXpApi(bot: Kirino) {
     http.createServer(async (req, res) => {
         if (!req.url) return res.end()
 
-        console.log("Receiving a request on the XP API")
         if (controlRequest(req, res, bot.apiCooldowns, 500)) {
 
             let { id, limit, page }: ApiQuery = url.parse(req.url, true).query // url.parse is deprecated but there is no easy workaround on the internet and the URL class is terrible to use imo
 
             if (limit === undefined) limit = 20 // default values
             if (page === undefined) page = 1
-
-            console.log(`Request accepted. ID = ${id}, limit = ${limit}, page = ${page}`)
 
             if (isNaN(limit) || limit <= 0 || limit > 100 || isNaN(page) || page <= 0) {
                 res.writeHead(StatusCodes.BAD_REQUEST)
@@ -140,9 +137,10 @@ export function startXpApi(bot: Kirino) {
                         })
                     }
 
+                    console.log(`XP API request success for server ${guild.name}`)
+
                     res.writeHead(StatusCodes.OK)
                     res.write(JSON.stringify(data))
-                    console.log("Request response sent with success")
                 }
                 else {
                     res.writeHead(StatusCodes.BAD_REQUEST)
