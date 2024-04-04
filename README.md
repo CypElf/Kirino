@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/license-GPL_v3-blue)](./LICENSE)
 [![CI status](https://github.com/CypElf/Kirino/actions/workflows/deploy.yml/badge.svg)](https://github.com/CypElf/Kirino/actions)
-[![Discord](https://img.shields.io/discord/698105563162083379.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/NNAGZCz)
+[![Discord](https://img.shields.io/discord/698105563162083379.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/7AnsDRE8hG)
 
 ## Description
 
@@ -68,7 +68,7 @@ Once you see the message `Connection to Discord established` in the output, the 
 
 ## Getting help
 
-If you have questions or need help with something, you can [join the support server](https://discord.gg/NNAGZCz) and ask in the appropiate channel. \
+If you have questions or need help with something, you can [join the support server](https://discord.gg/7AnsDRE8hG) and ask in the `#help-support` channel. \
 Also, if you want to stay informed about the project and the changes applied to Kirino over time, you might want to keep an eye on the `#news` and `#kirino-changelog` channels, or subscribe another channel elsewhere to them.
 
 ## Support the project
