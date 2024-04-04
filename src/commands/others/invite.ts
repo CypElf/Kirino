@@ -14,7 +14,7 @@ export const command: KirinoCommand = {
         }
 
         const invite = new EmbedBuilder()
-            .addFields({ name: `${t("invite_bot")} **${bot.user?.username}** ${t("on_a_server")}`, value: `${t("the_link_to_invite_me_is_available")} **${t("here")} (${process.env.INVITE_LINK})**` })
+            .addFields({ name: `${t("invite_bot")} **${bot.user?.username}** ${t("on_a_server")}`, value: `${t("the_link_to_invite_me_is_available")} **${t("here")}(${process.env.INVITE_LINK})**` })
             .setColor("#DFC900")
             .setFooter({ text: t("common:request_from", { username: interaction.user.username }), iconURL: interaction.user.avatarURL()?.toString() })
 
