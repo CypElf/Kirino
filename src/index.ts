@@ -57,7 +57,9 @@ async function main() {
     if (!process.env.KIRINO_TOKEN) throw new Error("No token provided, please check your env.")
     await bot.login(process.env.KIRINO_TOKEN)
 
-    startXpApi(bot)
+    if (process.env.API_TOKEN) {
+        startXpApi(bot)
+    }
 }
 
 main()
