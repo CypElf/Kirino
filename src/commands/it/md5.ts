@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js"
-import md5 from "js-md5"
+import { md5 } from "js-md5"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { t } from "../../lib/misc/i18n"
 

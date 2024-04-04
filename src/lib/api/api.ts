@@ -155,5 +155,5 @@ export function startXpApi(bot: Kirino) {
             }
             res.end()
         }
-    }).listen(62150)
+    }).listen(62150, "127.0.0.1")
 }
