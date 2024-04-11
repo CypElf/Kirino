@@ -82,6 +82,7 @@ DROP TABLE IF EXISTS "birthdays_metadata";
 CREATE TABLE IF NOT EXISTS "birthdays_metadata" (
 	"guild_id"	TEXT,
 	"enabled"	INTEGER NOT NULL,
+	"channel_id"	TEXT,
 	"message"	TEXT,
 	PRIMARY KEY("guild_id")
 );
