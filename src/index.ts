@@ -23,7 +23,7 @@ async function main() {
         lng: "en",
         fallbackLng: "en",
         supportedLngs: ["en", "fr"],
-        ns: ["common", "interactionCreate", "messageCreate"],
+        ns: ["common", "ready", "interactionCreate", "messageCreate"],
         defaultNS: "common",
         preload: fs.readdirSync(path.join(__dirname, "..", "languages")),
         backend: {

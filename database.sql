@@ -72,4 +72,17 @@ CREATE TABLE IF NOT EXISTS "xp_roles" (
 	"level"	INTEGER NOT NULL,
 	PRIMARY KEY("guild_id","role_id")
 );
+DROP TABLE IF EXISTS "birthdays";
+CREATE TABLE IF NOT EXISTS "birthdays" (
+	"user_id"	TEXT,
+	"birthday"	TEXT NOT NULL,
+	PRIMARY KEY("user_id")
+);
+DROP TABLE IF EXISTS "birthdays_metadata";
+CREATE TABLE IF NOT EXISTS "birthdays_metadata" (
+	"guild_id"	TEXT,
+	"enabled"	INTEGER NOT NULL,
+	"message"	TEXT,
+	PRIMARY KEY("guild_id")
+);
 COMMIT;

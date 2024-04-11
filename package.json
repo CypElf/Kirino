@@ -27,13 +27,15 @@
         "i18next": "^23.10.1",
         "i18next-fs-backend": "^2.3.1",
         "js-md5": "^0.8.3",
-        "node-fetch": "2"
+        "node-fetch": "2",
+        "node-schedule": "^2.1.1"
     },
     "devDependencies": {
         "@types/better-sqlite3": "^7.6.9",
         "@types/i18next-fs-backend": "^1.1.5",
         "@types/js-md5": "^0.7.2",
         "@types/node-fetch": "^2.6.11",
+        "@types/node-schedule": "^2",
         "@typescript-eslint/eslint-plugin": "^7.5.0",
         "@typescript-eslint/parser": "^7.5.0",
         "eslint": "^8.57.0",

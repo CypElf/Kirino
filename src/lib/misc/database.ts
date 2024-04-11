@@ -67,3 +67,15 @@ export type XpRole = {
     role_id: string,
     level: number
 }
+
+export type Birthday = {
+    user_id: string,
+    birthday: string
+}
+
+export type BirthdayMetadata = {
+    guild_id: string,
+    enabled: boolean,
+    channel_id: string | undefined,
+    message: string | undefined
+}
