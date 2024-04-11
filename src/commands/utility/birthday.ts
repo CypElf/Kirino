@@ -5,6 +5,7 @@ import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { Birthday, BirthdayMetadata } from "../../lib/misc/database"
 import { error, success, denied, what } from "../../lib/misc/format"
 import { t } from "../../lib/misc/i18n"
+import { scheduleBirthday } from "../../lib/birthday/schedule"
 
 dayjs.extend(customParseFormat)
 
@@ -17,7 +18,7 @@ export const command: KirinoCommand = {
         .addSubcommand(subcommand => subcommand.setName("set").setDescription("Set your birthday globally").addStringOption(option => option.setName("birthday").setDescription("Your birthday, format DD/MM").setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName("unset").setDescription("Unset your birthday globally"))
         .addSubcommand(subcommand => subcommand.setName("list").setDescription("List all the birthdays in this server"))
-        .addSubcommandGroup(group => group.setName("message").setDescription("Manage the birthday message").addSubcommand(subcommand => subcommand.setName("set").setDescription("Set the birthday message (require the manage server permission)").addStringOption(option => option.setName("message").setDescription("The birthday message. You can use {username}, {tag} and {user} (mention)").setRequired(true))).addSubcommand(subcommand => subcommand.setName("reset").setDescription("Reset the birthday message (require the manage server permission)")))
+        .addSubcommandGroup(group => group.setName("message").setDescription("Manage the birthday message").addSubcommand(subcommand => subcommand.setName("set").setDescription("Set the birthday message (require the manage server permission)").addStringOption(option => option.setName("message").setDescription("The birthday message. You can use {username} and {mention}").setRequired(true))).addSubcommand(subcommand => subcommand.setName("reset").setDescription("Reset the birthday message (require the manage server permission)")))
         .setDMPermission(false),
 
     async execute(bot: Kirino, interaction: ChatInputCommandInteraction) {
@@ -94,6 +95,14 @@ export const command: KirinoCommand = {
             }
 
             bot.db.prepare("INSERT INTO birthdays(user_id, birthday) VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET birthday = ?").run(interaction.user.id, birthday, birthday)
+
+            if (bot.birthdaysJobs.has(interaction.user.id)) {
+                bot.birthdaysJobs.get(interaction.user.id)?.cancel()
+                bot.birthdaysJobs.delete(interaction.user.id)
+            }
+
+            const job = scheduleBirthday(bot, interaction.user.id, parseInt(birthday.split("/")[0]), parseInt(birthday.split("/")[1]))
+            bot.birthdaysJobs.set(interaction.user.id, job)
             return interaction.reply(success(t("birthday_set")))
         }
 
@@ -101,6 +110,9 @@ export const command: KirinoCommand = {
             if (!bot.db.prepare("SELECT * FROM birthdays WHERE user_id = ?").get(interaction.user.id)) {
                 return interaction.reply({ content: error(t("no_birthday_set")), ephemeral: true })
             }
+
+            bot.birthdaysJobs.get(interaction.user.id)?.cancel()
+            bot.birthdaysJobs.delete(interaction.user.id)
 
             bot.db.prepare("DELETE FROM birthdays WHERE user_id = ?").run(interaction.user.id)
             return interaction.reply(success(t("birthday_unset")))

@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, Client, ClientOptions, Collection, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
 import fs from "fs"
+import { Job } from "node-schedule"
 import bsqlite3 from "better-sqlite3"
 
 export interface KirinoCommandBuilder {
@@ -28,6 +29,7 @@ export class Kirino extends Client {
     xpCooldowns: Collection<string, Collection<string, number>>
     apiCooldowns: Map<string, number>
     calls: Collection<string, number>
+    birthdaysJobs: Collection<string, Job>
 
     constructor(options: ClientOptions) {
         super(options)
@@ -35,6 +37,7 @@ export class Kirino extends Client {
         this.xpCooldowns = new Collection()
         this.apiCooldowns = new Map()
         this.calls = new Collection()
+        this.birthdaysJobs = new Collection()
 
         // Create database from schema if it doesn't exist
         if (!fs.existsSync(__dirname + "/../../../database.db")) {
