@@ -103,7 +103,7 @@ export const command: KirinoCommand = {
 
             const job = scheduleBirthday(bot, interaction.user.id, parseInt(birthday.split("/")[0]), parseInt(birthday.split("/")[1]))
             bot.birthdaysJobs.set(interaction.user.id, job)
-            return interaction.reply(success(t("birthday_set")))
+            return interaction.reply(success(t("birthday_set", { birthday })))
         }
 
         else if (subcommand === "unset") {
