@@ -119,6 +119,10 @@ export const command: KirinoCommand = {
         }
 
         else if (subcommand === "list") {
+            if (!serverMetadata?.enabled) {
+                return interaction.reply({ content: error(t("enable_needed_first")), ephemeral: true })
+            }
+
             const registeredUsers = bot.db.prepare("SELECT * FROM birthdays").all() as Birthday[]
             const registeredUsersIDs = registeredUsers.map(u => u.user_id)
             const members = await interaction.guild?.members.fetch()
