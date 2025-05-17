@@ -10,6 +10,6 @@ missing_permissions_to_add_role: "Vous n'avez pas les permissions nécessaires p
 role_externally_managed: "Ce rôle ne peut être ajouté, car il est géré par un service externe."
 bad_level: "Niveau invalide. Veuillez en préciser un entre 1 et 100."
 rrole_already_present: "Ce rôle est déjà dans la liste des rôles récompenses. Si vous voulez changer le niveau qui lui est associé, vous devez d'abord le retirer."
-max_rroles_count_reached: "Le maximum de 10 rôles récompenses est déjà atteint. Si vous voulez en rajouter, il vous faut d'abord en retirer."
+max_rroles_count_reached: "Le maximum de 50 rôles récompenses est déjà atteint. Si vous voulez en rajouter, il vous faut d'abord en retirer."
 the_role: "Le role"
 has_successfully_been_added_to_list: "a bien été ajouté aux rôles récompenses."

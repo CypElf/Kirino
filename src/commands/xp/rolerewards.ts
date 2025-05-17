@@ -85,7 +85,7 @@ export const command: KirinoCommand = {
 
             if (rolesRows.map(row => row.role_id).filter(role_id => role_id === role.id).length > 0) return interaction.reply({ content: error(t("rrole_already_present")), ephemeral: true })
 
-            if (rolesRows.length === 10) return interaction.reply({ content: error(t("max_rroles_count_reached")), ephemeral: true })
+            if (rolesRows.length === 50) return interaction.reply({ content: error(t("max_rroles_count_reached")), ephemeral: true })
 
             bot.db.prepare("INSERT INTO xp_roles VALUES(?,?,?)").run(interaction.guild.id, role.id, level)
 

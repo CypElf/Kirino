@@ -10,6 +10,6 @@ missing_permissions_to_add_role: "You do not have the necessary permissions to a
 role_externally_managed: "This role cannot be added, because it is handled by an external service."
 bad_level: "Invalid level. Please specify one between 1 and 100."
 rrole_already_present: "This role is already in the reward roles list. If you want to change the level associated with it, you must first remove it."
-max_rroles_count_reached: "The maximum of 10 reward roles has already been reached. If you want to add more, you must first remove some of them."
+max_rroles_count_reached: "The maximum of 50 reward roles has already been reached. If you want to add more, you must first remove some of them."
 the_role: "The role"
 has_successfully_been_added_to_list: "has successfully been added to the reward roles."
