@@ -25,6 +25,7 @@ type ApiData = {
         total_xp: number,
         level: number,
         color: string | undefined,
+        background: string | undefined,
         rank: number
     }[]
 }
@@ -97,7 +98,7 @@ export function startXpApi(bot: Kirino) {
                     return res.end()
                 }
 
-                const serverRequest = bot.db.prepare("SELECT user_id, xp, total_xp, level, color FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
+                const serverRequest = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ? ORDER BY level DESC, xp DESC")
                 const serverRows = serverRequest.all(id) as XpProfile[]
 
                 if (serverRows.length > 0) {
@@ -114,7 +115,7 @@ export function startXpApi(bot: Kirino) {
                         guild_metadata: {
                             id: guild.id,
                             name: guild.name,
-                            icon: guild.iconURL({ extension: "png", size: 128 }),
+                            icon: guild.iconURL({ extension: "png", size: 256 }),
                             players: serverRows.length
                         },
                         players: []
@@ -128,11 +129,12 @@ export function startXpApi(bot: Kirino) {
                         data.players.push({
                             id: user.id,
                             tag: user.displayName,
-                            avatar: user.displayAvatarURL({ size: 128 }),
+                            avatar: user.displayAvatarURL({ size: 256 }),
                             xp: row.xp,
                             total_xp: row.total_xp,
                             level: row.level,
                             color: row.color,
+                            background: row.background,
                             rank: page_start + i + 1
                         })
                     }
