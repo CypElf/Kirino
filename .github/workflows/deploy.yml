@@ -14,7 +14,6 @@ jobs:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_LOGIN}}
           key: ${{secrets.SSH_KEY}}
-          
           port: ${{secrets.SSH_PORT}}
           script: |
             cd Kirino
@@ -22,7 +21,6 @@ jobs:
             git pull "https://${{secrets.SSH_LOGIN}}:${{secrets.SSH_GITHUB_TOKEN}}@github.com/CypElf/Kirino.git" master
             source ~/.nvm/nvm.sh
             nvm use --lts
-            yarn install
-            yarn run build
-            yarn run registerProd
+            bun install
+            bun registerProd
             pm2 restart kirino
