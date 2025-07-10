@@ -1,5 +1,5 @@
 import { Guild } from "discord.js"
-import { Database } from "better-sqlite3"
+import { Database } from "bun:sqlite"
 import { Role } from "../misc/database"
 
 export default async function removeDeletedRolesRewards(db: Database, guild: Guild) {

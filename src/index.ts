@@ -32,7 +32,7 @@ async function main() {
         }
     })
 
-    const eventsFiles = fs.readdirSync(path.join(__dirname, "events")).filter(file => file.endsWith(".js"))
+    const eventsFiles = fs.readdirSync(path.join(__dirname, "events")).filter(file => file.endsWith(".ts"))
     for (const file of eventsFiles) {
         const { eventHandler } = await import(path.join(__dirname, "events", file))
         eventHandler(bot)
@@ -41,7 +41,7 @@ async function main() {
     const categories = fs.readdirSync(path.join(__dirname, "commands"))
 
     for (const category of categories) {
-        const commandFiles = fs.readdirSync(path.join(__dirname, "commands", category)).filter(file => file.endsWith(".js"))
+        const commandFiles = fs.readdirSync(path.join(__dirname, "commands", category)).filter(file => file.endsWith(".ts"))
         for (const commandFile of commandFiles) {
             const { command }: CommandFileObject = await import(path.join(__dirname, "commands", category, commandFile))
 

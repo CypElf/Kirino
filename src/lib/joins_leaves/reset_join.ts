@@ -1,4 +1,4 @@
-import { Database } from "better-sqlite3"
+import { Database } from "bun:sqlite"
 import { JoinLeave } from "../misc/database"
 
 // return false when there was already nothing set, otherwise return true

@@ -2,7 +2,7 @@ import { SlashCommandBuilder, Channel, ChatInputCommandInteraction, Guild, Guild
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success } from "../../lib/misc/format"
 import { XpBlacklistedChannel, XpBlacklistedRole, XpGuild } from "../../lib/misc/database"
-import { Database } from "better-sqlite3"
+import { Database } from "bun:sqlite"
 import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {

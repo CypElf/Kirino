@@ -21,7 +21,7 @@ async function register() {
     const rest = new REST().setToken(token)
 
     for (const category of categories) {
-        const commandFiles = fs.readdirSync(path.join(__dirname, "commands", category)).filter(file => file.endsWith(".js"))
+        const commandFiles = fs.readdirSync(path.join(__dirname, "commands", category)).filter(file => file.endsWith(".ts"))
 
         for (const commandFile of commandFiles) {
             const { command }: CommandFileObject = await import(path.join(__dirname, "commands", category, commandFile))

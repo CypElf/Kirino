@@ -5,7 +5,7 @@ import { CanvasRenderingContext2D } from "canvas"
 import { KirinoCommand, Kirino } from "../../lib/misc/types"
 import { denied, error, success, what } from "../../lib/misc/format"
 import { XpGuild, XpProfile } from "../../lib/misc/database"
-import { Database } from "better-sqlite3"
+import { Database } from "bun:sqlite"
 import { t } from "../../lib/misc/i18n"
 
 export const command: KirinoCommand = {

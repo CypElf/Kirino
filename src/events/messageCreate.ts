@@ -1,5 +1,5 @@
 import { ChannelType, Collection, Events, Message, PartialMessage, PermissionFlagsBits } from "discord.js"
-import { Database } from "better-sqlite3"
+import { Database } from "bun:sqlite"
 import i18next from "i18next"
 import checkBanwords from "../lib/banwords/check_banwords"
 import removeDeletedRolesRewards from "../lib/rolerewards/remove_deleted_roles_rewards"

@@ -32,16 +32,10 @@ The following environment variables are optional, but needed for some features o
 - `INVITE_LINK` : You can set this to the link used to invite your bot to a server. If missing, the `invite` command return a message saying that the invitation link is not available.
 - `OWNER_ID` : Set it to your own account user ID. It is only used for the `donation` command, to fetch your profile picture and display it in the corner of the embed. If missing, your profile picture will not be added to the embed when using this command.
 
-That being done, you need to install the bot dependencies. Using [yarn](https://yarnpkg.com/getting-started/install) is recommended, but you can use npm instead if you prefer.
+That being done, you need to install the bot dependencies using [bun](https://bun.sh/).
 
 ```
-$ yarn install
-```
-
-Next, compile the project by running the `build` script provided from the `package.json`. The TypeScript source files will be transpiled to JavaScript and placed in a `dist` folder.
-
-```
-$ yarn build
+$ bun install
 ```
 
 Before starting the bot, you need to register all the slash commands for the users to see them in their Discord clients. You can use the `registerProd` script for that.
@@ -49,19 +43,19 @@ Before starting the bot, you need to register all the slash commands for the use
 Note that this should be used only to register production ready commands, because all users will be able to see them and the registered commands are not propagated instantaneously to all clients.
 
 ```
-$ yarn registerProd
+$ bun registerProd
 ```
 
 If you want to register your commands only on one specific server for debug purposes, or if you have to register your commands multiple times in a small amount of time while working on them, you need to register your commands with the `registerDebug` script.
 
 ```
-$ yarn registerDebug
+$ bun registerDebug
 ```
 
-The only thing left to do is to start the bot with the `start` command.
+The only thing left to do is to start the bot with the `start` script.
 
 ```
-$ yarn start
+$ bun start
 ```
 
 Once you see the message `Connection to Discord established` in the output, the bot is online and ready to be used.
@@ -77,5 +71,5 @@ If you want to support me, the best way is to [add Kirino](https://discord.com/o
 
 ## Credits
 
-Copyright (C) 2018 - 2024 Elf \
+Copyright (C) 2018 - 2025 Elf \
 This project is distributed with a [GPLv3](LICENSE) license.

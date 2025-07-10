@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, Client, ClientOptions, Collection, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
 import fs from "fs"
 import { Job } from "node-schedule"
-import bsqlite3 from "better-sqlite3"
+import { Database } from "bun:sqlite"
 
 export interface KirinoCommandBuilder {
     toJSON(): RESTPostAPIChatInputApplicationCommandsJSONBody
@@ -25,7 +25,7 @@ export interface CommandFileObject {
 
 export class Kirino extends Client {
     commands: Collection<string, KirinoCommandWithMetadata>
-    db: bsqlite3.Database
+    db: Database
     xpCooldowns: Collection<string, Collection<string, number>>
     apiCooldowns: Map<string, number>
     calls: Collection<string, number>
@@ -45,11 +45,11 @@ export class Kirino extends Client {
                 throw new Error("The database schema file, database.sql, is missing in the project root.")
             }
             const schema = fs.readFileSync(__dirname + "/../../../database.sql", "utf-8")
-            const db = new bsqlite3(__dirname + "/../../../database.db")
+            const db = new Database(__dirname + "/../../../database.db")
             db.exec(schema)
             db.close()
         }
 
-        this.db = new bsqlite3(__dirname + "/../../../database.db", { fileMustExist: true })
+        this.db = new Database(__dirname + "/../../../database.db")
     }
 }
