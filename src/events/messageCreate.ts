@@ -28,9 +28,9 @@ function checkAfk(bot: Kirino, msg: Message | PartialMessage) {
     const afkRequest = bot.db.prepare("SELECT * FROM afk WHERE user_id = ?")
 
     for (const mention of mentions.values()) {
-        const mentionnedAfkRow = afkRequest.get(mention.id) as Afk | undefined
+        const mentionnedAfkRow = afkRequest.get(mention.id) as Afk | null
 
-        if (mentionnedAfkRow !== undefined) {
+        if (mentionnedAfkRow) {
             if (mentionnedAfkRow.user_id !== msg.author.id) {
                 if (mentionnedAfkRow.reason) {
                     msg.channel.send(`**${mention.username}**` + t("messageCreate:afk_with_reason") + mentionnedAfkRow.reason)
@@ -44,7 +44,7 @@ function checkAfk(bot: Kirino, msg: Message | PartialMessage) {
 
     const selfAfkRow = afkRequest.get(msg.author.id)
 
-    if (selfAfkRow !== undefined) {
+    if (selfAfkRow) {
         const deletionRequest = bot.db.prepare("DELETE FROM afk WHERE user_id = ?")
         deletionRequest.run(msg.author.id)
         msg.reply(t("messageCreate:deleted_from_afk")).then(afkMsg => setTimeout(() => afkMsg.delete().catch(), 5000)).catch()
@@ -54,7 +54,7 @@ function checkAfk(bot: Kirino, msg: Message | PartialMessage) {
 async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: Collection<string, Collection<string, number>>) {
     if (msg.guild && msg.member && msg.author) {
         const xpMetadataRequest = bot.db.prepare("SELECT is_enabled, level_up_message FROM xp_guilds WHERE guild_id = ?")
-        const xpMetadata = xpMetadataRequest.get(msg.guild.id) as XpGuild | undefined
+        const xpMetadata = xpMetadataRequest.get(msg.guild.id) as XpGuild | null
 
         let isEnabled
         let levelUpMsg
@@ -101,9 +101,9 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
 
         if (isEnabled && isReady && !isBlacklistedChannel && !hasBlacklistedRole) {
             const xpRequest = bot.db.prepare("SELECT * FROM xp_profiles WHERE guild_id = ? AND user_id = ?")
-            let xpRow = xpRequest.get(msg.guild.id, msg.author.id) as XpProfile | undefined
+            let xpRow = xpRequest.get(msg.guild.id, msg.author.id) as XpProfile | null
 
-            if (xpRow === undefined) {
+            if (!xpRow) {
                 xpRow = { guild_id: msg.guild.id, user_id: msg.author.id, xp: 0, total_xp: 0, level: 0, color: undefined, background: undefined }
             }
 
@@ -112,7 +112,7 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
 
             if (currentLvl < 100) {
                 const scaleRequest = bot.db.prepare("SELECT scale FROM xp_guilds WHERE guild_id = ?")
-                const row = scaleRequest.get(msg.guild.id) as XpGuild | undefined
+                const row = scaleRequest.get(msg.guild.id) as XpGuild | null
                 const scale = row?.scale ?? 1
 
                 const xpAdded = Math.floor((Math.floor(Math.random() * (25 - 15 + 1)) + 15) * scale) // the xp added to the user is generated between 15 and 25 and multiplied by the server scale
@@ -127,7 +127,7 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
                     newLvl += 1
                     newXp = newXp - nextLevelXp
 
-                    if (levelUpMsg === undefined || levelUpMsg === null) levelUpMsg = t("messageCreate:default_lvl_up_msg")
+                    if (!levelUpMsg) levelUpMsg = t("messageCreate:default_lvl_up_msg")
                     levelUpMsg = levelUpMsg
                         .replace("{user}", `<@${msg.author.id}>`)
                         .replace("{username}", msg.author.displayName)
@@ -137,7 +137,7 @@ async function handleXp(bot: Kirino, msg: Message | PartialMessage, cooldowns: C
 
 
                     const xpGuildRequest = bot.db.prepare("SELECT level_up_channel_id FROM xp_guilds WHERE guild_id = ?")
-                    const channelRow = xpGuildRequest.get(msg.guild.id) as XpGuild | undefined
+                    const channelRow = xpGuildRequest.get(msg.guild.id) as XpGuild | null
                     const channelId = channelRow?.level_up_channel_id ?? msg.channel.id
                     let channel
 

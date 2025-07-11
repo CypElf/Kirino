@@ -194,6 +194,6 @@ export const command: KirinoCommand = {
 }
 
 function deleteRowIfEmpty(db: Database, guild_id: string) {
-    const row = db.prepare("SELECT * FROM calls WHERE guild_id = ?").get(guild_id) as Call | undefined
+    const row = db.prepare("SELECT * FROM calls WHERE guild_id = ?").get(guild_id) as Call | null
     if (row && !row.channel_id && !row.dm && !row.asfile) db.prepare("DELETE FROM calls WHERE guild_id = ?").run(guild_id)
 }

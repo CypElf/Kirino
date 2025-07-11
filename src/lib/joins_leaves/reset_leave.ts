@@ -4,9 +4,9 @@ import { JoinLeave } from "../misc/database"
 // return false when there was already nothing set, otherwise return true
 export default function resetLeave(db: Database, guild_id: string) {
     const leaveRow = db.prepare("SELECT leaves_channel_id, join_message, leave_message FROM joins_leaves WHERE guild_id = ?").get(guild_id) as JoinLeave | undefined
-    if (leaveRow === undefined || leaveRow.leave_message === undefined) return false
+    if (!leaveRow || !leaveRow.leave_message) return false
 
-    if (leaveRow.join_message === undefined) {
+    if (!leaveRow.join_message) {
         db.prepare("DELETE FROM joins_leaves WHERE guild_id = ?").run(guild_id)
     }
     else {

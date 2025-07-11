@@ -25,7 +25,7 @@ export const command: KirinoCommand = {
         const subcommandGroup = interaction.options.getSubcommandGroup()
         const subcommand = interaction.options.getSubcommand()
 
-        const serverMetadata = bot.db.prepare("SELECT * FROM birthdays_metadata WHERE guild_id = ?").get(interaction.guild?.id) as BirthdayMetadata | undefined
+        const serverMetadata = bot.db.prepare("SELECT * FROM birthdays_metadata WHERE guild_id = ?").get(interaction.guild?.id) as BirthdayMetadata | null
         const canUserManageGuild = (interaction.member as GuildMember).permissions.has(PermissionsBitField.Flags.ManageGuild)
 
         if (subcommandGroup === "message") {

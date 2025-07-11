@@ -6,7 +6,7 @@ import { ChannelType, Events } from "discord.js"
 
 export function eventHandler(bot: Kirino) {
     bot.on(Events.GuildMemberAdd, async member => {
-        const row = bot.db.prepare("SELECT joins_channel_id, join_message FROM joins_leaves WHERE guild_id = ?").get(member.guild.id) as JoinLeave | undefined
+        const row = bot.db.prepare("SELECT joins_channel_id, join_message FROM joins_leaves WHERE guild_id = ?").get(member.guild.id) as JoinLeave | null
 
         if (row && row.joins_channel_id && row.join_message) {
             try {
