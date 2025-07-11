@@ -21,6 +21,8 @@ jobs:
             git pull "https://${{secrets.SSH_LOGIN}}:${{secrets.SSH_GITHUB_TOKEN}}@github.com/CypElf/Kirino.git" master
             source ~/.nvm/nvm.sh
             nvm use --lts
+            export BUN_INSTALL="$HOME/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH"
             bun install
             bun registerProd
             pm2 restart kirino
